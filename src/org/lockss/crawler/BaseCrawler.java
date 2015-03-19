@@ -4,7 +4,7 @@
 
 /*
 
-Copyright (c) 2000-2014 Board of Trustees of Leland Stanford Jr. University,
+Copyright (c) 2000-2015 Board of Trustees of Leland Stanford Jr. University,
 all rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -32,6 +32,7 @@ in this Software without prior written authorization from Stanford University.
 
 package org.lockss.crawler;
 
+import java.io.IOException;
 import java.net.*;
 import java.util.*;
 
@@ -39,7 +40,6 @@ import org.lockss.app.*;
 import org.lockss.alert.*;
 import org.lockss.config.*;
 import org.lockss.daemon.*;
-import org.lockss.daemon.Crawler.CrawlerFacade;
 import org.lockss.plugin.*;
 import org.lockss.plugin.ArchivalUnit.ConfigurationException;
 import org.lockss.plugin.UrlFetcher.FetchResult;
@@ -97,7 +97,7 @@ public abstract class BaseCrawler implements Crawler {
   
   public static final String PARAM_PERMISSION_BUF_MAX =
       Configuration.PREFIX + "permissionBuf.max";
-  public static final int DEFAULT_PERMISSION_BUF_MAX = 50 * 1024;
+  public static final int DEFAULT_PERMISSION_BUF_MAX = 512 * 1024;
 
   /** The source address for crawler connections, or null to use the
    * machine's primary IP address.  Allows multiple daemons on a machine
@@ -125,6 +125,8 @@ public abstract class BaseCrawler implements Crawler {
   public static final String PARAM_PROXY_PORT =
     PREFIX + "proxy.port";
   public static final int DEFAULT_PROXY_PORT = -1;
+  
+  public static final String ABORTED_BEFORE_START_MSG = "Crawl aborted before start";
   
   protected int streamResetMax = DEFAULT_PERMISSION_BUF_MAX;
   protected int defaultRetries = DEFAULT_DEFAULT_RETRY_COUNT;
@@ -203,7 +205,6 @@ public abstract class BaseCrawler implements Crawler {
     this.aus = aus;
     alertMgr = getDaemon().getAlertManager();
     connectionPool = new LockssUrlConnectionPool();
-    crawlSeed = au.makeCrawlSeed();
   }
   
   protected abstract boolean doCrawl0();
@@ -350,7 +351,7 @@ public abstract class BaseCrawler implements Crawler {
     try {
       if (crawlAborted) {
         //don't start an aborted crawl
-        return aborted();
+        return aborted(ABORTED_BEFORE_START_MSG);
       }
       logger.info("Beginning crawl of "+au);
       boolean res = doCrawl0();
@@ -441,25 +442,40 @@ public abstract class BaseCrawler implements Crawler {
   }
 
   protected boolean populatePermissionMap() {
+    Collection<String> permissionUrls = null;
     try {
-      permissionMap = new PermissionMap(getCrawlerFacade(), getDaemonPermissionCheckers(),
-          au.makePermissionCheckers(), crawlSeed.getPermissionUrls());
-      String perHost = au.getPerHostPermissionPath();
-      if (perHost != null) {
-        try {
-          permissionMap.setPerHostPermissionPath(perHost);
-        } catch (MalformedURLException e) {
-          logger.error("Plugin error", e);
-        }
+      permissionUrls = getCrawlSeed().getPermissionUrls();
+    }
+    // FIXME Java 7
+    catch (ConfigurationException ce) {
+      logger.error("Could not compute permission URLs", ce);
+      crawlStatus.setCrawlStatus(Crawler.STATUS_NO_PUB_PERMISSION);
+      return false;
+    }
+    catch (PluginException pe) {
+      logger.error("Could not compute permission URLs", pe);
+      crawlStatus.setCrawlStatus(Crawler.STATUS_NO_PUB_PERMISSION);
+      return false;
+    }
+    catch (IOException ioe) {
+      logger.error("Could not compute permission URLs", ioe);
+      crawlStatus.setCrawlStatus(Crawler.STATUS_NO_PUB_PERMISSION);
+      return false;
+    }
+
+    permissionMap = new PermissionMap(getCrawlerFacade(),
+                                      getDaemonPermissionCheckers(),
+                                      au.makePermissionCheckers(),
+                                      permissionUrls);
+    String perHost = au.getPerHostPermissionPath();
+    if (perHost != null) {
+      try {
+        permissionMap.setPerHostPermissionPath(perHost);
       }
-    } catch (ConfigurationException e) {
-      logger.error("Unable to start crawl due to invalid configuration" + e);
-      crawlStatus.setCrawlStatus(Crawler.STATUS_NO_PUB_PERMISSION);
-      return false;
-    } catch (PluginException e) {
-      logger.error("Unable to start crawl due to invalid plugin parameters" + e);
-      crawlStatus.setCrawlStatus(Crawler.STATUS_NO_PUB_PERMISSION);
-      return false;
+      catch (MalformedURLException mue) {
+        logger.error("Plugin error", mue);
+        // XXX we currently just go on, should we do something else?
+      }
     }
     return permissionMap.populate();
   }
@@ -479,8 +495,10 @@ public abstract class BaseCrawler implements Crawler {
   protected void updateCacheStats(FetchResult res, CrawlUrlData curl) {
     // Paranoia - assert that the rate limiter was actually used
     CrawlRateLimiter crl = getCrawlRateLimiter();
-    if(pauseCounter == crl.getPauseCounter()) {
-      logger.critical("CrawlRateLimiter not used after " + curl, new Throwable());
+    if(res != FetchResult.NOT_FETCHED &&
+       pauseCounter == crl.getPauseCounter()) {
+      logger.critical("CrawlRateLimiter not used after " + curl,
+                      new Throwable());
       if (throwIfRateLimiterNotUsed) {
         throw new RuntimeException("CrawlRateLimiter not used");
       }
@@ -642,12 +660,14 @@ public abstract class BaseCrawler implements Crawler {
       wdog.pokeWDog();
     }
   }
-
+  
   protected boolean aborted() {
+    return aborted("");
+  }
+  
+  protected boolean aborted(String msg) {
     logger.info("Crawl aborted: "+au);
-    if (!crawlStatus.isCrawlError()) {
-      crawlStatus.setCrawlStatus(Crawler.STATUS_ABORTED);
-    }
+    crawlStatus.setCrawlStatus(Crawler.STATUS_ABORTED, msg);
     return false;
   }
 
@@ -665,6 +685,13 @@ public abstract class BaseCrawler implements Crawler {
     sb.append(au.toString());
     sb.append("]");
     return sb.toString();
+  }
+  
+  protected CrawlSeed getCrawlSeed() {
+    if(crawlSeed == null) {
+      crawlSeed = au.makeCrawlSeed(getCrawlerFacade());
+    }
+    return crawlSeed;
   }
   
   protected CrawlerFacade getCrawlerFacade() {
@@ -689,6 +716,10 @@ public abstract class BaseCrawler implements Crawler {
       return crawler.getAu();
     }
 
+    public UrlFetcher makeUrlFetcher(String url) {
+      return crawler.makeUrlFetcher(url);
+    }
+    
     public UrlFetcher makePermissionUrlFetcher(String url) {
       return crawler.makePermissionUrlFetcher(url);
     }

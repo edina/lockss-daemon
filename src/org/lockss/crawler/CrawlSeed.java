@@ -4,7 +4,7 @@
 
 /*
 
-Copyright (c) 2000-2012 Board of Trustees of Leland Stanford Jr. University,
+Copyright (c) 2000-2015 Board of Trustees of Leland Stanford Jr. University,
 all rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -28,10 +28,11 @@ Except as contained in this notice, the name of Stanford University shall not
 be used in advertising or otherwise to promote the sale, use or other dealings
 in this Software without prior written authorization from Stanford University.
 
-*/
+ */
 
 package org.lockss.crawler;
 
+import java.io.IOException;
 import java.util.Collection;
 
 import org.lockss.daemon.PluginException;
@@ -39,15 +40,15 @@ import org.lockss.plugin.ArchivalUnit.ConfigurationException;
 
 /**
  * Basis needed to start a crawl.
- * Povides start and permission urls.
+ * Provides start and permission URLs.
  */
 public interface CrawlSeed {
-	
-	public Collection<String> getStartUrls() 
-	    throws ConfigurationException, PluginException;
-	
-	public Collection<String> getPermissionUrls() 
-	    throws ConfigurationException, PluginException;
+
+  public Collection<String> getStartUrls() 
+      throws ConfigurationException, PluginException, IOException;
+
+  public Collection<String> getPermissionUrls() 
+      throws ConfigurationException, PluginException, IOException;
 
   public boolean isFailOnStartUrlError();
 

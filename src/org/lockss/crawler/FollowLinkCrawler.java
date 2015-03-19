@@ -4,7 +4,7 @@
 
 /*
 
-Copyright (c) 2000-2014 Board of Trustees of Leland Stanford Jr. University,
+Copyright (c) 2000-2015 Board of Trustees of Leland Stanford Jr. University,
 all rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -32,48 +32,24 @@ in this Software without prior written authorization from Stanford University.
 
 package org.lockss.crawler;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.MalformedURLException;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.*;
 import java.util.Queue;
-import java.util.Set;
 
 import org.apache.commons.collections.map.LRUMap;
 import org.lockss.alert.Alert;
-import org.lockss.config.Configuration;
-import org.lockss.config.CurrentConfig;
+import org.lockss.config.*;
 import org.lockss.crawler.CrawlerStatus.ReferrerType;
-import org.lockss.daemon.Crawler;
-import org.lockss.daemon.PluginBehaviorException;
-import org.lockss.daemon.PluginException;
-import org.lockss.daemon.ShouldNotHappenException;
+import org.lockss.daemon.*;
 import org.lockss.extractor.LinkExtractor;
 import org.lockss.filter.FilterUtil;
-import org.lockss.plugin.ArchivalUnit;
+import org.lockss.plugin.*;
 import org.lockss.plugin.ArchivalUnit.ConfigurationException;
-import org.lockss.plugin.AuUtil;
-import org.lockss.plugin.CachedUrl;
-import org.lockss.plugin.ContentValidationException;
-import org.lockss.plugin.UrlFetcher;
 import org.lockss.plugin.UrlFetcher.FetchResult;
 import org.lockss.plugin.base.PassiveUrlConsumerFactory;
-import org.lockss.state.AuState;
-import org.lockss.state.SubstanceChecker;
-import org.lockss.util.Constants;
-import org.lockss.util.FifoQueue;
-import org.lockss.util.HeaderUtil;
-import org.lockss.util.IOUtil;
-import org.lockss.util.Logger;
-import org.lockss.util.PluginUtil;
-import org.lockss.util.StringUtil;
-import org.lockss.util.UrlUtil;
+import org.lockss.state.*;
+import org.lockss.util.*;
 import org.lockss.util.urlconn.CacheException;
 
 /**
@@ -83,7 +59,7 @@ import org.lockss.util.urlconn.CacheException;
  */
 public class FollowLinkCrawler extends BaseCrawler {
 
-  static Logger logger = Logger.getLogger(FollowLinkCrawler.class);
+  private static final Logger log = Logger.getLogger(FollowLinkCrawler.class);
 
   public static final String PREFIX = Configuration.PREFIX + "crawler.";
 
@@ -162,7 +138,7 @@ public class FollowLinkCrawler extends BaseCrawler {
     try {
       urlOrderComparator = au.getCrawlUrlComparator();
     } catch (PluginException e) {
-      logger.error("Plugin CrawlUrlComparatorFactory error, using breadth-first", e);
+      log.error("Plugin CrawlUrlComparatorFactory error, using breadth-first", e);
     }
     fetchQueue = new CrawlQueue(urlOrderComparator);
     parseQueue = new FifoQueue();
@@ -185,7 +161,7 @@ public class FollowLinkCrawler extends BaseCrawler {
   /** Return true if crawler should fail if any start URL(s) can't be
    * fetched */
   protected boolean isFailOnStartUrlError() {
-    return crawlSeed.isFailOnStartUrlError();
+    return getCrawlSeed().isFailOnStartUrlError();
   }
 
   protected int getRefetchDepth() {
@@ -202,7 +178,7 @@ public class FollowLinkCrawler extends BaseCrawler {
               "<auid>", au.getAuId());
       refetchDepth = CurrentConfig.getIntParam(key, refetchDepth0);
       if (refetchDepth != refetchDepth0) {
-        logger.info("Crawl spec refetch depth (" + refetchDepth0 +
+        log.info("Crawl spec refetch depth (" + refetchDepth0 +
             ") overridden by parameter (" + refetchDepth + ")");
       }
     }
@@ -235,10 +211,10 @@ public class FollowLinkCrawler extends BaseCrawler {
  
 
   protected boolean doCrawl0() {
-    if (crawlAborted) {
-      return aborted();
+    if (isAborted()) {
+      return aborted(ABORTED_BEFORE_START_MSG);
     }
-    logger.info("Beginning crawl, refetch depth: " + getRefetchDepth() +
+    log.info("Beginning crawl, refetch depth: " + getRefetchDepth() +
         ", max depth: " + maxDepth + " " +
         (shouldFollowLink() ? "" : "(no follow) ") +
         "of " + au);
@@ -251,26 +227,27 @@ public class FollowLinkCrawler extends BaseCrawler {
     // supported by plugin.
     subChecker = new SubstanceChecker(au);
     if (subChecker.isEnabledFor(SubstanceChecker.CONTEXT_CRAWL)) {
-      logger.debug2("Checking AU for substance during crawl");
+      log.debug2("Checking AU for substance during crawl");
       int threshold = AuUtil.getSubstanceTestThreshold(au);
       if (threshold >= 0) {
         subChecker.setSubstanceMin(threshold);
         isAbbreviatedCrawlTest = true;
-        logger.debug("Performing abbreviated crawl test, threshold: " +
+        log.debug("Performing abbreviated crawl test, threshold: " +
             threshold);
       } else {
         isAbbreviatedCrawlTest = false;
       }
     } else {
       subChecker = null;
-      logger.debug3("Not checking AU for substance during crawl");
+      log.debug3("Not checking AU for substance during crawl");
     }
 
     if (!populatePermissionMap()) {
       if(!crawlStatus.isCrawlError()) {
-        crawlStatus.setCrawlStatus(Crawler.STATUS_NO_PUB_PERMISSION);
+        crawlStatus.setCrawlStatus(Crawler.STATUS_NO_PUB_PERMISSION,
+                                   "Unable to populate permission");
       }
-      return aborted();
+      return false;
     } else if (permissionProbeUrls != null) {
       for(CrawlUrlData pud : permissionProbeUrls) {
         UrlFetcher uf = makePermissionUrlFetcher(pud.getUrl());
@@ -280,13 +257,13 @@ public class FollowLinkCrawler extends BaseCrawler {
         try {
           if(uf.fetch() != FetchResult.FETCHED) {
             crawlStatus.setCrawlStatus(Crawler.STATUS_NO_PUB_PERMISSION);
-            return aborted();
+            return false;
           } else {
             updateCacheStats(FetchResult.FETCHED, pud);
           }
         } catch (CacheException e) {
-          crawlStatus.setCrawlStatus(Crawler.STATUS_NO_PUB_PERMISSION);
-          return aborted();
+          crawlStatus.setCrawlStatus(Crawler.STATUS_NO_PUB_PERMISSION, e.getMessage());
+          return false;
         }
       }
     }
@@ -294,48 +271,57 @@ public class FollowLinkCrawler extends BaseCrawler {
     // get the Urls to follow 
     try {
       enqueueStartUrls();
-    } catch (RuntimeException e) {
-      logger.warning("Unexpected exception, should have been caught lower", e);
+    }
+    catch (RuntimeException re) {
+      log.warning("Unexpected exception, should have been caught lower", re);
       if (!crawlStatus.isCrawlError()) {
         crawlStatus.setCrawlStatus(Crawler.STATUS_ERROR);
       }
       abortCrawl();
-    } catch (OutOfMemoryError e) {
+    }
+    catch (OutOfMemoryError oome) {
       // daemon may keep running after this, so make sure crawl doesn't
       // appear to be successful
       //logger.error("Crawl aborted", e);
       if (!crawlStatus.isCrawlError()) {
         crawlStatus.setCrawlStatus(Crawler.STATUS_ERROR);
       }
-      throw e;
-    } catch (ConfigurationException e) {
-      logger.error("Unable to start crawl due to invalid configuration" + e);
+      throw oome;
+    }
+    // FIXME Java 7
+    catch (ConfigurationException ce) {
+      log.error("Unable to compute start URLs", ce);
       abortCrawl();
-    } catch (PluginException e) {
-      logger.error("Unable to start crawl due to invalid plugin parameters" + e);
+    }
+    catch (PluginException pe) {
+      log.error("Unable to compute start URLs", pe);
+      abortCrawl();
+    }
+    catch (IOException ioe) {
+      log.error("Unable to compute start URLs", ioe);
       abortCrawl();
     }
 
-    if (logger.isDebug3()) logger.debug3("Start URLs: " + fetchQueue );
-    if (crawlAborted) {
-      return aborted();
+    if (log.isDebug3()) log.debug3("Start URLs: " + fetchQueue );
+    if (isAborted()) {
+      return aborted(ABORTED_BEFORE_START_MSG);
     }
 
-    while (!fetchQueue.isEmpty() && !(crawlAborted || crawlTerminated)) {
+    while (!fetchQueue.isEmpty() && !(isAborted() || crawlTerminated)) {
       // check crawl window during crawl
       if (!withinCrawlWindow()) {
         crawlStatus.setCrawlStatus(Crawler.STATUS_WINDOW_CLOSED);
         crawlStatus.setDepth(hiDepth);
-        return aborted();
+        return false;
       }
-      if (logger.isDebug3()) logger.debug3("Fetch queue: " + fetchQueue);
+      if (log.isDebug3()) log.debug3("Fetch queue: " + fetchQueue);
       int len = fetchQueue.size();
       fqMaxLen = Math.max(fqMaxLen, len);
       fqSumLen += len;
       fqSamples += 1;
 
       CrawlUrlData curl = fetchQueue.remove();
-      if (logger.isDebug3()) logger.debug3("Removed from queue: " + curl);
+      if (log.isDebug3()) log.debug3("Removed from queue: " + curl);
       hiDepth = Math.max(hiDepth, curl.getDepth());
       String url = curl.getUrl();
 
@@ -343,37 +329,37 @@ public class FollowLinkCrawler extends BaseCrawler {
       try {
         if (!fetch(curl)) {
           if (!crawlStatus.isCrawlError()) {
-            logger.warning("fetch() failed, didn't set error status: "
+            log.warning("fetch() failed, didn't set error status: "
                 + curl);
             crawlStatus.setCrawlStatus(Crawler.STATUS_ERROR);
             crawlStatus.signalErrorForUrl(url, "Failed to fetch url", Crawler.STATUS_ERROR);
           }
         }
       } catch (RuntimeException e) {
-        if (crawlAborted) {
-          logger.debug("Expected exception while aborting crawl: " + e);
+        if (isAborted()) {
+          log.debug("Expected exception while aborting crawl: " + e);
           crawlStatus.setDepth(hiDepth);
-          return aborted();
+          return aborted(e.getMessage());
         }
-        logger.warning("Unexpected exception processing: " + url, e);
+        log.warning("Unexpected exception processing: " + url, e);
         crawlStatus.signalErrorForUrl(url, e.toString(), Crawler.STATUS_ERROR);
       }
       
       while(!parseQueue.isEmpty()) {
         try {
           CrawlUrlData parseCurl = (CrawlUrlData) parseQueue.peek();
-          if(crawlAborted) {
+          if(isAborted()) {
             return aborted();
           }
           parseQueue.remove(parseCurl);
           parse(parseCurl);
           processedUrls.put(parseCurl.getUrl(), parseCurl);
         } catch (RuntimeException e) {
-          logger.warning("Unexpected exception parsing: " + url, e);
+          log.warning("Unexpected exception parsing: " + url, e);
           crawlStatus.signalErrorForUrl(url, e.toString(), Crawler.STATUS_ERROR);
         }
       }
-      if (crawlAborted) {
+      if (isAborted()) {
         return aborted();
       }
     }
@@ -381,17 +367,17 @@ public class FollowLinkCrawler extends BaseCrawler {
     crawlStatus.setDepth(hiDepth);
     if (!maxDepthUrls.isEmpty()) {
       String msg = "Site depth exceeds max crawl depth (" + maxDepth + ")";
-      logger.error(msg + ". Stopped crawl of " + au.getName());
-      logger.debug("Too deep URLs: " + maxDepthUrls);
+      log.error(msg + ". Stopped crawl of " + au.getName());
+      log.debug("Too deep URLs: " + maxDepthUrls);
       crawlStatus.setCrawlStatus(Crawler.STATUS_ERROR, msg);
     } else {
-      logger.info("Crawled depth = " + (hiDepth) +
+      log.info("Crawled depth = " + (hiDepth) +
           ", fetched " + crawlStatus.getContentBytesFetched() +
           " bytes in " + crawlStatus.getNumFetched() + " files");
     }
-    logger.debug("Max queue len: " + fqMaxLen + ", avg: "
+    log.debug("Max queue len: " + fqMaxLen + ", avg: "
         + Math.round((fqSumLen) / ((double)fqSamples)));
-
+    
     if (subChecker != null) {
       switch (subChecker.hasSubstance()) {
       case No:
@@ -406,7 +392,7 @@ public class FollowLinkCrawler extends BaseCrawler {
             alertMgr.raiseAlert(Alert.auAlert(Alert.CRAWL_NO_SUBSTANCE, au),
                 msg);
           }
-	  logger.siteWarning("" + au + ": " + msg);
+	  log.siteWarning("" + au + ": " + msg);
         }
 	// update AuState unconditionally to record possible FeatureVersion
 	// change
@@ -415,10 +401,10 @@ public class FollowLinkCrawler extends BaseCrawler {
       case Yes:
         if (isAbbreviatedCrawlTest) {
           if (subChecker.getSubstanceCnt() >= subChecker.getSubstanceMin()) {
-            logger.debug("Abbreviated crawl test succeeded");
+            log.debug("Abbreviated crawl test succeeded");
             crawlStatus.setCrawlStatus(Crawler.STATUS_CRAWL_TEST_SUCCESSFUL);
           } else {
-            logger.debug("Abbreviated crawl test failed");
+            log.debug("Abbreviated crawl test failed");
             crawlStatus.setCrawlStatus(Crawler.STATUS_CRAWL_TEST_FAIL);
           }
         }
@@ -429,23 +415,26 @@ public class FollowLinkCrawler extends BaseCrawler {
     }
 
     if (crawlStatus.isCrawlError()) {
-      logger.info("Unfinished crawl of " + au.getName() + ", " +
+      log.info("Unfinished crawl of " + au.getName() + ", " +
 		  crawlStatus.getCrawlErrorMsg());
     } else {
-      logger.info("Finished crawl of "+au.getName());
+      log.info("Finished crawl of "+au.getName());
     }
-
+    
+    if(isAborted()) {
+      return aborted();
+    }
     doCrawlEndActions();
     return (!crawlStatus.isCrawlError());
   }
 
   // Overridable for testing
   protected void enqueueStartUrls() 
-      throws ConfigurationException, PluginException {
-    for (String url : crawlSeed.getStartUrls()) {
+      throws ConfigurationException, PluginException, IOException {
+    for (String url : getCrawlSeed().getStartUrls()) {
       CrawlUrlData curl = newCrawlUrlData(url, 1);
       curl.setStartUrl(true);
-      logger.debug2("setStartUrl(" + curl + ")");
+      log.debug2("setStartUrl(" + curl + ")");
       addToQueue(curl, fetchQueue, crawlStatus);
     }
   }
@@ -457,7 +446,7 @@ public class FollowLinkCrawler extends BaseCrawler {
       queue.add(curl);
       cstat.addPendingUrl(curl.getUrl());
     } catch (RuntimeException e) {
-      logger.error("URL comparator error", e);
+      log.error("URL comparator error", e);
       cstat.signalErrorForUrl(curl.getUrl(),
 			      "URL comparator error, can't add to queue: "
 			      + curl.getUrl() + ": " + e.getMessage(),
@@ -512,7 +501,7 @@ public class FollowLinkCrawler extends BaseCrawler {
         (isRefetchEmptyFiles && cu.getContentSize() == 0)) {
         if (failedUrls.contains(url)) {
           //skip if it's already failed
-          logger.debug3("Already failed to cache "+url+". Not retrying.");
+          log.debug3("Already failed to cache "+url+". Not retrying.");
           return true;
         } else {
           // checking the crawl permission of the url's host
@@ -532,20 +521,17 @@ public class FollowLinkCrawler extends BaseCrawler {
               if(curl.isStartUrl() && isFailOnStartUrlError()) {
                 // fail if cannot fetch a StartUrl
                 String msg = "Failed to cache start url: "+ curl.getUrl();
-                logger.error(msg);
-                crawlStatus.setCrawlStatus(Crawler.STATUS_ABORTED, msg);
-                abortCrawl();
+                log.error(msg);
+                crawlStatus.setCrawlStatus(Crawler.STATUS_FETCH_ERROR);
                 return false;
               }
             } else {
               checkSubstanceCollected(au.makeCachedUrl(url));
             }
           } catch (CacheException ex) {
-            
             //XXX: we have a fatal exception, but we need to store it
-            crawlStatus.setCrawlStatus(Crawler.STATUS_FETCH_ERROR,
-                "Fatal error fetching url " + url);
-            crawlAborted = true;
+            crawlStatus.signalErrorForUrl(url, ex);
+            crawlStatus.setCrawlStatus(Crawler.STATUS_FETCH_ERROR);
             return false;
           }   
           parseQueue.put(curl);
@@ -565,7 +551,7 @@ public class FollowLinkCrawler extends BaseCrawler {
       try {
         if (!processedUrls.containsKey(curl.getUrl())) {
           CachedUrl cu = au.makeCachedUrl(curl.getUrl());
-          logger.debug3("Parsing "+ cu);
+          log.debug3("Parsing "+ cu);
           
           try {
             if (cu.hasContent()) {
@@ -574,6 +560,7 @@ public class FollowLinkCrawler extends BaseCrawler {
                 //IOException if the CU can't be read
                 InputStream in = null;
                 try {
+                  pokeWDog();
                   in = cu.getUnfilteredInputStream();
                   // Might be reparsing with new content (if depth reduced
                   // below refetch depth); clear any existing children
@@ -591,7 +578,7 @@ public class FollowLinkCrawler extends BaseCrawler {
                   curl.trimChildren();
                   crawlStatus.signalUrlParsed(curl.getUrl());
                 } catch (PluginException e) {
-                  logger.error("Plugin LinkExtractor error", e);
+                  log.error("Plugin LinkExtractor error", e);
                   crawlStatus.signalErrorForUrl(curl.getUrl(),
                       "Plugin LinkExtractor error: " +
                           e.getMessage(),
@@ -608,22 +595,22 @@ public class FollowLinkCrawler extends BaseCrawler {
       } catch (CacheException ex) {
         crawlStatus.signalErrorForUrl(curl.getUrl(), ex);
         if (ex.isAttributeSet(CacheException.ATTRIBUTE_FATAL)) {
-          logger.error("Fatal error parsing "+curl, ex);
+          log.error("Fatal error parsing "+curl, ex);
           abortCrawl();
         } else if (ex.isAttributeSet(CacheException.ATTRIBUTE_FAIL)) {
-          logger.siteError("Couldn't parse "+curl+". continuing", ex);
+          log.siteError("Couldn't parse "+curl+". continuing", ex);
           crawlStatus.setCrawlStatus(Crawler.STATUS_EXTRACTOR_ERROR);
         } else {
-          logger.siteWarning("Couldn't parse "+curl+". ignoring error", ex);
+          log.siteWarning("Couldn't parse "+curl+". ignoring error", ex);
         }
         curl.setFailedParse(true);
         processedUrls.put(curl.getUrl(), curl);
       } catch (IOException ioe) {
-        logger.error("Problem parsing "+curl+". Ignoring", ioe);
+        log.error("Problem parsing "+curl+". Ignoring", ioe);
         crawlStatus.signalErrorForUrl(curl.getUrl(), ioe.getMessage(),
             Crawler.STATUS_FETCH_ERROR);
       }
-      logger.debug3("Removing from parsing list: "+ curl.getUrl());
+      log.debug3("Removing from parsing list: "+ curl.getUrl());
     }
   }
 
@@ -690,60 +677,60 @@ public class FollowLinkCrawler extends BaseCrawler {
       }
       try {
 	String normUrl = UrlUtil.normalizeUrl(url, au);
-	if (logger.isDebug3()) {
-	  logger.debug3("Found "+url);
-	  logger.debug3("Normalized to "+normUrl);
+	if (log.isDebug3()) {
+	  log.debug3("Found "+url);
+	  log.debug3("Normalized to "+normUrl);
 	}
 	if (normUrl.equals(curl.getUrl())) {
-	  if (logger.isDebug3()) logger.debug3("Self reference to " + url);
+	  if (log.isDebug3()) log.debug3("Self reference to " + url);
 	  return;
 	}
 	// The same URLs may be found repeatedly.  Ensure each is processed
 	// only once.  Both CrawlUrlData and CrawlerStatus.signalReferrer()
 	// assume no redundant calls.
 	if (foundUrls.contains(normUrl)) {
-	  if (logger.isDebug3()) logger.debug3("Redundant child: " + normUrl);
+	  if (log.isDebug3()) log.debug3("Redundant child: " + normUrl);
 	  return;
 	}
 	foundUrls.add(normUrl);
 
 	CrawlUrlData child = null;
 	if ((child = processedUrls.get(normUrl)) != null) {
-	  if (logger.isDebug2())
-	    logger.debug2("Already processed url: " + child);
+	  if (log.isDebug2())
+	    log.debug2("Already processed url: " + child);
 	  signalReferrer(normUrl, ReferrerType.Included);
 	} else if ((child = fetchQueue.get(normUrl)) != null) {
-	  if (logger.isDebug3())
-	    logger.debug3("Already queued url: " + child);
+	  if (log.isDebug3())
+	    log.debug3("Already queued url: " + child);
 	  signalReferrer(normUrl, ReferrerType.Included);
 	} else if ((child = maxDepthUrls.get(normUrl)) != null) {
-	  if (logger.isDebug3())
-	    logger.debug3("Already too-deep url: " + child);
+	  if (log.isDebug3())
+	    log.debug3("Already too-deep url: " + child);
 	  signalReferrer(normUrl, ReferrerType.Included);
 	} else if (excludedUrlCache.containsKey(normUrl)) {
 	  // au.shouldBeCached() is expensive, don't call it if we already
 	  // know the answer
-	  if (logger.isDebug3())
-	    logger.debug3("Already excluded url: " + normUrl);
+	  if (log.isDebug3())
+	    log.debug3("Already excluded url: " + normUrl);
 	  signalReferrer(normUrl, ReferrerType.Excluded);
 	  return;
 	} else if (failedUrls.contains(normUrl)) {
 	    // ditto
-	  if (logger.isDebug3())
-	    logger.debug3("Already failed to fetch url: " + normUrl);
+	  if (log.isDebug3())
+	    log.debug3("Already failed to fetch url: " + normUrl);
 	  signalReferrer(normUrl, ReferrerType.Included);
 	  return;
 	} else {
 	  if (au.shouldBeCached(normUrl)) {
  	    if (checkGloballyExcludedUrl(au, normUrl)) {
-	      if (logger.isDebug2()) {
-		logger.debug2("Globally excluded url: "+normUrl);
+	      if (log.isDebug2()) {
+		log.debug2("Globally excluded url: "+normUrl);
 	      }
 	      signalReferrer(normUrl, ReferrerType.Excluded);
 	      return;
 	    } else {
-	      if (logger.isDebug2()) {
-		logger.debug2("Included url: "+normUrl);
+	      if (log.isDebug2()) {
+		log.debug2("Included url: "+normUrl);
 	      }
 	      signalReferrer(normUrl, ReferrerType.Included);
 	      child = newCrawlUrlData(normUrl, curl.getDepth() + 1);
@@ -754,8 +741,8 @@ public class FollowLinkCrawler extends BaseCrawler {
 	      }
 	    }
 	  } else {
-	    if (logger.isDebug2()) {
-	      logger.debug2("Excluded url: "+normUrl);
+	    if (log.isDebug2()) {
+	      log.debug2("Excluded url: "+normUrl);
 	    }
 	    crawlStatus.signalUrlExcluded(normUrl);
 	    signalReferrer(normUrl, ReferrerType.Excluded);
@@ -767,9 +754,9 @@ public class FollowLinkCrawler extends BaseCrawler {
 	}
       } catch (MalformedURLException e) {
 	//XXX what exactly does this log want to tell?
-	logger.warning("Normalizing", e);
+	log.warning("Normalizing", e);
       } catch (PluginBehaviorException e) {
-	logger.warning("Normalizing", e);
+	log.warning("Normalizing", e);
       }
     }
 
@@ -786,16 +773,16 @@ public class FollowLinkCrawler extends BaseCrawler {
      * existing parents). */
     class ReducedDepthHandler implements CrawlUrlData.ReducedDepthHandler {
       public void depthReduced(CrawlUrlData curl, int from, int to) {
-	if (logger.isDebug3())
-	  logger.debug3("depthReduced("+from+","+to+"): "+curl);
+	if (log.isDebug3())
+	  log.debug3("depthReduced("+from+","+to+"): "+curl);
 	if (from > maxDepth && to <= maxDepth) {
 	  // If previously beyond max craw depth, is now eligible to be fetched
 	  CrawlUrlData tooDeepUrl = maxDepthUrls.remove(curl.getUrl());
 	  if (tooDeepUrl != curl) {
-	    logger.warning("Previously too deep " + tooDeepUrl
+	    log.warning("Previously too deep " + tooDeepUrl
 			   + " != no longer too deep " + curl);
 	  }
-	  if (logger.isDebug2()) logger.debug2("Rescued from too deep: " +curl);
+	  if (log.isDebug2()) log.debug2("Rescued from too deep: " +curl);
 	  addToFetchQueue(curl);
 	} else if (to <= maxDepth &&
 		   from > getRefetchDepth() &&
@@ -805,12 +792,12 @@ public class FollowLinkCrawler extends BaseCrawler {
 	  CrawlUrlData processedCurl = processedUrls.get(curl.getUrl());
 	  if (processedCurl != null && !processedCurl.isFetched()) {
 	    if (processedCurl != curl) {
-	      logger.warning("Previously processed " + processedCurl
+	      log.warning("Previously processed " + processedCurl
 			     + " != now within refetch depth " + curl);
 	    }
 	    processedUrls.remove(curl.getUrl());
 	    addToFetchQueue(curl);
-	    if (logger.isDebug2()) logger.debug2("Requeued for fetch: " + curl);
+	    if (log.isDebug2()) log.debug2("Requeued for fetch: " + curl);
 	  }
 	}
       }
