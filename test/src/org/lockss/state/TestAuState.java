@@ -1,10 +1,10 @@
 /*
- * $Id: TestAuState.java,v 1.23.10.3 2014-12-27 03:27:43 tlipkis Exp $
+ * $Id$
  */
 
 /*
 
-Copyright (c) 2000-2010 Board of Trustees of Leland Stanford Jr. University,
+Copyright (c) 2000-2015 Board of Trustees of Leland Stanford Jr. University,
 all rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -103,10 +103,10 @@ public class TestAuState extends LockssTestCase {
 		       -1,
 		       -1,
 		       -1,
-		       -1,
 		       -1, // numWillingRepairers
 		       -1, // numCurrentSuspectVersions
 		       0,
+		       null,
 		       historyRepo);
   }
 
@@ -524,6 +524,27 @@ public class TestAuState extends LockssTestCase {
     assertEquals(5, aus.getNumCurrentSuspectVersions());
   }
 
+  public void testCdnStems() {
+    AuState aus = new AuState(mau, historyRepo);
+    assertEquals(Collections.EMPTY_LIST, aus.getCdnStems());
+    aus.addCdnStem("http://fff.uselesstld");
+    assertClass(ArrayList.class, aus.getCdnStems());
+    assertEquals(ListUtil.list("http://fff.uselesstld"), aus.getCdnStems());
+    aus.addCdnStem("ccc");
+    assertEquals(ListUtil.list("http://fff.uselesstld", "ccc"),
+		 aus.getCdnStems());
+
+    aus.setCdnStems(new LinkedList(ListUtil.list("a", "b")));
+    assertClass(ArrayList.class, aus.getCdnStems());
+    assertEquals(ListUtil.list("a", "b"), aus.getCdnStems());
+    aus.setCdnStems(null);
+    assertEmpty(aus.getCdnStems());
+    aus.addCdnStem("https://a.b/");
+    aus.addCdnStem("https://b.a/");
+    assertEquals(ListUtil.list("https://a.b/", "https://b.a/"),
+		 aus.getCdnStems());
+  }
+
   public void testBatch() {
     AuState aus = new AuState(mau, historyRepo);
     assertEquals(0, historyRepo.getAuStateStoreCount());
@@ -576,6 +597,7 @@ public class TestAuState extends LockssTestCase {
     log.debug2("new: " + edser);
     AuState newaus = deser(edser);
     assertEquals(-1, newaus.getNumAgreePeersLastPoR());
+    assertEquals(Collections.EMPTY_LIST, newaus.getCdnStems());
   }
 
   public static void main(String[] argv) {

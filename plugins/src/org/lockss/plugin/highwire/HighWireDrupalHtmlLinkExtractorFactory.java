@@ -1,10 +1,10 @@
 /*
- * $Id: HighWireDrupalHtmlLinkExtractorFactory.java,v 1.4 2014-08-21 01:05:57 etenbrink Exp $
+ * $Id$
  */
 
 /*
 
-Copyright (c) 2000-2014 Board of Trustees of Leland Stanford Jr. University,
+Copyright (c) 2000-2015 Board of Trustees of Leland Stanford Jr. University,
 all rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -55,11 +55,13 @@ import org.lockss.util.Logger;
 // an implementation of JsoupHtmlLinkExtractor
 public class HighWireDrupalHtmlLinkExtractorFactory implements LinkExtractorFactory {
   
-  private static final String LINK_NAME = "link";
+  private static final Logger log = Logger.getLogger(HighWireDrupalHtmlLinkExtractorFactory.class);
+  
+  private static final String LINKTAG = "link";
   private static final String HREF_NAME = "href";
   private static final String REL_NAME = "rel";
   private static final String SHORTLINK = "shortlink";
-  private static final String DIV_NAME = "div";
+  private static final String DIVTAG = "div";
   
   protected static Pattern URL_PATTERN = Pattern.compile(
       "^(https?://[^/]+/)content/[^/]+/[^/]+/[^/?.]+$", Pattern.CASE_INSENSITIVE);
@@ -71,14 +73,12 @@ public class HighWireDrupalHtmlLinkExtractorFactory implements LinkExtractorFact
       throws PluginException {
     JsoupHtmlLinkExtractor extractor = new JsoupHtmlLinkExtractor();
     // we will do some additional processing for <link href="/node/25370" rel="shortlink">
-    extractor.registerTagExtractor(LINK_NAME, new HWSimpleTagLinkExtractor(HREF_NAME));
-    extractor.registerTagExtractor(DIV_NAME, new SimpleTagLinkExtractor(REL_NAME));
+    extractor.registerTagExtractor(LINKTAG, new HWSimpleTagLinkExtractor(HREF_NAME));
+    extractor.registerTagExtractor(DIVTAG, new SimpleTagLinkExtractor(REL_NAME));
     return extractor;
   }
   
-  public static class HWSimpleTagLinkExtractor extends SimpleTagLinkExtractor {
-    
-    private static Logger log = Logger.getLogger(HWSimpleTagLinkExtractor.class);
+  protected static class HWSimpleTagLinkExtractor extends SimpleTagLinkExtractor {
     
     // nothing needed in the constructor - just call the parent
     public HWSimpleTagLinkExtractor(String attr) {
@@ -95,6 +95,7 @@ public class HighWireDrupalHtmlLinkExtractorFactory implements LinkExtractorFact
      *     <base_url>highwire/citation/<id>/ris         
      * In any case other than this one, fall back to standard Jsoup implementation
      */
+    @Override
     public void tagBegin(Node node, ArchivalUnit au, Callback cb) {
       String srcUrl = node.baseUri();
       Matcher urlMat = URL_PATTERN.matcher(srcUrl);
@@ -115,5 +116,4 @@ public class HighWireDrupalHtmlLinkExtractorFactory implements LinkExtractorFact
       super.tagBegin(node, au, cb);
     }
   }
-  
 }

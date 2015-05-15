@@ -1,5 +1,5 @@
 /*
- * $Id: DefinablePlugin.java,v 1.82.2.1 2014-12-24 01:04:47 wkwilson Exp $
+ * $Id$
  */
 
 /*

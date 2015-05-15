@@ -30,7 +30,8 @@
       au < exists ; exists ; 2011 ; Cold Spring Harbor Protocols Volume 2011 ; 2011 >
       au < exists ; exists ; 2012 ; Cold Spring Harbor Protocols Volume 2012 ; 2012 >
       au < exists ; exists ; 2013 ; Cold Spring Harbor Protocols Volume 2013 ; 2013 >
-      au < manifest ; exists ; 2014 ; Cold Spring Harbor Protocols Volume 2014 ; 2014 >
+      au < crawling ; exists ; 2014 ; Cold Spring Harbor Protocols Volume 2014 ; 2014 >
+      au < manifest ; exists ; 2015 ; Cold Spring Harbor Protocols Volume 2015 ; 2015 >
       
     }
     
@@ -130,7 +131,7 @@
       au < exists ; exists ; 2010 ; Cold Spring Harbor Symposia on Quantitative Biology Volume 75 ; 75 >
       au < exists ; exists ; 2011 ; Cold Spring Harbor Symposia on Quantitative Biology Volume 76 ; 76 >
       au < exists ; exists ; 2012 ; Cold Spring Harbor Symposia on Quantitative Biology Volume 77 ; 77 >
-      au < expected ; exists ; 2013 ; Cold Spring Harbor Symposia on Quantitative Biology Volume 78 ; 78 >
+      au < exists ; exists ; 2013 ; Cold Spring Harbor Symposia on Quantitative Biology Volume 78 ; 78 >
       au < expected ; exists ; 2014 ; Cold Spring Harbor Symposia on Quantitative Biology Volume 79 ; 79 >
 
     }
@@ -179,7 +180,8 @@
       au < exists ; exists ; 2011 ; Genes & Development Volume 25 ; 25 >
       au < exists ; exists ; 2012 ; Genes & Development Volume 26 ; 26 >
       au < exists ; exists ; 2013 ; Genes & Development Volume 27 ; 27 >
-      au < manifest ; exists ; 2014 ; Genes & Development Volume 28 ; 28 >
+      au < crawling ; exists ; 2014 ; Genes & Development Volume 28 ; 28 >
+      au < manifest ; exists ; 2015 ; Genes & Development Volume 29 ; 29 >
 
     }
 
@@ -223,7 +225,8 @@
       au < exists ; exists ; 2011 ; Genome Research Volume 21 ; 21 >
       au < exists ; exists ; 2012 ; Genome Research Volume 22 ; 22 >
       au < exists ; exists ; 2013 ; Genome Research Volume 23 ; 23 >
-      au < manifest ; exists ; 2014 ; Genome Research Volume 24 ; 24 >
+      au < crawling ; exists ; 2014 ; Genome Research Volume 24 ; 24 >
+      au < manifest ; exists ; 2015 ; Genome Research Volume 25 ; 25 >
 
     }
 
@@ -264,7 +267,8 @@
       au < exists ; exists ; 2011 ; Learning & Memory Volume 18 ; 18 >
       au < exists ; exists ; 2012 ; Learning & Memory Volume 19 ; 19 >
       au < exists ; exists ; 2013 ; Learning & Memory Volume 20 ; 20 >
-      au < manifest ; exists ; 2014 ; Learning & Memory Volume 21 ; 21 >
+      au < crawling ; exists ; 2014 ; Learning & Memory Volume 21 ; 21 >
+      au < manifest ; exists ; 2015 ; Learning & Memory Volume 22 ; 22 >
 
     }
 
@@ -273,7 +277,7 @@
   {
   
     title <
-      name = Perspectives in Biology ;
+      name = Cold Spring Harbor Perspectives in Biology ;
       eissn = 1943-0264 ;
       issnl = 1943-0264
     >
@@ -284,12 +288,13 @@
       param[base_url] = http://cshperspectives.cshlp.org/
       implicit < status ; status2 ; year ; name ; param[volume_name] >
 
-      au < exists ; exists ; 2009 ; Perspectives in Biology Volume 1 ; 1 >
-      au < exists ; exists ; 2010 ; Perspectives in Biology Volume 2 ; 2 >
-      au < exists ; exists ; 2011 ; Perspectives in Biology Volume 3 ; 3 >
-      au < exists ; exists ; 2012 ; Perspectives in Biology Volume 4 ; 4 >
-      au < exists ; exists ; 2013 ; Perspectives in Biology Volume 5 ; 5 >
-      au < manifest ; exists ; 2014 ; Perspectives in Biology Volume 6 ; 6 >
+      au < exists ; exists ; 2009 ; Cold Spring Harbor Perspectives in Biology Volume 1 ; 1 >
+      au < exists ; exists ; 2010 ; Cold Spring Harbor Perspectives in Biology Volume 2 ; 2 >
+      au < exists ; exists ; 2011 ; Cold Spring Harbor Perspectives in Biology Volume 3 ; 3 >
+      au < exists ; exists ; 2012 ; Cold Spring Harbor Perspectives in Biology Volume 4 ; 4 >
+      au < exists ; exists ; 2013 ; Cold Spring Harbor Perspectives in Biology Volume 5 ; 5 >
+      au < ready ; exists ; 2014 ; Cold Spring Harbor Perspectives in Biology Volume 6 ; 6 >
+      au < manifest ; exists ; 2015 ; Cold Spring Harbor Perspectives in Biology Volume 7 ; 7 >
 
     }
     
@@ -298,7 +303,7 @@
   {
   
     title <
-      name = Perspectives in Medicine ;
+      name = Cold Spring Harbor Perspectives in Medicine ;
       eissn = 2157-1422 ;
       issnl = 2157-1422
     >
@@ -308,11 +313,13 @@
       plugin = org.lockss.plugin.highwire.ClockssHighWirePressH20Plugin
       param[base_url] = http://perspectivesinmedicine.cshlp.org/
       implicit < status ; status2 ; year ; name ; param[volume_name] >
+      comment[notReady] = no permission from publisher
 
-      au < exists ; exists ; 2011 ; Perspectives in Medicine Volume 1 ; 1 >
-      au < exists ; exists ; 2012 ; Perspectives in Medicine Volume 2 ; 2 >
-      au < exists ; exists ; 2013 ; Perspectives in Medicine Volume 3 ; 3 >
-      au < manifest ; exists ; 2014 ; Perspectives in Medicine Volume 4 ; 4 >
+      au < exists ; exists ; 2011 ; Cold Spring Harbor Perspectives in Medicine Volume 1 ; 1 >
+      au < exists ; exists ; 2012 ; Cold Spring Harbor Perspectives in Medicine Volume 2 ; 2 >
+      au < exists ; exists ; 2013 ; Cold Spring Harbor Perspectives in Medicine Volume 3 ; 3 >
+      au < notReady ; exists ; 2014 ; Cold Spring Harbor Perspectives in Medicine Volume 4 ; 4 >
+      au < manifest ; exists ; 2015 ; Cold Spring Harbor Perspectives in Medicine Volume 5 ; 5 >
 
     }
     
@@ -352,7 +359,8 @@
       au < exists ; exists ; 2011 ; RNA Volume 17 ; 17 >
       au < exists ; exists ; 2012 ; RNA Volume 18 ; 18 >
       au < exists ; exists ; 2013 ; RNA Volume 19 ; 19 >
-      au < manifest ; exists ; 2014 ; RNA Volume 20 ; 20 >
+      au < crawling ; exists ; 2014 ; RNA Volume 20 ; 20 >
+      au < manifest ; exists ; 2015 ; RNA Volume 21 ; 21 >
 
     }
 

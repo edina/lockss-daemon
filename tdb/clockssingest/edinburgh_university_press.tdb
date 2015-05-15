@@ -79,7 +79,8 @@
     au < finished ; crawling ; 2011 ; African Journal of International and Comparative Law Volume 19 ; 19 >
     au < finished ; crawling ; 2012 ; African Journal of International and Comparative Law Volume 20 ; 20 >
     au < crawling ; exists ; 2013 ; African Journal of International and Comparative Law Volume 21 ; 21 >
-    au < manifest ; exists ; 2014 ; African Journal of International and Comparative Law Volume 22 ; 22 >
+    au < crawling ; exists ; 2014 ; African Journal of International and Comparative Law Volume 22 ; 22 >
+    au < manifest ; exists ; 2015 ; African Journal of International and Comparative Law Volume 23 ; 23 >
 
   }
 
@@ -109,7 +110,8 @@
     au < finished ; crawling ; 2011 ; Architectural Heritage Volume 22 ; 22 >
     au < crawling ; exists ; 2012 ; Architectural Heritage Volume 23 ; 23 >
     au < crawling ; exists ; 2013 ; Architectural Heritage Volume 24 ; 24 >
-    au < manifest ; exists ; 2014 ; Architectural Heritage Volume 25 ; 25 >
+    au < crawling ; exists ; 2014 ; Architectural Heritage Volume 25 ; 25 >
+    au < expected ; exists ; 2015 ; Architectural Heritage Volume 26 ; 26 >
 
   }
 
@@ -135,7 +137,8 @@
     au < finished ; crawling ; 2011 ; Archives of Natural History Volume 38 ; 38 >
     au < finished ; crawling ; 2012 ; Archives of Natural History Volume 39 ; 39 >
     au < crawling ; exists ; 2013 ; Archives of Natural History Volume 40 ; 40 >
-    au < manifest ; exists ; 2014 ; Archives of Natural History Volume 41 ; 41 >
+    au < crawling ; exists ; 2014 ; Archives of Natural History Volume 41 ; 41 >
+    au < manifest ; exists ; 2015 ; Archives of Natural History Volume 42 ; 42 >
 
   }
 
@@ -157,7 +160,8 @@
     au < finished ; crawling ; 2011 ; Ben Jonson Journal Volume 18 ; 18 >
     au < finished ; crawling ; 2012 ; Ben Jonson Journal Volume 19 ; 19 >
     au < crawling ; exists ; 2013 ; Ben Jonson Journal Volume 20 ; 20 >
-    au < manifest ; exists ; 2014 ; Ben Jonson Journal Volume 21 ; 21 >
+    au < crawling ; exists ; 2014 ; Ben Jonson Journal Volume 21 ; 21 >
+    au < manifest ; exists ; 2015 ; Ben Jonson Journal Volume 22 ; 22 >
 
   }
 
@@ -169,17 +173,28 @@
       eissn = 2043-8575 ;
       issnl = 2043-8567 
      >
-
+    {
     param[journal_id] = brw
 
-    au < crawling ; crawling ; 2008-2009 ; Britain and the World Volume 1 ; 1 >
-    au < crawling ; crawling ; 2009-2010 ; Britain and the World Volume 2 ; 2 >
-    au < crawling ; crawling ; 2010 ; Britain and the World Volume 3 ; 3 >
+    au < superseded ; down ; 2008-2009 ; British Scholar Volume 1 [superseded] ; 1 >
+    au < superseded ; down ; 2009-2010 ; British Scholar Volume 2 [superseded] ; 2 >
+    au < superseded ; down ; 2010 ; British Scholar Volume 3 [superseded] ; 3 >
     au < finished ; crawling ; 2011 ; Britain and the World Volume 4 ; 4 >
     au < finished ; crawling ; 2012 ; Britain and the World Volume 5 ; 5 >
     au < crawling ; exists ; 2013 ; Britain and the World Volume 6 ; 6 >
-    au < manifest ; exists ; 2014 ; Britain and the World Volume 7 ; 7 >
+    au < crawling ; exists ; 2014 ; Britain and the World Volume 7 ; 7 >
+    au < manifest ; exists ; 2015 ; Britain and the World Volume 8 ; 8 >
+    
+    }
+    {
+    param[journal_id] = brs
+    comment[0] = old title used
 
+    au < manifest ; exists ; 2008-2009 ; British Scholar Volume 1 ; 1 >
+    au < manifest ; exists ; 2009-2010 ; British Scholar Volume 2 ; 2 >
+    au < manifest ; exists ; 2010 ; British Scholar Volume 3 ; 3 >
+
+    }
   }
 
   {
@@ -203,7 +218,8 @@
     au < finished ; crawling ; 2011 ; Comparative Critical Studies Volume 8 ; 8 >
     au < finished ; crawling ; 2012 ; Comparative Critical Studies Volume 9 ; 9 >
     au < crawling ; exists ; 2013 ; Comparative Critical Studies Volume 10 ; 10 >
-    au < manifest ; exists ; 2014 ; Comparative Critical Studies Volume 11 ; 11 >
+    au < crawling ; exists ; 2014 ; Comparative Critical Studies Volume 11 ; 11 >
+    au < expected ; exists ; 2015 ; Comparative Critical Studies Volume 12 ; 12 >
 
   }
 
@@ -226,7 +242,8 @@
     au < finished ; crawling ; 2011 ; Corpora Volume 6 ; 6 >
     au < finished ; frozen ; 2012 ; Corpora Volume 7 ; 7 >
     au < crawling ; exists ; 2013 ; Corpora Volume 8 ; 8 >
-    au < manifest ; exists ; 2014 ; Corpora Volume 9 ; 9 >
+    au < crawling ; exists ; 2014 ; Corpora Volume 9 ; 9 >
+    au < manifest ; exists ; 2015 ; Corpora Volume 10 ; 10 >
 
   }
 
@@ -255,7 +272,8 @@
     au < finished ; crawling ; 2011 ; Dance Research Volume 29 ; 29 >
     au < finished ; crawling ; 2012 ; Dance Research Volume 30 ; 30 >
     au < crawling ; exists ; 2013 ; Dance Research Volume 31 ; 31 >
-    au < manifest ; exists ; 2014 ; Dance Research Volume 32 ; 32 >
+    au < crawling ; exists ; 2014 ; Dance Research Volume 32 ; 32 >
+    au < expected ; exists ; 2015 ; Dance Research Volume 33 ; 33 >
 
   }
 
@@ -277,7 +295,8 @@
     au < finished ; crawling ; 2011 ; Deleuze Studies Volume 5 ; 5 >
     au < finished ; frozen ; 2012 ; Deleuze Studies Volume 6 ; 6 >
     au < crawling ; exists ; 2013 ; Deleuze Studies Volume 7 ; 7 >
-    au < manifest ; exists ; 2014 ; Deleuze Studies Volume 8 ; 8 >
+    au < crawling ; exists ; 2014 ; Deleuze Studies Volume 8 ; 8 >
+    au < manifest ; exists ; 2015 ; Deleuze Studies Volume 9 ; 9 >
 
   }
 
@@ -298,7 +317,8 @@
     au < finished ; crawling ; 2011 ; Derrida Today Volume 4 ; 4 >
     au < finished ; crawling ; 2012 ; Derrida Today Volume 5 ; 5 >
     au < crawling ; exists ; 2013 ; Derrida Today Volume 6 ; 6 >
-    au < manifest ; exists ; 2014 ; Derrida Today Volume 7 ; 7 >
+    au < crawling ; exists ; 2014 ; Derrida Today Volume 7 ; 7 >
+    au < manifest ; exists ; 2015 ; Derrida Today Volume 8 ; 8 >
 
   }
 
@@ -323,7 +343,8 @@
     au < finished ; crawling ; 2011 ; Edinburgh Law Review Volume 15 ; 15 >
     au < finished ; frozen ; 2012 ; Edinburgh Law Review Volume 16 ; 16 >
     au < crawling ; exists ; 2013 ; Edinburgh Law Review Volume 17 ; 17 >
-    au < manifest ; exists ; 2014 ; Edinburgh Law Review Volume 18 ; 18 >
+    au < crawling ; exists ; 2014 ; Edinburgh Law Review Volume 18 ; 18 >
+    au < manifest ; exists ; 2015 ; Edinburgh Law Review Volume 19 ; 19 >
 
   }
 
@@ -371,7 +392,8 @@
     au < finished ; crawling ; 2011 ; Holy Land Studies Volume 10 ; 10 >
     au < finished ; crawling ; 2012 ; Holy Land Studies Volume 11 ; 11 >
     au < crawling ; exists ; 2013 ; Holy Land Studies Volume 12 ; 12 >
-    au < manifest ; exists ; 2014 ; Holy Land Studies Volume 13 ; 13 >
+    au < crawling ; exists ; 2014 ; Holy Land Studies Volume 13 ; 13 >
+    au < manifest ; exists ; 2015 ; Holy Land Studies Volume 14 ; 14 >
 
   }
 
@@ -396,7 +418,8 @@
     au < finished ; crawling ; 2011 ; The Innes Review Volume 62 ; 62 >
     au < finished ; crawling ; 2012 ; The Innes Review Volume 63 ; 63 >
     au < crawling ; exists ; 2013 ; The Innes Review Volume 64 ; 64 >
-    au < manifest ; exists ; 2014 ; The Innes Review Volume 65 ; 65 >
+    au < crawling ; exists ; 2014 ; The Innes Review Volume 65 ; 65 >
+    au < expected ; exists ; 2015 ; The Innes Review Volume 66 ; 66 >
 
   }
 
@@ -415,16 +438,17 @@
     comment[0] = names changes to International Journal of Humanities and Arts Computing in 2007
     comment[1] = History and Computing from 1994 to 2002
     comment[3] = AUs not added to ingest machines, but added to production machines in error.
+    comment[notReady] = no substance
     
-    au < wanted ; down ; 1994 ; History and Computing Volume 6 (1994) ; 6 >
-    au < wanted ; down ; 1995 ; History and Computing Volume 7 (1995) ; 7 >
-    au < wanted ; down ; 1996 ; History and Computing Volume 8 (1996) ; 8 >
-    au < wanted ; down ; 1997 ; History and Computing Volume 9 (1997) ; 9 >
-    au < wanted ; down ; 1998 ; History and Computing Volume 10 (1998) ; 10 >
-    au < wanted ; down ; 1999 ; History and Computing Volume 11 (1999) ; 11 >
-    au < wanted ; down ; 2000 ; History and Computing Volume 12 (2000) ; 12 >
-    au < wanted ; down ; 2001 ; History and Computing Volume 13 (2001) ; 13 >
-    au < wanted ; down ; 2002 ; History and Computing Volume 14 (2002) ; 14 >
+    au < crawling ; down ; 1994 ; History and Computing Volume 6 (1994) ; 6 >
+    au < crawling ; down ; 1995 ; History and Computing Volume 7 (1995) ; 7 >
+    au < crawling ; down ; 1996 ; History and Computing Volume 8 (1996) ; 8 >
+    au < crawling ; down ; 1997 ; History and Computing Volume 9 (1997) ; 9 >
+    au < notReady ; down ; 1998 ; History and Computing Volume 10 (1998) ; 10 >
+    au < crawling ; down ; 1999 ; History and Computing Volume 11 (1999) ; 11 >
+    au < crawling ; down ; 2000 ; History and Computing Volume 12 (2000) ; 12 >
+    au < crawling ; down ; 2001 ; History and Computing Volume 13 (2001) ; 13 >
+    au < crawling ; down ; 2002 ; History and Computing Volume 14 (2002) ; 14 >
     
     }
 
@@ -453,8 +477,8 @@
     au < finished ; crawling ; 2011 ; International Journal of Humanities and Arts Computing Volume 5 (2011) ; 5 >
     au < finished ; crawling ; 2012 ; International Journal of Humanities and Arts Computing Volume 6 (2012) ; 6 >
     au < crawling ; exists ; 2013 ; International Journal of Humanities and Arts Computing Volume 7 (2013) ; 7 >
-    au < down ; notReady ; 2014 ; International Journal of Humanities and Arts Computing Volume 8 (2014) ; 8 >
-    au < down ; notReady ; 2015 ; International Journal of Humanities and Arts Computing Volume 9 (2015) [to delete] ; 9 >
+    au < ingNotReady ; notReady ; 2014 ; International Journal of Humanities and Arts Computing Volume 8 (2014) ; 8 >
+    au < ingNotReady ; notReady ; 2015 ; International Journal of Humanities and Arts Computing Volume 9 (2015) ; 9 >
     au < down ; notReady ; 2016 ; International Journal of Humanities and Arts Computing Volume 10 (2016) [to delete] ; 10 >
     au < down ; notReady ; 2017 ; International Journal of Humanities and Arts Computing Volume 11 (2017) [to delete] ; 11 >
     au < down ; notReady ; 2018 ; International Journal of Humanities and Arts Computing Volume 12 (2018) [to delete] ; 12 >
@@ -482,7 +506,8 @@
     au < finished ; crawling ; 2011 ; International Research in Children's Literature Volume 4 ; 4 >
     au < finished ; frozen ; 2012 ; International Research in Children's Literature Volume 5 ; 5 >
     au < crawling ; exists ; 2013 ; International Research in Children's Literature Volume 6 ; 6 >
-    au < manifest ; exists ; 2014 ; International Research in Children's Literature Volume 7 ; 7 >
+    au < crawling ; exists ; 2014 ; International Research in Children's Literature Volume 7 ; 7 >
+    au < expected ; exists ; 2015 ; International Research in Children's Literature Volume 8 ; 8 >
 
   }
 
@@ -501,7 +526,8 @@
       
       au < finished ; crawling ; 2012 ; Irish University Review Volume 42 ; 42 >
       au < crawling ; exists ; 2013 ; Irish University Review Volume 43 ; 43 >
-      au < manifest ; exists ; 2014 ; Irish University Review Volume 44 ; 44 >
+      au < crawling ; exists ; 2014 ; Irish University Review Volume 44 ; 44 >
+      au < manifest ; exists ; 2015 ; Irish University Review Volume 45 ; 45 >
   
     }
   
@@ -524,7 +550,8 @@
     au < finished ; crawling ; 2011 ; Journal of Beckett Studies Volume 20 ; 20 >
     au < finished ; crawling ; 2012 ; Journal of Beckett Studies Volume 21 ; 21 >
     au < crawling ; exists ; 2013 ; Journal of Beckett Studies Volume 22 ; 22 >
-    au < manifest ; exists ; 2014 ; Journal of Beckett Studies Volume 23 ; 23 >
+    au < crawling ; exists ; 2014 ; Journal of Beckett Studies Volume 23 ; 23 >
+    au < manifest ; exists ; 2015 ; Journal of Beckett Studies Volume 24 ; 24 >
 
   }
 
@@ -549,7 +576,8 @@
     au < finished ; crawling ; 2011 ; Journal of British Cinema and Television Volume 8 ; 8 >
     au < finished ; crawling ; 2012 ; Journal of British Cinema and Television Volume 9 ; 9 >
     au < crawling ; exists ; 2013 ; Journal of British Cinema and Television Volume 10 ; 10 >
-    au < manifest ; exists ; 2014 ; Journal of British Cinema and Television Volume 11 ; 11 >
+    au < crawling ; exists ; 2014 ; Journal of British Cinema and Television Volume 11 ; 11 >
+    au < manifest ; exists ; 2015 ; Journal of British Cinema and Television Volume 12 ; 12 >
 
   }
 
@@ -561,19 +589,33 @@
       eissn = 1755-1722 ;
       issnl = 1755-0882 
      >
-
+     
+     comment[moved] = journal moved to Sage. http://ipt.sagepub.com. Content still online as of 1/2014.
+     comment[changed_manifest] = Manifest pages may be down, disallowing reprocessing of the AUs that were chopped off at the knees.
+    {
     param[journal_id] = jipt
 
-    au < crawling ; crawling ; 2005 ; Journal of International Political Theory Volume 1 ; 1 >
-    au < crawling ; crawling ; 2006 ; Journal of International Political Theory Volume 2 ; 2 >
-    au < crawling ; crawling ; 2007 ; Journal of International Political Theory Volume 3 ; 3 >
+    au < superseded ; down ; 2005 ; Journal of International Political Theory Volume 1 [superseded] ; 1 >
+    au < superseded ; down ; 2006 ; Journal of International Political Theory Volume 2 [superseded] ; 2 >
+    au < superseded ; down ; 2007 ; Journal of International Political Theory Volume 3 [superseded] ; 3 >
     au < finished ; crawling ; 2008 ; Journal of International Political Theory Volume 4 ; 4 >
     au < finished ; crawling ; 2009 ; Journal of International Political Theory Volume 5 ; 5 >
     au < finished ; frozen ; 2010 ; Journal of International Political Theory Volume 6 ; 6 >
     au < finished ; crawling ; 2011 ; Journal of International Political Theory Volume 7 ; 7 >
     au < crawling ; exists ; 2012 ; Journal of International Political Theory Volume 8 ; 8 >
     au < crawling ; exists ; 2013 ; Journal of International Political Theory Volume 9 ; 9 >
-    au < expected ; exists ; 2014 ; Journal of International Political Theory Volume 10 ; 10 >
+    
+    }
+    
+    {
+    param[journal_id] = per
+    comment[title] = old title used
+
+    au < manifest ; exists ; 2005 ; Politics and Ethics Review Volume 1 ; 1 >
+    au < manifest ; exists ; 2006 ; Politics and Ethics Review Volume 2 ; 2 >
+    au < manifest ; exists ; 2007 ; Politics and Ethics Review Volume 3 ; 3 >
+    
+    }
 
   }
 
@@ -597,7 +639,8 @@
     au < finished ; crawling ; 2011 ; Journal of Qur'anic Studies Volume 13 ; 13 >
     au < finished ; crawling ; 2012 ; Journal of Qur'anic Studies Volume 14 ; 14 >
     au < crawling ; exists ; 2013 ; Journal of Qur'anic Studies Volume 15 ; 15 >
-    au < manifest ; exists ; 2014 ; Journal of Qur'anic Studies Volume 16 ; 16 >
+    au < crawling ; exists ; 2014 ; Journal of Qur'anic Studies Volume 16 ; 16 >
+    au < manifest ; exists ; 2015 ; Journal of Qur'anic Studies Volume 17 ; 17 >
 
   }
 
@@ -658,7 +701,8 @@
     au < finished ; crawling ; 2011 ; Journal of Scottish Historical Studies Volume 31 ; 31 >
     au < finished ; crawling ; 2012 ; Journal of Scottish Historical Studies Volume 32 ; 32 >
     au < crawling ; exists ; 2013 ; Journal of Scottish Historical Studies Volume 33 ; 33 >
-    au < manifest ; exists ; 2014 ; Journal of Scottish Historical Studies Volume 34 ; 34 >
+    au < crawling ; exists ; 2014 ; Journal of Scottish Historical Studies Volume 34 ; 34 >
+    au < manifest ; exists ; 2015 ; Journal of Scottish Historical Studies Volume 35 ; 35 >
 
   }
 
@@ -684,7 +728,8 @@
     au < finished ; crawling ; 2011 ; Journal of Scottish Philosophy Volume 9 ; 9 >
     au < finished ; crawling ; 2012 ; Journal of Scottish Philosophy Volume 10 ; 10 >
     au < crawling ; exists ; 2013 ; Journal of Scottish Philosophy Volume 11 ; 11 >
-    au < manifest ; exists ; 2014 ; Journal of Scottish Philosophy Volume 12 ; 12 >
+    au < crawling ; exists ; 2014 ; Journal of Scottish Philosophy Volume 12 ; 12 >
+    au < manifest ; exists ; 2015 ; Journal of Scottish Philosophy Volume 13 ; 13 >
 
   }
 
@@ -729,8 +774,8 @@
     au < finished ; crawling ; 2011 ; Modernist Cultures Volume 6 ; 6 >
     au < finished ; frozen ; 2012 ; Modernist Cultures Volume 7 ; 7 >
     au < crawling ; exists ; 2013 ; Modernist Cultures Volume 8 ; 8 >
-    au < manifest ; exists ; 2014 ; Modernist Cultures Volume 9 ; 9 >
-
+    au < crawling ; exists ; 2014 ; Modernist Cultures Volume 9 ; 9 >
+    au < manifest ; exists ; 2015 ; Modernist Cultures Volume 10 ; 10 >
 
   }
 
@@ -748,7 +793,8 @@
     au < finished ; crawling ; 2011 ; The New Soundtrack Volume 1 ; 1 >
     au < finished ; frozen ; 2012 ; The New Soundtrack Volume 2 ; 2 >
     au < crawling ; exists ; 2013 ; The New Soundtrack Volume 3 ; 3 >
-    au < manifest ; exists ; 2014 ; The New Soundtrack Volume 4 ; 4 >
+    au < crawling ; exists ; 2014 ; The New Soundtrack Volume 4 ; 4 >
+    au < manifest ; exists ; 2015 ; The New Soundtrack Volume 5 ; 5 >
 
   }
 
@@ -767,7 +813,8 @@
     au < finished ; frozen ; 2011 ; Northern Scotland Volume 2 ; 2 >
     au < finished ; frozen ; 2012 ; Northern Scotland Volume 3 ; 3 >
     au < crawling ; exists ; 2013 ; Northern Scotland Volume 4 ; 4 >
-    au < manifest ; exists ; 2014 ; Northern Scotland Volume 5 ; 5 >
+    au < crawling ; exists ; 2014 ; Northern Scotland Volume 5 ; 5 >
+    au < manifest ; exists ; 2015 ; Northern Scotland Volume 6 ; 6 >
 
   }
 
@@ -836,7 +883,8 @@
       au < finished ; crawling ; 2011 ; Nottingham French Studies Volume 50 ; 50 >
       au < crawling ; exists ; 2012 ; Nottingham French Studies Volume 51 ; 51 >
       au < crawling ; exists ; 2013 ; Nottingham French Studies Volume 52 ; 52 >
-      au < manifest ; exists ; 2014 ; Nottingham French Studies Volume 53 ; 53 >
+      au < crawling ; exists ; 2014 ; Nottingham French Studies Volume 53 ; 53 >
+      au < manifest ; exists ; 2015 ; Nottingham French Studies Volume 54 ; 54 >
 
     }
   
@@ -860,7 +908,8 @@
     au < finished ; crawling ; 2011 ; Oxford Literary Review Volume 33 ; 33 >
     au < finished ; frozen ; 2012 ; Oxford Literary Review Volume 34 ; 34 >
     au < crawling ; exists ; 2013 ; Oxford Literary Review Volume 35 ; 35 >
-    au < manifest ; exists ; 2014 ; Oxford Literary Review Volume 36 ; 36 >
+    au < crawling ; exists ; 2014 ; Oxford Literary Review Volume 36 ; 36 >
+    au < expected ; exists ; 2015 ; Oxford Literary Review Volume 37 ; 37 >
  
   }
 
@@ -888,7 +937,8 @@
     au < finished ; crawling ; 2011 ; Paragraph Volume 34 ; 34 >
     au < finished ; crawling ; 2012 ; Paragraph Volume 35 ; 35 >
     au < crawling ; exists ; 2013 ; Paragraph Volume 36 ; 36 >
-    au < manifest ; exists ; 2014 ; Paragraph Volume 37 ; 37 >
+    au < crawling ; exists ; 2014 ; Paragraph Volume 37 ; 37 >
+    au < manifest ; exists ; 2015 ; Paragraph Volume 38 ; 38 >
 
   }
 
@@ -918,7 +968,8 @@
     au < finished ; crawling ; 2011 ; Psychoanalysis and History Volume 13 ; 13 >
     au < finished ; crawling ; 2012 ; Psychoanalysis and History Volume 14 ; 14 >
     au < crawling ; exists ; 2013 ; Psychoanalysis and History Volume 15 ; 15 >
-    au < manifest ; exists ; 2014 ; Psychoanalysis and History Volume 16 ; 16 >
+    au < crawling ; exists ; 2014 ; Psychoanalysis and History Volume 16 ; 16 >
+    au < manifest ; exists ; 2015 ; Psychoanalysis and History Volume 17 ; 17 >
 
   }
 
@@ -946,7 +997,8 @@
     au < finished ; crawling ; 2011 ; Romanticism Volume 17 ; 17 >
     au < finished ; crawling ; 2012 ; Romanticism Volume 18 ; 18 >
     au < crawling ; exists ; 2013 ; Romanticism Volume 19 ; 19 >
-    au < manifest ; exists ; 2014 ; Romanticism Volume 20 ; 20 >
+    au < crawling ; exists ; 2014 ; Romanticism Volume 20 ; 20 >
+    au < manifest ; exists ; 2015 ; Romanticism Volume 21 ; 21 >
 
   }
 
@@ -961,7 +1013,90 @@
 
       param[journal_id] = scot
 
-      au < manifest ; exists ; 2014 ; Scottish Affairs Volume 23 ; 23 >
+      au < exists ; exists ; 1992 ; Scottish Affairs (First Series) Volume 1 ; 1+(First+Series) >
+      au < exists ; exists ; 1993 ; Scottish Affairs (First Series) Volume 2 ; 2+(First+Series) >
+      au < exists ; exists ; 1993 ; Scottish Affairs (First Series) Volume 3 ; 3+(First+Series) >
+      au < exists ; exists ; 1993 ; Scottish Affairs (First Series) Volume 4 ; 4+(First+Series) >
+      au < exists ; exists ; 1993 ; Scottish Affairs (First Series) Volume 5 ; 5+(First+Series) >
+      au < exists ; exists ; 1994 ; Scottish Affairs (First Series) Volume 6 ; 6+(First+Series) >
+      au < exists ; exists ; 1994 ; Scottish Affairs (First Series) Volume 7 ; 7+(First+Series) >
+      au < exists ; exists ; 1994 ; Scottish Affairs (First Series) Volume 8 ; 8+(First+Series) >
+      au < exists ; exists ; 1994 ; Scottish Affairs (First Series) Volume 9 ; 9+(First+Series) >
+      au < exists ; exists ; 1995 ; Scottish Affairs (First Series) Volume 10 ; 10+(First+Series) >
+      au < exists ; exists ; 1995 ; Scottish Affairs (First Series) Volume 11 ; 11+(First+Series) >
+      au < exists ; exists ; 1995 ; Scottish Affairs (First Series) Volume 12 ; 12+(First+Series) >
+      au < exists ; exists ; 1995 ; Scottish Affairs (First Series) Volume 13 ; 13+(First+Series) >
+      au < exists ; exists ; 1996 ; Scottish Affairs (First Series) Volume 14 ; 14+(First+Series) >
+      au < exists ; exists ; 1996 ; Scottish Affairs (First Series) Volume 15 ; 15+(First+Series) >
+      au < exists ; exists ; 1996 ; Scottish Affairs (First Series) Volume 16 ; 16+(First+Series) >
+      au < exists ; exists ; 1996 ; Scottish Affairs (First Series) Volume 17 ; 17+(First+Series) >
+      au < exists ; exists ; 1997 ; Scottish Affairs (First Series) Volume 18 ; 18+(First+Series) >
+      au < exists ; exists ; 1997 ; Scottish Affairs (First Series) Volume 19 ; 19+(First+Series) >
+      au < exists ; exists ; 1997 ; Scottish Affairs (First Series) Volume 20 ; 20+(First+Series) >
+      au < exists ; exists ; 1997 ; Scottish Affairs (First Series) Volume 21 ; 21+(First+Series) >
+      au < exists ; exists ; 1998 ; Scottish Affairs (First Series) Volume 22 ; 22+(First+Series) >
+      au < exists ; exists ; 1998 ; Scottish Affairs (First Series) Volume 23 ; 23+(First+Series) >
+      au < exists ; exists ; 1998 ; Scottish Affairs (First Series) Volume 24 ; 24+(First+Series) >
+      au < exists ; exists ; 1998 ; Scottish Affairs (First Series) Volume 25 ; 25+(First+Series) >
+      au < exists ; exists ; 1999 ; Scottish Affairs (First Series) Volume 26 ; 26+(First+Series) >
+      au < exists ; exists ; 1999 ; Scottish Affairs (First Series) Volume 27 ; 27+(First+Series) >
+      au < exists ; exists ; 1999 ; Scottish Affairs (First Series) Volume 28 ; 28+(First+Series) >
+      au < exists ; exists ; 1999 ; Scottish Affairs (First Series) Volume 29 ; 29+(First+Series) >
+      au < manifest ; exists ; 2000 ; Scottish Affairs (First Series) Volume 30 ; 30+(First+Series) >
+      au < manifest ; exists ; 2000 ; Scottish Affairs (First Series) Volume 31 ; 31+(First+Series) >
+      au < manifest ; exists ; 2000 ; Scottish Affairs (First Series) Volume 32 ; 32+(First+Series) >
+      au < manifest ; exists ; 2000 ; Scottish Affairs (First Series) Volume 33 ; 33+(First+Series) >
+      au < manifest ; exists ; 2001 ; Scottish Affairs (First Series) Volume 34 ; 34+(First+Series) >
+      au < manifest ; exists ; 2001 ; Scottish Affairs (First Series) Volume 35 ; 35+(First+Series) >
+      au < manifest ; exists ; 2001 ; Scottish Affairs (First Series) Volume 36 ; 36+(First+Series) >
+      au < manifest ; exists ; 2001 ; Scottish Affairs (First Series) Volume 37 ; 37+(First+Series) >
+      au < manifest ; exists ; 2002 ; Scottish Affairs (First Series) Volume 38 ; 38+(First+Series) >
+      au < manifest ; exists ; 2002 ; Scottish Affairs (First Series) Volume 39 ; 39+(First+Series) >
+      au < manifest ; exists ; 2002 ; Scottish Affairs (First Series) Volume 40 ; 40+(First+Series) >
+      au < manifest ; exists ; 2002 ; Scottish Affairs (First Series) Volume 41 ; 41+(First+Series) >
+      au < manifest ; exists ; 2003 ; Scottish Affairs (First Series) Volume 42 ; 42+(First+Series) >
+      au < manifest ; exists ; 2003 ; Scottish Affairs (First Series) Volume 43 ; 43+(First+Series) >
+      au < manifest ; exists ; 2003 ; Scottish Affairs (First Series) Volume 44 ; 44+(First+Series) >
+      au < manifest ; exists ; 2003 ; Scottish Affairs (First Series) Volume 45 ; 45+(First+Series) >
+      au < exists ; exists ; 2004 ; Scottish Affairs (First Series) Volume 46 ; 46+(First+Series) >
+      au < exists ; exists ; 2004 ; Scottish Affairs (First Series) Volume 47 ; 47+(First+Series) >
+      au < exists ; exists ; 2004 ; Scottish Affairs (First Series) Volume 48 ; 48+(First+Series) >
+      au < exists ; exists ; 2004 ; Scottish Affairs (First Series) Volume 49 ; 49+(First+Series) >
+      au < exists ; exists ; 2005 ; Scottish Affairs (First Series) Volume 50 ; 50+(First+Series) >
+      au < exists ; exists ; 2005 ; Scottish Affairs (First Series) Volume 51 ; 51+(First+Series) >
+      au < exists ; exists ; 2005 ; Scottish Affairs (First Series) Volume 52 ; 52+(First+Series) >
+      au < exists ; exists ; 2005 ; Scottish Affairs (First Series) Volume 53 ; 53+(First+Series) >
+      au < exists ; exists ; 2006 ; Scottish Affairs (First Series) Volume 54 ; 54+(First+Series) >
+      au < exists ; exists ; 2006 ; Scottish Affairs (First Series) Volume 55 ; 55+(First+Series) >
+      au < exists ; exists ; 2006 ; Scottish Affairs (First Series) Volume 56 ; 56+(First+Series) >
+      au < exists ; exists ; 2006 ; Scottish Affairs (First Series) Volume 57 ; 57+(First+Series) >
+      au < exists ; exists ; 2007 ; Scottish Affairs (First Series) Volume 58 ; 58+(First+Series) >
+      au < exists ; exists ; 2007 ; Scottish Affairs (First Series) Volume 59 ; 59+(First+Series) >
+      au < exists ; exists ; 2007 ; Scottish Affairs (First Series) Volume 60 ; 60+(First+Series) >
+      au < exists ; exists ; 2007 ; Scottish Affairs (First Series) Volume 61 ; 61+(First+Series) >
+      au < exists ; exists ; 2008 ; Scottish Affairs (First Series) Volume 62 ; 62+(First+Series) >
+      au < exists ; exists ; 2008 ; Scottish Affairs (First Series) Volume 63 ; 63+(First+Series) >
+      au < exists ; exists ; 2008 ; Scottish Affairs (First Series) Volume 64 ; 64+(First+Series) >
+      au < exists ; exists ; 2008 ; Scottish Affairs (First Series) Volume 65 ; 65+(First+Series) >
+      au < exists ; exists ; 2009 ; Scottish Affairs (First Series) Volume 66 ; 66+(First+Series) >
+      au < exists ; exists ; 2009 ; Scottish Affairs (First Series) Volume 67 ; 67+(First+Series) >
+      au < exists ; exists ; 2009 ; Scottish Affairs (First Series) Volume 68 ; 68+(First+Series) >
+      au < exists ; exists ; 2009 ; Scottish Affairs (First Series) Volume 69 ; 69+(First+Series) >
+      au < exists ; exists ; 2000 ; Scottish Affairs (First Series) Volume 70 ; 70+(First+Series) >
+      au < exists ; exists ; 2000 ; Scottish Affairs (First Series) Volume 71 ; 71+(First+Series) >
+      au < exists ; exists ; 2010 ; Scottish Affairs (First Series) Volume 72 ; 72+(First+Series) >
+      au < exists ; exists ; 2010 ; Scottish Affairs (First Series) Volume 73 ; 73+(First+Series) >
+      au < exists ; exists ; 2011 ; Scottish Affairs (First Series) Volume 74 ; 74+(First+Series) >
+      au < exists ; exists ; 2011 ; Scottish Affairs (First Series) Volume 75 ; 75+(First+Series) >
+      au < exists ; exists ; 2011 ; Scottish Affairs (First Series) Volume 76 ; 76+(First+Series) >
+      au < exists ; exists ; 2011 ; Scottish Affairs (First Series) Volume 77 ; 77+(First+Series) >
+      au < exists ; exists ; 2012 ; Scottish Affairs (First Series) Volume 78 ; 78+(First+Series) >
+      au < exists ; exists ; 2012 ; Scottish Affairs (First Series) Volume 79 ; 79+(First+Series) >
+      au < exists ; exists ; 2012 ; Scottish Affairs (First Series) Volume 80 ; 80+(First+Series) >
+      au < exists ; exists ; 2012 ; Scottish Affairs (First Series) Volume 81 ; 81+(First+Series) >
+
+      au < crawling ; exists ; 2014 ; Scottish Affairs Volume 23 ; 23 >
+      au < manifest ; exists ; 2015 ; Scottish Affairs Volume 24 ; 24 >
     
   }
 
@@ -1067,7 +1202,8 @@
     au < finished ; crawling ; 2011 ; Scottish Historical Review Volume 90 ; 90 >
     au < finished ; crawling ; 2012 ; Scottish Historical Review Volume 91 ; 91 >
     au < crawling ; exists ; 2013 ; Scottish Historical Review Volume 92 ; 92 >
-    au < manifest ; exists ; 2014 ; Scottish Historical Review Volume 93 ; 93 >
+    au < crawling ; exists ; 2014 ; Scottish Historical Review Volume 93 ; 93 >
+    au < manifest ; exists ; 2015 ; Scottish Historical Review Volume 94 ; 94 >
 
   }
 
@@ -1095,7 +1231,8 @@
     au < finished ; crawling ; 2011 ; Studies in World Christianity Volume 17 ; 17 >
     au < finished ; crawling ; 2012 ; Studies in World Christianity Volume 18 ; 18 >
     au < crawling ; exists ; 2013 ; Studies in World Christianity Volume 19 ; 19 >
-    au < manifest ; exists ; 2014 ; Studies in World Christianity Volume 20 ; 20 >
+    au < crawling ; exists ; 2014 ; Studies in World Christianity Volume 20 ; 20 >
+    au < manifest ; exists ; 2015 ; Studies in World Christianity Volume 21 ; 21 >
 
   }
 
@@ -1122,7 +1259,8 @@
     au < finished ; crawling ; 2011 ; Translation and Literature Volume 20 ; 20 >
     au < finished ; crawling ; 2012 ; Translation and Literature Volume 21 ; 21 >
     au < crawling ; exists ; 2013 ; Translation and Literature Volume 22 ; 22 >
-    au < manifest ; exists ; 2014 ; Translation and Literature Volume 23 ; 23 >
+    au < crawling ; exists ; 2014 ; Translation and Literature Volume 23 ; 23 >
+    au < manifest ; exists ; 2015 ; Translation and Literature Volume 24 ; 24 >
 
   }
 
@@ -1143,7 +1281,8 @@
     au < finished ; crawling ; 2011 ; Word Structure Volume 4 ; 4 >
     au < finished ; crawling ; 2012 ; Word Structure Volume 5 ; 5 >
     au < crawling ; exists ; 2013 ; Word Structure Volume 6 ; 6 >
-    au < manifest ; exists ; 2014 ; Word Structure Volume 7 ; 7 >
+    au < crawling ; exists ; 2014 ; Word Structure Volume 7 ; 7 >
+    au < manifest ; exists ; 2015 ; Word Structure Volume 8 ; 8 >
 
   }
 

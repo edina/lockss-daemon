@@ -1,10 +1,10 @@
 /*
- * $Id: ManeyAtyponHtmlHashFilterFactory.java,v 1.5 2014-08-27 17:35:04 alexandraohlson Exp $
+ * $Id$
  */
 
 /*
 
-Copyright (c) 2000-2014 Board of Trustees of Leland Stanford Jr. University,
+Copyright (c) 2000-2015 Board of Trustees of Leland Stanford Jr. University,
 all rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -33,97 +33,101 @@ in this Software without prior written authorization from Stanford University.
 package org.lockss.plugin.atypon.maney;
 
 import java.io.InputStream;
-import java.io.Reader;
 import org.htmlparser.NodeFilter;
-import org.htmlparser.filters.TagNameFilter;
-import org.lockss.filter.FilterUtil;
-import org.lockss.filter.WhiteSpaceFilter;
 import org.lockss.filter.html.*;
 import org.lockss.plugin.*;
 import org.lockss.plugin.atypon.BaseAtyponHtmlHashFilterFactory;
-import org.lockss.util.Logger;
-import org.lockss.util.ReaderInputStream;
 
-/* 
- * Don't extend BaseAtyponHtmlHashFilterFactory because we need to do more 
- * extensive filtering with spaces, etc.
- */
-public class ManeyAtyponHtmlHashFilterFactory extends BaseAtyponHtmlHashFilterFactory {
+public class ManeyAtyponHtmlHashFilterFactory 
+  extends BaseAtyponHtmlHashFilterFactory {
 
-  Logger log = Logger.getLogger(ManeyAtyponHtmlHashFilterFactory.class);
-  
   @Override
   public InputStream createFilteredInputStream(ArchivalUnit au,
       InputStream in,
       String encoding) {
     NodeFilter[] filters = new NodeFilter[] {
-        // div class="citedBySection" handled in BaseAtypon
-        // sfxlink handled in BaseAtypon
+        // handled by parent: script, sfxlink, stylesheet, pdfplus file sise
         
-        // this is controversial - draconian; what about updated metadata
-        new TagNameFilter("head"),
-        // head section & banner of page
-        HtmlNodeFilters.tagWithAttribute("section",  "id", "pageHeader"),
-        // footer section and copyright on page
-        HtmlNodeFilters.tagWithAttribute("section",  "id", "pageFooter"),
-        // this seems unused but may get turned on 
-        HtmlNodeFilters.tagWithAttribute("div",  "id", "MathJax_Message"),
-        // No obvious way to identify the entire right column
-        // right column, top - picture of current journal, etc
-        HtmlNodeFilters.tagWithAttribute("div",  "id", "compactJournalHeader"),
-        // right column, "journal services"
-        HtmlNodeFilters.tagWithAttribute("section",  "id", "migrated_information"),
-        // right column, "For Authors"
-        HtmlNodeFilters.tagWithAttribute("section",  "id", "migrated_forauthors"),
-        // right column, "Related Content Search"
-        HtmlNodeFilters.tagWithAttributeRegex("section",  "class", "literatumRelatedContentSearch"),
-        // right column, tabs - most read, most cited, editor's choice
-        // leave the tabs and header (no unique identifier), just remove contents
-        HtmlNodeFilters.tagWithAttributeRegex("section", "class", "literatumMostReadWidget"),
-        HtmlNodeFilters.tagWithAttributeRegex("section", "class", "literatumMostCitedWidget"),
-        HtmlNodeFilters.tagWithAttributeRegex("section", "class", "publicationListWidget"),
-        // ad placement
-        HtmlNodeFilters.tagWithAttributeRegex("section", "class", "literatumAd"),
-
-        //TOC - journal section with current
+        // toc - pageHeader - top down to breadcrumbs, above journalHeader
+        // http://www.maneyonline.com/toc/his/36/4
+        HtmlNodeFilters.tagWithAttributeRegex("div", "id", "pageHeader"),
+        // pageFooter
+        HtmlNodeFilters.tagWithAttribute("div", "id", "pageFooter"),
+        //  toc - right below breadcrumbs, journal section with current
         HtmlNodeFilters.tagWithAttribute("div",  "id", "Journal Header"),
-        // TOC - Prev/Next - probably not a problem, but not content either
-        HtmlNodeFilters.tagWithAttributeRegex("section",  "class", "literatumBookIssueNavigation"),
-        //TOC - access icon status of article
-        HtmlNodeFilters.tagWithAttribute("td",  "class" ,"accessIconContainer"),
-        //TOC - published on behalf of 
-        HtmlNodeFilters.tagWithAttribute("div",  "id" ,"Society Logo"),
-        // For the next three - no uniquely named chunk to allow removal of tabs
-        // so just remove the contents within the tab blocks
-        // in bottom TOC tabs block - news & alerts
-        HtmlNodeFilters.tagWithAttribute("section",  "id", "migrated_news"),
-        // in bottom TOC tabs block - about this journal
-        HtmlNodeFilters.tagWithAttribute("section",  "id", "migrated_aims"),
-        // in bottom TOC tabs block - editors & editorial board
-        HtmlNodeFilters.tagWithAttribute("section",  "id", "migrated_editors"),
-        // just under TOC issue information, select all access icons
+        // under TOC issue information, select all access icons and dropdown
         HtmlNodeFilters.tagWithAttributeRegex("ul", "class", "access-options"),
-        // TOC - right column at the bottom - no identifiable way to remove
-        // header statement, but can remove list of subjects
-        HtmlNodeFilters.tagWithAttributeRegex("section",  "class",  "literatumSerialSubjects"),
-      
-        
-        // HASHING ONLY - NOT CRAWLING
-        // right column, "Article Tools" - not this article's citation info 
-        HtmlNodeFilters.tagWithAttributeRegex("section", "class", "literatumArticleToolsWidget"),
-
-    
+        // toc - access icon status of article
+        HtmlNodeFilters.tagWithAttribute("td", "class" ,"accessIconContainer"),
+        //  toc - ad above News & Alerts
+        // http://www.maneyonline.com/toc/his/36/4
+        HtmlNodeFilters.tagWithAttributeRegex("div", "class", "literatumAd"),
+        // toc - Prev/Next - probably not a problem, but not content either
+        HtmlNodeFilters.tagWithAttributeRegex("div",  "class", 
+                                              "literatumBookIssueNavigation"),                                            
+        // abs, full, ref - compact journal header box on right column
+        // http://www.maneyonline.com/doi/abs/10.1179/1743676113Y.0000000112
+        HtmlNodeFilters.tagWithAttribute("div", "id", "compactJournalHeader"),
+        // full - this seems unused but may get turned on
+        // http://www.maneyonline.com/doi/full/10.1179/0076609714Z.00000000032
+        HtmlNodeFilters.tagWithAttribute("div",  "id", "MathJax_Message"),
+        // all pages - verify email message appears in certain content
+        // machines but not all
+        HtmlNodeFilters.tagWithAttributeRegex("div", "class", 
+                                            "literatumMailVerificationWidget"),
+        // abs - potential issue like 'corrigendum' from a figure page of
+        // Endocrine Society
+        HtmlNodeFilters.tagWithAttributeRegex("div", "class", 
+                                              "articleMetaDrop"), 
+        // abs - right sidebar - Citation part
+        HtmlNodeFilters.tagWithAttributeRegex("div",  "class", 
+                                              "literatumContentItemCitation"),
+        // full - section choose pulldown appeared in multiple sections
+        HtmlNodeFilters.tagWithAttribute("div",  "class", "sectionJumpTo"),
+        // toc - Full/Open access
+        HtmlNodeFilters.tagWithAttributeRegex("div", "class", 
+                                              "tocListDropZone"),
+        // toc - unused - potential issue
+        HtmlNodeFilters.tagWithAttributeRegex("div", "class", 
+                                              "tocListtDropZone2"),                                                                                    
+        // toc - For selected items dropdown next to Full/Open access                                   
+        HtmlNodeFilters.tagWithAttributeRegex("div", "class", 
+                                              "publicationToolContainer"),       
+        // toc, abs, full, ref - News & alerts box near bottom
+        // with About this Journal and Editors & Editorial Board tabs  and
+        // right column Most read/Most cited/Editor's Choice
+        HtmlNodeFilters.tagWithAttribute("div", "aria-relevant", "additions"), 
+        //  toc - bottom right column, "Subject resources"
+        HtmlNodeFilters.tagWithAttributeRegex("div", "class",  
+                                              "literatumSerialSubjects"),   
+        // toc - right column - Published on behalf of,  Journal services,
+        // For authors, Related content search,  Usage Downloaded count
+        // also abs, full - right column of an article - all article tools 
+        // except downloadCitations
+        HtmlNodeFilters.allExceptSubtree(
+            HtmlNodeFilters.tagWithAttributeRegex( 
+                "section", "class", "widget-titlebar"),
+                HtmlNodeFilters.tagWithAttributeRegex(
+                    "a", "href", "/action/showCitFormats\\?"))
     };
 
-    // super.createFilteredInputStream adds maney filter to the baseAtyponFilters
-    // and returns the filtered input stream using an array of NodeFilters that 
-    // combine the two arrays of NodeFilters - also do optional white space filter
-    boolean doWS = true;
-    return super.createFilteredInputStream(au, in, encoding, filters, doWS);
+    // super.createFilteredInputStream adds maney filters to the 
+    // baseAtyponFilters and returns the filtered input stream using an array 
+    // of NodeFilters that combine the two arrays of NodeFilters
+    return super.createFilteredInputStream(au, in, encoding, filters);
   }
 
+  // turn on all id tags filtering - ids are generated
+  @Override
+  public boolean doTagIDFiltering() {
+    return true;
+  }
+     
+  // turn on white space filter
+  @Override
+  public boolean doWSFiltering() {
+    return true;
+  }
+    
 }
-
-
-
 

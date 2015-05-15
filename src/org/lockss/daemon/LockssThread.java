@@ -1,5 +1,5 @@
 /*
- * $Id: LockssThread.java,v 1.29 2007-03-14 05:53:18 tlipkis Exp $
+ * $Id$
  */
 
 /*
@@ -45,6 +45,14 @@ import org.lockss.util.*;
  */
 public abstract class LockssThread extends Thread implements LockssWatchdog {
   static final String PREFIX = Configuration.PREFIX + "thread.";
+
+  /** If true, a thread that exits due to an otherwise unhandled
+   * OutOfMemoryError will cause the daemon to exit.  If {@link
+   * #triggerWDogOnExit(boolean true)} has been called then {@link
+   * #threadExited()} will be called instead (which may cause daemon
+   * exit). */
+  static final String PARAM_EXIT_DAEMON_ON_OOME = PREFIX + "exitDaemonOnOome";
+  static final boolean DEFAULT_EXIT_DAEMON_ON_OOME = false;
 
   static final String PARAM_THREAD_WDOG_HUNG_DUMP = PREFIX + "hungThreadDump";
   static final boolean DEFAULT_THREAD_WDOG_HUNG_DUMP = false;
@@ -271,7 +279,7 @@ public abstract class LockssThread extends Thread implements LockssWatchdog {
   /** Called if thread exited unexpectedly.  Default action is to exit the
    * daemon; can be overridden is thread is able to take some less drastic
    * corrective action. */
-  protected void threadExited() {
+  protected void threadExited(Throwable cause) {
     exitDaemon(Constants.EXIT_CODE_THREAD_EXIT, "Thread exited");
   }
 
@@ -350,6 +358,10 @@ public abstract class LockssThread extends Thread implements LockssWatchdog {
   /** Invoke the subclass's lockssRun() method, then cancel any outstanding
    * thread watchdog */
   public final void run() {
+    boolean exitDaemonOnOome =
+      CurrentConfig.getBooleanParam(PARAM_EXIT_DAEMON_ON_OOME,
+				    DEFAULT_EXIT_DAEMON_ON_OOME);
+    Throwable exitCause = null;
     try {
       lockssRun();
       String msg = getName() + " lockssRun() returned";
@@ -359,13 +371,22 @@ public abstract class LockssThread extends Thread implements LockssWatchdog {
 	log.debug2(msg);
       }
     } catch (Exception e) {
+      exitCause = e;
+      log.error("Thread threw", e);
+    } catch (OutOfMemoryError e) {
+      exitCause = e;
+      if (exitDaemonOnOome && !triggerOnExit) {
+	exitDaemon(Constants.EXIT_CODE_THREAD_EXIT,
+		   "Thread exited with OutOfMemoryError");
+      }
       log.error("Thread threw", e);
     } catch (Throwable e) {
+      exitCause = e;
       log.error("Thread threw Throwable", e);
     } finally {
       try {
 	if (triggerOnExit) {
-	  threadExited();
+	  threadExited(exitCause);
 	} else {
 	  stopWDog();
 	}

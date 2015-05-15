@@ -1,10 +1,10 @@
 /*
- * $Id: TestBaseArchivalUnit.java,v 1.66 2014-11-12 20:11:56 wkwilson Exp $
+ * $Id$
  */
 
 /*
 
-Copyright (c) 2000-2010 Board of Trustees of Leland Stanford Jr. University,
+Copyright (c) 2000-2015 Board of Trustees of Leland Stanford Jr. University,
 all rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -39,6 +39,7 @@ import java.net.*;
 import org.lockss.daemon.*;
 import org.lockss.test.*;
 import org.lockss.plugin.*;
+import org.lockss.state.*;
 import org.lockss.util.*;
 import org.lockss.poller.*;
 import org.lockss.config.*;
@@ -93,6 +94,9 @@ public class TestBaseArchivalUnit extends LockssTestCase {
 
     TestableBaseArchivalUnit au =
       new TestableBaseArchivalUnit(mplug, name, rule, startUrl);
+    MockNodeManager nm = new MockNodeManager();
+    nm.setAuState(new MockAuState(au));
+    getMockLockssDaemon().setNodeManager(nm, au);
     return au;
   }
 
@@ -121,6 +125,7 @@ public class TestBaseArchivalUnit extends LockssTestCase {
     Configuration exp = ConfigurationUtil.fromProps(props);
     mbau.setConfiguration(exp);
     assertEquals(exp, mbau.getConfiguration());
+    assertNotSame(exp, mbau.getConfiguration());
     BaseArchivalUnit.ParamHandlerMap paramMap = mbau.getParamMap();
     assertEquals(BASE_URL,
 		 paramMap.getUrl(BaseArchivalUnit.KEY_AU_BASE_URL).toString());
@@ -586,6 +591,7 @@ public class TestBaseArchivalUnit extends LockssTestCase {
   public void testGetUrlStems() throws Exception  {
     // uncofigured base url - return an empty list
     mbau = makeMbau(AU_NAME, BASE_URL, START_URL);
+
     mbau.setStartUrl(null);
     assertEmpty(mbau.getUrlStems());
     Configuration config =
@@ -612,7 +618,37 @@ public class TestBaseArchivalUnit extends LockssTestCase {
     assertSameElements(ListUtil.list("http://www.example.com/",
 				     "http://foo.other.com:8080/"),
 		       mbau.getUrlStems());
+
+    AuState aus = AuUtil.getAuState(mbau);
+    // ensure that adding a cdn host causes stems to be recomputed
+    aus.addCdnStem("http://cdn.host/");
+    Collection stems = mbau.getUrlStems();
+    assertSameElements(ListUtil.list("http://www.example.com/",
+				     "http://foo.other.com:8080/",
+				     "http://cdn.host/"),
+		       stems);
+    // and that they're not recomputed if cdn hosts haven't changed
+    assertSame(stems, mbau.getUrlStems());
+
+    ConfigParamDescr nondefUrl = new ConfigParamDescr();
+    nondefUrl.setDefinitional(false)
+      .setKey("base_url17")
+      .setType(ConfigParamDescr.TYPE_URL);
+
+    // Add another param of type URL, ensure its value gets added to stems
+    // even though isn't used in start or permission URLs
+    mplug.setAuConfigDescrs(ListUtil.list(ConfigParamDescr.BASE_URL,
+					  ConfigParamDescr.VOLUME_NUMBER,
+					  nondefUrl));
+    config.put(nondefUrl.getKey(), "http://base2.url/");
+    mbau.setConfiguration(config);
+    assertSameElements(ListUtil.list("http://www.example.com/",
+				     "http://foo.other.com:8080/",
+				     "http://cdn.host/",
+				     "http://base2.url/"),
+		       mbau.getUrlStems());
   }
+
 
 
   public void testSiteNormalizeUrl() {

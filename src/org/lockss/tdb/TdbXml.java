@@ -1,5 +1,5 @@
 /*
- * $Id: TdbXml.java,v 1.7.2.1 2015-01-22 22:37:55 thib_gc Exp $
+ * $Id$
  */
 
 /*
@@ -41,6 +41,7 @@ import org.apache.commons.cli.*;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.text.translate.*;
 import org.lockss.tdb.AntlrUtil.SyntaxError;
+import org.lockss.util.Constants;
 
 import com.ibm.icu.text.Transliterator;
 
@@ -414,6 +415,9 @@ public class TdbXml {
       int paramIndex = 1;
       for (String param : paramNames) {
         String val = params.get(param);
+        if (val == null || val.length() == 0) {
+          continue;
+        }
         appendOneParam(sb, paramIndex, param, val);
         ++paramIndex;
       }
@@ -644,7 +648,7 @@ public class TdbXml {
           KeepGoingOption.addError(options, null);
         }
         else {
-          tdbBuilder.parse(f);
+          tdbBuilder.parse(f, Constants.ENCODING_UTF_8);
           PrintStream out = OutputDirectoryOption.getMultipleOutput(options, f, ".xml");
           produceOutput(options, out, tdbBuilder.getTdb());
           out.close();
@@ -689,10 +693,10 @@ public class TdbXml {
       try {
         if ("-".equals(f)) {
           f = "<stdin>";
-          tdbBuilder.parse(f, System.in);
+          tdbBuilder.parse(f, System.in, Constants.ENCODING_UTF_8);
         }
         else {
-          tdbBuilder.parse(f);
+          tdbBuilder.parse(f, Constants.ENCODING_UTF_8);
         }
       }
       catch (FileNotFoundException fnfe) {

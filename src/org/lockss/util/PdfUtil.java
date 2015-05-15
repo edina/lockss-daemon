@@ -1,5 +1,5 @@
 /*
- * $Id: PdfUtil.java,v 1.32 2012-07-10 23:53:32 thib_gc Exp $
+ * $Id$
  */
 
 /*
@@ -757,23 +757,15 @@ return success;
       }
 
       // Return the transformed PDF file as an input stream
-      if (outputStream.isInMemory()) {
-	return new ByteArrayInputStream(outputStream.getData());
-      }
-      else {
-	File tempFile = outputStream.getFile();
-	return new BufferedInputStream(new DeleteFileOnCloseInputStream(tempFile));
-      }
+      return outputStream.getDeleteOnCloseInputStream();
     }
     catch (OutOfMemoryError oome) {
       logger.error("Out of memory in the PDF framework", oome);
       throw oome; // rethrow
     }
-    catch (IOException ioe) {
+    catch (Exception ioe) {
       logger.error("Transform from input stream failed", ioe);
-      if (outputStream != null) {
-	deleteTempFile(outputStream);
-      }
+      deleteTempFile(outputStream);
       return null;
     }
     finally {
@@ -782,10 +774,8 @@ return success;
   }
 
   private static void deleteTempFile(DeferredTempFileOutputStream dtfos) {
-    try {
+    if (dtfos != null) {
       dtfos.deleteTempFile();
-    } catch (Exception e) {
-      logger.error("Couldn't delete failed PDF temp file", e);
     }
   }
 

@@ -1,5 +1,5 @@
 /*
- * $Id: FollowLinkCrawler.java,v 1.108.2.2 2014-12-27 03:27:44 tlipkis Exp $
+ * $Id$
  */
 
 /*
@@ -104,6 +104,12 @@ public class FollowLinkCrawler extends BaseCrawler {
     PREFIX + "doFullSubstanceCheck";
   public static final boolean DEFAULT_IS_FULL_SUBSTANCE_CHECK = true;
 
+  /** If true, missing CDN stems will be picked up from all URLs
+   * encountered during the graph traversal.  If false, only newly fetched
+   * files contribute to new CDN stems. */
+  public static final String PARAM_REFIND_CDN_STEMS = PREFIX + "refindCdnStems";
+  public static final boolean DEFAULT_REFIND_CDN_STEMS = false;
+
   protected int maxDepth = DEFAULT_MAX_CRAWL_DEPTH;
 
   protected int hiDepth = 0;		// maximum depth seen
@@ -125,7 +131,8 @@ public class FollowLinkCrawler extends BaseCrawler {
   protected boolean isRefetchEmptyFiles = false;
   protected boolean shouldFollowLink = true;
   protected boolean isFullSubstanceCheck = false;
-  
+  protected boolean refindCdnStems   = false;
+
   // Cache recent negative results from au.shouldBeCached().  This is set
   // to an LRUMsp when crawl is initialized, it's initialized here to a
   // simple map for the sake of test code, which doesn't call
@@ -219,6 +226,8 @@ public class FollowLinkCrawler extends BaseCrawler {
     isFullSubstanceCheck =
       config.getBoolean(PARAM_IS_FULL_SUBSTANCE_CHECK,
 			DEFAULT_IS_FULL_SUBSTANCE_CHECK);
+    refindCdnStems =
+      config.getBoolean(PARAM_REFIND_CDN_STEMS, DEFAULT_REFIND_CDN_STEMS);
   }
  
 
@@ -272,6 +281,7 @@ public class FollowLinkCrawler extends BaseCrawler {
             return false;
           } else {
             updateCacheStats(FetchResult.FETCHED, pud);
+	    updateCdnStems(pud.getUrl());
           }
         } catch (CacheException e) {
           crawlStatus.setCrawlStatus(Crawler.STATUS_NO_PUB_PERMISSION, e.getMessage());
@@ -343,7 +353,7 @@ public class FollowLinkCrawler extends BaseCrawler {
           if (!crawlStatus.isCrawlError()) {
             log.warning("fetch() failed, didn't set error status: "
                 + curl);
-            crawlStatus.setCrawlStatus(Crawler.STATUS_ERROR);
+            crawlStatus.setCrawlStatus(Crawler.STATUS_FETCH_ERROR);
             crawlStatus.signalErrorForUrl(url, "Failed to fetch url", Crawler.STATUS_ERROR);
           }
         }
@@ -541,25 +551,36 @@ public class FollowLinkCrawler extends BaseCrawler {
             }
             return false;
           }
-          fetcher = makeUrlFetcher(url);
+          fetcher = makeUrlFetcher(curl);
           try {
             res = fetcher.fetch();
             updateCacheStats(res, curl);
             if (res == FetchResult.NOT_FETCHED) {
               if(curl.isStartUrl() && isFailOnStartUrlError()) {
                 // fail if cannot fetch a StartUrl
-                String msg = "Failed to cache start url: "+ curl.getUrl();
-                log.error(msg);
-                crawlStatus.setCrawlStatus(Crawler.STATUS_FETCH_ERROR);
+                String msg = "Failed to fetch start url";
+                log.error(msg + ": " + curl.getUrl());
+                crawlStatus.setCrawlStatus(Crawler.STATUS_FETCH_ERROR, msg);
                 return false;
               }
             } else {
+	      if (res == FetchResult.FETCHED && !refindCdnStems) {
+		updateCdnStems(url);
+	      }
               checkSubstanceCollected(au.makeCachedUrl(url));
             }
+	    if (refindCdnStems &&
+		res != FetchResult.FETCHED && 
+		au.makeCachedUrl(url).hasContent()) {
+	      updateCdnStems(url);
+	    }
           } catch (CacheException ex) {
-            //XXX: we have a fatal exception, but we need to store it
-            crawlStatus.signalErrorForUrl(url, ex);
-            crawlStatus.setCrawlStatus(Crawler.STATUS_FETCH_ERROR);
+            if (ex.isAttributeSet(CacheException.ATTRIBUTE_FATAL)) {
+              //XXX: we have a fatal exception, but we need to store it
+              crawlStatus.signalErrorForUrl(url, ex);
+              crawlStatus.setCrawlStatus(Crawler.STATUS_FETCH_ERROR, ex.getMessage());
+              abortCrawl();
+            }
             return false;
           }   
           parseQueue.put(curl);
@@ -568,6 +589,9 @@ public class FollowLinkCrawler extends BaseCrawler {
     } else {
       // If didn't fetch, check for existing substance file
       checkSubstanceCollected(au.makeCachedUrl(url));
+      if (refindCdnStems) {
+	updateCdnStems(url);
+      }
       parseQueue.put(curl);
       return true;
     }

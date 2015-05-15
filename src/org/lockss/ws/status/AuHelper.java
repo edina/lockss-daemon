@@ -1,10 +1,10 @@
 /*
- * $Id: AuHelper.java,v 1.7 2014-11-12 20:11:45 wkwilson Exp $
+ * $Id$
  */
 
 /*
 
- Copyright (c) 2014 Board of Trustees of Leland Stanford Jr. University,
+ Copyright (c) 2014-2015 Board of Trustees of Leland Stanford Jr. University,
  all rights reserved.
 
  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -86,6 +86,7 @@ public class AuHelper {
   static String DISK_USAGE = "diskUsage";
   static String REPOSITORY_PATH = "repositoryPath";
   static String RECENT_POLL_AGREEMENT = "recentPollAgreement";
+  static String HIGHEST_POLL_AGREEMENT = "highestPollAgreement";
   static String PUBLISHING_PLATFORM = "publishingPlatform";
   static String TDB_PUBLISHER = "tdbPublisher";
   static String AVAILABLE_FROM_PUBLISHER = "availableFromPublisher";
@@ -108,6 +109,9 @@ public class AuHelper {
   static String URL_STEMS = "urlStems";
   static String IS_BULK_CONTENT = "isBulkContent";
   static String PEER_AGREEMENTS = "peerAgreements";
+  static String URLS = "urls";
+  static String SUBSTANCE_URLS = "substanceUrls";
+  static String ARTICLE_URLS = "articleUrls";
 
   /**
    * All the property names used in Archival Unit queries.
@@ -125,6 +129,7 @@ public class AuHelper {
       add(DISK_USAGE);
       add(REPOSITORY_PATH);
       add(RECENT_POLL_AGREEMENT);
+      add(HIGHEST_POLL_AGREEMENT);
       add(PUBLISHING_PLATFORM);
       add(TDB_PUBLISHER);
       add(AVAILABLE_FROM_PUBLISHER);
@@ -147,6 +152,9 @@ public class AuHelper {
       add(URL_STEMS);
       add(IS_BULK_CONTENT);
       add(PEER_AGREEMENTS);
+      add(URLS);
+      add(SUBSTANCE_URLS);
+      add(ARTICLE_URLS);
     }
   };
 
@@ -500,6 +508,17 @@ public class AuHelper {
       .append(result.getRecentPollAgreement());
     }
 
+    if (result.getHighestPollAgreement() != null) {
+      if (!isFirst) {
+	builder.append(", ");
+      } else {
+	isFirst = false;
+      }
+
+      builder.append("highestPollAgreement=")
+      .append(result.getHighestPollAgreement());
+    }
+
     if (result.getPublishingPlatform() != null) {
       if (!isFirst) {
 	builder.append(", ");
@@ -725,6 +744,36 @@ public class AuHelper {
       }
 
       builder.append("peerAgreements=").append(result.getPeerAgreements());
+    }
+
+    if (result.getUrls() != null) {
+      if (!isFirst) {
+	builder.append(", ");
+      } else {
+	isFirst = false;
+      }
+
+      builder.append("urls=").append(result.getUrls());
+    }
+
+    if (result.getSubstanceUrls() != null) {
+      if (!isFirst) {
+	builder.append(", ");
+      } else {
+	isFirst = false;
+      }
+
+      builder.append("substanceUrls=").append(result.getSubstanceUrls());
+    }
+
+    if (result.getArticleUrls() != null) {
+      if (!isFirst) {
+	builder.append(", ");
+      } else {
+	isFirst = false;
+      }
+
+      builder.append("articleUrls=").append(result.getArticleUrls());
     }
 
     return builder.append("]").toString();

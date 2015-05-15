@@ -1,5 +1,5 @@
 /*
- * $Id: TestCoverageNotesFormat.java,v 1.4.36.1 2015-01-12 06:29:49 tlipkis Exp $
+ * $Id$
  */
 
 /*
@@ -31,14 +31,13 @@ in this Software without prior written authorization from Stanford University.
 */
 package org.lockss.exporter.kbart;
 
+import java.util.*;
+
 import org.lockss.exporter.biblio.BibliographicUtil;
 import org.lockss.test.LockssTestCase;
 import org.lockss.exporter.kbart.KbartTitle.Field;
-import org.lockss.util.StringUtil;
+import org.lockss.util.*;
 
-import java.util.Arrays;
-import java.util.EnumSet;
-import java.util.List;
 
 /**
  * Note that single title should reduce to summary.
@@ -57,6 +56,7 @@ public class TestCoverageNotesFormat extends LockssTestCase {
   @Override
   public void setUp() throws Exception {
     super.setUp();
+    TimeBase.setSimulated("2014/6/1 00:00:00");
     sb = new StringBuilder();
     title1 = new KbartTitle()
         .setField(Field.PUBLICATION_TITLE, "My Journal Title")
@@ -298,8 +298,7 @@ public class TestCoverageNotesFormat extends LockssTestCase {
     }
   }
 
-  // test-only problem, fixed on main branch
-  public void xxxtestRestrictRanges() throws Exception {
+  public void testRestrictRanges() throws Exception {
     for (CoverageNotesFormat cnf : CoverageNotesFormat.values()) {
       assertIsomorphic(restrictedRangeTitles, cnf.restrictRanges(rangeTitles));
     }

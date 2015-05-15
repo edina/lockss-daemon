@@ -1,5 +1,5 @@
 /*
- * $Id: V3LcapMessage.java,v 1.53.14.1 2014-12-28 08:39:07 tlipkis Exp $
+ * $Id$
  */
 
 /*

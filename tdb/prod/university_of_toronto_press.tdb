@@ -21,6 +21,7 @@
     attr[journal_id] = ant
 
     au < manifest ; 2014 ; Anthropologica Volume 56 ; 56 >
+    au < manifest ; 2015 ; Anthropologica Volume 57 ; 57 >
     
   }
 
@@ -46,7 +47,24 @@
     au < released ; 2011 ; The Canadian Historical Review Volume 92 ; 92 >
     au < released ; 2012 ; The Canadian Historical Review Volume 93 ; 93 >
     au < released ; 2013 ; The Canadian Historical Review Volume 94 ; 94 >
-    au < expected ; 2014 ; The Canadian Historical Review Volume 95 ; 95 >
+    au < manifest ; 2014 ; The Canadian Historical Review Volume 95 ; 95 >
+    au < manifest ; 2015 ; The Canadian Historical Review Volume 96 ; 96 >
+
+  }
+
+  {
+  
+    title <
+      name = Canadian Journal of History ;
+      issn = 0008-4107 ;
+      eissn = 2292-8502 ;
+      issnl = 0008-4107
+    >
+
+    param[journal_dir] = canadian_journal_of_history
+    attr[journal_id] = cnh
+
+    au < manifest ; 2015 ; Canadian Journal of History Volume 50 ; 50 >
 
   }
 
@@ -70,7 +88,8 @@
     au < released ; 2011 ; Canadian Journal of Criminology and Criminal Justice Volume 53 ; 53 >
     au < released ; 2012 ; Canadian Journal of Criminology and Criminal Justice Volume 54 ; 54 >
     au < released ; 2013 ; Canadian Journal of Criminology and Criminal Justice Volume 55 ; 55 >
-    au < expected ; 2014 ; Canadian Journal of Criminology and Criminal Justice Volume 56 ; 56 >
+    au < manifest ; 2014 ; Canadian Journal of Criminology and Criminal Justice Volume 56 ; 56 >
+    au < manifest ; 2015 ; Canadian Journal of Criminology and Criminal Justice Volume 57 ; 57 >
 
   }
 
@@ -87,6 +106,7 @@
     attr[journal_id] = cjh
 
     au < manifest ; 2014 ; The Canadian Journal of Human Sexuality Volume 23 ; 23 >
+    au < manifest ; 2015 ; The Canadian Journal of Human Sexuality Volume 24 ; 24 >
     
   }
 
@@ -106,7 +126,8 @@
     au < released ; 2011 ; Canadian Journal of Information and Library Science Volume 35 ; 35 >
     au < released ; 2012 ; Canadian Journal of Information and Library Science Volume 36 ; 36 >
     au < released ; 2013 ; Canadian Journal of Information and Library Science Volume 37 ; 37 >
-    au < expected ; 2014 ; Canadian Journal of Information and Library Science Volume 38 ; 38 >
+    au < manifest ; 2014 ; Canadian Journal of Information and Library Science Volume 38 ; 38 >
+    au < expected ; 2015 ; Canadian Journal of Information and Library Science Volume 39 ; 39 >
 
   }
   
@@ -131,7 +152,8 @@
     au < released ; 2011 ; Canadian Journal of Law and Society Volume 26 ; 26 >
     au < released ; 2012 ; Canadian Journal of Law and Society Volume 27 ; 27 >
     au < released ; 2013 ; Canadian Journal of Law and Society Volume 28 ; 28 >
-    au < expected ; 2014 ; Canadian Journal of Law and Society Volume 29 ; 29 >
+    au < manifest ; 2014 ; Canadian Journal of Law and Society Volume 29 ; 29 >
+    au < manifest ; 2015 ; Canadian Journal of Law and Society Volume 30 ; 30 >
 
   }
 
@@ -158,8 +180,8 @@
     au < released ; 2011 ; The Canadian Journal of Linguistics / La revue canadienne de linguistique Volume 56 ; 56 >
     au < released ; 2012 ; The Canadian Journal of Linguistics / La revue canadienne de linguistique Volume 57 ; 57 >
     au < released ; 2013 ; The Canadian Journal of Linguistics / La revue canadienne de linguistique Volume 58 ; 58 >
-    au < expected ; 2014 ; The Canadian Journal of Linguistics / La revue canadienne de linguistique Volume 59 ; 59 >
-
+    au < manifest ; 2014 ; The Canadian Journal of Linguistics / La revue canadienne de linguistique Volume 59 ; 59 >
+    au < expected ; 2015 ; The Canadian Journal of Linguistics / La revue canadienne de linguistique Volume 60 ; 60 >
 
   }
 
@@ -203,7 +225,8 @@
     au < released ; 2011 ; Canadian Journal of Women and the Law Volume 23 ; 23 >
     au < released ; 2012 ; Canadian Journal of Women and the Law Volume 24 ; 24 >
     au < released ; 2013 ; Canadian Journal of Women and the Law Volume 25 ; 25 >
-    au < expected ; 2014 ; Canadian Journal of Women and the Law Volume 26 ; 26 >
+    au < manifest ; 2014 ; Canadian Journal of Women and the Law Volume 26 ; 26 >
+    au < manifest ; 2015 ; Canadian Journal of Women and the Law Volume 27 ; 27 >
 
   }
 
@@ -228,7 +251,8 @@
     au < released ; 2011 ; The Canadian Modern Language Review / La revue canadienne des langues vivantes Volume 67 ; 67 >
     au < released ; 2012 ; The Canadian Modern Language Review / La revue canadienne des langues vivantes Volume 68 ; 68 >
     au < released ; 2013 ; The Canadian Modern Language Review / La revue canadienne des langues vivantes Volume 69 ; 69 >
-    au < expected ; 2014 ; The Canadian Modern Language Review / La revue canadienne des langues vivantes Volume 70 ; 70 >
+    au < manifest ; 2014 ; The Canadian Modern Language Review / La revue canadienne des langues vivantes Volume 70 ; 70 >
+    au < manifest ; 2015 ; The Canadian Modern Language Review / La revue canadienne des langues vivantes Volume 71 ; 71 >
 
   }
 
@@ -249,7 +273,8 @@
     au < released ; 2011 ; Canadian Public Policy Volume 37 ; 37 >
     au < released ; 2012 ; Canadian Public Policy Volume 38 ; 38 >
     au < released ; 2013 ; Canadian Public Policy Volume 39 ; 39 >
-    au < expected ; 2014 ; Canadian Public Policy Volume 40 ; 40 >
+    au < manifest ; 2014 ; Canadian Public Policy Volume 40 ; 40 >
+    au < manifest ; 2015 ; Canadian Public Policy Volume 41 ; 41 >
 
   }
 
@@ -275,7 +300,8 @@
     au < released ; 2011 ; Canadian Review of American Studies Volume 41 ; 41 >
     au < released ; 2012 ; Canadian Review of American Studies Volume 42 ; 42 >
     au < released ; 2013 ; Canadian Review of American Sutdies Volume 43 ; 43 >
-    au < expected ; 2014 ; Canadian Review of American Sutdies Volume 44 ; 44 >
+    au < manifest ; 2014 ; Canadian Review of American Sutdies Volume 44 ; 44 >
+    au < manifest ; 2015 ; Canadian Review of American Sutdies Volume 45 ; 45 >
 
   }
 
@@ -308,7 +334,8 @@
     au < released ; 2013 ; Canadian Theatre Review Issue 155 ; 155 >
     au < released ; 2013 ; Canadian Theatre Review Issue 156 ; 156 >
     au < released ; 2014 ; Canadian Theatre Review Issue 157 ; 157 >
-    au < expected ; 2014 ; Canadian Theatre Review Issue 158 ; 158 >
+    au < manifest ; 2014 ; Canadian Theatre Review Issue 158 ; 158 >
+    au < manifest ; 2015 ; Canadian Theatre Review Issue 159 ; 159 >
 
   }
 
@@ -324,7 +351,8 @@
     attr[journal_id] = car
 
     au < released ; 2013 ; Cartographica: The International Journal for Geographic Information and Geovisualization Volume 48 ; 48 >
-    au < expected ; 2014 ; Cartographica: The International Journal for Geographic Information and Geovisualization Volume 49 ; 49 >
+    au < manifest ; 2014 ; Cartographica: The International Journal for Geographic Information and Geovisualization Volume 49 ; 49 >
+    au < manifest ; 2015 ; Cartographica: The International Journal for Geographic Information and Geovisualization Volume 50 ; 50 >
 
   }
 
@@ -388,7 +416,8 @@
     au < released ; 2010-2011 ; Eighteenth-Century Fiction Volume 23 ; 23 >
     au < released ; 2011-2012 ; Eighteenth-Century Fiction Volume 24 ; 24 >
     au < released ; 2012-2013 ; Eighteenth-Century Fiction Volume 25 ; 25 >
-    au < expected ; 2013-2014 ; Eighteenth-Century Fiction Volume 26 ; 26 >
+    au < manifest ; 2013-2014 ; Eighteenth-Century Fiction Volume 26 ; 26 >
+    au < manifest ; 2014-2015 ; Eighteenth-Century Fiction Volume 27 ; 27 >
 
   }
 
@@ -420,6 +449,7 @@
 
     param[journal_dir] = genocide_studies_and_prevention
     attr[journal_id] = gsp
+    comment[continued_by] = 2291-1847
 
     au < released ; 2006 ; Genocide Studies and Prevention Volume 1 ; 1 >
     au < released ; 2007 ; Genocide Studies and Prevention Volume 2 ; 2 >
@@ -428,8 +458,24 @@
     au < released ; 2010 ; Genocide Studies and Prevention Volume 5 ; 5 >
     au < released ; 2011 ; Genocide Studies and Prevention Volume 6 ; 6 >
     au < released ; 2012 ; Genocide Studies and Prevention Volume 7 ; 7 >
-    au < released ; 2013 ; Genocide Studies and Prevention Volume 8 ; 8 >
-    au < expected ; 2014 ; Genocide Studies and Prevention Volume 9 ; 9 >
+
+  }
+
+  {
+  
+    title <
+      name = Genocide Studies International ;
+      issn = 2291-1847 ;
+      eissn = 2291-1855 ;
+      issnl = 2291-1847
+    >
+
+    param[journal_dir] = genocide_studies_and_prevention
+    attr[journal_id] = gsp
+    comment[continues] = 1911-0359
+
+    au < released ; 2014 ; Genocide Studies International Volume 8 ; 8 >
+    au < manifest ; 2015 ; Genocide Studies International Volume 9 ; 9 >
 
   }
 
@@ -450,7 +496,8 @@
     au < released ; 2011 ; Histoire sociale / Social History Volume 44 ; 44 >
     au < released ; 2012 ; Histoire sociale / Social History Volume 45 ; 45 >
     au < released ; 2013 ; Histoire sociale / Social History Volume 46 ; 46 >
-    au < expected ; 2014 ; Histoire sociale / Social History Volume 47 ; 47 >
+    au < manifest ; 2014 ; Histoire sociale / Social History Volume 47 ; 47 >
+    au < expected ; 2015 ; Histoire sociale / Social History Volume 48 ; 48 >
 
   }
 
@@ -467,7 +514,8 @@
     attr[journal_id] = ijc
 
     au < released ; 2013 ; International Journal of Canadian Studies Volume 47 ; 47 >
-    au < expected ; 2014 ; International Journal of Canadian Studies Volume 48 ; 48 >
+    au < manifest ; 2014 ; International Journal of Canadian Studies Volume 48 ; 48 >
+    au < manifest ; 2015 ; International Journal of Canadian Studies Volume 49 ; 49 >
 
   }
 
@@ -492,7 +540,8 @@
     au < released ; 2011 ; Journal of Canadian Studies / Revue d'études canadiennes Volume 45 ; 45 >
     au < released ; 2012 ; Journal of Canadian Studies / Revue d'études canadiennes Volume 46 ; 46 >
     au < released ; 2013 ; Journal of Canadian Studies / Revue d'études canadiennes Volume 47 ; 47 >
-    au < expected ; 2014 ; Journal of Canadian Studies / Revue d'études canadiennes Volume 48 ; 48 >
+    au < manifest ; 2014 ; Journal of Canadian Studies / Revue d'études canadiennes Volume 48 ; 48 >
+    au < expected ; 2015 ; Journal of Canadian Studies / Revue d'études canadiennes Volume 49 ; 49 >
 
   }
 
@@ -508,7 +557,8 @@
 
     au < released ; 2012 ; Journal of Religion and Popular Culture Volume 24 ; 24 >
     au < released ; 2013 ; Journal of Religion and Popular Culture Volume 25 ; 25 >
-    au < expected ; 2014 ; Journal of Religion and Popular Culture Volume 26 ; 26 >
+    au < manifest ; 2014 ; Journal of Religion and Popular Culture Volume 26 ; 26 >
+    au < manifest ; 2015 ; Journal of Religion and Popular Culture Volume 27 ; 27 >
 
   }
 
@@ -535,6 +585,7 @@
     au < released ; 2011-2012 ; Journal of Scholarly Publishing Volume 43 ; 43 >
     au < released ; 2012-2013 ; Journal of Scholarly Publishing Volume 44 ; 44 >
     au < manifest ; 2013-2014 ; Journal of Scholarly Publishing Volume 45 ; 45 >
+    au < manifest ; 2014-2015 ; Journal of Scholarly Publishing Volume 46 ; 46 >
 
   }
 
@@ -559,7 +610,8 @@
     au < released ; 2011 ; Modern Drama Volume 54 ; 54 >
     au < released ; 2012 ; Modern Drama Volume 55 ; 55 >
     au < released ; 2013 ; Modern Drama Volume 56 ; 56 >
-    au < expected ; 2014 ; Modern Drama Volume 57 ; 57 >
+    au < manifest ; 2014 ; Modern Drama Volume 57 ; 57 >
+    au < manifest ; 2015 ; Modern Drama Volume 58 ; 58 >
 
   }
 
@@ -583,7 +635,8 @@
     au < released ; 2011 ; Seminar: A Journal of Germanic Studies Volume 47 ; 47 >
     au < released ; 2012 ; Seminar: A Journal of Germanic Studies Volume 48 ; 48 >
     au < released ; 2013 ; Seminar: A Journal of Germanic Studies Volume 49 ; 49 >
-    au < expected ; 2014 ; Seminar: A Journal of Germanic Studies Volume 50 ; 50 >
+    au < manifest ; 2014 ; Seminar: A Journal of Germanic Studies Volume 50 ; 50 >
+    au < manifest ; 2015 ; Seminar: A Journal of Germanic Studies Volume 51 ; 51 >
 
   }
 
@@ -604,7 +657,8 @@
     au < released ; 2011 ; The Tocqueville Review/La revue Tocqueville Volume 32 ; 32 >
     au < released ; 2012 ; The Tocqueville Review/La revue Tocqueville Volume 33 ; 33 >
     au < released ; 2013 ; The Tocqueville Review/La revue Tocqueville Volume 34 ; 34 >
-    au < expected ; 2014 ; The Tocqueville Review/La revue Tocqueville Volume 35 ; 35 >
+    au < manifest ; 2014 ; The Tocqueville Review/La revue Tocqueville Volume 35 ; 35 >
+    au < expected ; 2015 ; The Tocqueville Review/La revue Tocqueville Volume 36 ; 36 >
 
   }
 
@@ -623,7 +677,8 @@
     au < released ; 2011 ; Toronto Journal of Theology Volume 27 ; 27 >
     au < released ; 2012 ; Toronto Journal of Theology Volume 28 ; 28 >
     au < released ; 2013 ; Toronto Journal of Theology Volume 29 ; 29 >
-    au < expected ; 2014 ; Toronto Journal of Theology Volume 30 ; 30 >
+    au < manifest ; 2014 ; Toronto Journal of Theology Volume 30 ; 30 >
+    au < manifest ; 2015 ; Toronto Journal of Theology Volume 31 ; 31 >
 
   }
 
@@ -649,7 +704,8 @@
     au < released ; 2011 ; University of Toronto Law Journal Volume 61 ; 61 >
     au < released ; 2012 ; University of Toronto Law Journal Volume 62 ; 62 >
     au < released ; 2013 ; University of Toronto Law Journal Volume 63 ; 63 >
-    au < expected ; 2014 ; University of Toronto Law Journal Volume 64 ; 64 >
+    au < manifest ; 2014 ; University of Toronto Law Journal Volume 64 ; 64 >
+    au < manifest ; 2015 ; University of Toronto Law Journal Volume 65 ; 65 >
 
   }
 
@@ -676,7 +732,8 @@
     au < released ; 2011 ; University of Toronto Quarterly Volume 80 ; 80 >
     au < released ; 2012 ; University of Toronto Quarterly Volume 81 ; 81 >
     au < released ; 2013 ; University of Toronto Quarterly Volume 82 ; 82 >
-    au < expected ; 2014 ; University of Toronto Quarterly Volume 83 ; 83 >
+    au < manifest ; 2014 ; University of Toronto Quarterly Volume 83 ; 83 >
+    au < manifest ; 2015 ; University of Toronto Quarterly Volume 84 ; 84 >
 
   }
 
@@ -696,6 +753,7 @@
     au < released ; 2009 ; The Yearbook of Comparative Literature Volume 55 ; 55 >
     au < released ; 2010 ; The Yearbook of Comparative Literature Volume 56 ; 56 >
     au < released ; 2011 ; The Yearbook of Comparative Literature Volume 57 ; 57 >
+    au < manifest ; 2012 ; The Yearbook of Comparative Literature Volume 58 ; 58 >
 
   }
 

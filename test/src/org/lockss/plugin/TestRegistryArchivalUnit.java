@@ -1,10 +1,10 @@
 /*
- * $Id: TestRegistryArchivalUnit.java,v 1.20.2.3 2014-12-27 03:27:44 tlipkis Exp $
+ * $Id$
  */
 
 /*
 
-Copyright (c) 2000-2009 Board of Trustees of Leland Stanford Jr. University,
+Copyright (c) 2000-2015 Board of Trustees of Leland Stanford Jr. University,
 all rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -189,10 +189,10 @@ public class TestRegistryArchivalUnit extends LockssTestCase {
 			      -1, // lastPoPPoll
 			      -1, // lastPoPPollResult
 			      -1, // lastLocalHashScan
-			      -1, // lastLocalHashMismatch
 			      -1, // numAgreePeersLastPoR
 			      -1, // numWillingRepairers
 			      -1, // numCurrentSuspectVersions
+			      null, // cdnStems
 			      (HistoryRepository)null);
     assertFalse(au.shouldCallTopLevelPoll(aus));
     ConfigurationUtil.setFromArgs(RegistryArchivalUnit.PARAM_ENABLE_REGISTRY_POLLS,

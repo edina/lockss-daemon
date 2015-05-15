@@ -1,5 +1,5 @@
 /*
- * $Id: TestStringPool.java,v 1.3 2014-05-28 00:16:27 tlipkis Exp $
+ * $Id$
  */
 
 /*
@@ -52,6 +52,17 @@ public class TestStringPool extends LockssTestCase {
 
     assertNotSame(exp, s2);
     assertSame(exp, pool.intern(s2));
+  }
+
+  public void testInternList() {
+    StringPool pool = new StringPool("name");
+    List lst1 = ListUtil.list(new String("foo"), new String("bar"));
+    List lst2 = ListUtil.list(new String("bar"), new String("foo"));
+    ArrayList intLst1 = pool.internList(lst1);
+    ArrayList intLst2 = pool.internList(lst2);
+    assertNotSame(intLst1, intLst2);
+    assertSame(intLst1.get(0), intLst2.get(1));
+    assertSame(intLst1.get(1), intLst2.get(0));
   }
 
   public void testSealed() {

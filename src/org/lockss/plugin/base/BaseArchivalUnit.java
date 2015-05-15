@@ -1,10 +1,10 @@
 /*
- * $Id: BaseArchivalUnit.java,v 1.172.2.1 2014-12-24 01:04:47 wkwilson Exp $
+ * $Id$
  */
 
 /*
 
-Copyright (c) 2000-2014 Board of Trustees of Leland Stanford Jr. University,
+Copyright (c) 2000-2015 Board of Trustees of Leland Stanford Jr. University,
 all rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -144,8 +144,10 @@ public abstract class BaseArchivalUnit implements ArchivalUnit {
   }
 
   /**
-   * Checks that the configuration is legal (doesn't change any of the defining
-   * properties), and stores the configuration
+   * Checks that the configuration is legal (doesn't change any of the
+   * defining properties), stores the new configuration and causes any
+   * cached info to be recomputed.  If called with current config, just
+   * clears cached info.
    * @param config new Configuration
    * @throws ArchivalUnit.ConfigurationException if the configuration change is
    * illegal or for other configuration errors
@@ -155,13 +157,19 @@ public abstract class BaseArchivalUnit implements ArchivalUnit {
     if (config == null) {
       throw new ConfigurationException("Null Configuration");
     }
-    if (logger.isDebug3()) logger.debug3("setConfiguration: " + config);
-    checkLegalConfigChange(config);
-    auConfig = config;
-    loadAuConfigDescrs(config);
-    addImpliedConfigParams();
-    setBaseAuParams(config);
-    fetchRateLimiter = recomputeFetchRateLimiter(fetchRateLimiter);
+    if (config.equals(auConfig)) {
+      if (logger.isDebug3()) logger.debug3("setConfiguration (unchanged): " +
+					   config);
+    } else {
+      if (logger.isDebug3()) logger.debug3("setConfiguration: " + config);
+      checkLegalConfigChange(config);
+      auConfig = config.copy();
+      loadAuConfigDescrs(config);
+      addImpliedConfigParams();
+      setBaseAuParams(config);
+      fetchRateLimiter = recomputeFetchRateLimiter(fetchRateLimiter);
+    }
+    urlStems = null;
   }
 
   public Configuration getConfiguration() {
@@ -409,6 +417,23 @@ public abstract class BaseArchivalUnit implements ArchivalUnit {
     return getStartUrls();
   }
   
+  void addUrlParamStems(Set toSet) {
+    for (ConfigParamDescr descr : plugin.getAuConfigDescrs()) {
+      if (descr.getTypeEnum() == AuParamType.Url) {
+	String key = descr.getKey();
+	try {
+	  String url = auConfig.get(key);
+	  if (!StringUtil.isNullString(url)) {
+	    String stem = UrlUtil.getUrlPrefix(url);
+	    toSet.add(stem);
+	  }
+	} catch (MalformedURLException ex) {
+	  logger.error("addUrlParamStems key: " + key);
+	}
+      }
+    }
+  }
+
   /**
    * Return the Url stems (proto, host & port) of potential content within
    * this AU
@@ -425,8 +450,15 @@ public abstract class BaseArchivalUnit implements ArchivalUnit {
 	    set.add(stem);
 	  }
 	}
-	ArrayList<String> res = new ArrayList<String>(set.size());
+	addUrlParamStems(set);
+	AuState aus = AuUtil.getAuState(this);
+	// XXX Many plugin tests don't set up AuState
+	List cdnStems = (aus != null
+			 ? aus.getCdnStems() : Collections.EMPTY_LIST);
+	ArrayList<String> res = new ArrayList<String>(set.size() +
+						      cdnStems.size());
 	res.addAll(set);
+	res.addAll(cdnStems);
 	urlStems = res;
       } catch (MalformedURLException e) {
 	logger.error("getUrlStems(" + getName() + ")", e);

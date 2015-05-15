@@ -1,5 +1,5 @@
 /*
- * $Id: BaseCrawler.java,v 1.57.2.1 2014-12-24 01:04:45 wkwilson Exp $
+ * $Id$
  */
 
 /*
@@ -133,6 +133,8 @@ public abstract class BaseCrawler implements Crawler {
   protected int maxRetries = DEFAULT_MAX_RETRY_COUNT;
   protected long defaultRetryDelay = DEFAULT_DEFAULT_RETRY_DELAY;
   protected long minRetryDelay = DEFAULT_MIN_RETRY_DELAY;
+  protected Set<String> origStems;
+  protected Set<String> cdnStems;
   
   public enum StorePermissionScheme {Legacy, StoreAllInSpec};
 
@@ -205,6 +207,8 @@ public abstract class BaseCrawler implements Crawler {
     this.aus = aus;
     alertMgr = getDaemon().getAlertManager();
     connectionPool = new LockssUrlConnectionPool();
+    origStems = new HashSet(au.getUrlStems());
+    cdnStems = new HashSet();
   }
   
   protected abstract boolean doCrawl0();
@@ -492,6 +496,22 @@ public abstract class BaseCrawler implements Crawler {
     return false;
   }
 
+  /** If this url was allowed due to globallyPermittedHosts or cdn host and
+   * its stem isn't already contained in the AU's stems, add it to the
+   * dynamic stem list */
+  protected void updateCdnStems(String url) {
+    try {
+      String stem = UrlUtil.getUrlPrefix(url);
+      if (!origStems.contains(stem) && !cdnStems.contains(stem)) {
+	aus.addCdnStem(stem);
+	cdnStems.add(stem);
+      }
+    } catch (MalformedURLException e) {
+      logger.error("updateCdnStems(" + url + ")", e);
+      // ignore
+    }
+  }
+
   protected void updateCacheStats(FetchResult res, CrawlUrlData curl) {
     // Paranoia - assert that the rate limiter was actually used
     CrawlRateLimiter crl = getCrawlRateLimiter();
@@ -590,6 +610,12 @@ public abstract class BaseCrawler implements Crawler {
     UrlCacher uc = au.makeUrlCacher(ud);
     uc.setWatchdog(wdog);
     return uc;
+  }
+  
+  public UrlFetcher makeUrlFetcher(CrawlUrlData curl) {
+    UrlFetcher uf = makeUrlFetcher(curl.getUrl());
+    uf.setCrawlUrl(curl);
+    return uf;
   }
 
   /** All UrlFetchers should be made via this method, so they get their
@@ -788,6 +814,19 @@ public abstract class BaseCrawler implements Crawler {
     @Override
     public boolean isAllowedPluginPermittedHost(String host) {
       return crawler.crawlMgr.isAllowedPluginPermittedHost(host);
+    }
+
+    @Override
+    public void updateCdnStems(String url) {
+      crawler.updateCdnStems(url);
+    }
+
+    @Override
+    public CrawlUrl addChild(CrawlUrl curl, String url) {
+      CrawlUrlData curld = (CrawlUrlData)curl;
+      CrawlUrlData child = new CrawlUrlData(url, curld.getDepth()+1);
+      curld.addChild(child);
+      return child;
     }
   }
 

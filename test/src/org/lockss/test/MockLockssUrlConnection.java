@@ -1,5 +1,5 @@
 /*
- * $Id: MockLockssUrlConnection.java,v 1.11 2014-11-22 08:42:32 tlipkis Exp $
+ * $Id$
  */
 
 /*
@@ -49,6 +49,7 @@ public class MockLockssUrlConnection extends BaseLockssUrlConnection {
   String respContentEncoding;
   long respDate = -1;
   long respLastModified = -1;
+  boolean keepAlive = false;
 
   // Some tests don't need a URL
   public MockLockssUrlConnection() throws IOException {
@@ -83,6 +84,14 @@ public class MockLockssUrlConnection extends BaseLockssUrlConnection {
 
   public void setProxy(String host, int port) {
     throw new UnsupportedOperationException();
+  }
+
+  public void setKeepAlive(boolean val) {
+    keepAlive = val;
+  }
+
+  public boolean getKeepAlive() {
+    return keepAlive;
   }
 
   public void setRequestProperty(String key, String value) {

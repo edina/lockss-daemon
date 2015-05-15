@@ -12,14 +12,16 @@
     <string>Base Atypon Plugin</string>
   </entry>
   <entry>
+  <!--  for jsoup extractor support for script tags  -->
+  <!--  printf version of plugin_au_config_user_message -->
     <string>required_daemon_version</string>
-    <string>1.62.0</string>
+    <string>1.67.0</string>
   </entry>
   <entry>
     <string>plugin_version</string>
-    <string>21</string>
+    <string>36</string>
   </entry>
-   <entry>
+  <entry>
     <string>plugin_publishing_platform</string>
     <string>Atypon</string>
   </entry>
@@ -30,11 +32,11 @@
     <map>
       <entry>
         <string>Metadata</string>
-        <string>13</string>
+        <string>14</string>
       </entry>
       <entry>
         <string>Poll</string>
-        <string>16</string>
+        <string>24</string>
       </entry>
       <entry>
         <string>Substance</string>
@@ -74,8 +76,10 @@
   <entry>
     <string>au_crawlrules</string>
     <!--  CRAWL COMMENT BLOCK
+    - googleAnalyticsPlugin.js : TMP: ASCE recursing ever deeper incorrectly relative url
     - "imgJawr" exclusion is Taylor&Francis child specific. See RU4586 - removeable after that gets dealt with
-    - include all image/css files that live under base_url
+    - include all content from cdn (eg js, css and common images) cdn.nejm.org 
+      (For now, OR in other global urls eg mathjax)
     - specifically include images/figures/tables that live under
          <base>/na101/home/literatum/publisher/<publisher_id>/journals/<dirname>/<journal_id>/....
          in case it has a suffix not covered by the first rule
@@ -88,9 +92,14 @@
     - exclude the article with the search highlight turned off. It's redundant (BioOneAtypon)
     - exclude the citedBy tab of an article by not explicitly allowing it in the next rule
     - exclude the "mlt" (related articles) page (see: http://www.tandfonline.com/toc/rama20/7/1)
+
     - include the article in all possible formats - which live under non-deterministic DOI path; do not terminate, could go deeper
     - use basic DOI pattern, to whit: PREFIX = one or more digits and dots [0-9.]+; SUFFIX = not a slash
     - The following may not be needed by all Atypon publishers, but won't hurt:
+    - exclude the article ending with a suffix that is now normalized off to handle previously collected
+    - allow only downloadCitation format=ris and include=cit or abs in order to ignore previously collected mismatch
+    - allow the download of a figure (this is how ppt version of image comes down - 
+    - see http://www.nrcresearchpress.com/action/downloadFigures?doi=10.1139/p2012-099&id=f5
     - exclude a doi/<type>/<DOIprefix>/null?sequence=.... (taylor&francis)
     - exclude the popup image if the id is null (bioOneAtypon)        
     - some publishers show in-line images in larger format using URL with show*Image and variations for other formats
@@ -99,16 +108,18 @@
      -->
     <list>
       <string>2,"^%simgJawr/[^/]+/templates/jsp/_style2/_tandf/images/favicon\.png$", base_url</string>
-      <string>1,"^https?://%s.*\.(bmp|css|eot|gif|ico|jpe?g|js|png|svg|tif?f|ttf|woff)(_v[0-9]+)?$", base_url_host</string>
+      <string>2,"^%sdoi/.*/googleAnalyticsPlugin\.js$", base_url</string>
+      <string>1,"^https?://%s[^?]*\.(bmp|css|eot|gif|ico|jpe?g|js|png|svg|tif?f|ttf|woff)(_v[0-9]+)?$", base_url_host</string>
+      <string>1,"^https?://(cdn\.nejm\.org)/."</string>
       <string>1,"^%sna101/home/literatum/publisher/[^/]+/journals/[^/]+/%s/", base_url, journal_id</string>   
       <string>1,"^%stoc/%s(\.[0-9]+)?/%s($|/)", base_url, journal_id, volume_name</string>
-      <string>2,"^%sdoi/[^/]+/[0-9.]+/[-.9]+$", base_url</string>
-      <string>2,"^%sdoi/[^/]+/[0-9.]+/null\?", base_url</string>      
-      <string>2,"^%sdoi/.*\?tab=permissions", base_url</string>      
-      <string>2,"^%sdoi/.*\?prevSearch=$", base_url</string>      
+      <string>2,"^%sdoi/[^/]+/[0-9.]+/(null\?|[-.9]+$)", base_url</string>
+      <string>2,"^%sdoi/.*\?(prevSearch=|queryID=%%24%%7BresultBean.queryID%%7D|tab=permissions)", base_url</string>  
       <string>1,"^%sdoi/(pdf|pdfplus|full|abs|ref|suppl|figure|video[^/]+)/[0-9.]+/", base_url</string>
       <string>2,"^%saction/showFullPopup\?doi=.*&amp;id=$", base_url</string>          
-      <string>1,"^%saction/(showImage|showFullPopup|showCitFormats|showSupplements|showMediaPlayer|showPopup|downloadCitation)\?([^=]+=[^&amp;]*&amp;)*doi=", base_url</string>
+      <string>1,"^%saction/downloadCitation\?doi=.*&amp;format=ris&amp;include=(cit|abs)$", base_url</string> 
+      <string>1,"^%saction/downloadFigures\?doi=.+&amp;id=[^&amp;]+$", base_url</string>          
+      <string>1,"^%saction/(showImage|showFullPopup|showCitFormats|showSupplements|showMediaPlayer|showPopup)\?([^=]+=[^&amp;]+&amp;)*doi=", base_url</string>
     </list>
   </entry>
   <entry>
@@ -149,6 +160,15 @@
     </list>
   </entry>
   <entry>
+    <string>au_def_new_content_crawl</string>
+    <long>1209600000</long>
+  </entry>
+  <entry>
+    <string>au_def_pause_time</string>
+    <long>3000</long>
+  </entry>
+  <entry>
+<!--  this is actually used to look for redirection  -->  
     <string>plugin_substance_predicate_factory</string>
     <string>org.lockss.plugin.atypon.BaseAtyponSubstancePredicateFactory</string>
   </entry>  
@@ -230,13 +250,34 @@
       </entry>
     </map>
   </entry>
+  <!-- au_permitted_host_pattern:
+       Necessary for using global hosts (eg cdn) (instead of using base_url2),
+       Until unwieldy, confine these settings to BaseAtyponParent
+       Also, au_permitted_host_pattern must find match in lockss-daemon config (eg):
+       org.lockss.crawler.allowedPluginPermittedHosts =cdn\.nejm\.org -->
+  <entry>
+    <string>au_permitted_host_pattern</string>
+    <string>"cdn\.nejm\.org"</string>
+  </entry>  
+  <!-- if use a global host AND that url differs from (eg) ip to ip, may need to 
+       use these patterns to either repair/exclude files from polling
+  <entry>
+    <string>au_repair_from_peer_if_missing_url_pattern</string>
+    <string></string>
+  </entry>
+  -->
+  <!-- these files may differ with differing versions (eg 6.0 vs 6.1), so
+        let's not hash them
+  -->
+  <entry>
+    <string>au_exclude_urls_from_polls_pattern</string>
+    <string>cdn\.nejm\.org\/6\.[\d]\/(img|css|js)\/.+\.(gif|js|css|png|jpg)$</string>
+  </entry>
   <!-- GLN children require a plugin_au_config_user_msg, which is a printf -->
   <!-- Here is a default version, but plugins may need to customize -->
   <!-- CLOCKSS children must turn it off-->
-  <!--  TURN THIS OFF UNTIL 1.67
   <entry>
     <string>plugin_au_config_user_msg</string>
     <string>"Atypon Systems hosts this archival unit (AU) and requires that you &lt;a href=&apos;%saction/institutionLockssIpChange&apos;&gt;register the IP address of this LOCKSS box in your institutional account as a crawler&lt;/a&gt; before allowing your LOCKSS box to harvest this AU. Failure to comply with this publisher requirement may trigger crawler traps on the Atypon Systems platform, and your LOCKSS box or your entire institution may be temporarily banned from accessing the site. You only need to register the IP address of your LOCKSS box once for all AUs published by this publisher.", base_url</string>
   </entry>
-   TURN THI SOFF UNTIL 1.67 -->
 </map>

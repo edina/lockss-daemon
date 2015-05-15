@@ -1,5 +1,5 @@
 /*
- * $Id: TestLockssRunnable.java,v 1.9 2013-05-27 05:38:40 tlipkis Exp $
+ * $Id$
  */
 
 /*
@@ -220,6 +220,7 @@ public class TestLockssRunnable extends LockssTestCase {
     }
     assertTrue(threadHung);
     assertEquals(Constants.EXIT_CODE_THREAD_HUNG, daemonExitCode);
+    assertEquals("Thread hung for 2000ms", daemonExitMsg);
   }
 
   // Same, but should produce a thread dump.
@@ -261,7 +262,32 @@ public class TestLockssRunnable extends LockssTestCase {
     // wait until thread exits, make sure it triggered threadExited()
     thr.join(TIMEOUT_SHOULDNT);
     assertTrue(threadExited);
+    assertEquals(null, threadExitCause);
     assertEquals(Constants.EXIT_CODE_THREAD_EXIT, daemonExitCode);
+    assertEquals("Thread exited", daemonExitMsg);
+  }
+
+  public void testTriggerOnError() throws Exception {
+    TestRunnable runabl = new TestRunnable("Test");
+    goOn = true;
+    triggerOnExit = true;
+    dogInterval = 20000;
+    stepTime = 1000;
+    toThrow = new RuntimeException("Test RE");
+    Thread thr = start(runabl);
+    if (!startSem.take(TIMEOUT_SHOULDNT)) {
+      fail("Thread didn't start");
+    }
+    if (!stopSem.take(TIMEOUT_SHOULDNT)) {
+      fail("Thread didn't stop");
+    }
+    // wait until thread exits, make sure it triggered threadExited()
+    thr.join(TIMEOUT_SHOULDNT);
+    assertTrue(threadExited);
+    assertEquals("java.lang.RuntimeException: Test RE",
+		 threadExitCause.toString());
+    assertEquals(Constants.EXIT_CODE_THREAD_EXIT, daemonExitCode);
+    assertEquals("Thread exited", daemonExitMsg);
   }
 
   public void testTriggerOnExitNoInterval() throws Exception {
@@ -283,16 +309,41 @@ public class TestLockssRunnable extends LockssTestCase {
     assertEquals(Constants.EXIT_CODE_THREAD_EXIT, daemonExitCode);
   }
 
+  public void testTriggerOnOome() throws Exception {
+    ConfigurationUtil.addFromArgs(LockssThread.PARAM_EXIT_DAEMON_ON_OOME, "true");
+    TestRunnable runabl = new TestRunnable("Test");
+    goOn = true;
+    triggerOnExit = false;
+    dogInterval = 0;
+    stepTime = 1000;
+    toError = new OutOfMemoryError("Test OOME");
+    Thread thr = start(runabl);
+    if (!startSem.take(TIMEOUT_SHOULDNT)) {
+      fail("Thread didn't start");
+    }
+    if (!stopSem.take(TIMEOUT_SHOULDNT)) {
+      fail("Thread didn't stop");
+    }
+    // wait until thread exits, make sure it triggered threadExited()
+    thr.join(TIMEOUT_SHOULDNT);
+    assertEquals(Constants.EXIT_CODE_THREAD_EXIT, daemonExitCode);
+    assertEquals("Thread exited with OutOfMemoryError", daemonExitMsg);
+  }
+
   SimpleBinarySemaphore startSem;
   SimpleBinarySemaphore stopSem;
   SimpleBinarySemaphore runSem;
+  Error toError;
+  RuntimeException toThrow;
   volatile boolean goOn;
   volatile long dogInterval;
   volatile long stepTime;
   volatile boolean triggerOnExit;
   volatile boolean threadHung;
   volatile boolean threadExited;
+  volatile Throwable threadExitCause;
   volatile int daemonExitCode;
+  volatile String daemonExitMsg;
 
   private class TestRunnable extends LockssRunnable {
     private boolean runSuper = false;
@@ -305,45 +356,59 @@ public class TestLockssRunnable extends LockssTestCase {
       runSuper = flg;
     }
 
+    @Override
     public void lockssRun() {
-
-      if (dogInterval != 0) {
-	startWDog(dogInterval);
-      }
-      if (triggerOnExit) {
-	triggerWDogOnExit(true);
-      }
-      nowRunning();
-      startSem.give();
-      if (runSem != null) {
-	runSem.take();
-      }
-      if (dogInterval != 0) {
-	for (int ix = 0; ix < 10; ix++) {
-	  if (stepTime != 0) {
-	    TimeBase.step(stepTime);
-	  }
-	  if (dogInterval != 0) {
-	    pokeWDog();
-	  }
-	  TimerUtil.guaranteedSleep(10);
+      try {
+	if (dogInterval != 0) {
+	  startWDog(dogInterval);
 	}
+	if (triggerOnExit) {
+	  triggerWDogOnExit(true);
+	}
+	nowRunning();
+	startSem.give();
+	if (toError != null) {
+	  throw toError;
+	}
+	if (toThrow != null) {
+	  throw toThrow;
+	}
+	if (runSem != null) {
+	  runSem.take();
+	}
+	if (dogInterval != 0) {
+	  for (int ix = 0; ix < 10; ix++) {
+	    if (stepTime != 0) {
+	      TimeBase.step(stepTime);
+	    }
+	    if (dogInterval != 0) {
+	      pokeWDog();
+	    }
+	    TimerUtil.guaranteedSleep(10);
+	  }
+	}
+      } finally {
+	stopSem.give();
       }
-      stopSem.give();
     }
 
+    @Override
     protected void exitDaemon(int exitCode, String msg) {
       daemonExitCode = exitCode;
+      daemonExitMsg = msg;
     }
 
+    @Override
     protected void threadHung() {
       threadHung = true;
       super.threadHung();
     }
 
-    protected void threadExited() {
+    @Override
+    protected void threadExited(Throwable cause) {
       threadExited = true;
-      super.threadExited();
+      threadExitCause = cause;
+      super.threadExited(cause);
     }
   }
 }

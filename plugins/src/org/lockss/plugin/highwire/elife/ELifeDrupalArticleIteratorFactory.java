@@ -1,10 +1,10 @@
 /*
- * $Id: ELifeDrupalArticleIteratorFactory.java,v 1.2 2014-10-22 16:13:28 etenbrink Exp $
+ * $Id$
  */
 
 /*
 
-Copyright (c) 2000-2014 Board of Trustees of Leland Stanford Jr. University,
+Copyright (c) 2000-2015 Board of Trustees of Leland Stanford Jr. University,
 all rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -45,14 +45,13 @@ public class ELifeDrupalArticleIteratorFactory
     implements ArticleIteratorFactory,
                ArticleMetadataExtractorFactory {
   
-  protected static Logger log =
-      Logger.getLogger(ELifeDrupalArticleIteratorFactory.class);
+  private static final Logger log = Logger.getLogger(ELifeDrupalArticleIteratorFactory.class);
   
   protected static final String ROOT_TEMPLATE =
     "\"%scontent/\", base_url";
   
   protected static final String PATTERN_TEMPLATE =
-    "\"^%scontent/(?:[^/]+/)?[0-9]+/e(?:[^./?&]+)$\", " + "base_url";
+    "\"^%scontent/(elife/)?[0-9]+/e(?:[^./?&]+)$\", base_url";
   // various aspects of an article
   // http://elifesciences.org/content/1/e00311
   // http://elifesciences.org/content/elife/1/e00311.full.pdf
@@ -73,6 +72,7 @@ public class ELifeDrupalArticleIteratorFactory
   protected static final String FIGURES_REPLACEMENT = "/$1/$2/article-data";
   
   
+  @Override
   public Iterator<ArticleFiles> createArticleIterator(ArchivalUnit au,
                                                       MetadataTarget target)
       throws PluginException {
@@ -86,7 +86,8 @@ public class ELifeDrupalArticleIteratorFactory
     // until this is deprecated
     builder.addAspect(
         LANDING_PATTERN, LANDING_REPLACEMENT,
-        ArticleFiles.ROLE_FULL_TEXT_HTML_LANDING_PAGE);
+        ArticleFiles.ROLE_FULL_TEXT_HTML_LANDING_PAGE,
+        ArticleFiles.ROLE_ARTICLE_METADATA);
     
     builder.addAspect(
         Arrays.asList(PDF_REPLACEMENT, PDF_REPLACEMENT2),
@@ -96,19 +97,10 @@ public class ELifeDrupalArticleIteratorFactory
     builder.addAspect(FIGURES_REPLACEMENT,
         ArticleFiles.ROLE_FIGURES_TABLES);
     
-    // add metadata role from html
-    builder.setRoleFromOtherRoles(ArticleFiles.ROLE_ARTICLE_METADATA,
-        ArticleFiles.ROLE_FULL_TEXT_HTML_LANDING_PAGE);
-    
-    // The order in which we want to define full_text_cu.
-    // First one that exists will get the job
-    builder.setFullTextFromRoles(
-        ArticleFiles.ROLE_FULL_TEXT_HTML_LANDING_PAGE,
-        ArticleFiles.ROLE_FULL_TEXT_PDF);
-    
     return builder.getSubTreeArticleIterator();
   }
   
+  @Override
   public ArticleMetadataExtractor createArticleMetadataExtractor(MetadataTarget target)
       throws PluginException {
     return new BaseArticleMetadataExtractor(ArticleFiles.ROLE_ARTICLE_METADATA);

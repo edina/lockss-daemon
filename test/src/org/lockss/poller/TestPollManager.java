@@ -1,5 +1,5 @@
 /*
- * $Id: TestPollManager.java,v 1.113.28.3 2014-12-27 03:32:25 tlipkis Exp $
+ * $Id$
  */
 
 /*

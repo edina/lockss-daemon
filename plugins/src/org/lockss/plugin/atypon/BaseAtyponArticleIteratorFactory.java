@@ -1,10 +1,10 @@
 /*
- * $Id: BaseAtyponArticleIteratorFactory.java,v 1.12 2014-10-21 16:47:13 alexandraohlson Exp $
+ * $Id$
  */
 
 /*
 
-Copyright (c) 2000-2014 Board of Trustees of Leland Stanford Jr. University,
+Copyright (c) 2000-2015 Board of Trustees of Leland Stanford Jr. University,
 all rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -57,8 +57,12 @@ ArticleMetadataExtractorFactory {
   private static final String ROLE_PDFPLUS = "PdfPlus";
 
   private static final String ROOT_TEMPLATE = "\"%sdoi/\", base_url";
-  private static final String PATTERN_TEMPLATE = 
+
+  // Only put the 'abs' in the pattern if used for primary; otherwise builder spews errors
+  private static final String PATTERN_TEMPLATE_WITH_ABSTRACT = 
       "\"^%sdoi/(abs|full|pdf|pdfplus)/[.0-9]+/\", base_url";
+  private static final String PATTERN_TEMPLATE = 
+      "\"^%sdoi/(full|pdf|pdfplus)/[.0-9]+/\", base_url";
 
   // various aspects of an article
   // DOI's can have "/"s in the suffix
@@ -76,6 +80,8 @@ ArticleMetadataExtractorFactory {
   // Things not an "article" but in support of an article
   private static final String REFERENCES_REPLACEMENT = "/doi/ref/$1/$2";
   private static final String SUPPL_REPLACEMENT = "/doi/suppl/$1/$2";
+  // MassMedical uses this second form for SUPPL materials
+  private static final String SECOND_SUPPL_REPLACEMENT = "/action/showSupplements?doi=$1%2F$2";
   // link extractor used forms to pick up this URL
 
   /* TODO: Note that if the DOI suffix has a "/" this will not work because the 
@@ -102,6 +108,7 @@ ArticleMetadataExtractorFactory {
   //  <atyponbase>.org/doi/ref/10.3366/drs.2011.0010  (page with references on it)
   //
   // note: at least one publisher has a doi suffix that includes a "/", eg:
+  // t&f,writing systems research - vol3, issue2 
   // <base>/doi/pdfplus/10.1093/wsr/wsr0023
   //
   //  There is the possibility of downloaded citation information which will get normalized to look something like this:
@@ -112,9 +119,15 @@ ArticleMetadataExtractorFactory {
   public Iterator<ArticleFiles> createArticleIterator(ArchivalUnit au, MetadataTarget target) throws PluginException {
     SubTreeArticleIteratorBuilder builder = localBuilderCreator(au);
 
-    builder.setSpec(target,
-        ROOT_TEMPLATE,
-        PATTERN_TEMPLATE, Pattern.CASE_INSENSITIVE);
+    if (isAbstractOnly(au)) {
+      builder.setSpec(target,
+          ROOT_TEMPLATE,
+          PATTERN_TEMPLATE_WITH_ABSTRACT, Pattern.CASE_INSENSITIVE);
+    } else {
+      builder.setSpec(target,
+          ROOT_TEMPLATE,
+          PATTERN_TEMPLATE, Pattern.CASE_INSENSITIVE);
+    }
 
     // The order in which these aspects are added is important. They determine which will trigger
     // the ArticleFiles and if you are only counting articles (not pulling metadata) then the 
@@ -157,7 +170,8 @@ ArticleMetadataExtractorFactory {
         ArticleFiles.ROLE_REFERENCES);
 
     // set a role, but it isn't sufficient to trigger an ArticleFiles
-    builder.addAspect(SUPPL_REPLACEMENT,
+    builder.addAspect(Arrays.asList(
+        SUPPL_REPLACEMENT, SECOND_SUPPL_REPLACEMENT),
         ArticleFiles.ROLE_SUPPLEMENTARY_MATERIALS);
 
     // set a role, but it isn't sufficient to trigger an ArticleFiles
@@ -165,7 +179,7 @@ ArticleMetadataExtractorFactory {
     builder.addAspect(Arrays.asList(
         RIS_REPLACEMENT, SECOND_RIS_REPLACEMENT),
         ArticleFiles.ROLE_CITATION_RIS);
-    
+
     // The order in which we want to define full_text_cu.  
     // First one that exists will get the job
     builder.setFullTextFromRoles(ArticleFiles.ROLE_FULL_TEXT_PDF,

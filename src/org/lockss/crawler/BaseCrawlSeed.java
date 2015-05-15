@@ -1,5 +1,5 @@
 /*
- * $Id: BaseCrawlSeed.java 40192 2015-03-04 06:40:12Z thib_gc $
+ * $Id$
  */
 
 /*

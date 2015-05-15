@@ -3,6 +3,8 @@
   publisher <
     name = American Psychiatric Publishing Inc.
   >
+  
+  comment[platform] = Moved from HW (to Silverchair) thence to Atypon.
 
   {
   
@@ -72,17 +74,16 @@
       
       {
     
-      plugin = org.lockss.plugin.silverchair.SilverchairJournalsPlugin
+      plugin = needs.plugin
+      comment[platform] = Atypon
       implicit < status ; year ; name ; param[year] >
       param[base_url] = http://ajp.psychiatryonline.org/
       param[resource_id] = 13
       comment[0] = content starts from 1844 to current
-        
-        comment[smoketest] = created one au for testing
     
-      au < testing ; 2011 ; The American Journal of Psychiatry Volume 168 ; 2011 >
+      au < exists ; 2011 ; The American Journal of Psychiatry Volume 168 ; 2011 >
       au < exists ; 2012 ; The American Journal of Psychiatry Volume 169 ; 2012 >
-      au < testing ; 2013 ; The American Journal of Psychiatry Volume 170 ; 2013 >
+      au < exists ; 2013 ; The American Journal of Psychiatry Volume 170 ; 2013 >
       au < exists ; 2014 ; The American Journal of Psychiatry Volume 171 ; 2014 >
     
       }
@@ -114,7 +115,8 @@
       }
       
       {
-      plugin = org.lockss.plugin.silverchair.SilverchairJournalsPlugin
+      plugin = needs.plugin
+      comment[platform] = Atypon
       implicit < status ; year ; name ; param[year] >
       param[base_url] = http://focus.psychiatryonline.org/
       param[resource_id] = 21
@@ -157,7 +159,8 @@
       }
       
       {
-      plugin = org.lockss.plugin.silverchair.SilverchairJournalsPlugin
+      plugin = needs.plugin
+      comment[platform] = Atypon
       implicit < status ; year ; name ; param[year] >
       param[base_url] = http://neuro.psychiatryonline.org/
       param[resource_id] = 62
@@ -221,7 +224,8 @@
       }
       
       {
-      plugin = org.lockss.plugin.silverchair.SilverchairJournalsPlugin
+      plugin = needs.plugin
+      comment[platform] = Atypon
       implicit < status ; year ; name ; param[year] >
       param[base_url] = http://psychnews.psychiatryonline.org/
       param[resource_id] = 61
@@ -264,16 +268,15 @@
       }
       
       {
-      plugin = org.lockss.plugin.silverchair.SilverchairJournalsPlugin
+      plugin = needs.plugin
+      comment[platform] = Atypon
       implicit < status ; year ; name ; param[year] >
       param[base_url] = http://ps.psychiatryonline.org/
       param[resource_id] = 18
       comment[0] = content starts from year 1950 to current
-        
-        comment[smoketest] = created one au for testing
     
       au < exists ; 2012 ; Psychiatric Services Volume 63 ; 2012 >
-      au < testing ; 2013 ; Psychiatric Services Volume 64 ; 2013 >
+      au < exists ; 2013 ; Psychiatric Services Volume 64 ; 2013 >
       au < exists ; 2014 ; Psychiatric Services Volume 65 ; 2014 >
       }
     

@@ -1,5 +1,5 @@
 /*
-* $Id: MockIdentityManager.java,v 1.23.12.1 2014-12-28 08:36:36 tlipkis Exp $
+* $Id$
  */
 
 /*

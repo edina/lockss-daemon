@@ -1,5 +1,5 @@
 /*
- * $Id: PermissionMap.java,v 1.38.2.1 2014-12-17 23:21:31 tlipkis Exp $
+ * $Id$
  */
 
 /*

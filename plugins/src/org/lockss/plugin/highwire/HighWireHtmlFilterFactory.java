@@ -1,5 +1,5 @@
 /*
- * $Id: HighWireHtmlFilterFactory.java,v 1.12 2013-12-13 04:20:02 etenbrink Exp $
+ * $Id$
  */
 
 /*
@@ -81,7 +81,6 @@ public class HighWireHtmlFilterFactory implements FilterFactory {
         HtmlNodeFilters.tagWithAttribute("table", "class", "content_box_inner_table"),
         HtmlNodeFilters.tagWithAttribute("a", "class", "contentbox"),
         HtmlNodeFilters.tagWithAttribute("div", "id", "ArchivesNav"),
-        // the following filter was removed as it does not work, 
         // tagWithText creates a CompositeStringFilter, which requires the node 
         // to be an instanceof CompositeTag, <strong> is not a CompositeTag, 
         //   HtmlNodeFilters.tagWithText("strong", "related", true),

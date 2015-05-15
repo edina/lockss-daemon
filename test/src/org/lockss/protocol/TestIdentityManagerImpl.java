@@ -1,5 +1,5 @@
 /*
- * $Id: TestIdentityManagerImpl.java,v 1.33.12.2 2014-12-28 08:36:36 tlipkis Exp $
+ * $Id$
  */
 
 /*

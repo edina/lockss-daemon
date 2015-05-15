@@ -1,5 +1,5 @@
 /*
- * $Id: MockArchivalUnit.java,v 1.109.2.2 2014-12-27 03:33:21 tlipkis Exp $
+ * $Id$
  */
 
 /*
@@ -174,10 +174,10 @@ public class MockArchivalUnit implements ArchivalUnit {
    * over all the CUs in cuHash.  Note only the CuIterator is currently set
    * up, not the other iterators. */
   public CachedUrlSet populateAuCachedUrlSet() {
-    MockCachedUrlSet mcus = (MockCachedUrlSet)cus;
     if (cus == null) {
       cus = makeCachedUrlSet(new AuCachedUrlSetSpec());
     }
+    MockCachedUrlSet mcus = (MockCachedUrlSet)cus;
     Collection<String> urls = new TreeSet(cuHash.keySet());
     Collection culist = new ArrayList();
     for (String url : urls) {

@@ -1,5 +1,5 @@
 /*
- * $Id: MockUrlFetcher.java,v 1.3 2014-11-25 01:41:43 wkwilson Exp $
+ * $Id$
  */
 
 /*
@@ -74,6 +74,7 @@ public class MockUrlFetcher implements UrlFetcher {
   private UrlConsumerFactory ucf;
   private CrawlerFacade cf;
   private LockssWatchdog wdog;
+  private CrawlUrl curl;
 
   public MockUrlFetcher(CrawlerFacade cf, String url){
     this.url = url;
@@ -113,6 +114,10 @@ public class MockUrlFetcher implements UrlFetcher {
     return localAddr;
   }
 
+  public void setCrawlUrl(CrawlUrl curl) {
+    this.curl = curl;
+  }
+  
   public void setFetchFlags(BitSet fetchFlags) {
     this.fetchFlags = fetchFlags;
   }

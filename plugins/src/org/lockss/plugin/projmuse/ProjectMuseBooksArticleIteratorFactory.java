@@ -1,10 +1,10 @@
 /*
- * $Id: ProjectMuseBooksArticleIteratorFactory.java,v 1.2 2013-09-26 18:36:22 wkwilson Exp $
+ * $Id$
  */
 
 /*
 
-Copyright (c) 2000-2011 Board of Trustees of Leland Stanford Jr. University,
+Copyright (c) 2000-2015 Board of Trustees of Leland Stanford Jr. University,
 all rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -33,43 +33,38 @@ in this Software without prior written authorization from Stanford University.
 package org.lockss.plugin.projmuse;
 
 import java.util.Iterator;
-import java.util.regex.*;
+import java.util.regex.Pattern;
 
-import org.lockss.daemon.*;
+import org.lockss.daemon.PluginException;
 import org.lockss.extractor.*;
 import org.lockss.plugin.*;
-import org.lockss.util.Logger;
-
 
 public class ProjectMuseBooksArticleIteratorFactory
     implements ArticleIteratorFactory,
                ArticleMetadataExtractorFactory {
 
-  protected static Logger log = Logger.getLogger("ProjectMuseBooksArticleIteratorFactory");
-  
-  protected static final String ROOT_TEMPLATE = "\"%sbooks/\", base_url"; // params from tdb file corresponding to AU
-  protected static final String PATTERN_TEMPLATE = "\"^%sbooks/%s/%s-[\\d]+\", base_url, eisbn, eisbn";
-  // http://muse.jhu.edu/books/9780299107635/9780299107635-2.pdf
+  // http://muse.jhu.edu/books/9780299107635
+  protected static final String ROOT_TEMPLATE = "\"%sbooks/\", base_url";
+  protected static final String PATTERN_TEMPLATE = "\"^%sbooks/%s/?$\", base_url, eisbn";
   
   @Override
   public Iterator<ArticleFiles> createArticleIterator(ArchivalUnit au,
                                                       MetadataTarget target)
       throws PluginException {
-    SubTreeArticleIteratorBuilder builder = new SubTreeArticleIteratorBuilder(au);
-
-    final Pattern PDF_PATTERN = Pattern.compile("([0-9]{13})/([0-9]{13})-([0-9]+).pdf$");
-    final String PDF_REPL = "$1/$1-$3.pdf";
-    final Pattern HTML_PATTERN = Pattern.compile("([0-9]{13})$");
-    final String HTML_REPL = "$1";
-    builder.setSpec(target, ROOT_TEMPLATE, PATTERN_TEMPLATE, Pattern.CASE_INSENSITIVE);
-    // only meaningful substance on this page is pdfs
-    builder.addAspect(PDF_PATTERN, PDF_REPL, ArticleFiles.ROLE_FULL_TEXT_PDF);
-    builder.addAspect(HTML_PATTERN, HTML_REPL, ArticleFiles.ROLE_ARTICLE_METADATA);
-    
-    builder.setRoleFromOtherRoles(ArticleFiles.ROLE_ARTICLE_METADATA,
-        ArticleFiles.ROLE_ABSTRACT,
-        ArticleFiles.ROLE_FULL_TEXT_HTML);
-    return builder.getSubTreeArticleIterator(); 
+    return new SubTreeArticleIterator(au,
+                                      new SubTreeArticleIterator.Spec()
+                                        .setTarget(target)
+                                        .setRootTemplate(ROOT_TEMPLATE)
+                                        .setPatternTemplate(PATTERN_TEMPLATE,
+                                                            Pattern.CASE_INSENSITIVE)) {
+      @Override
+      protected ArticleFiles createArticleFiles(CachedUrl cu) {
+        ArticleFiles af = super.createArticleFiles(cu);
+        af.setRoleCu(ArticleFiles.ROLE_ABSTRACT, cu);
+        af.setRoleCu(ArticleFiles.ROLE_ARTICLE_METADATA, cu);
+        return af;
+      }
+    };
   }
 
   // getting metadata from the tdb - BaseArticleMetadataExtractor does that for us!
@@ -77,7 +72,7 @@ public class ProjectMuseBooksArticleIteratorFactory
   @Override
   public ArticleMetadataExtractor createArticleMetadataExtractor(MetadataTarget target)
       throws PluginException {
-    return new BaseArticleMetadataExtractor(null);
+    return new BaseArticleMetadataExtractor(ArticleFiles.ROLE_ARTICLE_METADATA);
   }
 
 }

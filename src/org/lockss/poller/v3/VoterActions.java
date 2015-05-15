@@ -1,5 +1,5 @@
 /*
- * $Id: VoterActions.java,v 1.36.4.1 2014-12-28 08:38:55 tlipkis Exp $
+ * $Id$
  */
 
 /*

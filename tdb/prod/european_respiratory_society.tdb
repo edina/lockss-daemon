@@ -25,6 +25,7 @@
     au < manifest ; 2011-2012 ; Breathe Volume 8 ; 8 >
     au < manifest ; 2012-2013 ; Breathe Volume 9 ; 9 >
     au < exists ; 2014 ; Breathe Volume 10 ; 10 >
+    au < expected ; 2015 ; Breathe Volume 11 ; 11 >
     
   }
 
@@ -36,12 +37,10 @@
       issnl = 2312-0541
     >
 
-    plugin = org.lockss.plugin.highwire.HighWirePressH20Plugin
-    implicit < status ; year ; name ; param[volume_name] >
-    param[base_url] = http://ERJopenres.ersjournals.com/
+    param[base_url] = http://openres.ersjournals.com/
 
-    au < expected ; 2014 ; ERJ Open Research Volume 1 ; 1 >
-    
+    au < exists ; 2015 ; ERJ Open Research Volume 1 ; 1 >
+
   }
 
   {
@@ -104,6 +103,7 @@
     au < manifest ; 2013 ; European Respiratory Journal Volume 42 ; 42 >
     au < manifest ; 2014 ; European Respiratory Journal Volume 43 ; 43 >
     au < manifest ; 2014 ; European respiratory Journal Volume 44 ; 44 >
+    au < manifest ; 2015 ; European Respiratory Journal Volume 45 ; 45 >
     
   }
 
@@ -128,6 +128,7 @@
     au < released ; 2012 ; European Respiratory Review Volume 21 ; 21 >
     au < manifest ; 2013 ; European Respiratory Review Volume 22 ; 22 >
     au < manifest ; 2014 ; European Respiratory Review Volume 23 ; 23 >
+    au < manifest ; 2015 ; European Respiratory Review Volume 24 ; 24 >
  
 
   }

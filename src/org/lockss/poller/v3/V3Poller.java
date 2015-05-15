@@ -1,5 +1,5 @@
 /*
- * $Id: V3Poller.java,v 1.181.2.3 2014-12-28 08:38:26 tlipkis Exp $
+ * $Id$
  */
 
 /*

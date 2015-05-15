@@ -1,5 +1,5 @@
 /*
- * $Id: ReindexingTask.java,v 1.16 2014-08-29 20:47:04 pgust Exp $
+ * $Id$
  */
 
 /*
@@ -35,7 +35,6 @@ import java.io.*;
 import java.lang.management.*;
 import java.sql.*;
 import java.util.*;
-
 import org.lockss.app.LockssDaemon;
 import org.lockss.config.TdbAu;
 import org.lockss.daemon.*;
@@ -112,6 +111,9 @@ public class ReindexingTask extends StepTask {
   // The metadata manager.
   private final MetadataManager mdManager;
 
+  // The metadata manager SQL executor.
+  private final MetadataManagerSql mdManagerSql;
+
   private final Emitter emitter;
   private int extractedCount = 0;
 
@@ -152,6 +154,7 @@ public class ReindexingTask extends StepTask {
     this.auNoSubstance = AuUtil.getAuState(au).hasNoSubstance();
     dbManager = LockssDaemon.getLockssDaemon().getDbManager();
     mdManager = LockssDaemon.getLockssDaemon().getMetadataManager();
+    mdManagerSql = mdManager.getMetadataManagerSql();
 
     // The accumulator of article metadata.
     emitter = new ReindexingEmitter();
@@ -499,7 +502,7 @@ public class ReindexingTask extends StepTask {
         tdbauIsbn = tdbau.getIsbn();
         tdbauIssn = tdbau.getPrintIssn();
         tdbauEissn = tdbau.getEissn();
-        tdbauJournalTitle = tdbau.getJournalTitle();
+        tdbauJournalTitle = tdbau.getPublicationTitle();
       }
 
       if (tdbau != null) {
@@ -708,10 +711,11 @@ public class ReindexingTask extends StepTask {
         // Check whether this same AU has been indexed before.
         if (!isNewAu) {
           // Only allow incremental extraction if not doing full reindex
-          needFullReindex = mdManager.needAuFullReindexing(conn, au);
+          needFullReindex = mdManagerSql.needAuFullReindexing(conn, au);
           log.debug2(DEBUG_HEADER + "needFullReindex = " + needFullReindex);
           if (!needFullReindex) {
-            long lastExtractTime = mdManager.getAuExtractionTime(conn, auSeq);
+            long lastExtractTime =
+        	mdManagerSql.getAuExtractionTime(conn, auSeq);
             log.debug2(DEBUG_HEADER + "lastExtractTime = " + lastExtractTime);
             target.setIncludeFilesChangedAfter(lastExtractTime);
           }
@@ -785,7 +789,8 @@ public class ReindexingTask extends StepTask {
             // stored in the database is older than the current plugin version.
             if (needFullReindex) { 
               // Yes: Remove old AU metadata before adding new.
-              removedArticleCount = mdManager.removeAuMetadataItems(conn, auId);
+              removedArticleCount =
+        	  mdManagerSql.removeAuMetadataItems(conn, auId);
               log.debug3(DEBUG_HEADER + "removedArticleCount = "
                   + removedArticleCount);
             }
@@ -805,7 +810,8 @@ public class ReindexingTask extends StepTask {
 
             // Remove the AU just re-indexed from the list of AUs pending to be
             // re-indexed.
-            mdManager.removeFromPendingAus(conn, auId);
+            mdManagerSql.removeFromPendingAus(conn, auId);
+            mdManager.updatePendingAusCount(conn);
 
             // Complete the database transaction.
             DbManager.commitOrRollback(conn, log);
@@ -852,7 +858,8 @@ public class ReindexingTask extends StepTask {
             // Get a connection to the database.
             conn = dbManager.getConnection();
 
-            mdManager.removeFromPendingAus(conn, au.getAuId());
+            mdManagerSql.removeFromPendingAus(conn, au.getAuId());
+            mdManager.updatePendingAusCount(conn);
 
             if (status == ReindexingStatus.Failed) {
               log.debug2(DEBUG_HEADER + "Marking as broken reindexing task au "
@@ -860,7 +867,7 @@ public class ReindexingTask extends StepTask {
 
             // Add the failed AU to the pending list with the right priority to
             // avoid processing it again before the underlying problem is fixed.
-              mdManager.addFailedIndexingAuToPendingAus(conn, au.getAuId());
+              mdManagerSql.addFailedIndexingAuToPendingAus(conn, au.getAuId());
             } else if (status == ReindexingStatus.Rescheduled) {
               log.debug2(DEBUG_HEADER + "Rescheduling reindexing task au "
                   + au.getName());
@@ -943,14 +950,14 @@ public class ReindexingTask extends StepTask {
 
       // Find the plugin.
       Long pluginSeq =
-          mdManager.findPlugin(conn, PluginManager.pluginIdFromAuId(auId));
+	  mdManagerSql.findPlugin(conn, PluginManager.pluginIdFromAuId(auId));
 
       // Check whether the plugin exists.
       if (pluginSeq != null) {
         // Yes: Get the database identifier of the AU.
         String auKey = PluginManager.auKeyFromAuId(auId);
 
-        auSeq = mdManager.findAu(conn, pluginSeq, auKey);
+        auSeq = mdManagerSql.findAu(conn, pluginSeq, auKey);
         log.debug2(DEBUG_HEADER + "auSeq = " + auSeq);
       }
 

@@ -1,5 +1,5 @@
 /*
- * $Id: BlockHasher.java,v 1.37.2.3 2014-12-28 08:37:37 tlipkis Exp $
+ * $Id$
  */
 
 /*

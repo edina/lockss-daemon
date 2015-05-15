@@ -1,5 +1,5 @@
 /*
- * $Id: BaseLockssUrlConnection.java,v 1.14 2012-09-25 23:01:42 tlipkis Exp $
+ * $Id$
  *
 
 Copyright (c) 2000-2003 Board of Trustees of Leland Stanford Jr. University,
@@ -108,6 +108,10 @@ public abstract class BaseLockssUrlConnection implements LockssUrlConnection {
   }
 
   public void setCookiePolicy(String policy) {
+    throw new UnsupportedOperationException();
+  }
+
+  public void setKeepAlive(boolean val) {
     throw new UnsupportedOperationException();
   }
 

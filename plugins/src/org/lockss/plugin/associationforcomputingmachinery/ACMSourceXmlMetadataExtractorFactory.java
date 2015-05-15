@@ -1,10 +1,10 @@
 /*
- * $Id: ACMSourceXmlMetadataExtractorFactory.java,v 1.6 2014-03-06 17:19:34 alexandraohlson Exp $
+ * $Id$
  */
 
 /*
 
- Copyright (c) 2000-2014 Board of Trustees of Leland Stanford Jr. University,
+ Copyright (c) 2000-2015 Board of Trustees of Leland Stanford Jr. University,
  all rights reserved.
 
  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -33,6 +33,7 @@
 package org.lockss.plugin.associationforcomputingmachinery;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.io.FilenameUtils;
 import org.lockss.util.*;
@@ -45,7 +46,7 @@ import org.lockss.plugin.clockss.SourceXmlSchemaHelper;
 
 
 public class ACMSourceXmlMetadataExtractorFactory extends SourceXmlMetadataExtractorFactory {
-  static Logger log = Logger.getLogger(ACMSourceXmlMetadataExtractorFactory.class);
+  private static final Logger log = Logger.getLogger(ACMSourceXmlMetadataExtractorFactory.class);
 
   private static SourceXmlSchemaHelper ACMHelper = null;
 
@@ -58,13 +59,6 @@ public class ACMSourceXmlMetadataExtractorFactory extends SourceXmlMetadataExtra
 
   public class ACMSourceXmlMetadataExtractor extends SourceXmlMetadataExtractor {
 
-    // this version shouldn't get called. It will ultimately get removed
-    // in favor of the version that takes a CachedUrl
-    @Override
-    protected SourceXmlSchemaHelper setUpSchema() {
-      return null; // cause a plugin exception to get thrown
-    }
-
     @Override
     protected SourceXmlSchemaHelper setUpSchema(CachedUrl cu) {
     // Once you have it, just keep returning the same one. It won't change.
@@ -76,7 +70,7 @@ public class ACMSourceXmlMetadataExtractorFactory extends SourceXmlMetadataExtra
     }
     
     @Override
-    protected ArrayList<String> getFilenamesAssociatedWithRecord(SourceXmlSchemaHelper helper, 
+    protected List<String> getFilenamesAssociatedWithRecord(SourceXmlSchemaHelper helper, 
         CachedUrl cu,
         ArticleMetadata oneAM) {
       
@@ -99,7 +93,7 @@ public class ACMSourceXmlMetadataExtractorFactory extends SourceXmlMetadataExtra
       }
       
       String cuBase = FilenameUtils.getFullPath(cu.getUrl());
-      ArrayList<String> returnList = new ArrayList<String>();
+      List<String> returnList = new ArrayList<String>();
       // default version is just the filename associated with the key, in this directory
       returnList.add(cuBase + filenameValue);
       return returnList;

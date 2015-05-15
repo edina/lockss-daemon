@@ -41,7 +41,7 @@
       au < released ; 2011 ; 4 ; AEDOS Volume 2011 ; 2011 ; >
       au < released ; 2012 ; 5 ; AEDOS Volume 2012 ; 2012 ; >
       au < released ; 2013 ; 6 ; AEDOS Volume 2013 ; 2013 ; >
-      au < manifest ; 2014 ; 7 ; AEDOS Volume 2014 ; 2014 ; >
+      au < released ; 2014 ; 7 ; AEDOS Volume 2014 ; 2014 ; >
 
   }
 
@@ -70,7 +70,8 @@
       au < released ; 2011 ; 15 ; Ambiente Construído Volume 2011 ; 2011 ; >
       au < released ; 2012 ; 16 ; Ambiente Construído Volume 2012 ; 2012 ; >
       au < released ; 2013 ; 17 ; Ambiente Construído Volume 2013 ; 2013 ; >
-      au < manifest ; 2014 ; 18 ; Ambiente Construído Volume 2014 ; 2014 ; >
+      au < released ; 2014 ; 18 ; Ambiente Construído Volume 2014 ; 2014 ; >
+      au < manifest ; 2015 ; 19 ; Ambiente Construído Volume 2015 ; 2015 ; >
 
   }
 
@@ -117,7 +118,8 @@
       au < released ; 2011 ; 29 ; Análise Econômica Volume 2011 ; 2011 ; >
       au < released ; 2012 ; 30 ; Análise Econômica Volume 2012 ; 2012 ; >
       au < released ; 2013 ; 31 ; Análise Econômica Volume 2013 ; 2013 ; >
-      au < manifest ; 2014 ; 32 ; Análise Econômica Volume 2014 ; 2014 ; >
+      au < released ; 2014 ; 32 ; Análise Econômica Volume 2014 ; 2014 ; >
+      au < manifest ; 2015 ; 33 ; Análise Econômica Volume 2015 ; 2015 ; >
 
   }
 
@@ -142,7 +144,7 @@
       au < released ; 1999 ; 7 ; Anos Noventa Volume 1999 ; 1999 ; >
       au < released ; 2000 ; 8 ; Anos Noventa Volume 2000 ; 2000 ; >
       au < released ; 2001 ; 9 ; Anos Noventa Volume 2001 ; 2001 ; >
-      au < released ; 2002 ; 10 ; Anos Noventa Volume 2002 ; 2002 ; >
+      au < down ; 2002 ; 10 ; Anos Noventa Volume 2002 ; 2002 ; Volume does not exist >
       au < released ; 2003 ; 11 ; Anos Noventa Volume 2003 ; 2003 ; >
       au < released ; 2004 ; 12 ; Anos Noventa Volume 2004 ; 2004 ; >
       au < released ; 2005 ; 13 ; Anos Noventa Volume 2005 ; 2005 ; >
@@ -154,7 +156,7 @@
       au < released ; 2011 ; 19 ; Anos Noventa Volume 2011 ; 2011 ; >
       au < released ; 2012 ; 20 ; Anos Noventa Volume 2012 ; 2012 ; >
       au < released ; 2013 ; 21 ; Anos Noventa Volume 2013 ; 2013 ; >
-      au < manifest ; 2014 ; 22 ; Anos Noventa Volume 2014 ; 2014 ; >
+      au < released ; 2014 ; 22 ; Anos Noventa Volume 2014 ; 2014 ; >
 
   }
 
@@ -171,7 +173,7 @@
 
       au < released ; 2012 ; 1 ; Austral: Revista Brasileira de Estratégia e Relações Internacionais Volume 2012 ; 2012 ; >
       au < released ; 2013 ; 2 ; Austral: Revista Brasileira de Estratégia e Relações Internacionais Volume 2013 ; 2013 ; >
-      au < manifest ; 2014 ; 3 ; Austral: Revista Brasileira de Estratégia e Relações Internacionais Volume 2014 ; 2014 ; >
+      au < released ; 2014 ; 3 ; Austral: Revista Brasileira de Estratégia e Relações Internacionais Volume 2014 ; 2014 ; >
 
   }
 
@@ -218,7 +220,8 @@
       au < notReady ; 2011 ; 38 ; Boletim Gaúcho de Geografia Volume 2011 ; 2011 ; css has background image with login page >
       au < notReady ; 2012 ; 39 ; Boletim Gaúcho de Geografia Volume 2012 ; 2012 ; css has background image with login page >
       au < notReady ; 2013 ; 40 ; Boletim Gaúcho de Geografia Volume 2013 ; 2013 ; css has background image with login page >
-      au < manifest ; 2014 ; 41 ; Boletim Gaúcho de Geografia Volume 2014 ; 2014 ; >
+      au < notReady ; 2014 ; 41 ; Boletim Gaúcho de Geografia Volume 2014 ; 2014 ; >
+      au < manifest ; 2015 ; 42 ; Boletim Gaúcho de Geografia Volume 2015 ; 2015 ; >
 
   }
 
@@ -262,7 +265,7 @@
       au < released ; 2011 ; 5 ; Cadernos do IL Volume 2011 ; 2011 ; >
       au < released ; 2012 ; 6 ; Cadernos do IL Volume 2012 ; 2012 ; >
       au < released ; 2013 ; 7 ; Cadernos do IL Volume 2013 ; 2013 ; >
-      au < expected ; 2014 ; 8 ; Cadernos do IL Volume 2014 ; 2014 ; >
+      au < released ; 2014 ; 8 ; Cadernos do IL Volume 2014 ; 2014 ; >
 
   }
 
@@ -280,7 +283,7 @@
 
       au < released ; 2012 ; 1 ; Cadernos do Programa de Pós-Graduação em Direito Volume 2012 ; 2012 ; >
       au < released ; 2013 ; 2 ; Cadernos do Programa de Pós-Graduação em Direito Volume 2013 ; 2013 ; >
-      au < manifest ; 2014 ; 3 ; Cadernos do Programa de Pós-Graduação em Direito Volume 2014 ; 2014 ; >
+      au < released ; 2014 ; 3 ; Cadernos do Programa de Pós-Graduação em Direito Volume 2014 ; 2014 ; >
 
   }
 
@@ -303,7 +306,7 @@
       au < released ; 2011 ; 6 ; Cena Volume 2011 ; 2011 ; >
       au < released ; 2012 ; 7 ; Cena Volume 2012 ; 2012 ; >
       au < released ; 2013 ; 8 ; Cena Volume 2013 ; 2013 ; >
-      au < manifest ; 2014 ; 9 ; Cena Volume 2014 ; 2014 ; >
+      au < released ; 2014 ; 9 ; Cena Volume 2014 ; 2014 ; >
 
   }
 
@@ -400,7 +403,7 @@
       au < released ; 2011 ; 11 ; ConTexto Volume 2011 ; 2011 ; >
       au < released ; 2012 ; 12 ; ConTexto Volume 2012 ; 2012 ; >
       au < released ; 2013 ; 13 ; ConTexto Volume 2013 ; 2013 ; >
-      au < manifest ; 2014 ; 14 ; ConTexto Volume 2014 ; 2014 ; >
+      au < released ; 2014 ; 14 ; ConTexto Volume 2014 ; 2014 ; >
 
   }
 
@@ -443,7 +446,7 @@
       au < released ; 2011 ; 7 ; Debate Terminológico Volume 2011 ; 2011 ; >
       au < released ; 2012 ; 8 ; Debate Terminológico Volume 2012 ; 2012 ; >
       au < released ; 2013 ; 9 ; Debate Terminológico Volume 2013 ; 2013 ; >
-      au < manifest ; 2014 ; 10 ; Debate Terminológico Volume 2014 ; 2014 ; >
+      au < released ; 2014 ; 10 ; Debate Terminológico Volume 2014 ; 2014 ; >
 
   }
 
@@ -472,7 +475,7 @@
       au < released ; 2011 ; 15 ; Debates do NER Volume 2011 ; 2011 ; >
       au < released ; 2012 ; 16 ; Debates do NER Volume 2012 ; 2012 ; >
       au < released ; 2013 ; 17 ; Debates do NER Volume 2013 ; 2013 ; >
-      au < manifest ; 2014 ; 18 ; Debates do NER Volume 2014 ; 2014 ; >
+      au < released ; 2014 ; 18 ; Debates do NER Volume 2014 ; 2014 ; >
 
   }
 
@@ -488,20 +491,22 @@
       param[base_url] = http://seer.ufrgs.br/
       param[journal_id] = educacaoerealidade
 
-      au < released ; 2001 ; 1 ; Educação & Realidade Volume 2001 ; 2001 ; >
-      au < released ; 2002 ; 2 ; Educação & Realidade Volume 2002 ; 2002 ; >
-      au < released ; 2003 ; 3 ; Educação & Realidade Volume 2003 ; 2003 ; >
-      au < released ; 2004 ; 4 ; Educação & Realidade Volume 2004 ; 2004 ; >
-      au < released ; 2005 ; 5 ; Educação & Realidade Volume 2005 ; 2005 ; >
-      au < released ; 2006 ; 6 ; Educação & Realidade Volume 2006 ; 2006 ; >
-      au < released ; 2007 ; 7 ; Educação & Realidade Volume 2007 ; 2007 ; >
-      au < released ; 2008 ; 8 ; Educação & Realidade Volume 2008 ; 2008 ; >
-      au < released ; 2009 ; 9 ; Educação & Realidade Volume 2009 ; 2009 ; >
-      au < released ; 2010 ; 10 ; Educação & Realidade Volume 2010 ; 2010 ; >
-      au < released ; 2011 ; 11 ; Educação & Realidade Volume 2011 ; 2011 ; >
-      au < released ; 2012 ; 12 ; Educação & Realidade Volume 2012 ; 2012 ; >
-      au < released ; 2013 ; 13 ; Educação & Realidade Volume 2013 ; 2013 ; >
-      au < manifest ; 2014 ; 14 ; Educação & Realidade Volume 2014 ; 2014 ; >
+      au < manifest ; 2000 ; 1 ; Educação & Realidade Volume 2000 ; 2000 ; >
+      au < released ; 2001 ; 2 ; Educação & Realidade Volume 2001 ; 2001 ; >
+      au < released ; 2002 ; 3 ; Educação & Realidade Volume 2002 ; 2002 ; >
+      au < released ; 2003 ; 4 ; Educação & Realidade Volume 2003 ; 2003 ; >
+      au < released ; 2004 ; 5 ; Educação & Realidade Volume 2004 ; 2004 ; >
+      au < released ; 2005 ; 6 ; Educação & Realidade Volume 2005 ; 2005 ; >
+      au < released ; 2006 ; 7 ; Educação & Realidade Volume 2006 ; 2006 ; >
+      au < released ; 2007 ; 8 ; Educação & Realidade Volume 2007 ; 2007 ; >
+      au < released ; 2008 ; 9 ; Educação & Realidade Volume 2008 ; 2008 ; >
+      au < released ; 2009 ; 10 ; Educação & Realidade Volume 2009 ; 2009 ; >
+      au < released ; 2010 ; 11 ; Educação & Realidade Volume 2010 ; 2010 ; >
+      au < released ; 2011 ; 12 ; Educação & Realidade Volume 2011 ; 2011 ; >
+      au < released ; 2012 ; 13 ; Educação & Realidade Volume 2012 ; 2012 ; >
+      au < released ; 2013 ; 14 ; Educação & Realidade Volume 2013 ; 2013 ; >
+      au < released ; 2014 ; 15 ; Educação & Realidade Volume 2014 ; 2014 ; >
+      au < manifest ; 2015 ; 16 ; Educação & Realidade Volume 2015 ; 2015 ; >
 
   }
 
@@ -552,7 +557,7 @@
       au < released ; 2011 ; 9 ; em questão Volume 2011 ; 2011 ; >
       au < released ; 2012 ; 10 ; em questão Volume 2012 ; 2012 ; >
       au < released ; 2013 ; 11 ; em questão Volume 2013 ; 2013 ; >
-      au < manifest ; 2014 ; 12 ; em questão Volume 2014 ; 2014 ; >
+      au < released ; 2014 ; 12 ; em questão Volume 2014 ; 2014 ; >
 
   }
 
@@ -574,7 +579,7 @@
       au < released ; 2011 ; 5 ; Espaço Ameríndio Volume 2011 ; 2011 ; >
       au < released ; 2012 ; 6 ; Espaço Ameríndio Volume 2012 ; 2012 ; >
       au < released ; 2013 ; 7 ; Espaço Ameríndio Volume 2013 ; 2013 ; >
-      au < manifest ; 2014 ; 8 ; Espaço Ameríndio Volume 2014 ; 2014 ; >
+      au < released ; 2014 ; 8 ; Espaço Ameríndio Volume 2014 ; 2014 ; >
 
   }
 
@@ -622,7 +627,7 @@
       au < released ; 2011 ; 13 ; Estudos Interdisciplinares sobre o Envelhecimento Volume 2011 ; 2011 ; >
       au < released ; 2012 ; 14 ; Estudos Interdisciplinares sobre o Envelhecimento Volume 2012 ; 2012 ; >
       au < released ; 2013 ; 15 ; Estudos Interdisciplinares sobre o Envelhecimento Volume 2013 ; 2013 ; >
-      au < manifest ; 2014 ; 16 ; Estudos Interdisciplinares sobre o Envelhecimento Volume 2014 ; 2014 ; >
+      au < released ; 2014 ; 16 ; Estudos Interdisciplinares sobre o Envelhecimento Volume 2014 ; 2014 ; >
 
   }
 
@@ -639,7 +644,7 @@
 
       au < released ; 2011 ; 1 ; FINEDUCA-Revista de Financiamento da Educação Volume 2011 ; 2011 ; >
       au < released ; 2012 ; 2 ; FINEDUCA-Revista de Financiamento da Educação Volume 2012 ; 2012 ; >
-      au < expected ; 2013 ; 3 ; FINEDUCA-Revista de Financiamento da Educação Volume 2013 ; 2013 ; >
+      au < manifest ; 2013 ; 3 ; FINEDUCA-Revista de Financiamento da Educação Volume 2013 ; 2013 ; >
       au < expected ; 2014 ; 4 ; FINEDUCA-Revista de Financiamento da Educação Volume 2014 ; 2014 ; >
 
   }
@@ -663,6 +668,8 @@
       au < released ; 2002 ; 6 ; History of Education Journal Volume 2002 ; 2002 ; >
       au < released ; 2003 ; 7 ; History of Education Journal Volume 2003 ; 2003 ; >
       au < released ; 2004 ; 8 ; History of Education Journal Volume 2004 ; 2004 ; >
+      au < manifest ; 2005 ; 9 ; History of Education Journal Volume 2005 ; 2005 ; >
+      au < manifest ; 2006 ; 10 ; History of Education Journal Volume 2006 ; 2006 ; >
 
   }
 
@@ -677,13 +684,16 @@
       param[base_url] = http://seer.ufrgs.br/
       param[journal_id] = iluminuras
 
-      au < released ; 2008 ; 1 ; ILUMINURAS Volume 2008 ; 2008 ; >
-      au < released ; 2009 ; 2 ; ILUMINURAS Volume 2009 ; 2009 ; >
-      au < released ; 2010 ; 3 ; ILUMINURAS Volume 2010 ; 2010 ; >
-      au < released ; 2011 ; 4 ; ILUMINURAS Volume 2011 ; 2011 ; >
-      au < released ; 2012 ; 5 ; ILUMINURAS Volume 2012 ; 2012 ; >
-      au < released ; 2013 ; 6 ; ILUMINURAS Volume 2013 ; 2013 ; >
-      au < manifest ; 2014 ; 7 ; ILUMINURAS Volume 2014 ; 2014 ; >
+      au < manifest ; 2006 ; 1 ; ILUMINURAS Volume 2006 ; 2006 ; >
+      au < manifest ; 2007 ; 2 ; ILUMINURAS Volume 2007 ; 2007 ; >
+      au < released ; 2008 ; 3 ; ILUMINURAS Volume 2008 ; 2008 ; >
+      au < released ; 2009 ; 4 ; ILUMINURAS Volume 2009 ; 2009 ; >
+      au < released ; 2010 ; 5 ; ILUMINURAS Volume 2010 ; 2010 ; >
+      au < released ; 2011 ; 6 ; ILUMINURAS Volume 2011 ; 2011 ; >
+      au < released ; 2012 ; 7 ; ILUMINURAS Volume 2012 ; 2012 ; >
+      au < released ; 2013 ; 8 ; ILUMINURAS Volume 2013 ; 2013 ; >
+      au < released ; 2014 ; 9 ; ILUMINURAS Volume 2014 ; 2014 ; >
+      au < manifest ; 2015 ; 10 ; ILUMINURAS Volume 2015 ; 2015 ; >
 
   }
 
@@ -714,7 +724,7 @@
       au < released ; 2011 ; 14 ; Informática na educação: teoria & prática Volume 2011 ; 2011 ; >
       au < released ; 2012 ; 15 ; Informática na educação: teoria & prática Volume 2012 ; 2012 ; >
       au < released ; 2013 ; 16 ; Informática na educação: teoria & prática Volume 2013 ; 2013 ; >
-      au < manifest ; 2014 ; 17 ; Informática na educação: teoria & prática Volume 2014 ; 2014 ; >
+      au < released ; 2014 ; 17 ; Informática na educação: teoria & prática Volume 2014 ; 2014 ; >
 
   }
 
@@ -744,7 +754,7 @@
       au < released ; 2011 ; 15 ; Intexto Volume 2011 ; 2011 ; >
       au < released ; 2012 ; 16 ; Intexto Volume 2012 ; 2012 ; >
       au < released ; 2013 ; 17 ; Intexto Volume 2013 ; 2013 ; >
-      au < manifest ; 2014 ; 18 ; Intexto Volume 2014 ; 2014 ; >
+      au < released ; 2014 ; 18 ; Intexto Volume 2014 ; 2014 ; >
 
   }
 
@@ -760,23 +770,26 @@
       param[base_url] = http://seer.ufrgs.br/
       param[journal_id] = Movimento
 
-      au < notReady ; 1998 ; 1 ; Movimento (ESEF/UFRGS) Volume 1998 ; 1998 ; login for img barra_indexadores_parceiros_rodape.jpg on manifest page >
-      au < notReady ; 1999 ; 2 ; Movimento (ESEF/UFRGS) Volume 1999 ; 1999 ; login for img barra_indexadores_parceiros_rodape.jpg on manifest page >
-      au < notReady ; 2000 ; 3 ; Movimento (ESEF/UFRGS) Volume 2000 ; 2000 ; login for img barra_indexadores_parceiros_rodape.jpg on manifest page >
-      au < notReady ; 2001 ; 4 ; Movimento (ESEF/UFRGS) Volume 2001 ; 2001 ; login for img barra_indexadores_parceiros_rodape.jpg on manifest page >
-      au < notReady ; 2002 ; 5 ; Movimento (ESEF/UFRGS) Volume 2002 ; 2002 ; login for img barra_indexadores_parceiros_rodape.jpg on manifest page >
-      au < notReady ; 2003 ; 6 ; Movimento (ESEF/UFRGS) Volume 2003 ; 2003 ; login for img barra_indexadores_parceiros_rodape.jpg on manifest page >
-      au < notReady ; 2004 ; 7 ; Movimento (ESEF/UFRGS) Volume 2004 ; 2004 ; login for img barra_indexadores_parceiros_rodape.jpg on manifest page >
-      au < notReady ; 2005 ; 8 ; Movimento (ESEF/UFRGS) Volume 2005 ; 2005 ; login for img barra_indexadores_parceiros_rodape.jpg on manifest page >
-      au < notReady ; 2006 ; 9 ; Movimento (ESEF/UFRGS) Volume 2006 ; 2006 ; login for img barra_indexadores_parceiros_rodape.jpg on manifest page >
-      au < notReady ; 2007 ; 10 ; Movimento (ESEF/UFRGS) Volume 2007 ; 2007 ; login for img barra_indexadores_parceiros_rodape.jpg on manifest page >
-      au < notReady ; 2008 ; 11 ; Movimento (ESEF/UFRGS) Volume 2008 ; 2008 ; login for img barra_indexadores_parceiros_rodape.jpg on manifest page >
-      au < notReady ; 2009 ; 12 ; Movimento (ESEF/UFRGS) Volume 2009 ; 2009 ; login for img barra_indexadores_parceiros_rodape.jpg on manifest page >
-      au < notReady ; 2010 ; 13 ; Movimento (ESEF/UFRGS) Volume 2010 ; 2010 ; login for img barra_indexadores_parceiros_rodape.jpg on manifest page >
-      au < notReady ; 2011 ; 14 ; Movimento (ESEF/UFRGS) Volume 2011 ; 2011 ; login for img barra_indexadores_parceiros_rodape.jpg on manifest page >
-      au < notReady ; 2012 ; 15 ; Movimento (ESEF/UFRGS) Volume 2012 ; 2012 ; login for img barra_indexadores_parceiros_rodape.jpg on manifest page >
-      au < notReady ; 2013 ; 16 ; Movimento (ESEF/UFRGS) Volume 2013 ; 2013 ; redirected to login page >
-      au < manifest ; 2014 ; 17 ; Movimento (ESEF/UFRGS) Volume 2014 ; 2014 ; >
+      au < manifest ; 1996 ; 1 ; Movimento (ESEF/UFRGS) Volume 1996 ; 1996 ; >
+      au < manifest ; 1997 ; 2 ; Movimento (ESEF/UFRGS) Volume 1997 ; 1997 ; >
+      au < notReady ; 1998 ; 3 ; Movimento (ESEF/UFRGS) Volume 1998 ; 1998 ; login for img barra_indexadores_parceiros_rodape.jpg on manifest page >
+      au < notReady ; 1999 ; 4 ; Movimento (ESEF/UFRGS) Volume 1999 ; 1999 ; login for img barra_indexadores_parceiros_rodape.jpg on manifest page >
+      au < notReady ; 2000 ; 5 ; Movimento (ESEF/UFRGS) Volume 2000 ; 2000 ; login for img barra_indexadores_parceiros_rodape.jpg on manifest page >
+      au < notReady ; 2001 ; 6 ; Movimento (ESEF/UFRGS) Volume 2001 ; 2001 ; login for img barra_indexadores_parceiros_rodape.jpg on manifest page >
+      au < notReady ; 2002 ; 7 ; Movimento (ESEF/UFRGS) Volume 2002 ; 2002 ; login for img barra_indexadores_parceiros_rodape.jpg on manifest page >
+      au < notReady ; 2003 ; 8 ; Movimento (ESEF/UFRGS) Volume 2003 ; 2003 ; login for img barra_indexadores_parceiros_rodape.jpg on manifest page >
+      au < notReady ; 2004 ; 9 ; Movimento (ESEF/UFRGS) Volume 2004 ; 2004 ; login for img barra_indexadores_parceiros_rodape.jpg on manifest page >
+      au < notReady ; 2005 ; 10 ; Movimento (ESEF/UFRGS) Volume 2005 ; 2005 ; login for img barra_indexadores_parceiros_rodape.jpg on manifest page >
+      au < notReady ; 2006 ; 11 ; Movimento (ESEF/UFRGS) Volume 2006 ; 2006 ; login for img barra_indexadores_parceiros_rodape.jpg on manifest page >
+      au < notReady ; 2007 ; 12 ; Movimento (ESEF/UFRGS) Volume 2007 ; 2007 ; login for img barra_indexadores_parceiros_rodape.jpg on manifest page >
+      au < notReady ; 2008 ; 13 ; Movimento (ESEF/UFRGS) Volume 2008 ; 2008 ; login for img barra_indexadores_parceiros_rodape.jpg on manifest page >
+      au < notReady ; 2009 ; 14 ; Movimento (ESEF/UFRGS) Volume 2009 ; 2009 ; login for img barra_indexadores_parceiros_rodape.jpg on manifest page >
+      au < notReady ; 2010 ; 15 ; Movimento (ESEF/UFRGS) Volume 2010 ; 2010 ; login for img barra_indexadores_parceiros_rodape.jpg on manifest page >
+      au < notReady ; 2011 ; 16 ; Movimento (ESEF/UFRGS) Volume 2011 ; 2011 ; login for img barra_indexadores_parceiros_rodape.jpg on manifest page >
+      au < notReady ; 2012 ; 17 ; Movimento (ESEF/UFRGS) Volume 2012 ; 2012 ; login for img barra_indexadores_parceiros_rodape.jpg on manifest page >
+      au < notReady ; 2013 ; 18 ; Movimento (ESEF/UFRGS) Volume 2013 ; 2013 ; redirected to login page >
+      au < released ; 2014 ; 19 ; Movimento (ESEF/UFRGS) Volume 2014 ; 2014 ; >
+      au < manifest ; 2015 ; 20 ; Movimento (ESEF/UFRGS) Volume 2015 ; 2015 ; >
 
   }
 
@@ -800,7 +813,7 @@
       au < released ; 2011 ; 7 ; Nau Literária Volume 2011 ; 2011 ; >
       au < released ; 2012 ; 8 ; Nau Literária Volume 2012 ; 2012 ; >
       au < released ; 2013 ; 9 ; Nau Literária Volume 2013 ; 2013 ; >
-      au < manifest ; 2014 ; 10 ; Nau Literária Volume 2014 ; 2014 ; >
+      au < released ; 2014 ; 10 ; Nau Literária Volume 2014 ; 2014 ; >
 
   }
 
@@ -852,7 +865,7 @@
       au < released ; 2011 ; 56 ; Organon Volume 2011 ; 2011 ; >
       au < released ; 2012 ; 57 ; Organon Volume 2012 ; 2012 ; >
       au < released ; 2013 ; 58 ; Organon Volume 2013 ; 2013 ; >
-      au < manifest ; 2014 ; 59 ; Organon Volume 2014 ; 2014 ; >
+      au < released ; 2014 ; 59 ; Organon Volume 2014 ; 2014 ; >
 
   }
 
@@ -908,7 +921,7 @@
       au < notReady ; 2010 ; 39 ; Pesquisas em Geociências Volume 2010 ; 2010 ; permission page redirects to login page >
       au < notReady ; 2011 ; 40 ; Pesquisas em Geociências Volume 2011 ; 2011 ; permission page redirects to login page >
       au < notReady ; 2012 ; 41 ; Pesquisas em Geociências Volume 2012 ; 2012 ; permission page redirects to login page >
-      au < manifest ; 2013 ; 42 ; Pesquisas em Geociências Volume 2013 ; 2013 ; >
+      au < notReady ; 2013 ; 42 ; Pesquisas em Geociências Volume 2013 ; 2013 ; Can't fetch permission page - likely same issue as above>
       au < expected ; 2014 ; 43 ; Pesquisas em Geociências Volume 2014 ; 2014 ; >
 
   }
@@ -1008,7 +1021,7 @@
       au < released ; 2011 ; 9 ; RENOTE Volume 2011 ; 2011 ; >
       au < released ; 2012 ; 10 ; RENOTE Volume 2012 ; 2012 ; >
       au < released ; 2013 ; 11 ; RENOTE Volume 2013 ; 2013 ; >
-      au < manifest ; 2014 ; 12 ; RENOTE Volume 2014 ; 2014 ; >
+      au < released ; 2014 ; 12 ; RENOTE Volume 2014 ; 2014 ; >
 
   }
 
@@ -1025,8 +1038,9 @@
 
       au < released ; 2011 ; 1 ; Revista Brasileira de Estudos da Presença Volume 2011 ; 2011 ; >
       au < released ; 2012 ; 2 ; Revista Brasileira de Estudos da Presença Volume 2012 ; 2012 ; >
-      au < manifest ; 2013 ; 3 ; Revista Brasileira de Estudos da Presença Volume 2013 ; 2013 ; >
-      au < manifest ; 2014 ; 4 ; Revista Brasileira de Estudos da Presença Volume 2014 ; 2014 ; >
+      au < released ; 2013 ; 3 ; Revista Brasileira de Estudos da Presença Volume 2013 ; 2013 ; >
+      au < released ; 2014 ; 4 ; Revista Brasileira de Estudos da Presença Volume 2014 ; 2014 ; >
+      au < manifest ; 2015 ; 5 ; Revista Brasileira de Estudos da Presença Volume 2015 ; 2015 ; >
 
   }
 
@@ -1055,7 +1069,7 @@
       au < released ; 2011 ; 12 ; Revista Brasileira de Política e Administração da Educação Volume 2011 ; 2011 ; >
       au < released ; 2012 ; 13 ; Revista Brasileira de Política e Administração da Educação Volume 2012 ; 2012 ; >
       au < released ; 2013 ; 14 ; Revista Brasileira de Política e Administração da Educação Volume 2013 ; 2013 ; >
-      au < manifest ; 2014 ; 15 ; Revista Brasileira de Política e Administração da Educação Volume 2014 ; 2014 ; >
+      au < released ; 2014 ; 15 ; Revista Brasileira de Política e Administração da Educação Volume 2014 ; 2014 ; >
 
   }
 
@@ -1107,7 +1121,7 @@
       au < released ; 2011 ; 8 ; Revista de Informática Teórica e Aplicada Volume 2011 ; 2011 ; >
       au < released ; 2012 ; 9 ; Revista de Informática Teórica e Aplicada Volume 2012 ; 2012 ; >
       au < released ; 2013 ; 10 ; Revista de Informática Teórica e Aplicada Volume 2013 ; 2013 ; >
-      au < manifest ; 2014 ; 11 ; Revista de Informática Teórica e Aplicada Volume 2014 ; 2014 ; >
+      au < released ; 2014 ; 11 ; Revista de Informática Teórica e Aplicada Volume 2014 ; 2014 ; >
 
   }
 
@@ -1148,7 +1162,7 @@
       au < released ; 2011 ; 5 ; Revista Debates Volume 2011 ; 2011 ; >
       au < released ; 2012 ; 6 ; Revista Debates Volume 2012 ; 2012 ; >
       au < released ; 2013 ; 7 ; Revista Debates Volume 2013 ; 2013 ; >
-      au < manifest ; 2014 ; 8 ; Revista Debates Volume 2014 ; 2014 ; >
+      au < released ; 2014 ; 8 ; Revista Debates Volume 2014 ; 2014 ; >
 
   }
 
@@ -1164,6 +1178,8 @@
       param[journal_id] = revistadoscursos
 
       au < released ; 1915 ; 1 ; Revista dos Cursos da Faculdade de Medicina de Porto Alegre Volume 1915 ; 1915 ; >
+      au < manifest ; 1916 ; 2 ; Revista dos Cursos da Faculdade de Medicina de Porto Alegre Volume 1916 ; 1916 ; >
+      au < manifest ; 1917 ; 3 ; Revista dos Cursos da Faculdade de Medicina de Porto Alegre Volume 1917 ; 1917 ; >
 
   }
 
@@ -1191,7 +1207,8 @@
       au < released ; 2011 ; 10 ; Revista Eletrônica de Administração Volume 2011 ; 2011 ; >
       au < released ; 2012 ; 11 ; Revista Eletrônica de Administração Volume 2012 ; 2012 ; >
       au < released ; 2013 ; 12 ; Revista Eletrônica de Administração Volume 2013 ; 2013 ; >
-      au < manifest ; 2014 ; 13 ; Revista Eletrônica de Administração Volume 2014 ; 2014 ; >
+      au < released ; 2014 ; 13 ; Revista Eletrônica de Administração Volume 2014 ; 2014 ; >
+      au < manifest ; 2015 ; 14 ; Revista Eletrônica de Administração Volume 2015 ; 2015 ; >
 
   }
 
@@ -1238,7 +1255,8 @@
       au < released ; 2011 ; 29 ; Revista Gaúcha de Enfermagem Volume 2011 ; 2011 ; >
       au < released ; 2012 ; 30 ; Revista Gaúcha de Enfermagem Volume 2012 ; 2012 ; >
       au < released ; 2013 ; 31 ; Revista Gaúcha de Enfermagem Volume 2013 ; 2013 ; >
-      au < manifest ; 2014 ; 32 ; Revista Gaúcha de Enfermagem Volume 2014 ; 2014 ; >
+      au < released ; 2014 ; 32 ; Revista Gaúcha de Enfermagem Volume 2014 ; 2014 ; >
+      au < manifest ; 2015 ; 33 ; Revista Gaúcha de Enfermagem Volume 2015 ; 2015 ; >
 
   }
 
@@ -1261,7 +1279,7 @@
       au < released ; 2011 ; 5 ; Revista HCPA Volume 2011 ; 2011 ; >
       au < released ; 2012 ; 6 ; Revista HCPA Volume 2012 ; 2012 ; >
       au < released ; 2013 ; 7 ; Revista HCPA Volume 2013 ; 2013 ; >
-      au < manifest ; 2014 ; 8 ; Revista HCPA Volume 2014 ; 2014 ; >
+      au < released ; 2014 ; 8 ; Revista HCPA Volume 2014 ; 2014 ; >
 
   }
 
@@ -1279,7 +1297,7 @@
       au < released ; 2011 ; 1 ; Revista Polis e Psique Volume 2011 ; 2011 ; >
       au < released ; 2012 ; 2 ; Revista Polis e Psique Volume 2012 ; 2012 ; >
       au < released ; 2013 ; 3 ; Revista Polis e Psique Volume 2013 ; 2013 ; >
-      au < manifest ; 2014 ; 4 ; Revista Polis e Psique Volume 2014 ; 2014 ; >
+      au < released ; 2014 ; 4 ; Revista Polis e Psique Volume 2014 ; 2014 ; >
 
   }
 
@@ -1297,7 +1315,7 @@
       au < released ; 2011 ; 1 ; Revista-Valise Volume 2011 ; 2011 ; >
       au < released ; 2012 ; 2 ; Revista-Valise Volume 2012 ; 2012 ; >
       au < released ; 2013 ; 3 ; Revista-Valise Volume 2013 ; 2013 ; >
-      au < manifest ; 2014 ; 4 ; Revista-Valise Volume 2014 ; 2014 ; >
+      au < released ; 2014 ; 4 ; Revista-Valise Volume 2014 ; 2014 ; >
 
   }
 
@@ -1347,7 +1365,8 @@
       au < released ; 2011 ; 13 ; Sociologias Volume 2011 ; 2011 ; >
       au < released ; 2012 ; 14 ; Sociologias Volume 2012 ; 2012 ; >
       au < released ; 2013 ; 15 ; Sociologias Volume 2013 ; 2013 ; >
-      au < manifest ; 2014 ; 16 ; Sociologias Volume 2014 ; 2014 ; >
+      au < released ; 2014 ; 16 ; Sociologias Volume 2014 ; 2014 ; >
+      au < manifest ; 2015 ; 17 ; Sociologias Volume 2015 ; 2015 ; >
 
   }
 
@@ -1365,7 +1384,7 @@
       au < released ; 2011 ; 1 ; Translatio Volume 2011 ; 2011 ; >
       au < released ; 2012 ; 2 ; Translatio Volume 2012 ; 2012 ; >
       au < released ; 2013 ; 3 ; Translatio Volume 2013 ; 2013 ; >
-      au < manifest ; 2014 ; 4 ; Translatio Volume 2014 ; 2014 ; >
+      au < released ; 2014 ; 4 ; Translatio Volume 2014 ; 2014 ; >
 
   }
 
@@ -1425,7 +1444,7 @@
       au < released ; 2011 ; 8 ; Revista Produto & Produção Volume 2011 ; 2011 ; >
       au < released ; 2012 ; 9 ; Revista Produto & Produção Volume 2012 ; 2012 ; >
       au < released ; 2013 ; 10 ; Revista Produto & Produção Volume 2013 ; 2013 ; >
-      au < manifest ; 2014 ; 11 ; Revista Produto & Produção Volume 2014 ; 2014 ; >
+      au < released ; 2014 ; 11 ; Revista Produto & Produção Volume 2014 ; 2014 ; >
 
   }
 

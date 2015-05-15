@@ -1,5 +1,5 @@
 /*
-* $Id: V3PollStatus.java,v 1.51.8.2 2014-12-28 08:38:15 tlipkis Exp $
+* $Id$
  */
 
 /*
@@ -275,15 +275,15 @@ public class V3PollStatus {
       Collection v3Pollers = pollManager.getV3Pollers();
       for (Iterator it = v3Pollers.iterator(); it.hasNext(); ) {
         V3Poller poller = (V3Poller)it.next();
-        if ((key != null && key.equals(poller.getAu().getAuId())) || 
-            key == null) {
+        if (key == null || key.equals(poller.getAu().getAuId())) {
           rows.add(makeRow(poller));
         }
       }
       int rowNum = 0;
       for (ArchivalUnit au : pollManager.getPendingQueueAus()) {
-	rows.add(makePendingRow(au, rowNum++));
-
+        if (key == null || key.equals(au.getAuId())) {
+	  rows.add(makePendingRow(au, rowNum++));
+	}
       }
 
       return rows;

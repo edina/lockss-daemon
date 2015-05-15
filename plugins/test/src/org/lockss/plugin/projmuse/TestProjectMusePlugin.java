@@ -1,5 +1,5 @@
 /*
- * $Id: TestProjectMusePlugin.java,v 1.5 2007-10-31 19:04:48 thib_gc Exp $
+ * $Id$
  */
 
 /*
@@ -69,9 +69,8 @@ public class TestProjectMusePlugin extends LockssTestCase {
     props.setProperty(JRNL_KEY, "blah2");
     props.setProperty(VOL_KEY, "322");
 
-    DefinableArchivalUnit au = null;
     try {
-      au = makeAuFromProps(props);
+      makeAuFromProps(props);
     }
     catch (ConfigurationException ex) {
     }
@@ -92,11 +91,9 @@ public class TestProjectMusePlugin extends LockssTestCase {
     props.setProperty(VOL_KEY, "322");
 
     try {
-      DefinableArchivalUnit au = makeAuFromProps(props);
+      makeAuFromProps(props);
       fail ("Didn't throw InstantiationException when given a bad url");
     } catch (ArchivalUnit.ConfigurationException auie) {
-      ConfigParamDescr.InvalidFormatException murle =
-        (ConfigParamDescr.InvalidFormatException)auie.getCause();
       assertNotNull(auie.getCause());
     }
   }
@@ -110,7 +107,7 @@ public class TestProjectMusePlugin extends LockssTestCase {
     props.setProperty(VOL_KEY, "322");
 
     DefinableArchivalUnit au = makeAuFromProps(props);
-    assertEquals("Project Muse Plugin, Base URL http://www.example.com/, Journal ID journal_dir, Volume 322", au.getName());
+    assertEquals("Project Muse Journals Plugin, Base URL http://www.example.com/, Journal ID journal_dir, Volume 322", au.getName());
   }
 
   public void testGetPluginId() {

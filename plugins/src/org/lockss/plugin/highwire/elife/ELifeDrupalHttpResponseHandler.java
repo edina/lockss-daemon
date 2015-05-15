@@ -1,10 +1,10 @@
 /*
- * $Id: ELifeDrupalHttpResponseHandler.java,v 1.1 2014-06-07 02:32:17 etenbrink Exp $
+ * $Id$
  */
 
 /*
 
-Copyright (c) 2000-2014 Board of Trustees of Leland Stanford Jr. University,
+Copyright (c) 2000-2015 Board of Trustees of Leland Stanford Jr. University,
 all rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -33,43 +33,58 @@ in this Software without prior written authorization from Stanford University.
 package org.lockss.plugin.highwire.elife;
 
 import org.lockss.plugin.*;
+import org.lockss.plugin.highwire.HighWireDrupalHttpResponseHandler;
 import org.lockss.util.*;
 import org.lockss.util.urlconn.*;
 
 
-public class ELifeDrupalHttpResponseHandler implements CacheResultHandler {
+public class ELifeDrupalHttpResponseHandler extends HighWireDrupalHttpResponseHandler {
   
   protected static Logger logger = Logger.getLogger(ELifeDrupalHttpResponseHandler.class);
   
+  @Override
   public void init(CacheResultMap crmap) {
     logger.warning("Unexpected call to init()");
-    throw new UnsupportedOperationException();
+    throw new UnsupportedOperationException("Unexpected call to ELifeDrupalHttpResponseHandler.init()");
   }
   
+  @Override
   public CacheException handleResult(ArchivalUnit au,
                                      String url,
                                      int responseCode) {
-    logger.debug2(url);
+    logger.debug3(url);
     switch (responseCode) {
+      case 403:
+        // no example as HighWire did 'fix' the problem url
+        logger.debug3("403");
+        if (url.contains("/download")) {
+          return new CacheException.RetryDeadLinkException("403 Forbidden (non-fatal)");
+        }
+        return new CacheException.RetrySameUrlException("403 Forbidden");
+        
       case 500:
-        logger.debug2("500");
+        // ex. http://elifesciences.org/highwire/citation/8378/ris
+        logger.debug3("500");
         if (url.contains("lockss-manifest/")) {
           return new CacheException.RetrySameUrlException("500 Internal Server Error");
         }
-        else {
-          return new CacheException.NoRetryDeadLinkException("500 Internal Server Error (non-fatal)");
-        }
+        return super.handleResult(au, url, responseCode);
+        
+      case 504:
+        // JIC: parent handles, as we get Gateway Timeout often enough
+        return super.handleResult(au, url, responseCode);
+        
       default:
-        logger.debug2("default");
-        throw new UnsupportedOperationException();
+        return super.handleResult(au, url, responseCode);
     }
   }
   
+  @Override
   public CacheException handleResult(ArchivalUnit au,
                                      String url,
                                      Exception ex) {
     logger.warning("Unexpected call to handleResult(): AU " + au.getName() + "; URL " + url, ex);
-    throw new UnsupportedOperationException();
+    throw new UnsupportedOperationException("Unexpected call to handleResult(): AU " + au.getName() + "; URL " + url, ex);
   }
   
 }

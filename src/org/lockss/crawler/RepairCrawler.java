@@ -1,5 +1,5 @@
 /*
- * $Id: RepairCrawler.java,v 1.77 2014-11-12 20:11:23 wkwilson Exp $
+ * $Id$
  */
 
 /*
@@ -282,7 +282,7 @@ public class RepairCrawler extends BaseCrawler {
   
   protected CrawlerFacade getCrawlerFacade() {
     if(facade == null) {
-      facade = new BaseCrawlerFacade(this);
+      facade = new RepairCrawlerFacade(this);
     }
     return facade;
   };

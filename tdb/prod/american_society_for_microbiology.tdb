@@ -78,6 +78,7 @@
       au < HighWirePressH20Plugin ; notReady ; 2012 ; Antimicrobial Agents and Chemotherapy Volume 56 ; 56 >
       au < HighWirePressH20Plugin ; manifest ; 2013 ; Antimicrobial Agents and Chemotherapy Volume 57 ; 57 >
       au < HighWirePressH20Plugin ; manifest ; 2014 ; Antimicrobial Agents and Chemotherapy Volume 58 ; 58 >
+      au < HighWirePressH20Plugin ; manifest ; 2015 ; Antimicrobial Agents and Chemotherapy Volume 59 ; 59 >
   
     }
   
@@ -170,6 +171,7 @@
       au < HighWirePressH20Plugin ; released ; 2012 ; Applied and Environmental Microbiology Volume 78 ; 78 >
       au < HighWirePressH20Plugin ; manifest ; 2013 ; Applied and Environmental Microbiology Volume 79 ; 79 >
       au < HighWirePressH20Plugin ; manifest ; 2014 ; Applied and Environmental Microbiology Volume 80 ; 80 >
+      au < HighWirePressH20Plugin ; manifest ; 2015 ; Applied and Environmental Microbiology Volume 81 ; 81 >
   
     }
   
@@ -203,6 +205,7 @@
       au < HighWirePressH20Plugin ; released ; 2012 ; Clinical and Vaccine Immunology Volume 19 ; 19 >
       au < HighWirePressH20Plugin ; manifest ; 2013 ; Clinical and Vaccine Immunology Volume 20 ; 20 >
       au < HighWirePressH20Plugin ; manifest ; 2014 ; Clinical and Vaccine Immunology Volume 21 ; 21 >
+      au < HighWirePressH20Plugin ; manifest ; 2015 ; Clinical and Vaccine Immunology Volume 22 ; 22 >
   
     }
   
@@ -242,6 +245,7 @@
       au < HighWirePressH20Plugin ; released ; 2012 ; Clinical Microbiology Reviews Volume 25 ; 25 >
       au < HighWirePressH20Plugin ; manifest ; 2013 ; Clinical Microbiology Reviews Volume 26 ; 26 >
       au < HighWirePressH20Plugin ; manifest ; 2014 ; Clinical Microbiology Reviews Volume 27 ; 27 >
+      au < HighWirePressH20Plugin ; manifest ; 2015 ; Clinical Microbiology Reviews Volume 28 ; 28 >
   
     }
   
@@ -267,6 +271,7 @@
       au < HighWirePressH20Plugin ; released ; 2012 ; Eukaryotic Cell Volume 11 ; 11 >
       au < HighWirePressH20Plugin ; manifest ; 2013 ; Eukaryotic Cell Volume 12 ; 12 >
       au < HighWirePressH20Plugin ; manifest ; 2014 ; Eukaryotic Cell Volume 13 ; 13 >
+      au < HighWirePressH20Plugin ; manifest ; 2015 ; Eukaryotic Cell Volume 14 ; 14 >
       
   
     }
@@ -361,6 +366,7 @@
       au < HighWirePressH20Plugin ; released ; 2012 ; Infection and Immunity Volume 80 ; 80 >
       au < HighWirePressH20Plugin ; manifest ; 2013 ; Infection and Immunity Volume 81 ; 81 >
       au < HighWirePressH20Plugin ; manifest ; 2014 ; Infection and Immunity Volume 82 ; 82 >
+      au < HighWirePressH20Plugin ; manifest ; 2015 ; Infection and Immunity Volume 83 ; 83 >
   
     }
   
@@ -569,6 +575,7 @@
       au < HighWirePressH20Plugin ; released ; 2012 ; Journal of Bacteriology Volume 194 ; 194 >
       au < HighWirePressH20Plugin ; manifest ; 2013 ; Journal of Bacteriology Volume 195 ; 195 >
       au < HighWirePressH20Plugin ; manifest ; 2014 ; Journal of Bacteriology Volume 196 ; 196 >
+      au < HighWirePressH20Plugin ; manifest ; 2015 ; Journal of Bacteriology Volume 197 ; 197 >
   
     }
   
@@ -633,6 +640,7 @@
       au < HighWirePressH20Plugin ; released ; 2012 ; Journal of Clinical Microbiology Volume 50 ; 50 >
       au < HighWirePressH20Plugin ; manifest ; 2013 ; Journal of Clinical Microbiology Volume 51 ; 51 >
       au < HighWirePressH20Plugin ; manifest ; 2014 ; Journal of Clinical Microbiology Volume 52 ; 52 >
+      au < HighWirePressH20Plugin ; manifest ; 2015 ; Journal of Clinical Microbiology Volume 53 ; 53 >
   
     }
   
@@ -733,6 +741,7 @@
       au < HighWirePressH20Plugin ; released ; 2012 ; Journal of Virology Volume 86 ; 86 >
       au < HighWirePressH20Plugin ; manifest ; 2013 ; Journal of Virology Volume 87 ; 87 >
       au < HighWirePressH20Plugin ; manifest ; 2014 ; Journal of Virology Volume 88 ; 88 >
+      au < HighWirePressH20Plugin ; manifest ; 2015 ; Journal of Virology Volume 89 ; 89 >
   
     }
 
@@ -749,6 +758,7 @@
       au < HighWirePressH20Plugin ; manifest ; 2012 ; mBio Volume 3 ; 3 >
       au < HighWirePressH20Plugin ; manifest ; 2013 ; mBio Volume 4 ; 4 >
       au < HighWirePressH20Plugin ; manifest ; 2014 ; mBio Volume 5 ; 5 >
+      au < HighWirePressH20Plugin ; manifest ; 2015 ; mBio Volume 6 ; 6 >
   
     }
 
@@ -839,6 +849,7 @@
       au < HighWirePressH20Plugin ; released ; 2012 ; Microbiology and Molecular Biology Reviews Volume 76 ; 76 >
       au < HighWirePressH20Plugin ; manifest ; 2013 ; Microbiology and Molecular Biology Reviews Volume 77 ; 77 >
       au < HighWirePressH20Plugin ; manifest ; 2014 ; Microbiology and Molecular Biology Reviews Volume 78 ; 78 >
+      au < HighWirePressH20Plugin ; manifest ; 2015 ; Microbiology and Molecular Biology Reviews Volume 79 ; 79 >
   
     }
   
@@ -885,6 +896,7 @@
       au < HighWirePressH20Plugin ; released ; 2012 ; Molecular and Cellular Biology Volume 32 ; 32 >
       au < HighWirePressH20Plugin ; manifest ; 2013 ; Molecular and Cellular Biology Volume 33 ; 33 >
       au < HighWirePressH20Plugin ; manifest ; 2014 ; Molecular and Cellular Biology Volume 34 ; 34 >
+      au < HighWirePressH20Plugin ; manifest ; 2015 ; Molecular and Cellular Biology Volume 35 ; 35 >
   
     }
   
@@ -901,6 +913,8 @@
         name = EcoSal Plus ;
         eissn = 2324-6200
       >
+      
+      comment[structure] = this seems to be organized as a reference, not as a journal.
       
       param[journal_id] = ecosalplus
       
@@ -924,8 +938,10 @@
         eissn = 2165-0497
       >
       
-      param[journal_id] = 
+      param[journal_id] = cm
       
+      au < exists ; 2013 ; Microbiology Spectrum 2013 ; 2013 >
+      au < exists ; 2014 ; Microbiology Spectrum 2014 ; 2014 >
 
     }
 

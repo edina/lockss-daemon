@@ -1,10 +1,10 @@
 /*
- * $Id: TaylorAndFrancisSourceXmlMetadataExtractorFactory.java,v 1.2 2014-03-06 17:19:33 alexandraohlson Exp $
+ * $Id$
  */
 
 /*
 
- Copyright (c) 2000-2014 Board of Trustees of Leland Stanford Jr. University,
+ Copyright (c) 2000-2015 Board of Trustees of Leland Stanford Jr. University,
  all rights reserved.
 
  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -33,6 +33,7 @@
 package org.lockss.plugin.taylorandfrancis;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -48,7 +49,7 @@ import org.lockss.plugin.clockss.SourceXmlSchemaHelper;
 
 
 public class TaylorAndFrancisSourceXmlMetadataExtractorFactory extends SourceXmlMetadataExtractorFactory {
-  static Logger log = Logger.getLogger(TaylorAndFrancisSourceXmlMetadataExtractorFactory.class);
+  private static final Logger log = Logger.getLogger(TaylorAndFrancisSourceXmlMetadataExtractorFactory.class);
   
   private static SourceXmlSchemaHelper TandFHelper = null;
   private static SourceXmlSchemaHelper TandF16Helper = null;
@@ -68,17 +69,6 @@ public class TaylorAndFrancisSourceXmlMetadataExtractorFactory extends SourceXml
 
   public class TaylorAndFrancisSourceXmlMetadataExtractor extends SourceXmlMetadataExtractor {
 
-    // This must be implemented because it is abstract in the parent
-    // but we don't actually use it. This method is deprecated and will get 
-    // removed later. There is an alternate with a "cu"  
-    // argument which we also override so that we can base the schema on 
-    // URL of the XML.
-    // This publisher was inconsistent in choice of XML schema within the AU
-    @Override
-    protected SourceXmlSchemaHelper setUpSchema() {
-      return null; //will cause a plugin exception to get thrown
-    }
-    
     
     //In the bulk source we were given, for 2013/UACP and 2013/WJPT, the V16 of
     // UACP had xml files in a schema different from all the others! So this
@@ -110,7 +100,7 @@ public class TaylorAndFrancisSourceXmlMetadataExtractorFactory extends SourceXml
     // use the filename in the XML file and when it's not available (UACP V16)
     // send back the name of the current XML file with .pdf instead of .xml
     @Override
-    protected ArrayList<String> getFilenamesAssociatedWithRecord(SourceXmlSchemaHelper helper, CachedUrl cu,
+    protected List<String> getFilenamesAssociatedWithRecord(SourceXmlSchemaHelper helper, CachedUrl cu,
         ArticleMetadata oneAM) {
       
       String filenameValue = null;
@@ -125,7 +115,7 @@ public class TaylorAndFrancisSourceXmlMetadataExtractorFactory extends SourceXml
        filenameValue = FilenameUtils.getBaseName(cu.getUrl()) + ".pdf";
       }
       String cuBase = FilenameUtils.getFullPath(cu.getUrl());
-      ArrayList<String> returnList = new ArrayList<String>();
+      List<String> returnList = new ArrayList<String>();
       returnList.add(cuBase + filenameValue);
       return returnList;
     }

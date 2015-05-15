@@ -167,7 +167,7 @@
       au < released ; 2009 ; 6 ; Revista Mackenzie de Engenharia e Computação Volume 6 ; 2009 >
       au < released ; 2011 ; 11 ; Revista Mackenzie de Engenharia e Computação Volume 11 ; 2011 >
       au < released ; 2012 ; 12 ; Revista Mackenzie de Engenharia e Computação Volume 12 ; 2012 >
-      au < expected ; 2013 ; 13 ; Revista Mackenzie de Engenharia e Computação Volume 13 ; 2013 >
+      au < released ; 2013 ; 13 ; Revista Mackenzie de Engenharia e Computação Volume 13 ; 2013 >
 
   }
 
@@ -216,6 +216,7 @@
       au < released ; 2012 ; 3 ; Revista Trama Interdisciplinar Volume 3 ; 2012 >
       au < released ; 2013 ; 4 ; Revista Trama Interdisciplinar Volume 4 ; 2013 >
       au < manifest ; 2014 ; 5 ; Revista Trama Interdisciplinar Volume 5 ; 2014 >
+      au < manifest ; 2015 ; 6 ; Revista Trama Interdisciplinar Volume 6 ; 2015 >
 
   }
 

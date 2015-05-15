@@ -1,5 +1,5 @@
 /*
- * $Id: BMCPluginHtmlFilterFactory.java,v 1.5 2013-10-30 22:21:56 thib_gc Exp $
+ * $Id$
  */
 
 /*
@@ -48,17 +48,19 @@ public class BMCPluginHtmlFilterFactory implements FilterFactory {
       String encoding) throws PluginException {
     NodeFilter[] filters = new NodeFilter[] {
         // Contains variable code
-        new TagNameFilter("script"),
+        HtmlNodeFilters.tag("script"),
         // Contains variable alternatives to the code
-        new TagNameFilter("noscript"),
+        HtmlNodeFilters.tag("noscript"),
+        // remove all style tags!
+        HtmlNodeFilters.tag("style"),
         // Contains ads
-        new TagNameFilter("iframe"),
+        HtmlNodeFilters.tag("iframe"),
         // Contains ads
-        new TagNameFilter("object"),
+        HtmlNodeFilters.tag("object"),
         // CSS and RSS links varied over time
-        new TagNameFilter("link"),
+        HtmlNodeFilters.tag("link"),
         //filter out comments
-        HtmlNodeFilters.commentWithRegex(".*"),
+        HtmlNodeFilters.comment(),
         // upper area above the article - Extreme Hash filtering!
         HtmlNodeFilters.tagWithAttribute("div", "id", "branding"),
         // left-hand area next to the article - Extreme Hash filtering!
@@ -103,6 +105,13 @@ public class BMCPluginHtmlFilterFactory implements FilterFactory {
         HtmlNodeFilters.tagWithAttribute("div", "class", "springer"),
         // The text of this link changed from "About this article" to "Article metrics"
         HtmlNodeFilters.tagWithAttributeRegex("a", "href", "/about$"),
+        // removes mathml inline wierdnesses
+        HtmlNodeFilters.tagWithAttribute("p", "class", "inlinenumber"),
+        HtmlNodeFilters.tagWithAttributeRegex("div", "style", ".*display:inline$"),
+        HtmlNodeFilters.tagWithAttribute("span", "class", "mathjax"),
+        HtmlNodeFilters.tagWithAttribute("span", "class", "inline-math"),
+        HtmlNodeFilters.tagWithAttribute("span", "class", "inlinenumber"),
+
     };
     InputStream filtered =  new HtmlFilterInputStream(in, encoding, 
         HtmlNodeFilterTransform.exclude(new OrFilter(filters)));

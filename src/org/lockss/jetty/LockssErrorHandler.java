@@ -1,5 +1,5 @@
 /*
- * $Id: LockssErrorHandler.java,v 1.3 2009-02-26 05:13:19 tlipkis Exp $
+ * $Id$
  */
 
 /*
@@ -32,7 +32,7 @@ in this Software without prior written authorization from Stanford University.
 // Some portions of this code are:
 // ========================================================================
 // Copyright 1999-2004 Mort Bay Consulting Pty. Ltd.
-// $Id: LockssErrorHandler.java,v 1.3 2009-02-26 05:13:19 tlipkis Exp $
+// $Id$
 // ------------------------------------------------------------------------
 
 package org.lockss.jetty;
@@ -43,8 +43,8 @@ import java.net.URLDecoder;
 import org.mortbay.http.*;
 import org.mortbay.http.handler.*;
 import org.mortbay.util.ByteArrayISO8859Writer;
-import org.mortbay.util.StringUtil;
 import org.lockss.util.*;
+import org.lockss.util.StringUtil;
 
 /** Handler to generate error pages for servlets and proxy
  */
@@ -63,10 +63,16 @@ public class LockssErrorHandler extends AbstractHttpHandler {
 		     HttpRequest request,
 		     HttpResponse response)
       throws HttpException, IOException {
+    String msg = response.getReason();
+    Object eobj = request.getAttribute(org.mortbay.jetty.servlet.ServletHandler.__J_S_ERROR_EXCEPTION);
+    if (eobj instanceof Error) {
+      String cls = StringUtil.shortName(eobj.getClass());
+      msg = cls + ": " + msg;
+    }
     response.setContentType(HttpFields.__TextHtml);
     ByteArrayISO8859Writer writer= new ByteArrayISO8859Writer(2048);
     writeErrorPage(request, writer,
-		   response.getStatus(), response.getReason());
+		   response.getStatus(), msg);
     writer.flush();
     response.setContentLength(writer.size());
     writer.writeTo(response.getOutputStream());

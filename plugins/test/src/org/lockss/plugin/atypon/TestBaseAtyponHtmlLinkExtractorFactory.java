@@ -1,5 +1,5 @@
 /*
- * $Id: TestBaseAtyponHtmlLinkExtractorFactory.java,v 1.6 2014-09-04 23:02:25 alexandraohlson Exp $
+ * $Id$
  */
 /*
 
@@ -31,16 +31,12 @@
 
 package org.lockss.plugin.atypon;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import org.lockss.plugin.UrlNormalizer;
 import org.lockss.plugin.atypon.BaseAtyponUrlNormalizer;
-import org.lockss.extractor.HtmlFormExtractor;
 import org.lockss.extractor.JsoupHtmlLinkExtractor;
 import org.lockss.extractor.LinkExtractor;
-import org.lockss.extractor.RegexpCssLinkExtractor;
 import org.lockss.test.LockssTestCase;
 import org.lockss.test.MockArchivalUnit;
 import org.lockss.test.MockCachedUrl;
@@ -151,23 +147,29 @@ public class TestBaseAtyponHtmlLinkExtractorFactory extends LockssTestCase {
   /* Since this sample form comes from SIAM this is very similar to the TestSiamHtmLinkExtractor, but 
    * since this is the less restricted BaseAtyponHtnlLinkExtractor there are more expected URLs so it's
    * not exactly the same test.
+   * 
+   * Newly implmemented - we ONLY want to collect urls that are format=ris&include=cit. 
+   * exclude all others
    */
 
   public void testCitationsForm() throws Exception {
     UrlNormalizer normalizer = new BaseAtyponUrlNormalizer();
     expectedUrls = SetUtil.set(
         BASE_URL + "action/downloadCitation?doi=" + DOI_START + "%2F" + DOI_END + "&format=ris&include=cit",
-        BASE_URL + "action/downloadCitation?doi=" + DOI_START + "%2F" + DOI_END + "&format=bibtex&include=cit",
+/*        BASE_URL + "action/downloadCitation?doi=" + DOI_START + "%2F" + DOI_END + "&format=bibtex&include=cit",
         BASE_URL + "action/downloadCitation?doi=" + DOI_START + "%2F" + DOI_END + "&format=refworks&include=cit",
         BASE_URL + "action/downloadCitation?doi=" + DOI_START + "%2F" + DOI_END + "&format=refworks-cn&include=cit",
         BASE_URL + "action/downloadCitation?doi=" + DOI_START + "%2F" + DOI_END + "&format=endnote&include=cit",
         BASE_URL + "action/downloadCitation?doi=" + DOI_START + "%2F" + DOI_END + "&format=medlars&include=cit",     
-        BASE_URL + "action/downloadCitation?direct=on&doi=" + DOI_START + "%2F" + DOI_END + "&format=ris&include=cit",
-        BASE_URL + "action/downloadCitation?direct=on&doi=" + DOI_START + "%2F" + DOI_END + "&format=bibtex&include=cit",
+*/     
+        BASE_URL + "action/downloadCitation?direct=on&doi=" + DOI_START + "%2F" + DOI_END + "&format=ris&include=cit"
+/*        BASE_URL + "action/downloadCitation?direct=on&doi=" + DOI_START + "%2F" + DOI_END + "&format=bibtex&include=cit",
         BASE_URL + "action/downloadCitation?direct=on&doi=" + DOI_START + "%2F" + DOI_END + "&format=refworks&include=cit",
         BASE_URL + "action/downloadCitation?direct=on&doi=" + DOI_START + "%2F" + DOI_END + "&format=refworks-cn&include=cit",
         BASE_URL + "action/downloadCitation?direct=on&doi=" + DOI_START + "%2F" + DOI_END + "&format=endnote&include=cit",
-        BASE_URL + "action/downloadCitation?direct=on&doi=" + DOI_START + "%2F" + DOI_END + "&format=medlars&include=cit");      
+        BASE_URL + "action/downloadCitation?direct=on&doi=" + DOI_START + "%2F" + DOI_END + "&format=medlars&include=cit"
+*/        
+        );      
 
 
     String norm_url;
@@ -176,13 +178,14 @@ public class TestBaseAtyponHtmlLinkExtractorFactory extends LockssTestCase {
     final String refworks_url = BASE_URL + "action/downloadCitation?doi=" + DOI_START + "%2F" + DOI_END + "&format=refworks&include=cit";
     final String refworks_cn_url = BASE_URL + "action/downloadCitation?doi=" + DOI_START + "%2F" + DOI_END + "&format=refworks-cn&include=cit";
 
+    assertEquals(2, result_strings.size());
     for (String url : result_strings) {
       norm_url = normalizer.normalizeUrl(url, m_mau);
       log.debug3("normalized citation form URL: " + norm_url);
       assertTrue(expectedUrls.contains(norm_url));
       norm_urls.add(norm_url);
     }
-    // these two were excluded by BaseAtypon
+    // these were all excluded by BaseAtypon
     assertFalse(norm_urls.contains(refworks_url)); 
     assertFalse(norm_urls.contains(refworks_cn_url));
   }
@@ -238,7 +241,6 @@ public class TestBaseAtyponHtmlLinkExtractorFactory extends LockssTestCase {
       "<br><strong>View larger image </strong>(64K)<br><br></a>";
     private static final String seg_doi =  "99.9999/gabc2013-0099.9";
     public void testSEGImages() throws Exception {
-
       Set<String> result_strings = parseSingleSource(segRefFull_input, "full", seg_doi);
       for (String url : result_strings) {
         log.debug3("segImages URL: " + url);
@@ -277,6 +279,283 @@ public class TestBaseAtyponHtmlLinkExtractorFactory extends LockssTestCase {
   
   /*-------TESTING THE window.FigureViewer link extractor -----------*/
   /* currently only implemented under Maney. Requires 1.67 */
+    private static final String SCRIPT_TAG = "script";
+    
+    /*
+     * First the html for a limited test - just the image tag that needs expanding
+     */
+    private static final String test1_urlprefix = 
+        "na101/home/literatum/publisher/maney/journals/" +                                                                 
+        "content/amb/2013/amb.2013.60.issue-3/0002698013z.00000000033/production" +                                                                    
+        "images/";
+
+    private static final String test1_figureLinksHtml=
+        "<html><head><title>Test Title</title></head><body>" +
+            "<div class=\"holder\">" +
+            "<a title=\"Open Figure Viewer\" onclick=\"showFigures(this,event); return false;\" href=\"JavaScript:void(0);\" class=\"thumbnail\">" +
+            "<img alt=\"figure\" " +
+            "src=\"/" + test1_urlprefix + "/images/small/s3-g1.gif\">" +
+            "</img>" +
+            "</a>" +
+            "<span class=\"overlay\"></span>" +
+            "</div>" +
+            "<div>" +
+            "<" + SCRIPT_TAG + " type=\"text/javascript\">" +
+            "  window.figureViewer={doi:\'10.1179/0002698013Z.00000000033\',\n" +
+            "path:\'/" + test1_urlprefix + "\',figures:[{i:\'S3F1\',g:[{m:\'s3-g1.gif\',l:\'s3-g1.jpeg\',size:\'116 kB\'}]}" +
+            "   ,{i:\'S3F2\',g:[{m:\'s3-g2.gif\',l:\'s3-g2.jpeg\',size:\'70 kB\'}]}" +
+            "   ,{i:\'S3F3\',g:[{m:\'s3-g3.gif\',l:\'s3-g3.jpeg\',size:\'61 kB\'}]}" +
+            "   ,{i:\'S3F4\',g:[{m:\'s3-g4.gif\',l:\'s3-g4.jpeg\',size:\'37 kB\'}]}" +
+            "   ,{i:\'S3F5\',g:[{m:\'s3-g5.gif\',l:\'s3-g5.jpeg\',size:\'28 kB\'}]}" +
+            "   ]}</" + SCRIPT_TAG + ">" +
+            "</div>" +
+            
+            "</body>" +
+            "</html>";
+    private static final String test2_urlprefix = "na101/home/literatum/publisher/maney/journals/content/amb/2013/" +
+            "amb.2013.60.issue-4/0002698013z.00000000038/20131129";
+    private static final String test2_figureLinksHtml = 
+    "<html><head><title>Test Title</title></head><body>" +
+    "<div class=\"holder\">" +
+    "<a title=\"Open Figure Viewer\" onclick=\"showFigures(this,event); return false;\" href=\"JavaScript:void(0);\" class=\"thumbnail\">" +
+    "<img alt=\"figure\" src=\"/" + test2_urlprefix + "/images/small/0002698013z.00000000038.01.gif\" />" +
+    "</a>" +
+    "<" + SCRIPT_TAG + " type=\"text/javascript\">" +
+    "  window.figureViewer={doi:\'10.1179/0002698013Z.00000000038\'," +
+    "path:\'/" + test2_urlprefix + "\'," +
+    "figures:[{i:\'F1\',g:[{m:\'0002698013z.00000000038.01.gif\',l:" +
+    "\'0002698013z.00000000038.01.jpeg\',size:\'102 KB\'}]}" +
+    " ]}</" + SCRIPT_TAG + ">" +
+    "</div>" +
+            "</body>" +
+            "</html>";
+    /*
+     * Now more complete html code to test that other links still work as expected
+     * 
+     */
+    private static final String fullHtml =
+    "<!DOCTYPE html>" +
+    "<html lang=\"en\" class=\"pb-page\">" +
+    "<head data-pb-dropzone=\"head\">" +
+    "<title>TEST FOO</title>" +
+    "<script type=\"text/javascript\" src=\"/wro/product.js\"></script>" +
+    "<link rel=\"stylesheet\" type=\"text/css\" href=\"/wro/product.css\">" +
+    "</head>" +
+    "<body>" +
+    " <div id=\"pb-page-content\">" +
+    " <div data-pb-dropzone=\"main\" data-pb-dropzone-name=\"Main\">" +
+    " <section class=\"widget general-image none  widget-none  widget-compact\" id=\"ec8b7042-594c-48ae-b50a-619a7c70b9b6\">" +
+    " <div class=\"wrapped 1_12\" >" +
+    " <div class=\"widget-body body body-none  body-compact\"><a href=\"/\">" +
+    " <img src=\"/pb/assets/raw/Maney_logo.jpg\"/>" +
+    " </a></div>" +
+    "  </div>" +
+    "  </section>" +
+    "</div></div></body></html>";
+
+    
+    private static final String test3_figureLinksWithSpacesAndNewlines=
+        "<html><head><title>Test Title</title></head><body>" +
+            "<div class=\"holder\">" +
+            "<a title=\"Open Figure Viewer\" onclick=\"showFigures(this,event); return false;\" href=\"JavaScript:void(0);\" class=\"thumbnail\">" +
+            "<img alt=\"figure\" " +
+            "src=\"/" + test1_urlprefix + "/images/small/s3-g1.gif\">" +
+            "</img>" +
+            "</a>" +
+            "<span class=\"overlay\"></span>" +
+            "</div>" +
+            "<div>" +
+            "<" + SCRIPT_TAG + " type=\"text/javascript\">" +
+            "    window.figureViewer={  doi  : \'10.1179/0002698013Z.00000000033\'  ,  \n  " +
+            " path : \'/" + test1_urlprefix + "\' ,  figures : [ { i : \'S3F1\' , \n " +
+                          " g : [ { m : \'s3-g1.gif\' , l : \'s3-g1.jpeg\',size:\'116 kB\' } ] }\n" +
+            "\n   ] } </" + SCRIPT_TAG + ">" +
+            "</div>" +
+            "\n" +          
+            "</body>" +
+            "</html>";
+    
+    private static final String test_noLinks=
+
+        "<html><head><title>Test Title</title></head><body>" +
+    "<div class=\"holder\">" +
+    "<a title=\"Open Figure Viewer\" onclick=\"showFigures(this,event); return false;\" href=\"JavaScript:void(0);\" class=\"thumbnail\">" +
+    "</a>" +
+    "<a title=\"Open Figure Viewer\" onclick=\"showFigures(this,event); return false;\" class=\"foo\">" +
+    "</a>" +
+    "<a fooarg=\"fooval\"></a>" +
+    "</div></body></html>";
+    
+    private static final String test_nrc_links=
+        "<html><head><title>Test Title</title></head><body>" +
+        "<a href=\"/journal/gen\">" +
+            " <img class=\"pubCoverImg\" src=\"/na101/home/literatum/publisher/nrc/journals/covergifs/gen/cover.jpg\" alt=\"Genome\" />" +
+            "</a>" +
+            "<a class=\"ref aff\" href=\"javascript:popRef('aff1')\"><sup><i>a</i></sup></a>" +
+            "<a class=\"openLayerForItem\" itemid=\"tabX\" href=\"javascript:void(0);\">Table 1</a>" +
+            "<a class=\"ref openTablesLayer\" href=\"javascript:void(0);\" id=\"tabY\" doi=\"10.1139/g2012-037\">" +
+            "<img src=\"/templates/jsp/_style2/_nrc/images/dummy_table_thumb.gif\" width=\"150\" height=\"100\" " +
+            "align=\"bottom\" border=\"1\" alt=\"Data table\" /><p class=\"red-link-left\">&raquo;View table</p></a>" +
+            "<a name=\"f1\"><!--FIG--></a>" +
+            "<a doi=\"10.1111/test.doi\" id=\"f2\" class=\"red-link-left openFigLayer\"> " +
+            "<img src=\"/na101/home/literatum/publisher/nrc/journals/content/gen/2012/gen.2012.5507/g2012-037/production/images/small/g2012-037f1.gif\" " +
+            "align=\"bottom\" border=\"1\" alt=\"\" /><p>&raquo;View larger version</p></a>" +
+            "</div></body></html>";
+
+
+    public void testNoLinks() throws Exception {
+      Set<String> result_strings = parseSingleSource(test_noLinks, "full", null);
+
+      assertEquals(0, result_strings.size());
+      
+    }
+ 
+    public void test1FigureLinks() throws Exception {
+       // the snippet of html used to set this up only establishes the small
+       // size for the first image. So it is correct that the other images, which
+       // come form the figureViewer only include medium and large
+      expectedUrls = SetUtil.set(
+          BASE_URL + test1_urlprefix + "/images/small/s3-g1.gif",
+          BASE_URL + test1_urlprefix + "/images/medium/s3-g1.gif",
+          BASE_URL + test1_urlprefix + "/images/large/s3-g1.jpeg",
+          BASE_URL + test1_urlprefix + "/images/medium/s3-g2.gif",
+          BASE_URL + test1_urlprefix + "/images/large/s3-g2.jpeg",
+          BASE_URL + test1_urlprefix + "/images/medium/s3-g3.gif",
+          BASE_URL + test1_urlprefix + "/images/large/s3-g3.jpeg",
+          BASE_URL + test1_urlprefix + "/images/medium/s3-g4.gif",
+          BASE_URL + test1_urlprefix + "/images/large/s3-g4.jpeg",
+          BASE_URL + test1_urlprefix + "/images/medium/s3-g5.gif",
+          BASE_URL + test1_urlprefix + "/images/large/s3-g5.jpeg");
+
+      Set<String> result_strings = parseSingleSource(test1_figureLinksHtml, "full", null);
+
+      assertEquals(11, result_strings.size());
+      
+      for (String url : result_strings) {
+        log.debug3("URL: " + url);
+        assertTrue(expectedUrls.contains(url));
+      }
+      
+      // Now try it not on a "full" page, should just extract the one listed lnk 
+      result_strings = parseSingleSource(test1_figureLinksHtml, "abs", null);
+
+      assertEquals(1, result_strings.size());
+      for (String url : result_strings) {
+        log.debug("URL: " + url);
+        assertEquals(BASE_URL + test1_urlprefix + "/images/small/s3-g1.gif", url);
+      }
+      
+    }
+    
+    public void test2FigureLinks() throws Exception {
+
+      expectedUrls = SetUtil.set(
+          BASE_URL + test2_urlprefix + "/images/small/0002698013z.00000000038.01.gif",
+          BASE_URL + test2_urlprefix + "/images/medium/0002698013z.00000000038.01.gif",
+          BASE_URL + test2_urlprefix + "/images/large/0002698013z.00000000038.01.jpeg");
+
+      Set<String> result_strings = parseSingleSource(test2_figureLinksHtml, "full", null);
+
+      assertEquals(3, result_strings.size());
+      
+      for (String url : result_strings) {
+        log.debug3("URL: " + url);
+        assertTrue(expectedUrls.contains(url));
+      }
+    }
+    
+    public void testNRCLinks() throws Exception {
+
+      expectedUrls = SetUtil.set(
+          // not yet doing the open "openLayerForItem\" 
+          //BASE_URL + "/action/showFullPopup?id=tabX&doi=",
+          // from the href= + image
+          BASE_URL + "na101/home/literatum/publisher/nrc/journals/covergifs/gen/cover.jpg",
+          BASE_URL + "journal/gen",
+          // from the popRef
+          BASE_URL + "action/showPopup?citid=citart1&id=aff1&doi=11.1111%2FTEST",
+          //from the openTablesLayer + img
+          BASE_URL + "action/showFullPopup?id=tabY&doi=10.1139%2Fg2012-037",          
+          BASE_URL + "templates/jsp/_style2/_nrc/images/dummy_table_thumb.gif",
+          // from the openFigLayer link + img 
+          BASE_URL + "action/showFullPopup?id=f2&doi=10.1111%2Ftest.doi",
+          BASE_URL + "na101/home/literatum/publisher/nrc/journals/content/gen/2012/gen.2012.5507/g2012-037/production/images/small/g2012-037f1.gif");
+      
+      Set<String> result_strings = parseSingleSource(test_nrc_links, "full", null);
+
+      log.debug3("in testNRCLinks");
+      if (log.isDebug3()) {
+        for (String url : result_strings) {
+          log.debug3("URL: " + url);
+        }
+      }
+      
+      assertEquals(7, result_strings.size());
+      // loop over the expected URLs and make sure each is in the result
+      for (String url : expectedUrls) {
+        log.debug3("expectedURL: " + url);
+        assertTrue(result_strings.contains(url));
+      }
+
+      
+    }
+
+    
+     //This test makes sure other base link extraction continues to work
+     public void testfullHtml() throws Exception {
+   
+      Set<String> result_strings = parseSingleSource(fullHtml, "full", null);
+      expectedUrls = SetUtil.set(
+      BASE_URL + "pb/assets/raw/Maney_logo.jpg",
+      BASE_URL + "wro/product.js",
+      BASE_URL + "wro/product.css",
+      BASE_URL);
+
+      assertEquals(4, result_strings.size());
+      for (String url : result_strings) {
+        log.debug("URL: " + url);
+        assertTrue(expectedUrls.contains(url));
+      }
+    }
+    
+     public void test3FigureLinks() throws Exception {
+        //Testing to make sure that the image extracgtor can handle spaces
+        // and newlines within the regexp section
+       expectedUrls = SetUtil.set(
+           BASE_URL + test1_urlprefix + "/images/small/s3-g1.gif",
+           BASE_URL + test1_urlprefix + "/images/medium/s3-g1.gif",
+           BASE_URL + test1_urlprefix + "/images/large/s3-g1.jpeg");
+
+       Set<String> result_strings = parseSingleSource(test3_figureLinksWithSpacesAndNewlines, "full", null);
+
+       assertEquals(3, result_strings.size());
+       
+       for (String url : result_strings) {
+         log.debug3("URL: " + url);
+         assertTrue(expectedUrls.contains(url));
+       }
+       
+     }
+    
+    // this is copied directory from the Jsoup test to make sure that our class extension
+    // hasn't broken fallback behavior
+    public void testResolvesHtmlEntities() throws Exception {
+      String url1 = "http://www.example.com/bioone/?"
+          + "request=get-toc&issn=0044-7447&volume=32&issue=1";
+
+      String source = "<html><head><title>Test</title></head><body>"
+          + "<a href=http://www.example.com/bioone/?"
+          + "request=get-toc&#38;issn=0044-7447&#38;volume=32&issue=1>link1</a>";
+      assertEquals(SetUtil.set(url1), parseSingleSource(source, "full", null));
+
+      // ensure character entities processed before rel url resolution
+      source = "<html><head><title>Test</title></head><body>"
+          + "<base href=http://www.example.com/foo/bar>"
+          + "<a href=&#46&#46/xxx>link1</a>";
+      assertEquals(SetUtil.set("http://www.example.com/xxx"),
+          parseSingleSource(source, "full", null));
+    }
+
   
   /*------------------SUPPORT FUNCTIONS --------------------- */
 

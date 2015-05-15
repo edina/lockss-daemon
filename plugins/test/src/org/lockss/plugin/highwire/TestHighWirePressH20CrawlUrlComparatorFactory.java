@@ -1,10 +1,10 @@
 /*
- * $Id: TestHighWirePressH20CrawlUrlComparatorFactory.java,v 1.4 2010-01-11 22:41:55 thib_gc Exp $
+ * $Id$
  */
 
 /*
 
-Copyright (c) 2000-2010 Board of Trustees of Leland Stanford Jr. University,
+Copyright (c) 2000-2015 Board of Trustees of Leland Stanford Jr. University,
 all rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -34,12 +34,43 @@ package org.lockss.plugin.highwire;
 
 import java.util.Comparator;
 
+import org.lockss.config.Configuration;
 import org.lockss.crawler.CrawlUrl;
+import org.lockss.daemon.ConfigParamDescr;
+import org.lockss.plugin.ArchivalUnit;
+import org.lockss.plugin.PluginManager;
+import org.lockss.plugin.PluginTestUtil;
 import org.lockss.plugin.highwire.HighWirePressH20CrawlUrlComparatorFactory.*;
 import org.lockss.plugin.highwire.HighWirePressH20CrawlUrlComparatorFactory.HighWirePressH20UrlFactory.*;
+import org.lockss.test.ConfigurationUtil;
 import org.lockss.test.LockssTestCase;
+import org.lockss.test.MockLockssDaemon;
 
 public class TestHighWirePressH20CrawlUrlComparatorFactory extends LockssTestCase {
+  
+  private final String PLUGIN_NAME = "org.lockss.plugin.highwire.ClockssHighWirePressH20Plugin";
+  static final String BASE_URL_KEY = ConfigParamDescr.BASE_URL.getKey();
+  static final String VOLUME_NAME_KEY = ConfigParamDescr.VOLUME_NAME.getKey();
+  private final String BASE_URL = "http://www.example.com/";
+  private final Configuration AU_CONFIG = ConfigurationUtil.fromArgs(
+      BASE_URL_KEY, BASE_URL,
+      VOLUME_NAME_KEY, "1");
+  private ArchivalUnit au;
+  
+  @Override
+  public void setUp() throws Exception {
+    super.setUp();
+    setUpDiskSpace();
+    MockLockssDaemon daemon = getMockLockssDaemon();
+    PluginManager pluginMgr = daemon.getPluginManager();
+    pluginMgr.setLoadablePluginsReady(true);
+    daemon.setDaemonInited(true);
+    pluginMgr.startService();
+    daemon.getAlertManager();
+    daemon.getCrawlManager();
+    
+    au = PluginTestUtil.createAndStartAu(PLUGIN_NAME,  AU_CONFIG);
+  }
 
   public void testAssumptions() throws Exception {
     assertNegative(".".compareTo("/"));
@@ -60,7 +91,7 @@ public class TestHighWirePressH20CrawlUrlComparatorFactory extends LockssTestCas
      * performs assertions on the constructed HighWirePressH20Url.
      */
     class MyFactory extends HighWirePressH20UrlFactory {
-      public MyFactory(String baseUrl) { super(baseUrl); }
+      public MyFactory(String baseUrl, String jcode) { super(baseUrl, jcode); }
       public void testUrl(String url,
                           HighWirePressH20UrlPriority expectedPriority,
                           String expectedVolume,
@@ -76,7 +107,7 @@ public class TestHighWirePressH20CrawlUrlComparatorFactory extends LockssTestCas
       }
     }
     
-    MyFactory factory = new MyFactory("http://www.example.com/");
+    MyFactory factory = new MyFactory("http://www.example.com/", "jcode");
     factory.testUrl("http://www.example.com/content/123",
                     HighWirePressH20UrlPriority.VOLUME,
                     "123", null, null, null);
@@ -140,6 +171,29 @@ public class TestHighWirePressH20CrawlUrlComparatorFactory extends LockssTestCas
     factory.testUrl("http://www.lockss.org/favicon.ico",
                     HighWirePressH20UrlPriority.HIGHEST,
                     null, null, null, null);
+    
+    // Drupal additional tests
+    factory.testUrl("http://www.example.com/lockss-manifest/vol_3_manifest.html",
+        HighWirePressH20UrlPriority.HIGHEST, null, null, null, null);
+    factory.testUrl("http://www.example.com/content/3/4.toc",
+        HighWirePressH20UrlPriority.ISSUE, "3", "4", null, null);
+    factory.testUrl("http://www.example.com/content/3/4/5",
+        HighWirePressH20UrlPriority.PAGE, "3", "4", "5", null);
+    factory.testUrl("http://www.example.com/content/3/4/5.abstract",
+        HighWirePressH20UrlPriority.PAGE, "3", "4", "5", null);
+    factory.testUrl("http://www.example.com/content/3/4/5.article-info",
+        HighWirePressH20UrlPriority.PAGE, "3", "4", "5", null);
+    factory.testUrl("http://www.example.com/content/3/4/5.e-letters",
+        HighWirePressH20UrlPriority.PAGE, "3", "4", "5", null);
+    factory.testUrl("http://www.example.com/content/3/4/5.figures-only",
+        HighWirePressH20UrlPriority.PAGE, "3", "4", "5", null);
+    factory.testUrl("http://www.example.com/content/3/4/5.full.pdf",
+        HighWirePressH20UrlPriority.PAGE, "3", "4", "5", null);
+    // these are actually pages may need to revisit later XXX
+    factory.testUrl("http://www.example.com/content/jcode/3/4/5.full.pdf",
+        HighWirePressH20UrlPriority.PAGE, "3", "4", "5", null);
+    factory.testUrl("http://www.example.com/content/jcode/3/4/5/F6.medium.gif",
+        HighWirePressH20UrlPriority.FIGURE, "3", "4", "5", "f6");
   }
   
   public void testHighWirePressH20CrawlUrlComparator() throws Exception {
@@ -147,13 +201,16 @@ public class TestHighWirePressH20CrawlUrlComparatorFactory extends LockssTestCas
     class MyCrawlUrl implements CrawlUrl {
       protected String url;
       public MyCrawlUrl(String url) { this.url = url; }
+      @Override
       public String getUrl() { return url; }
+      @Override
       public int getDepth() { return 0; }
     }
     
     class MyComparator implements Comparator<CrawlUrl> {
       protected Comparator<CrawlUrl> comparator;
       public MyComparator(Comparator<CrawlUrl> comparator) { this.comparator = comparator; }
+      @Override
       public int compare(CrawlUrl o1, CrawlUrl o2) { return comparator.compare(o1, o2); }
       public int compare(String url1, String url2) { return compare(new MyCrawlUrl(url1), new MyCrawlUrl(url2)); }
     }
@@ -161,6 +218,7 @@ public class TestHighWirePressH20CrawlUrlComparatorFactory extends LockssTestCas
     String[] urls = new String[] {
         "http://www.lockss.org/favicon.ico",
         "http://www.lockss.org/robots.txt",
+        "http://www.example.com/content/123/456/998",
         "http://www.example.com/content/123/456/998.abstract",
         "http://www.example.com/content/123/456/999/F1.expansion.html",
         "http://www.example.com/content/123/456/999/F1.large.jpg",
@@ -174,7 +232,7 @@ public class TestHighWirePressH20CrawlUrlComparatorFactory extends LockssTestCas
         "http://www.example.com/content/124.fake",
     };
     
-    MyComparator cmp = new MyComparator(new HighWirePressH20CrawlUrlComparatorFactory().createCrawlUrlComparator("http://www.example.com/"));
+    MyComparator cmp = new MyComparator(new HighWirePressH20CrawlUrlComparatorFactory().createCrawlUrlComparator(au));
     for (int i = 0 ; i < urls.length ; ++i) {
       for (int j = 0 ; j < urls.length ; ++j) {
         int x = cmp.compare(urls[i], urls[j]);
