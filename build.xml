@@ -1194,6 +1194,7 @@ The target you have selected requires compiling under JDK 1.7.
   <target name="compile-plugins" depends="jar-lockss"
    description="Compile the plugins" >
     <mkdir dir="${plugins.classes}" />
+    <mkdir dir="${plugins.externals}" />
     <dojavac srcdir="${plugins.src}" destdir="${plugins.classes}"
              cpid="plugins.compile.classpath" >
      <javacelem>
