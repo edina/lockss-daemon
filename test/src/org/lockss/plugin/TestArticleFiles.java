@@ -1,10 +1,10 @@
 /*
- * $Id: TestArticleFiles.java,v 1.5 2011-04-26 23:52:40 tlipkis Exp $
+ * $Id$
  */
 
 /*
 
-Copyright (c) 2000-2011 Board of Trustees of Leland Stanford Jr. University,
+Copyright (c) 2000-2015 Board of Trustees of Leland Stanford Jr. University,
 all rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy

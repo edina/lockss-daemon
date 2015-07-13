@@ -1,10 +1,10 @@
 /*
- * $Id: BatchAuConfig.java,v 1.56 2014-10-22 19:39:33 thib_gc Exp $
+ * $Id$
  */
 
 /*
 
-Copyright (c) 2000-2014 Board of Trustees of Leland Stanford Jr. University,
+Copyright (c) 2000-2015 Board of Trustees of Leland Stanford Jr. University,
 all rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -263,7 +263,7 @@ public class BatchAuConfig extends LockssServlet {
 
       // Only show the update link if there are subscriptions already.
       try {
-	if (subManager.countSubscribedPublications() > 0) {
+	if (subManager.hasSubscriptionRanges()) {
 	  // Add titles to subscription management.
 	  list.add(getMenuDescriptor(AdminServletManager.SERVLET_SUB_MANAGEMENT,
 	      			     SubscriptionManagement
@@ -288,48 +288,6 @@ public class BatchAuConfig extends LockssServlet {
     }
 
     return list.iterator();
-  }
-
-  /**
-   * <p>Makes a new link with explanation.</p>
-   * <p>The resulting link is always enabled.</p>
-   * @param descr    The link's servlet descriptor.
-   * @param linkText The text appearing in the link.
-   * @param action   The action associated with the servlet descriptor
-   *                 (can be null).
-   * @param expl     The explanation associated with the link.
-   * @return A {@link LinkWithExplanation} corresponding to the servlet
-   *         descriptor (optionally with an action), showing the given
-   *         text and explanation.
-   */
-  private LinkWithExplanation getMenuDescriptor(ServletDescr descr,
-                                                String linkText,
-                                                String action,
-                                                String expl) {
-    return getMenuDescriptor(descr, linkText, action, expl, true);
-  }
-
-  /**
-   * <p>Makes a new link with explanation.</p>
-   * @param descr      The link's servlet descriptor.
-   * @param linkText   The text appearing in the link.
-   * @param linkAction The action associated with the servlet descriptor
-   *                   (can be null).
-   * @param linkExpl   The explanation associated with the link.
-   * @param enabled    Whether or not the link is actually enabled.
-   * @return A {@link LinkWithExplanation} corresponding to the servlet
-   *         descriptor (optionally with an action), showing the given
-   *         text and explanation; the link is enabled or disabled
-   *         according to the parameter.
-   */
-  private LinkWithExplanation getMenuDescriptor(ServletDescr descr,
-                                                String linkText,
-                                                String linkAction,
-                                                String linkExpl,
-                                                boolean enabled) {
-    return new LinkWithExplanation(
-      enabled ? srvLink(descr, linkText, linkAction) : ServletUtil.gray(linkText),
-      linkExpl);
   }
 
   /** Display top level batch config choices */

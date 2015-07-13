@@ -1,5 +1,5 @@
 /*
- * $Id: TestAmmonsScientificHashHtmlFilterFactory.java,v 1.3 2014-10-22 21:51:13 alexandraohlson Exp $
+ * $Id$
  */
 
 /* Copyright (c) 2000-2010 Board of Trustees of Leland Stanford Jr. University, all rights reserved.
@@ -60,8 +60,6 @@ public class TestAmmonsScientificHashHtmlFilterFactory extends LockssTestCase{
   private static final String withoutHeader =
     "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\"> " +
     "<html> " +
-    "<head> " +
-    "</head> " +
     "</html>";
   private static final String withScript=
     "<script type=\"text/javascript\"> <!-- // hide it from old browsers  var anyDbId = -1; //stop hiding --> </script>" +

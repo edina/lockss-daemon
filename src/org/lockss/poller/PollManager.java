@@ -1,5 +1,5 @@
 /*
- * $Id: PollManager.java,v 1.271.2.7 2015-02-09 05:37:02 tlipkis Exp $
+ * $Id$
  */
 
 /*
@@ -987,7 +987,7 @@ public class PollManager
 		}
 	      } catch (NotEligibleException e) {
 		if (theLog.isDebug3()) {
-		  theLog.debug3("Not eligible for poll: " + au);
+		  theLog.debug3("Not eligible for poll: " + au + " reason " + e);
 		}
 	      }
 	    } catch (RuntimeException e) {

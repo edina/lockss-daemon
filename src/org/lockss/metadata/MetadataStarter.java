@@ -1,5 +1,5 @@
 /*
- * $Id: MetadataStarter.java,v 1.10 2014-08-22 22:15:00 fergaloy-sf Exp $
+ * $Id$
  */
 
 /*
@@ -32,6 +32,7 @@
 package org.lockss.metadata;
 
 import static org.lockss.db.SqlConstants.*;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -39,6 +40,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.ArrayList;
+
 import org.lockss.app.LockssDaemon;
 import org.lockss.daemon.LockssRunnable;
 import org.lockss.db.DbException;
@@ -204,7 +206,8 @@ public class MetadataStarter extends LockssRunnable {
         DbManager.commitOrRollback(conn, log);
 
         // Remove the AU from the table of unconfigured AUs.
-        mdManager.removeFromUnconfiguredAus(conn, au.getAuId());
+        mdManager.getMetadataManagerSql().removeFromUnconfiguredAus(conn,
+            au.getAuId());
 
         insertPendingAuBatchStatement =
             mdManager.getInsertPendingAuBatchStatement(conn);

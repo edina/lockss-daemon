@@ -1,5 +1,5 @@
 /*
- * $Id: TestHighWireDrupalArticleIteratorFactory.java,v 1.4 2014-11-12 20:11:41 wkwilson Exp $
+ * $Id$
  */
 
 /*
@@ -119,8 +119,9 @@ public class TestHighWireDrupalArticleIteratorFactory extends ArticleIteratorTes
     Pattern pat = getPattern(artIter);
     
     assertMatchesRE(pat, "http://ajpendo.physiology.org/content/1/1/1");
-    assertMatchesRE(pat, "http://ajpendo.physiology.org/content/1/1");
     // but not to ...
+    assertNotMatchesRE(pat, "http://ajpendo.physiology.org/content/1/1");
+    assertNotMatchesRE(pat, "http://ajpendo.physiology.org/content/ajpendo/1/1");
     assertNotMatchesRE(pat, "http://ajpendo.physiology.org/content/ajpendo/1/1/1");
     assertNotMatchesRE(pat, "http://ajpendo.physiology.org/content/1/1/1.full");
     assertNotMatchesRE(pat, "http://ajpendo.physiology.org/content/1/1/1.full.pdf");
@@ -238,6 +239,7 @@ public class TestHighWireDrupalArticleIteratorFactory extends ArticleIteratorTes
   public void testCreateArticleFiles2() throws Exception {
     PluginTestUtil.crawlSimAu(sau);
     String[] urls = {
+        BASE_URL + "content/1/1/C1.full",
         BASE_URL + "content/1/1/C1.full.pdf",
         BASE_URL + "content/1/1/C1.full.pdf+html",
         BASE_URL + "content/1/1/C1",
@@ -302,22 +304,22 @@ public class TestHighWireDrupalArticleIteratorFactory extends ArticleIteratorTes
     
     Stack<String[]> expStack = new Stack<String[]>();
     String [] af1 = {
-        BASE_URL + "content/1/1/C1",
+        BASE_URL + "content/1/1/C1.full",
         BASE_URL + "content/1/1/C1.full.pdf+html",
         BASE_URL + "content/1/1/C1.full.pdf",
-        BASE_URL + "content/1/1/C1"};
+        BASE_URL + "content/1/1/C1.full.pdf+html"};
     
     String [] af2 = {
         BASE_URL + "content/1/1/C10",
         BASE_URL + "content/1/1/C10.full.pdf+html",
         BASE_URL + "content/1/1/C10.full.pdf",
-        BASE_URL + "content/1/1/C10"};
+        BASE_URL + "content/1/1/C10.full.pdf+html"};
     
     String [] af3 = {
         BASE_URL + "content/1/1/C100",
         BASE_URL + "content/1/1/C100.full.pdf+html",
         null,
-        BASE_URL + "content/1/1/C100"};
+        BASE_URL + "content/1/1/C100.full.pdf+html"};
     
     String [] af4 = {
         BASE_URL + "content/1/1/C3",

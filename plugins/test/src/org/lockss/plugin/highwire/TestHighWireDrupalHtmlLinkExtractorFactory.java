@@ -1,5 +1,5 @@
 /*
- * $Id: TestHighWireDrupalHtmlLinkExtractorFactory.java,v 1.2 2014-07-30 16:04:17 etenbrink Exp $
+ * $Id$
  */
 /*
 
@@ -188,6 +188,7 @@ public class TestHighWireDrupalHtmlLinkExtractorFactory extends LockssTestCase {
     
     Set<String> foundUrls = new java.util.HashSet<String>();
     
+    @Override
     public void foundLink(String url) {
       foundUrls.add(url);
     }

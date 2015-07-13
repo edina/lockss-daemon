@@ -1,10 +1,10 @@
 /*
- * $Id: BioMedCentralHtmlFilterFactory.java,v 1.13 2014-08-05 18:51:46 aishizaki Exp $
+ * $Id$
  */
 
 /*
 
-Copyright (c) 2000-2014 Board of Trustees of Leland Stanford Jr. University,
+Copyright (c) 2000-2015 Board of Trustees of Leland Stanford Jr. University,
 all rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -51,15 +51,17 @@ public class BioMedCentralHtmlFilterFactory implements FilterFactory {
       throws PluginException {
     NodeFilter[] filters = new NodeFilter[] {
         // Contains variable code
-        new TagNameFilter("script"),
+        HtmlNodeFilters.tag("script"),
         // Contains variable alternatives to the code
-        new TagNameFilter("noscript"),
+        HtmlNodeFilters.tag("noscript"),
+        // remove all style tags!
+        HtmlNodeFilters.tag("style"),
         // Contains ads
-        new TagNameFilter("iframe"),
+        HtmlNodeFilters.tag("iframe"),
         // Contains ads
-        new TagNameFilter("object"),
+        HtmlNodeFilters.tag("object"),
         // CSS and RSS links varied over time
-        new TagNameFilter("link"),
+        HtmlNodeFilters.tag("link"),
         // Contains one-time names inside the page
         HtmlNodeFilters.tagWithAttribute("a", "name"),
         // Links to one-time names inside the page
@@ -110,6 +112,14 @@ public class BioMedCentralHtmlFilterFactory implements FilterFactory {
         HtmlNodeFilters.tagWithAttributeRegex("a", "href", "/about$"),
         // Journal of Cheminformatics -  an "accesses" and/or "citations" block
         // but the id is associated with the <h2>, not with the sibling <div>
+        
+        // removes mathml inline wierdnesses
+        HtmlNodeFilters.tagWithAttribute("p", "class", "inlinenumber"),
+        HtmlNodeFilters.tagWithAttributeRegex("div", "style", ".*display:inline$"),
+        HtmlNodeFilters.tagWithAttribute("span", "class", "mathjax"),
+        HtmlNodeFilters.tagWithAttribute("span", "class", "inline-math"),
+        HtmlNodeFilters.tagWithAttribute("span", "class", "inlinenumber"),
+        
         new NodeFilter() {
           @Override public boolean accept(Node node) {
             if (!(node instanceof Div)) return false;

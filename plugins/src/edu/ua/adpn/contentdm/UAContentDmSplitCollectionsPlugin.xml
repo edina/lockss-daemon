@@ -1,0 +1,66 @@
+<map>
+  <entry>
+    <string>plugin_status</string>
+    <string>ready</string>
+  </entry>
+  <entry>
+    <string>plugin_identifier</string>
+    <string>edu.ua.adpn.contentdm.UAContentDmSplitCollectionsPlugin</string>
+  </entry>
+  <entry>
+    <string>plugin_version</string>
+    <string>3</string>
+  </entry>
+  <entry>
+    <string>plugin_name</string>
+    <string>University of Alabama CONTENTdm Plugin (Split Collections)</string>
+  </entry>
+  <entry>
+    <string>plugin_parent</string>
+    <string>edu.ua.adpn.contentdm.UAContentDmPlugin</string>
+  </entry>
+  <entry>
+    <string>plugin_parent_version</string>
+    <string>3</string>
+  </entry>
+  <entry>
+    <string>plugin_config_props</string>
+    <list>
+      <org.lockss.daemon.ConfigParamDescr>
+        <key>base_url</key>
+        <displayName>Base URL</displayName>
+        <description>Usually of the form http://&lt;journal-name&gt;.com/</description>
+        <type>3</type>
+        <size>40</size>
+        <definitional>true</definitional>
+        <defaultOnly>false</defaultOnly>
+      </org.lockss.daemon.ConfigParamDescr>
+      <org.lockss.daemon.ConfigParamDescr>
+        <key>collection_path</key>
+        <displayName>Collection Path</displayName>
+        <description>A collection path under the base URL, e.g. u0002/0000003/0000001</description>
+        <type>1</type>
+        <size>40</size>
+        <definitional>true</definitional>
+        <defaultOnly>false</defaultOnly>
+      </org.lockss.daemon.ConfigParamDescr>
+      <org.lockss.daemon.ConfigParamDescr>
+        <key>collection_part</key>
+        <displayName>Collection Part Number</displayName>
+        <description>The number of this part of the collection (1, 2, 3...)</description>
+        <type>2</type>
+        <size>4</size>
+        <definitional>true</definitional>
+        <defaultOnly>false</defaultOnly>
+      </org.lockss.daemon.ConfigParamDescr>
+    </list>
+  </entry>
+  <entry>
+    <string>au_name</string>
+    <string>&quot;University of Alabama CONTENTdm Plugin (Split Collections), Base URL %s, Collection Path %s, Collection Part %d&quot;, base_url, collection_path, collection_part</string>
+  </entry>
+  <entry>
+    <string>au_start_url</string>
+    <string>&quot;%s%s/Documentation/Manifest%d.html&quot;, base_url, collection_path, collection_part</string>
+  </entry>
+</map>

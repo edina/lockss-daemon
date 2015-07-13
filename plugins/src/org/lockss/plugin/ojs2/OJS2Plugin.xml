@@ -16,7 +16,7 @@
   </entry>
   <entry>
     <string>plugin_version</string>
-    <string>38</string>
+    <string>46</string>
   </entry>
   <!--  This is a list of OJS2 Child plugins - be sure to update
         the child's plugin_parent_version number to match, then
@@ -38,7 +38,7 @@
     <map>
       <entry>
         <string>Poll</string>
-        <string>14</string>
+        <string>20</string>
       </entry>
       <entry>
         <string>Metadata</string>
@@ -46,13 +46,13 @@
       </entry>
       <entry>
         <string>Substance</string>
-        <string>7</string>
+        <string>9</string>
       </entry>
     </map>
   </entry>
   <entry>
     <string>required_daemon_version</string>
-    <string>1.65.0</string>
+    <string>1.67.0</string>
   </entry>
   <entry>
     <string>au_name</string>
@@ -128,12 +128,15 @@
   <entry>
     <string>au_crawlrules</string>
     <list>
+      <!-- all content from CDN -->
+      <string>1,"^https?://(.+[.]cloudfront[.]net|cdn[.]mathjax[.]org|fonts[.]gstatic[.]com)/."</string>
       <!-- new - making index.php and journal_id optional, removed [0-9]+ for some rules -->
       <string>1,"^https?://%s.*\.(bmp|css|gif|ico|js|jpe?g|png|tif?f)$", base_url_host</string>
       <string>4,"^%s", base_url</string>
       <string>1,"^%s(index\.php/)?(%s/)?(gateway/lockss\?year=%d|about/editorialPolicies)$", base_url, journal_id, year</string>
+      <string>2,"/([^.?/]+)/\1/\1/"</string>
       <string>2,"^%s(index\.php/)?(%s/)?(article|issue)/viewFile/[0-9]+(/[0-9]+)?/%%20http:", base_url, journal_id</string>
-      <string>1,"^%s(index\.php/)?(%s/)?(article|issue)/(download|downloadSuppFile|view|viewArticle|viewDownloadInterstitial|viewFile|viewPDFInterstitial|viewRST)/", base_url, journal_id</string>
+      <string>1,"^%s(index\.php/)?(%s/)?(article|issue)/(download(SuppFile)?|view(Article|File|(Download|PDF)Interstitial|RST)?)/", base_url, journal_id</string>
       <string>1,"^%s(index\.php/)?(%s/)?rt/(bio|findingReferences|metadata|printerFriendly|suppFileMetadata|suppFiles)/", base_url, journal_id</string>
     </list>
   </entry>
@@ -143,7 +146,7 @@
         <!--  new - making index.php and journal_id optional -->
         <!--  adding pdf for Electronic Journal of Combinatorics; 
               viewFile for KwaZulu Natal Museum -->
-        <string>"^%s(?:index[.]php/)?(?:%s/)?article/(?:view(?:File)?|download)/[^/]+/[^/?#@amp;]+$", base_url, journal_id</string>
+        <string>"^%s(?:index[.]php/)?(?:%s/)?article/(?:view(?:File)?|download)/[^/]+/[^/?#&amp;.]+$", base_url, journal_id</string>
       </list>
   </entry>
   <entry>
@@ -198,8 +201,18 @@
     <string>au_refetch_depth</string>
     <int>2</int>
   </entry>
-  <!-- entry>
-    <string>au_exclude_urls_from_polls_pattern</string>
+  <entry>
+    <!-- the au_permitted_host_pattern must also find match in lockss-daemon config
+         org.lockss.crawler.allowedPluginPermittedHosts= -->
+    <string>au_permitted_host_pattern</string>
+    <string>".*[.]cloudfront[.]net|cdn[.]mathjax[.]org|fonts[.]gstatic[.]com"</string>
+  </entry>
+  <entry>
+    <string>au_repair_from_peer_if_missing_url_pattern</string>
     <string>/(lib|site|images|js|public|ads)/.+[.](css|png|gif|js)$</string>
-  </entry -->
+  </entry>
+  <entry>
+    <string>au_exclude_urls_from_poll_results_pattern</string>
+    <string>/(lib|site|images|js|public|ads)/.+[.](css|png|gif|js)$</string>
+  </entry>
 </map>

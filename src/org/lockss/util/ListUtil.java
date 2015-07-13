@@ -1,5 +1,5 @@
 /*
- * $Id: ListUtil.java,v 1.16 2014-07-21 03:16:39 tlipkis Exp $
+ * $Id$
  *
 
 Copyright (c) 2000-2003 Board of Trustees of Leland Stanford Jr. University,
@@ -261,6 +261,17 @@ public class ListUtil {
       toList.addFirst(iter.next());
     }
     return toList;
+  }
+
+  /** Return a trimmed Arraylist equal to lst */
+  public static ArrayList minimalArrayList(List lst) {
+    if (lst instanceof ArrayList) {
+      ArrayList alst = (ArrayList)lst;
+      alst.trimToSize();
+      return alst;
+    } else {
+      return new ArrayList(lst);
+    }
   }
 
   /** Create a list containing the elements of an iterator */

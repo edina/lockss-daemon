@@ -1,10 +1,10 @@
 /*
- * $Id: HighWireDrupalHtmlCrawlFilterFactory.java,v 1.4 2014-10-06 23:09:50 etenbrink Exp $
+ * $Id$
  */
 
 /*
 
-Copyright (c) 2000-2014 Board of Trustees of Leland Stanford Jr. University,
+Copyright (c) 2000-2015 Board of Trustees of Leland Stanford Jr. University,
 all rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -33,6 +33,7 @@ in this Software without prior written authorization from Stanford University.
 package org.lockss.plugin.highwire;
 
 import java.io.InputStream;
+import java.util.Arrays;
 
 import org.htmlparser.NodeFilter;
 import org.htmlparser.filters.*;
@@ -41,28 +42,56 @@ import org.lockss.filter.html.*;
 import org.lockss.plugin.*;
 
 public class HighWireDrupalHtmlCrawlFilterFactory implements FilterFactory {
-
+  
+  protected static NodeFilter[] baseHWDrupalFilters = new NodeFilter[] {
+    // Do not crawl header or footer for links 
+    new TagNameFilter("header"),
+    new TagNameFilter("footer"),
+    // Do not crawl for links from aside in BMJ, etc
+    new TagNameFilter("aside"),
+    // Do not crawl reference section, right sidebar for links; common with APS & OUP
+    HtmlNodeFilters.tagWithAttribute("div", "class", "section ref-list"),
+    HtmlNodeFilters.tagWithAttributeRegex("div", "class", "sidebar-right-wrapper"),
+  };
+  
   @Override
   public InputStream createFilteredInputStream(ArchivalUnit au,
                                                InputStream in,
                                                String encoding)
       throws PluginException {
-    NodeFilter[] filters = new NodeFilter[] {
-        // Do not crawl header or footer for links 
-        new TagNameFilter("header"),
-        new TagNameFilter("footer"),
-        // Do not crawl reference section, right-sidebar, or prev/next pager for links from APS
-        HtmlNodeFilters.tagWithAttribute("div", "class", "section ref-list"),
-        HtmlNodeFilters.tagWithAttributeRegex("div", "class", "sidebar-right-wrapper"),
-        HtmlNodeFilters.tagWithAttributeRegex("div", "class", "pane-highwire-node-pager"),
-        // Do not crawl for links from BMJ
-        new TagNameFilter("aside"),
-        // Do not crawl for links from Royal Society <div class="panel-pane pane-highwire-article-comments-form">
-        HtmlNodeFilters.tagWithAttributeRegex("div", "class", "comments-form"),
-    };
-    InputStream filtered = new HtmlFilterInputStream(in, encoding,
-        HtmlNodeFilterTransform.exclude(new OrFilter(filters)));
-    return filtered;
+     
+    return doFiltering(in, encoding, null);
   }
-
+  
+  public InputStream createFilteredInputStream(ArchivalUnit au,
+                                               InputStream in,
+                                               String encoding,
+                                               NodeFilter[] moreNodes)
+      throws PluginException {
+    
+    return doFiltering(in, encoding, moreNodes);
+  }
+  
+  /* the shared portion of the filtering
+   * pick up the extra nodes from the child if there are any
+   */
+  protected InputStream doFiltering(InputStream in, String encoding, NodeFilter[] moreNodes) {
+    NodeFilter[] filters = baseHWDrupalFilters;
+    if (moreNodes != null) {
+      filters = addTo(moreNodes);
+    }
+    
+    return new HtmlFilterInputStream(in, encoding,
+        HtmlNodeFilterTransform.exclude(new OrFilter(filters)));
+  }
+  /** Create an array of NodeFilters that combines the baseHWDrupalFilters with
+   *  the given array
+   *  @param nodes The array of NodeFilters to add
+   */
+  protected NodeFilter[] addTo(NodeFilter[] nodes) {
+    NodeFilter[] result  = Arrays.copyOf(baseHWDrupalFilters, baseHWDrupalFilters.length + nodes.length);
+    System.arraycopy(nodes, 0, result, baseHWDrupalFilters.length, nodes.length);
+    return result;
+  }
+  
 }

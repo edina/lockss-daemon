@@ -1,10 +1,10 @@
 /*
- * $Id: TestBaseAtyponArchivalUnit.java,v 1.11 2014-11-12 20:11:54 wkwilson Exp $
+ * $Id$
  */
 
 /*
 
-Copyright (c) 2000-2014 Board of Trustees of Leland Stanford Jr. University,
+Copyright (c) 2000-2015 Board of Trustees of Leland Stanford Jr. University,
 all rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -28,7 +28,7 @@ Except as contained in this notice, the name of Stanford University shall not
 be used in advertising or otherwise to promote the sale, use or other dealings
 in this Software without prior written authorization from Stanford University.
 
-*/
+ */
 
 package org.lockss.plugin.atypon;
 
@@ -55,12 +55,12 @@ public class TestBaseAtyponArchivalUnit extends LockssTestCase {
   static final String JID_KEY = ConfigParamDescr.JOURNAL_ID.getKey();
   static final String VOL_KEY = ConfigParamDescr.VOLUME_NAME.getKey();
   static final String ROOT_URL = "http://www.BaseAtypon.com/"; //this is not a real url
-  
+
   private static final Logger log = Logger.getLogger(TestBaseAtyponArchivalUnit.class);
-  
+
   static final String PLUGIN_ID = "org.lockss.plugin.atypon.BaseAtyponPlugin";
   static final String PluginName = "Base Atypon Plugin";
-  
+
   public void setUp() throws Exception {
     super.setUp();
     setUpDiskSpace();
@@ -82,7 +82,7 @@ public class TestBaseAtyponArchivalUnit extends LockssTestCase {
       props.setProperty(BASE_URL_KEY, url.toString());
     }
     Configuration config = ConfigurationUtil.fromProps(props);
-    
+
     DefinablePlugin ap = new DefinablePlugin();
     ap.initPlugin(getMockLockssDaemon(),
         PLUGIN_ID);
@@ -97,7 +97,7 @@ public class TestBaseAtyponArchivalUnit extends LockssTestCase {
     } catch (ArchivalUnit.ConfigurationException e) {
     }
   }
-  
+
   //
   // Test the crawl rules
   //
@@ -111,6 +111,9 @@ public class TestBaseAtyponArchivalUnit extends LockssTestCase {
     // Test for pages that should get crawled
     //manifest page
     shouldCacheTest(ROOT_URL+"lockss/xxxx/123/index.html", true, ABAu, cus);    
+    // images (etc.) but not as query arguments
+    shouldCacheTest(ROOT_URL+"foo/bar/baz/qux.js", true, ABAu, cus);
+    shouldCacheTest(ROOT_URL+"foo/bar/baz?url=qux.js", false, ABAu, cus);
     // toc page for an issue
     shouldCacheTest(ROOT_URL+"toc/xxxx/123/5", true, ABAu, cus);
     // special issue
@@ -132,9 +135,13 @@ public class TestBaseAtyponArchivalUnit extends LockssTestCase {
     shouldCacheTest(ROOT_URL+"action/showPopup?citid=citart1&id=T0003&doi=10.1080/19416520.2010.495530", true, ABAu, cus);
     shouldCacheTest(ROOT_URL+"action/showPopup?citid=citart1&id=CIT0013&doi=10.1080/19416521003732362", true, ABAu, cus);
     shouldCacheTest(ROOT_URL+"action/showFullPopup?doi=10.1206%2F3743.2&id=m05", true, ABAu, cus);
+    // require option argument before doi has value
+    shouldCacheTest(ROOT_URL+"action/showFullPopup?id=foo&doi=10.1206%2F3743.2", true, ABAu, cus);
+    // missing value
+    shouldCacheTest(ROOT_URL+"action/showFullPopup?id=&doi=10.1206%2F3743.2", false, ABAu, cus);
     // images figures and tables can live here
     shouldCacheTest(ROOT_URL+"na101/home/literatum/publisher/apha/journals/covergifs/xxxx/2005/15200477-86.6/cover.jpg", true, ABAu, cus);   
-    
+
     // Now a couple that shouldn't get crawled
     // wrong volume
     shouldCacheTest(ROOT_URL+"toc/xxxx/12/index.html", false, ABAu, cus);
@@ -143,13 +150,53 @@ public class TestBaseAtyponArchivalUnit extends LockssTestCase {
     // LOCKSS
     shouldCacheTest("http://lockss.stanford.edu", false, ABAu, cus);
     // other sites
+
+    // Later addition of crawl rules to avoid polling things we no longer collect or that we normalize off
+    // this is normalized off but does exist in some aus from early crawls
+    shouldCacheTest(ROOT_URL + "doi/abs/10.5504/50YRTIMB.2011.0036?queryID=%24%7BresultBean.queryID%7D", 
+        false, ABAu, cus);
+    // but if it were part of a doiname
+    shouldCacheTest(ROOT_URL + "doi/abs/10.5504/50YRTIMB.2011.0036queryIDresultBean_name", 
+        true, ABAu, cus);
+    // no longer accepted citation formats
+    shouldCacheTest(ROOT_URL + "action/downloadCitation?doi=10.1111%2F123456&format=bibtex&include=cit", 
+        false, ABAu, cus);
+    shouldCacheTest(ROOT_URL + "action/downloadCitation?doi=10.1111%2F123456&format=medlars&include=cit", 
+        false, ABAu, cus);
+    shouldCacheTest(ROOT_URL + "action/downloadCitation?doi=10.1111%2F123456&format=endnote&include=cit", 
+        false, ABAu, cus);
+    shouldCacheTest(ROOT_URL + "action/downloadCitation?doi=10.1111%2F123456&format=refworks&include=cit", 
+        false, ABAu, cus);
+    shouldCacheTest(ROOT_URL + "action/downloadCitation?doi=10.1111%2F123456&format=refworks=cn&include=cit", 
+        false, ABAu, cus);
+    //no longer accepted include types.  we allow abs and cit, but not ref
+    shouldCacheTest(ROOT_URL + "action/downloadCitation?doi=10.1111%2F123456&format=ris&include=abs", 
+        true, ABAu, cus);
+    shouldCacheTest(ROOT_URL + "action/downloadCitation?doi=10.1111%2F123456&format=ris&include=ref", 
+        false, ABAu, cus);
+    // this one is valid 
+    shouldCacheTest(ROOT_URL + "action/downloadCitation?doi=10.1111%2F123456&format=ris&include=cit", 
+        true, ABAu, cus);
+
+    // ASCE use of relative link where it should be absolute causes ever-deeper URLS because
+    // the "page not found" page uses the template with the same relative link problem.
+    // added to crawl rules to combat this until they fix it
+    shouldCacheTest(ROOT_URL + "action/showCart?backUri=/action/showLogin?uri=/action/showCart?backUri=/action/showLogin?uri=/doi/abs/10.1061/templates/jsp/js/googleAnalyticsPlugin.js", 
+        false, ABAu, cus); 
+    shouldCacheTest(ROOT_URL + "doi/abs/10.1061/templates/jsp/js/googleAnalyticsPlugin.js", 
+        false, ABAu, cus); 
+    shouldCacheTest(ROOT_URL + "doi/abs/10.1061/templates/jsp/js/templates/jsp/js/templates/jsp/js/templates/jsp/js/googleAnalyticsPlugin.js", 
+        false, ABAu, cus); 
+
   }
-  
+
+
+
   private void shouldCacheTest(String url, boolean shouldCache,
       ArchivalUnit au, CachedUrlSet cus) {
     assertEquals(shouldCache, au.shouldBeCached(url));
   }
-  
+
   public void testStartUrlConstruction() throws Exception {
     URL url = new URL(ROOT_URL);
 
@@ -158,7 +205,7 @@ public class TestBaseAtyponArchivalUnit extends LockssTestCase {
     DefinableArchivalUnit ABAu = makeAu(url, 123, "xxxx");
     assertEquals(ListUtil.list(expected), ABAu.getStartUrls());
   }
-  
+
   public void testShouldNotCachePageFromOtherSite() throws Exception {
     URL base = new URL("http://www.BaseAtypon.com/");
     int volume = 123;
@@ -176,7 +223,7 @@ public class TestBaseAtyponArchivalUnit extends LockssTestCase {
 
   public void testShouldDoNewContentCrawlTooEarly() throws Exception {
     ArchivalUnit ABAu =
-      makeAu(new URL("http://www.BaseAtypon.com/"), 33, "yyyy");
+        makeAu(new URL("http://www.BaseAtypon.com/"), 33, "yyyy");
 
     AuState aus = new MockAuState(null, TimeBase.nowMs(), -1, -1, null);
 
@@ -185,7 +232,7 @@ public class TestBaseAtyponArchivalUnit extends LockssTestCase {
 
   public void testShouldDoNewContentCrawlFor0() throws Exception {
     ArchivalUnit ABAu =
-      makeAu(new URL("http://www.BaseAtypon.com/"), 33, "yyyy");
+        makeAu(new URL("http://www.BaseAtypon.com/"), 33, "yyyy");
 
     AuState aus = new MockAuState(null, 0, -1, -1, null);
 
@@ -193,44 +240,44 @@ public class TestBaseAtyponArchivalUnit extends LockssTestCase {
   }
 
 
-  public void testgetName() throws Exception {
+  public void testGetName() throws Exception {
     DefinableArchivalUnit au =
-      makeAu(new URL("http://www.BaseAtypon.com/"), 33, "yyyy");
+        makeAu(new URL("http://www.BaseAtypon.com/"), 33, "yyyy");
     assertEquals(PluginName + ", Base URL http://www.BaseAtypon.com/, Journal ID yyyy, Volume 33", au.getName());
     DefinableArchivalUnit au1 =
-      makeAu(new URL("http://www.apha.com/"), 24, "apha");
+        makeAu(new URL("http://www.apha.com/"), 24, "apha");
     assertEquals(PluginName + ", Base URL http://www.apha.com/, Journal ID apha, Volume 24", au1.getName());
   }
-  
+
   private static final String gln_lockss_user_msg = 
       "Atypon Systems hosts this archival unit (AU) " +
           "and may require you to register the IP address "+
           "of this LOCKSS box as a crawler. For more information, visit the <a " +
           "href=\'http://www.lockss.org/support/use-a-lockss-box/adding-titles/publisher-ip-address-registration-contacts-for-global-lockss-network/\'>" +
           "LOCKSS IP address registration page</a>.";
-  
+
   private static final String bq_msg = 
       "Atypon Systems hosts this archival unit (AU) and may require you to register the IP address of " +
-      "this LOCKSS box as a crawler, by sending e-mail to <a href=\'mailto:pcoyne@qf.org.qa\'>Paul Coyne</a>. " +
-      "Failure to comply with this publisher requirement may trigger crawler traps on the Atypon Systems platform, " +
-      "and your LOCKSS box or your entire institution may be temporarily banned from accessing the site. " +
-      "You only need to register the IP address of your LOCKSS box once for all AUs published by Bloomsbury Qatar.";
+          "this LOCKSS box as a crawler, by sending e-mail to <a href=\'mailto:pcoyne@qf.org.qa\'>Paul Coyne</a>. " +
+          "Failure to comply with this publisher requirement may trigger crawler traps on the Atypon Systems platform, " +
+          "and your LOCKSS box or your entire institution may be temporarily banned from accessing the site. " +
+          "You only need to register the IP address of your LOCKSS box once for all AUs published by Bloomsbury Qatar.";
 
   private static final String default_msg_part1 = 
       "Atypon Systems hosts this archival unit (AU) and requires " +
-  "that you <a href=\'";
-  
+          "that you <a href=\'";
+
   private static final String default_msg_part2 =
       "action/institutionLockssIpChange\'>register the " +
           "IP address of this LOCKSS box in your institutional account as a " +
-  "crawler</a> before allowing your LOCKSS box to harvest this AU. " +
+          "crawler</a> before allowing your LOCKSS box to harvest this AU. " +
           "Failure to comply with this publisher requirement may trigger crawler traps on the " +
-  "Atypon Systems platform, and your LOCKSS box or your entire institution may be " +
+          "Atypon Systems platform, and your LOCKSS box or your entire institution may be " +
           "temporarily banned from accessing the site. You only need to register the IP address " +
-  "of your LOCKSS box once for all AUs published by this publisher.";
-  
+          "of your LOCKSS box once for all AUs published by this publisher.";
 
-      
+
+
   private static final String BASE_ATYPON_BASE = "http://www.BaseAtypon.org/";
   /* test all the atypon child au_config_user_msgs
    * by first checking the gln message either against a specific passed-in message
@@ -239,12 +286,11 @@ public class TestBaseAtyponArchivalUnit extends LockssTestCase {
    * and then checking that the clockss plugin has a null message
    */
   public void testUserMsgs() throws Exception {
-    /* TURN THIS OFF UNTIL 1.67
-     *    testSpecificUserMsg(BASE_ATYPON_BASE, default_msg_part1 + BASE_ATYPON_BASE + default_msg_part2, 
-     *   "org.lockss.plugin.atypon.BaseAtyponPlugin",
-     *   null);
-     */        
-    
+    // the default when a child doesn't set
+    testSpecificUserMsg(BASE_ATYPON_BASE, default_msg_part1 + BASE_ATYPON_BASE + default_msg_part2, 
+       "org.lockss.plugin.atypon.BaseAtyponPlugin",
+       null);
+
     //AMetSoc - points users at our web page with registration info
     testSpecificUserMsg("http://journals.ametsoc.org/", gln_lockss_user_msg, 
         "org.lockss.plugin.atypon.americanmeteorologicalsociety.AMetSocPlugin",
@@ -265,6 +311,10 @@ public class TestBaseAtyponArchivalUnit extends LockssTestCase {
     testSpecificUserMsg("http://ajph.aphapublications.org/", null, 
         "org.lockss.plugin.atypon.apha.AmPublicHealthAssocPlugin",
         null);
+    //arrs
+    testSpecificUserMsg("http://www.ajronline.org/", null, 
+        "org.lockss.plugin.atypon.arrs.ARRSPlugin",
+        null);
     //bir
     testSpecificUserMsg("http://www.birpublications.org/", null, 
         "org.lockss.plugin.atypon.bir.BIRAtyponPlugin",
@@ -273,6 +323,10 @@ public class TestBaseAtyponArchivalUnit extends LockssTestCase {
     testSpecificUserMsg("http://www.qscience.com/", bq_msg, 
         "org.lockss.plugin.atypon.bloomsburyqatar.BloomsburyQatarPlugin",
         "org.lockss.plugin.atypon.bloomsburyqatar.ClockssBloomsburyQatarPlugin");
+    //emeraldgroup
+    testSpecificUserMsg("http://www.emeraldinsight.com/", null, 
+        "org.lockss.plugin.atypon.emeraldgroup.EmeraldGroupPlugin",
+        null);
     //endocrine society
     testSpecificUserMsg("http://press.endocrine.org/", null, 
         "org.lockss.plugin.atypon.endocrinesociety.EndocrineSocietyPlugin",
@@ -281,6 +335,14 @@ public class TestBaseAtyponArchivalUnit extends LockssTestCase {
     testSpecificUserMsg("http://www.future-science.com/", null,
         "org.lockss.plugin.atypon.futurescience.FutureSciencePlugin",
         "org.lockss.plugin.atypon.futurescience.ClockssFutureSciencePlugin");
+    //inderscience
+    testSpecificUserMsg("http://www.inderscienceonline.com/", null, 
+        "org.lockss.plugin.atypon.inderscience.InderscienceAtyponPlugin",
+        "org.lockss.plugin.atypon.inderscience.ClockssInderscienceAtyponPlugin");    
+    //liverpool
+    testSpecificUserMsg("http://online.liverpooluniversitypress.co.uk/", null, 
+        "org.lockss.plugin.atypon.liverpool.LiverpoolAtyponPlugin",
+        "org.lockss.plugin.atypon.liverpool.ClockssLiverpoolAtyponPlugin");
     //maney
     testSpecificUserMsg("http://www.maneyonline.com/", null, 
         "org.lockss.plugin.atypon.maney.ManeyAtyponPlugin",
@@ -289,10 +351,18 @@ public class TestBaseAtyponArchivalUnit extends LockssTestCase {
     testSpecificUserMsg("http://www.magonlinelibrary.com/", null, 
         "org.lockss.plugin.atypon.markallen.MarkAllenPlugin",
         "org.lockss.plugin.atypon.markallen.ClockssMarkAllenPlugin");
+    //multiscience
+    testSpecificUserMsg("http://multi-science.atypon.com/", null, 
+        "org.lockss.plugin.atypon.multiscience.MultiScienceAtyponPlugin",
+        "org.lockss.plugin.atypon.multiscience.ClockssMultiScienceAtyponPlugin");    
     //nrcresearch
     testSpecificUserMsg("http://www.nrcresearchpress.com/", null, 
         null,
         "org.lockss.plugin.atypon.nrcresearchpress.ClockssNRCResearchPressPlugin");
+    //practicalaction
+    testSpecificUserMsg("http://www.developmentbookshelf.com/", null, 
+        null,
+        "org.lockss.plugin.atypon.practicalaction.ClockssPracticalActionAtyponPlugin");    
     //seg
     testSpecificUserMsg("http://library.seg.org/", null, 
         null,
@@ -315,33 +385,43 @@ public class TestBaseAtyponArchivalUnit extends LockssTestCase {
     testSpecificUserMsg("http://www.tandfonline.com/", null, 
         "org.lockss.plugin.taylorandfrancis.TaylorAndFrancisPlugin",
         "org.lockss.plugin.taylorandfrancis.ClockssTaylorAndFrancisPlugin");
-    
+    //wageningen
+    testSpecificUserMsg("http://www.wageningenacademic.com/", null, 
+        null,
+        "org.lockss.plugin.atypon.wageningen.ClockssWageningenAtyponPlugin");    
   }
-  
+
   // Associate the base_url with the publisher name for convenience
   static private final Map<String, String> pluginPubMap =
       new HashMap<String,String>();
   static {
     pluginPubMap.put("http://journals.ametsoc.org/", "American Meteorological Society");
     pluginPubMap.put("http://arc.aiaa.org/", "American Institute of Aeronautics and Astronautics");
+    pluginPubMap.put("http://www.ajronline.org/", "American Roentgen Ray Society");
     pluginPubMap.put("http://ascelibrary.org/", "American Society of Civil Engineers");
     pluginPubMap.put("http://www.amsciepub.com/", "Ammons Scientific Journals");
     pluginPubMap.put("http://ajph.aphapublications.org/", "American Public Health Association");
     pluginPubMap.put("http://www.birpublications.org/", "British Institute of Radiology");
     pluginPubMap.put("http://www.qscience.com/", "Bloomsbury Qatar Foundation Journals");
     pluginPubMap.put("http://press.endocrine.org/", "Endocrine Society");
+    pluginPubMap.put("http://www.emeraldinsight.com/", "Emerald Group Publishing");
     pluginPubMap.put("http://www.future-science.com/", "Future Science");
+    pluginPubMap.put("http://www.inderscienceonline.com/", "Inderscience");
+    pluginPubMap.put("http://online.liverpooluniversitypress.co.uk/", "Liverpool University Press");
     pluginPubMap.put("http://www.maneyonline.com/", "Maney Publishing");
     pluginPubMap.put("http://www.magonlinelibrary.com/", "Mark Allen Group");
+    pluginPubMap.put("http://multi-science.atypon.com/", "Multi-Science");    
     pluginPubMap.put("http://www.nrcresearchpress.com/", "NRC Research Press");
+    pluginPubMap.put("http://www.developmentbookshelf.com/", "Practical Action Publishing");
     pluginPubMap.put("http://library.seg.org/", "Society of Exploration Geophysicists");
     pluginPubMap.put("http://epubs.siam.org/", "Society for Industrial and Applied Mathematics");
     pluginPubMap.put("http://www.bioone.org/", "BioOne");
     pluginPubMap.put("http://www.euppublishing.com/", "Edinburgh University Press");
     pluginPubMap.put("http://www.tandfonline.com/", "Taylor & Francis");
+    pluginPubMap.put("http://www.wageningenacademic.com/", "Wageningen Academic Publishers");
   }
-      
-  
+
+
   private void testSpecificUserMsg(String plugin_base_url, String full_msg, 
       String gln_plugin, String clockss_plugin) throws Exception {
 
@@ -379,7 +459,7 @@ public class TestBaseAtyponArchivalUnit extends LockssTestCase {
       log.debug3("testing CLOCKSS absence of user message");
       assertEquals(null, cAU.getProperties().getString(DefinableArchivalUnit.KEY_AU_CONFIG_USER_MSG, null));
     }
-    
+
   }
 
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: JsoupHtmlLinkExtractor.java,v 1.11 2014-08-20 22:54:27 clairegriffin Exp $
+ * $Id$
  */
 
 /*
@@ -78,7 +78,12 @@ public class JsoupHtmlLinkExtractor implements LinkExtractor {
 
   static {
     theTagTable = new HashMap<String, LinkExtractor>();
-    theTagTable.put("a", new SimpleTagLinkExtractor("href"));
+    theTagTable.put("a", new SimpleTagLinkExtractor(new String[]
+                                                        {
+                                                          "href",
+                                                          "download"
+                                                        })
+                   );
     theTagTable.put("applet",
                     new SimpleTagLinkExtractor(new String[]
                                                    {

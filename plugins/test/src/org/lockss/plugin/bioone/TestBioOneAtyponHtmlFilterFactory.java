@@ -1,9 +1,9 @@
 /*
- * $Id: TestBioOneAtyponHtmlFilterFactory.java,v 1.2 2014-10-08 16:11:29 alexandraohlson Exp $
+ * $Id$
  */
 /*
 
- Copyright (c) 2000-2013 Board of Trustees of Leland Stanford Jr. University,
+ Copyright (c) 2000-2015 Board of Trustees of Leland Stanford Jr. University,
  all rights reserved.
 
  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -37,8 +37,6 @@ import junit.framework.Test;
 
 import org.lockss.util.*;
 import org.lockss.plugin.FilterFactory;
-import org.lockss.plugin.taylorandfrancis.TestTaylorAndFrancisHtmlFilterFactory.TestCrawl;
-import org.lockss.plugin.taylorandfrancis.TestTaylorAndFrancisHtmlFilterFactory.TestHash;
 import org.lockss.test.*;
 
 /*
@@ -166,9 +164,9 @@ public class TestBioOneAtyponHtmlFilterFactory extends LockssTestCase {
   
   private static final String articleNav=
       "<div class=\"articleNav\">" +
-          "<a class=\"articleToolsNav\" href=\"/doi/full/10.111/x\">Ç previous article</a>" +
+          "<a class=\"articleToolsNav\" href=\"/doi/full/10.111/x\">ï¿½ previous article</a>" +
           "<span class=\"navSearchColon\"> : </span>" +
-          "<a class=\"articleToolsNav\" href=\"/doi/full/10.1111/x\">next article È</a>" +
+          "<a class=\"articleToolsNav\" href=\"/doi/full/10.1111/x\">next article ï¿½</a>" +
           "</div>";
   private static final String articleNavFiltered=
       "<div class=\"articleNav\">" +
@@ -178,11 +176,11 @@ public class TestBioOneAtyponHtmlFilterFactory extends LockssTestCase {
       "<div class=\"issueNav\">Jun 2010 : Volume 45 Issue 1 |" +
           "<!--<div id=\"nextprev\">-->" +
           "<a href=\"/toc/xxx/44/2\">" +
-          "                            Ç previous issue" +
+          "                            ï¿½ previous issue" +
           "</a>" +
           "            : " +
           "<a href=\"/toc/xxx/45/2\">" +
-          "                            next issue È" +
+          "                            next issue ï¿½" +
           "</a>" +
           "<!--</div><br/>-->" +
           "</div>";
@@ -350,6 +348,31 @@ public class TestBioOneAtyponHtmlFilterFactory extends LockssTestCase {
   private static final String googleWidgetFiltered = 
       "";
 
+  // Yup. They really do have orphan <td> group around inner content
+  private static final String refSectionWithTollfreelink=
+      "<div valign=\"top\" class=\"refnumber\" id=\"bibr27\">" +
+      "<td valign=\"top\">Foo (<span class=\"NLM_year\">2000</span>) " +
+      "<span class=\"NLM_article-title\"> Foo Title.</span> " +
+      "<span class=\"citation_source-journal\">Zool Sci</span> 17: " +
+      "<span class=\"NLM_fpage\">1129</span>- <span class=\"NLM_lpage\">1136</span> " +
+      "<a href=\"/servlet/linkout?suffix=bibr27&amp;dbid=4&amp;doi=10.2108%2Fzs140053&amp;key=10.2108%2Fzsj.17.1129&amp;tollfreelink=2011_106728_8dcaec470370ec38b274e723e8495ed975b7ee94917ff16a517fb1b7ae6a4a84\">BioOne</a>" +
+      ", <a href=\"/servlet/linkout?suffix=bibr27&amp;dbid=8&amp;doi=10.2108%2Fzs140053&amp;key=18522469\" target=\"new\">PubMed</a>" +
+      "</td>" +
+      "</div>" +
+      "<div valign=\"top\" class=\"refnumber\" id=\"bibr28\">";
+  
+  private static final String refSectionWithTollfreelink_filtered=
+      "<div valign=\"top\" class=\"refnumber\" id=\"bibr27\">" +
+      "<td valign=\"top\">Foo (<span class=\"NLM_year\">2000</span>) " +
+      "<span class=\"NLM_article-title\"> Foo Title.</span> " +
+      "<span class=\"citation_source-journal\">Zool Sci</span> 17: " +
+      "<span class=\"NLM_fpage\">1129</span>- <span class=\"NLM_lpage\">1136</span> " +
+      ", " +
+      "</td>" +
+      "</div>" +
+      "<div valign=\"top\" class=\"refnumber\" id=\"bibr28\">";
+
+  
   public static class TestHash extends TestBioOneAtyponHtmlFilterFactory {
 
     public void setUp() throws Exception {
@@ -393,6 +416,10 @@ public class TestBioOneAtyponHtmlFilterFactory extends LockssTestCase {
       inA = fact.createFilteredInputStream(mau, new StringInputStream(googleWidgetHtml),
           ENC);
       assertEquals(googleWidgetFiltered,StringUtil.fromInputStream(inA));
+      
+      inA = fact.createFilteredInputStream(mau, new StringInputStream(refSectionWithTollfreelink),
+          ENC);
+      assertEquals(refSectionWithTollfreelink_filtered,StringUtil.fromInputStream(inA));
     }
   }
 

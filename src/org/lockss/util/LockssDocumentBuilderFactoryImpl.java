@@ -1,5 +1,5 @@
 /*
- * $Id: LockssDocumentBuilderFactoryImpl.java,v 1.6 2013-10-23 04:19:51 tlipkis Exp $
+ * $Id$
  */
 
 /*
@@ -35,6 +35,7 @@ package org.lockss.util;
 import java.util.*;
 import java.lang.reflect.*;
 import javax.xml.parsers.*;
+import javax.xml.validation.Schema;
 import org.xml.sax.*;
 import org.lockss.util.*;
 
@@ -81,6 +82,11 @@ public class LockssDocumentBuilderFactoryImpl extends DocumentBuilderFactory {
   @Override
   public void setNamespaceAware(boolean awareness) {
     fact.setNamespaceAware(awareness);
+  }
+
+  @Override
+  public void setSchema(Schema schema) {
+    fact.setSchema(schema);
   }
 
   @Override

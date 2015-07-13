@@ -1,10 +1,10 @@
 /*
- * $Id: EditAccountBase.java,v 1.6 2013-10-17 07:48:18 tlipkis Exp $
+ * $Id$
  */
 
 /*
 
-Copyright (c) 2000-2012 Board of Trustees of Leland Stanford Jr. University,
+Copyright (c) 2000-2015 Board of Trustees of Leland Stanford Jr. University,
 all rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -81,7 +81,7 @@ public abstract class EditAccountBase extends LockssServlet {
   }
 
   protected void lockssHandleRequest() throws IOException {
-    if (!getLockssDaemon().areAusStarted()) {
+    if (!getLockssDaemon().isDaemonRunning()) {
       displayNotStarted();
       return;
     }

@@ -1,5 +1,5 @@
 /*
- * $Id: TestFollowLinkCrawler.java,v 1.46 2014-11-19 22:46:24 wkwilson Exp $
+ * $Id$
  */
 
 /*
@@ -102,16 +102,19 @@ public class TestFollowLinkCrawler extends LockssTestCase {
     
     crawlMgr.newCrawlRateLimiter(mau);
     
-    crawler = new TestableFollowLinkCrawler(mau, aus);
-
-    crawler.setDaemonPermissionCheckers(
-        ListUtil.list(new MyMockPermissionChecker(1)));
+    crawler = makeTestableCrawler();
 
     mau.setLinkExtractor("text/html", extractor);
     Properties p = new Properties();
     p.setProperty(FollowLinkCrawler.PARAM_DEFAULT_RETRY_DELAY, "0");
     p.setProperty(FollowLinkCrawler.PARAM_MIN_RETRY_DELAY, "0");
     ConfigurationUtil.setCurrentConfigFromProps(p);
+  }
+
+  TestableFollowLinkCrawler makeTestableCrawler() {
+    TestableFollowLinkCrawler res = new TestableFollowLinkCrawler(mau, aus);
+    res.setDaemonPermissionCheckers(ListUtil.list(new MyMockPermissionChecker(1)));
+    return res;
   }
 
   public void testFlcThrowsForNullAu() {
@@ -352,6 +355,55 @@ public class TestFollowLinkCrawler extends LockssTestCase {
     assertEquals(expectedSrcUrls,extractor.getSrcUrls());
   }
 
+  public void testCdnHost() throws Exception {
+    ConfigurationUtil.addFromArgs(CrawlManagerImpl.PARAM_PERMITTED_HOSTS,
+				  "foo\\.com");
+
+    String url1="http://www.example.com/one.html";
+    String url2="http://foo.com/two";
+    String url3="http://www.example.com/three";
+
+    mau.setUrlStems(ListUtil.list("http://www.example.com/"));
+    mau.setStartUrls(ListUtil.list(url1));
+    crawler = makeTestableCrawler();
+
+    mau.addUrl(startUrl, false, true);
+    mau.addUrl(url1);
+    mau.addUrl(url2);
+    mau.addUrl(url3);
+    crawler.setUrlsToFollow(ListUtil.list(url2, url3));
+    assertEmpty(aus.getCdnStems());
+    assertTrue(crawler.doCrawl());
+    // url2 should have been eliminated by the crawl filter
+    assertEquals(SetUtil.set(url1, url2, url3), crawler.fetched);
+    assertEquals(ListUtil.list(UrlUtil.getUrlPrefix(url2)), aus.getCdnStems());
+  }
+
+  public void testRefindCdnHost() throws Exception {
+    ConfigurationUtil.addFromArgs(CrawlManagerImpl.PARAM_PERMITTED_HOSTS,
+				  "cdn\\.host");
+    String url1="http://www.example.com/blah.html";
+    String url2="http://cdn.host/halb.html";
+    mau.setUrlStems(ListUtil.list("http://www.example.com/"));
+    mau.setStartUrls(ListUtil.list(url1));
+    crawler = makeTestableCrawler();
+
+    mau.addUrl(startUrl, false, true);
+    mau.addUrl(url1);
+    mau.addUrl(url2, "foo");		// has content so won't get fetched
+    crawler.setUrlsToFollow(ListUtil.list(url2));
+    assertEmpty(aus.getCdnStems());
+    
+    assertTrue(crawler.doCrawl());
+    assertEmpty(aus.getCdnStems());
+    ConfigurationUtil.addFromArgs(FollowLinkCrawler.PARAM_REFIND_CDN_STEMS,
+				  "true");
+    crawler = makeTestableCrawler();
+    crawler.setUrlsToFollow(ListUtil.list(url2));
+    assertTrue(crawler.doCrawl());
+    assertEquals(ListUtil.list(UrlUtil.getUrlPrefix(url2)), aus.getCdnStems());
+  }
+
   CIProperties fromArgs(String prop, String val) {
     CIProperties props = new CIProperties();
     props.put(prop, val);
@@ -462,6 +514,7 @@ public class TestFollowLinkCrawler extends LockssTestCase {
     mau.addUrl(nsurl3, false, true, props);
 
     mau.addUrl(nsurl4, true, true);
+    mau.populateAuCachedUrlSet();
 
     assertTrue(crawler.doCrawl());
     AuState aus1 = AuUtil.getAuState(mau);
@@ -489,6 +542,20 @@ public class TestFollowLinkCrawler extends LockssTestCase {
     testNoSubstance(State.Yes, ListUtil.list("important","two"), null);
   }
 
+  public void testNoSubstanceNoCrawledUrlsMatchSubstancePatterns() throws Exception {
+    ConfigurationUtil.addFromArgs(FollowLinkCrawler.PARAM_IS_FULL_SUBSTANCE_CHECK,
+				  "false");
+    setSubstanceMode("Crawl");
+    testNoSubstance(State.No, ListUtil.list("important","redir"), null);
+  }
+
+  public void testNoSubstanceFullWhenNoCrawledUrlsMatchSubstancePatterns() throws Exception {
+    ConfigurationUtil.addFromArgs(FollowLinkCrawler.PARAM_IS_FULL_SUBSTANCE_CHECK,
+				  "true");
+    setSubstanceMode("Crawl");
+    testNoSubstance(State.Yes, ListUtil.list("important","redir"), null);
+  }
+
   // Same as previous but disabled
   public void testNoSubstanceDisabled() throws Exception {
     setSubstanceMode("None");
@@ -514,7 +581,17 @@ public class TestFollowLinkCrawler extends LockssTestCase {
 
   public void testNoSubstanceAllUrlsMatchNonSubstancePatterns() throws Exception {
     setSubstanceMode("Crawl");
+    ConfigurationUtil.addFromArgs(FollowLinkCrawler.PARAM_IS_FULL_SUBSTANCE_CHECK,
+				  "false");
     testNoSubstance(State.No, null,
+		    ListUtil.list("one","two","three", "four"));
+  }
+
+  public void testNoSubstanceFullUrlsDontAllMatchNonSubstancePatterns() throws Exception {
+    setSubstanceMode("Crawl");
+    ConfigurationUtil.addFromArgs(FollowLinkCrawler.PARAM_IS_FULL_SUBSTANCE_CHECK,
+				  "true");
+    testNoSubstance(State.Yes, null,
 		    ListUtil.list("one","two","three", "four"));
   }
 
@@ -633,7 +710,7 @@ public class TestFollowLinkCrawler extends LockssTestCase {
 
   private void setUpCrawlWindowTest(CrawlWindow myCrawlWindow) {
     mau.setCrawlWindow(myCrawlWindow);
-    crawler = new TestableFollowLinkCrawler(mau, aus);
+    crawler = makeTestableCrawler();
 
     mau.addUrl(startUrl);
     
@@ -1008,9 +1085,7 @@ testAbbreviatedCrawlTest(Crawler.STATUS_NO_PUB_PERMISSION,
 		mmau.setRefetchDepth(1);
 
     //set Crawler
-    crawler = new TestableFollowLinkCrawler(mmau, new MockAuState());
-    crawler.setDaemonPermissionCheckers(ListUtil.list(
-        new MyMockPermissionChecker(passPermissionCheck)));
+    crawler = makeTestableCrawler();
 
     //set extractor
     mmau.setLinkExtractor("text/html", extractor);

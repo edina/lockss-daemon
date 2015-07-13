@@ -73,7 +73,8 @@
     au < manifest ; exists ; 2011 ; Geochemistry: Exploration, Environment, Analysis Volume 11 ; 11 >
     au < manifest ; exists ; 2012 ; Geochemistry: Exploration, Environment, Analysis Volume 12 ; 12 >
     au < crawling ; exists ; 2013 ; Geochemistry: Exploration, Environment, Analysis Volume 13 ; 13 >
-    au < manifest ; exists ; 2014 ; Geochemistry: Exploration, Environment, Analysis Volume 14 ; 14 >
+    au < crawling ; exists ; 2014 ; Geochemistry: Exploration, Environment, Analysis Volume 14 ; 14 >
+    au < manifest ; exists ; 2015 ; Geochemistry: Exploration, Environment, Analysis Volume 15 ; 15 >
 
   }
 
@@ -124,10 +125,12 @@
     au < manifest ; exists ; 2011 ; Geological Society of London Memoirs Volume 35 ; 35 >
     au < manifest ; exists ; 2011 ; Geological Society of London Memoirs Volume 36 ; 36 >
     au < crawling ; exists ; 2013 ; Geological Society of London Memoirs Volume 37 ; 37 >
-    au < testing ; exists ; 2013 ; Geological Society of London Memoirs Volume 38 ; 38 >
-    au < manifest ; exists ; 2014 ; Geological Society of London Memoirs Volume 39 ; 39 >
-    au < manifest ; exists ; 2014 ; Geological Society of London Memoirs Volume 40 ; 40 >
-    au < manifest ; exists ; 2014 ; Geological Society of London Memoirs Volume 41 ; 41 >
+    au < crawling ; exists ; 2013 ; Geological Society of London Memoirs Volume 38 ; 38 >
+    au < crawling ; exists ; 2014 ; Geological Society of London Memoirs Volume 39 ; 39 >
+    au < crawling ; exists ; 2014 ; Geological Society of London Memoirs Volume 40 ; 40 >
+    au < crawling ; exists ; 2014 ; Geological Society of London Memoirs Volume 41 ; 41 >
+    au < manifest ; exists ; 2015 ; Geological Society of London Memoirs Volume 42 ; 42 >
+    au < manifest ; exists ; 2015 ; Geological Society of London Memoirs Volume 43 ; 43 >
 
   }
 
@@ -514,7 +517,7 @@
     au < manifest ; exists ; 2012 ; Geological Society of London Special Publications Volume 371 ; 371 >
     au < crawling ; exists ; 2013 ; Geological Society of London Special Publications Volume 372 ; 372 >
     au < crawling ; exists ; 2013 ; Geological Society of London Special Publications Volume 373 ; 373 >
-    au < manifest ; exists ; 2014 ; Geological Society of London Special Publications Volume 374 ; 374 >
+    au < crawling ; exists ; 2014 ; Geological Society of London Special Publications Volume 374 ; 374 >
     au < crawling ; exists ; 2013 ; Geological Society of London Special Publications Volume 375 ; 375 >
     au < crawling ; exists ; 2013 ; Geological Society of London Special Publications Volume 376 ; 376 >
     au < crawling ; exists ; 2013 ; Geological Society of London Special Publications Volume 377 ; 377 >
@@ -525,31 +528,32 @@
     au < crawling ; exists ; 2013 ; Geological Society of London Special Publications Volume 382 ; 382 >
     au < crawling ; exists ; 2013 ; Geological Society of London Special Publications Volume 383 ; 383 >
     au < crawling ; exists ; 2013 ; Geological Society of London Special Publications Volume 384 ; 384 >
-    au < manifest ; exists ; 2014 ; Geological Society of London Special Publications Volume 385 ; 385 >
-    au < manifest ; exists ; 2014 ; Geological Society of London Special Publications Volume 386 ; 386 >
-    au < manifest ; exists ; 2014 ; Geological Society of London Special Publications Volume 387 ; 387 >
-    au < manifest ; exists ; 2014 ; Geological Society of London Special Publications Volume 388 ; 388 >
-    au < expected ; exists ; 2014 ; Geological Society of London Special Publications Volume 389 ; 389 >
-    au < manifest ; exists ; 2014 ; Geological Society of London Special Publications Volume 390 ; 390 >
-    au < manifest ; exists ; 2014 ; Geological Society of London Special Publications Volume 391 ; 391 >
-    au < manifest ; exists ; 2014 ; Geological Society of London Special Publications Volume 392 ; 392 >
-    au < expected ; exists ; 2014 ; Geological Society of London Special Publications Volume 393 ; 393 >
-    au < manifest ; exists ; 2014 ; Geological Society of London Special Publications Volume 394 ; 394 >
-    au < manifest ; exists ; 2014 ; Geological Society of London Special Publications Volume 395 ; 395 >
-    au < expected ; exists ; 2014 ; Geological Society of London Special Publications Volume 396 ; 396 >
-    au < manifest ; exists ; 2014 ; Geological Society of London Special Publications Volume 397 ; 397 >
-    au < manifest ; exists ; 2014 ; Geological Society of London Special Publications Volume 398 ; 398 >
-    au < expected ; exists ; 2014 ; Geological Society of London Special Publications Volume 399 ; 399 >
-    au < manifest ; exists ; 2014 ; Geological Society of London Special Publications Volume 400 ; 400 >
-    au < expected ; exists ; 2014 ; Geological Society of London Special Publications Volume 401 ; 401 >
-    au < manifest ; exists ; 2014 ; Geological Society of London Special Publications Volume 402 ; 402 >
+    au < crawling ; exists ; 2014 ; Geological Society of London Special Publications Volume 385 ; 385 >
+    au < crawling ; exists ; 2014 ; Geological Society of London Special Publications Volume 386 ; 386 >
+    au < crawling ; exists ; 2014 ; Geological Society of London Special Publications Volume 387 ; 387 >
+    au < crawling ; exists ; 2014 ; Geological Society of London Special Publications Volume 388 ; 388 >
+    au < crawling ; exists ; 2014 ; Geological Society of London Special Publications Volume 389 ; 389 >
+    au < crawling ; exists ; 2014 ; Geological Society of London Special Publications Volume 390 ; 390 >
+    au < crawling ; exists ; 2014 ; Geological Society of London Special Publications Volume 391 ; 391 >
+    au < crawling ; exists ; 2014 ; Geological Society of London Special Publications Volume 392 ; 392 >
+    au < crawling ; exists ; 2014 ; Geological Society of London Special Publications Volume 393 ; 393 >
+    au < crawling ; exists ; 2014 ; Geological Society of London Special Publications Volume 394 ; 394 >
+    au < crawling ; exists ; 2014 ; Geological Society of London Special Publications Volume 395 ; 395 >
+    au < crawling ; exists ; 2014 ; Geological Society of London Special Publications Volume 396 ; 396 >
+    au < crawling ; exists ; 2014 ; Geological Society of London Special Publications Volume 397 ; 397 >
+    au < crawling ; exists ; 2014 ; Geological Society of London Special Publications Volume 398 ; 398 >
+    au < crawling ; exists ; 2014 ; Geological Society of London Special Publications Volume 399 ; 399 >
+    au < crawling ; exists ; 2014 ; Geological Society of London Special Publications Volume 400 ; 400 >
+    au < crawling ; exists ; 2014 ; Geological Society of London Special Publications Volume 401 ; 401 >
+    au < crawling ; exists ; 2014 ; Geological Society of London Special Publications Volume 402 ; 402 >
     au < expected ; exists ; 2014 ; Geological Society of London Special Publications Volume 403 ; 403 >
-    au < expected ; exists ; 2014 ; Geological Society of London Special Publications Volume 404 ; 404 >
-    au < manifest ; exists ; 2014 ; Geological Society of London Special Publications Volume 405 ; 405 >
-    au < expected ; exists ; 2014 ; Geological Society of London Special Publications Volume 406 ; 406 >
-    au < expected ; exists ; 2014 ; Geological Society of London Special Publications Volume 407 ; 407 >
-    au < expected ; exists ; 2014 ; Geological Society of London Special Publications Volume 408 ; 408 >
-    au < expected ; exists ; 2014 ; Geological Society of London Special Publications Volume 409 ; 409 >
+    au < manifest ; exists ; 2014 ; Geological Society of London Special Publications Volume 404 ; 404 >
+    au < crawling ; exists ; 2014 ; Geological Society of London Special Publications Volume 405 ; 405 >
+    au < crawling ; exists ; 2014 ; Geological Society of London Special Publications Volume 406 ; 406 >
+    au < manifest ; exists ; 2015 ; Geological Society of London Special Publications Volume 407 ; 407 >
+    au < expected ; exists ; 2015 ; Geological Society of London Special Publications Volume 408 ; 408 >
+    au < expected ; exists ; 2015 ; Geological Society of London Special Publications Volume 409 ; 409 >
+    au < manifest ; exists ; 2015 ; Geological Society of London Special Publications Volume 410 ; 410 >
 
   }
 
@@ -608,7 +612,8 @@
     au < manifest ; exists ; 2011 ; Journal of the Geological Society of London Volume 168 ; 168 >
     au < manifest ; exists ; 2012 ; Journal of the Geological Society of London Volume 169 ; 169 >
     au < crawling ; exists ; 2013 ; Journal of the Geological Society of London Volume 170 ; 170 >
-    au < manifest ; exists ; 2014 ; Journal of the Geological Society of London Volume 171 ; 171 >
+    au < crawling ; exists ; 2014 ; Journal of the Geological Society of London Volume 171 ; 171 >
+    au < manifest ; exists ; 2015 ; Journal of the Geological Society of London Volume 172 ; 172 >
 
   }
 
@@ -641,7 +646,8 @@
       au < manifest ; exists ; 2011 ; Petroleum Geoscience Volume 17 ; 17 >
       au < manifest ; exists ; 2012 ; Petroleum Geoscience Volume 18 ; 18 >
       au < crawling ; exists ; 2013 ; Petroleum Geoscience Volume 19 ; 19 >
-      au < manifest ; exists ; 2014 ; Petroleum Geoscience Volume 20 ; 20 >
+      au < crawling ; exists ; 2014 ; Petroleum Geoscience Volume 20 ; 20 >
+      au < manifest ; exists ; 2015 ; Petroleum Geoscience Volume 21 ; 21 >
     
   }
 
@@ -702,7 +708,8 @@
     au < manifest ; exists ; 2011 ; Quarterly Journal of Engineering Geology and Hydrogeology Volume 44 ; 44 >
     au < manifest ; exists ; 2012 ; Quarterly Journal of Engineering Geology and Hydrogeology Volume 45 ; 45 >
     au < crawling ; exists ; 2013 ; Quarterly Journal of Engineering Geology and Hydrogeology Volume 46 ; 46 >
-    au < manifest ; exists ; 2014 ; Quarterly Journal of Engineering Geology and Hydrogeology Volume 47 ; 47 >
+    au < crawling ; exists ; 2014 ; Quarterly Journal of Engineering Geology and Hydrogeology Volume 47 ; 47 >
+    au < manifest ; exists ; 2015 ; Quarterly Journal of Engineering Geology and Hydrogeology Volume 48 ; 48 >
       
   }
 
@@ -751,7 +758,7 @@
     >
 
     param[base_url] = http://trngl.lyellcollection.org/
-    plugin = org.lockss.plugin.highwire.ClockssHighWireDrupalPlugin
+    plugin = org.lockss.plugin.highwire.ClockssHWDrupalPlugin
 
     au < exists ; exists ; 1860-1863 ; Transactions of the Geological Society of Glasgow Volume 1 ; 1 >
     au < exists ; exists ; 1865-1867 ; Transactions of the Geological Society of Glasgow Volume 2 ; 2 >

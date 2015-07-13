@@ -1,10 +1,10 @@
 /*
- * $Id: HighWireDrupalHtmlMetadataExtractorFactory.java,v 1.5 2014-07-30 16:02:41 etenbrink Exp $
+ * $Id$
  */
 
 /*
 
-Copyright (c) 2000-2011 Board of Trustees of Leland Stanford Jr. University,
+Copyright (c) 2000-2015 Board of Trustees of Leland Stanford Jr. University,
 all rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -44,11 +44,13 @@ import org.lockss.plugin.*;
 
 
 public class HighWireDrupalHtmlMetadataExtractorFactory implements FileMetadataExtractorFactory {
-  static Logger log = Logger.getLogger(HighWireDrupalHtmlMetadataExtractorFactory.class);
+  
+  private static final Logger log = Logger.getLogger(HighWireDrupalHtmlMetadataExtractorFactory.class);
 
-  public FileMetadataExtractor createFileMetadataExtractor(MetadataTarget target, 
-      String contentType)
-      throws PluginException {
+  @Override
+  public FileMetadataExtractor createFileMetadataExtractor(
+      MetadataTarget target, String contentType)
+          throws PluginException {
     return new HighWireDrupalHtmlMetadataExtractor();
   }
   
@@ -87,6 +89,15 @@ public class HighWireDrupalHtmlMetadataExtractorFactory implements FileMetadataE
       ArticleMetadata am = 
         new SimpleHtmlMetaTagMetadataExtractor().extract(target, cu);
       am.cook(tagMap);
+      String url = am.get(MetadataField.FIELD_ACCESS_URL);
+      if (url != null && !url.isEmpty()) {
+        CachedUrl val = cu.getArchivalUnit().makeCachedUrl(url);
+        if (!val.hasContent()) {
+          am.replace(MetadataField.FIELD_ACCESS_URL, cu.getUrl());
+        }
+      } else {
+        am.replace(MetadataField.FIELD_ACCESS_URL, cu.getUrl());
+      }
       emitter.emitMetadata(cu, am);
     }
   }

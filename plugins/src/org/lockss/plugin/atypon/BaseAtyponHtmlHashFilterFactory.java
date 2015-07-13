@@ -1,10 +1,10 @@
 /*
- * $Id: BaseAtyponHtmlHashFilterFactory.java,v 1.10 2014-11-18 20:06:29 thib_gc Exp $
+ * $Id$
  */
 
 /*
 
-Copyright (c) 2000-2013 Board of Trustees of Leland Stanford Jr. University,
+Copyright (c) 2000-2015 Board of Trustees of Leland Stanford Jr. University,
 all rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -33,15 +33,18 @@ in this Software without prior written authorization from Stanford University.
 package org.lockss.plugin.atypon;
 
 import java.io.IOException;
+
 import java.io.InputStream;
 import java.io.Reader;
 import java.util.Arrays;
 import java.util.regex.Pattern;
 
+import org.htmlparser.Node;
 import org.htmlparser.NodeFilter;
 import org.htmlparser.Tag;
 import org.htmlparser.Text;
 import org.htmlparser.filters.*;
+import org.htmlparser.tags.Bullet;
 import org.htmlparser.tags.CompositeTag;
 import org.htmlparser.tags.LinkTag;
 import org.htmlparser.tags.Span;
@@ -65,23 +68,28 @@ import org.lockss.util.ReaderInputStream;
  */
 
 public class BaseAtyponHtmlHashFilterFactory implements FilterFactory {
-  Logger log = Logger.getLogger(BaseAtyponHtmlHashFilterFactory.class);
+  private static final Logger log = Logger.getLogger(BaseAtyponHtmlHashFilterFactory.class);
   // String used to see if text matches a size description of an article
-  // usually "PDF Plus (527 KB)" or similar
+  // usually "PDF Plus (527 KB)" or similar (PDFPlus, PDF-Plus)
   // (?i) makes it case insensitive
-  private static final String SIZE_REGEX = "PDF\\s?(Plus)?\\s?\\(\\s?[0-9]+";
+  private static final String SIZE_REGEX = "PDF(\\s|-)?(Plus)?\\s?\\(\\s?[0-9]+";
   private static final Pattern SIZE_PATTERN = Pattern.compile(SIZE_REGEX, Pattern.CASE_INSENSITIVE);  
+  protected static final Pattern CITED_BY_PATTERN =
+      Pattern.compile("Cited by", Pattern.CASE_INSENSITIVE);
 
   protected static NodeFilter[] baseAtyponFilters = new NodeFilter[] {
     // 7/22/2013 starting to use a more aggressive hashing policy-
     // these are on both issue and article pages
     // leave only the content
+    HtmlNodeFilters.tag("head"),
+    // filter out javascript
+    HtmlNodeFilters.tag("script"),
+    //filter out comments
+    HtmlNodeFilters.comment(),
+    
     HtmlNodeFilters.tagWithAttribute("div", "id", "header"),
     HtmlNodeFilters.tagWithAttribute("div", "id", "footer"),
-    // filter out javascript
-    new TagNameFilter("script"),
-    //filter out comments
-    HtmlNodeFilters.commentWithRegex(".*"),
+
     // crossref to site library
     HtmlNodeFilters.tagWithAttribute("a", "class", "sfxLink"),
     // stylesheets
@@ -93,6 +101,17 @@ public class BaseAtyponHtmlHashFilterFactory implements FilterFactory {
     // some size notes are within an identifying span
     // (see future science on an article page
     HtmlNodeFilters.tagWithAttribute("span", "class", "fileSize"),
+    
+    // A number of children add a link item "Cited By" only after the article
+    // has been cited...remove the entire list item - look for text pattern
+    new NodeFilter() {
+      @Override public boolean accept(Node node) {
+        if (!(node instanceof Bullet)) return false;
+        String allText = ((CompositeTag)node).toPlainTextString();
+        return CITED_BY_PATTERN.matcher(allText).find();
+      }
+    },
+    
   };
 
   HtmlTransform xform_spanID = new HtmlTransform() {
@@ -126,8 +145,12 @@ public class BaseAtyponHtmlHashFilterFactory implements FilterFactory {
     }
   };   
 
+  /*
+   * Removes all "id' attributes and/or white space if activated by 
+   * child plugins.  The "id" attribute of various tags <span>, <section> .. 
+   * can have a gensym. Also removes pdf(plus) file sizes.
+   */
   HtmlTransform xform_allIDs = new HtmlTransform() {
-    //; The "id" attribute of <span> tags can have a gensym
     @Override
     public NodeList transform(NodeList nodeList) throws IOException {
       try {
@@ -210,6 +233,48 @@ public class BaseAtyponHtmlHashFilterFactory implements FilterFactory {
           new HtmlCompoundTransform(HtmlNodeFilterTransform.exclude(new OrFilter(bothFilters)), xform_spanID));
     }
     if (doWS) {
+      Reader reader = FilterUtil.getReader(combinedFiltered, encoding);
+      return new ReaderInputStream(new WhiteSpaceFilter(reader)); 
+    } else { 
+      return combinedFiltered;
+    }
+  }
+  
+  /*
+   * Takes include and exclude nodes as input. Removes all "id' attributes 
+   * and/or white space if activated by child plugins.  The "id" attribute of 
+   * various tags <span>, <section> .. can have a gensym.
+   * Also removes pdf(plus) file sizes.
+   */
+  public InputStream createFilteredInputStream(ArchivalUnit au, InputStream in,
+      String encoding, NodeFilter[] includeNodes, NodeFilter[] excludeNodes) {
+    NodeFilter[] allExcludeNodes = baseAtyponFilters;
+    if (excludeNodes == null) {
+      throw new NullPointerException("excludeNodes array is null");
+    }  
+    if (includeNodes == null) {
+      throw new NullPointerException("includeNodes array is null!");
+    }   
+    // combine baseAtyponFilters and excludeNodes
+    allExcludeNodes = addTo(excludeNodes);
+    InputStream combinedFiltered;
+    // xform_allIDs filters out all "id" attributes and
+    // also removes pdf(plus) file sizes
+    if (doTagIDFiltering()) {
+      combinedFiltered = new HtmlFilterInputStream(in, encoding,
+        new HtmlCompoundTransform(
+            HtmlNodeFilterTransform.include(new OrFilter(includeNodes)),
+            HtmlNodeFilterTransform.exclude(new OrFilter(allExcludeNodes)), 
+            xform_allIDs)
+        );
+    } else {
+      combinedFiltered = new HtmlFilterInputStream(in, encoding,
+        new HtmlCompoundTransform(
+            HtmlNodeFilterTransform.include(new OrFilter(includeNodes)),
+            HtmlNodeFilterTransform.exclude(new OrFilter(allExcludeNodes)))
+        );
+    }
+    if (doWSFiltering()) {
       Reader reader = FilterUtil.getReader(combinedFiltered, encoding);
       return new ReaderInputStream(new WhiteSpaceFilter(reader)); 
     } else { 

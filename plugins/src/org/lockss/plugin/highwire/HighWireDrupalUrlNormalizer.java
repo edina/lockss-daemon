@@ -1,10 +1,10 @@
 /*
- * $Id: HighWireDrupalUrlNormalizer.java,v 1.6 2014-07-04 04:06:47 etenbrink Exp $
+ * $Id$
  */
 
 /*
 
-Copyright (c) 2000-2014 Board of Trustees of Leland Stanford Jr. University,
+Copyright (c) 2000-2015 Board of Trustees of Leland Stanford Jr. University,
 all rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -42,13 +42,23 @@ import org.lockss.util.StringUtil;
 
 public class HighWireDrupalUrlNormalizer implements UrlNormalizer {
   
-  protected static Logger log = Logger.getLogger(HighWireDrupalUrlNormalizer.class);
+  private static final Logger log = Logger.getLogger(HighWireDrupalUrlNormalizer.class);
+  
   protected static final String WEB_VIEWER =
       "/sites/all/libraries/pdfjs/web/viewer.html?file=/";
   protected static final Pattern URL_PAT = Pattern.compile("/content/[^/0-9]+/");
+  
+  protected static final String CITATION = "/highwire/citation/";
+  protected static final Pattern RIS_PAT = Pattern.compile(
+      "/(bookends|easybib|mendeley|papers|reference-manager|refworks|ris|zotero)$");
+  
   protected static final String LARGE_JPG = ".large.jpg?";
   protected static final String JS_SUFFIX = ".js?";
   protected static final String CSS_SUFFIX = ".css?";
+  protected static final String EOT_SUFFIX = ".eot?";
+  protected static final String SVG_SUFFIX = ".svg?";
+  protected static final String TTF_SUFFIX = ".ttf?";
+  protected static final String WOFF_SUFFIX = ".woff?";
   
   protected static final String PDF_HTML_VARIANT_SUFFIX = ".pdf%2Bhtml";
   protected static final String PDF_HTML_SUFFIX = ".pdf+html";
@@ -56,6 +66,13 @@ public class HighWireDrupalUrlNormalizer implements UrlNormalizer {
   protected static final String FT_PDF = ".full-text.pdf";
   protected static final String FULL_PDF_SUFFIX = ".full.pdf";
   
+  protected static final String RSS_PARAM = "?rss=";
+  protected static final String IJKEY_PARAM = "?ijkey=";
+  protected static final String ELTR_PARAM = ".e-letters?";
+  protected static final String EXPAND_PARAM = "/expansion?";
+  
+  
+  @Override
   public String normalizeUrl(String url, ArchivalUnit au)
       throws PluginException {
     // map 
@@ -80,6 +97,16 @@ public class HighWireDrupalUrlNormalizer implements UrlNormalizer {
     // http://ajprenal.physiology.org/sites/all/libraries/pdfjs/web/viewer.html
     //  ?file=/content/ajprenal/304/1/F33.full.pdf
     // to http://ajprenal.physiology.org/content/304/1/F33.full.pdf
+    // 
+    // map 
+    // http://ajpcell.physiology.org/highwire/citation/1814/bookends
+    // http://ajpcell.physiology.org/highwire/citation/1814/easybib
+    // http://ajpcell.physiology.org/highwire/citation/1814/mendeley
+    // http://ajpcell.physiology.org/highwire/citation/1814/papers
+    // http://ajpcell.physiology.org/highwire/citation/1814/reference-manager
+    // http://ajpcell.physiology.org/highwire/citation/1814/zotero
+    // to
+    // http://ajpcell.physiology.org/highwire/citation/1814/ris
     
     if (url.contains(WEB_VIEWER)) { 
       url = url.replace(WEB_VIEWER, "/");
@@ -87,21 +114,35 @@ public class HighWireDrupalUrlNormalizer implements UrlNormalizer {
       url = mat.replaceFirst("/content/");
     }
     
+    if (url.contains(CITATION)) { 
+      Matcher  mat = RIS_PAT.matcher(url);
+      url = mat.replaceFirst("/ris");
+    }
+    
     if (url.contains(LARGE_JPG) ||
         url.contains(JS_SUFFIX) ||
-        url.contains(CSS_SUFFIX)) {
+        url.contains(CSS_SUFFIX) ||
+        url.contains(EOT_SUFFIX) ||
+        url.contains(SVG_SUFFIX) ||
+        url.contains(TTF_SUFFIX) ||
+        url.contains(WOFF_SUFFIX)) {
       url = url.replaceFirst("[?].+$", "");
     } else if (url.contains(PDF)) {
       if (url.endsWith(PDF_HTML_VARIANT_SUFFIX)) {
         url = StringUtil.replaceLast(url, PDF_HTML_VARIANT_SUFFIX, PDF_HTML_SUFFIX);
-      }  
+      }
       if (url.contains(FT_PDF)) {
         url = StringUtil.replaceLast(url, FT_PDF, FULL_PDF_SUFFIX);
       }
     }
     
-    return(url);
+    if (url.contains(RSS_PARAM) ||
+        url.contains(IJKEY_PARAM) ||
+        url.contains(ELTR_PARAM) || 
+        url.contains(EXPAND_PARAM)) {
+      url = url.replaceFirst("[?].+$", "");
+    }
     
+    return(url);
   }
-  
 }

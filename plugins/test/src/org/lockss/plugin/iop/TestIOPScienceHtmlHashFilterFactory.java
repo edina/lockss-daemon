@@ -1,10 +1,10 @@
 /*
- * $Id: TestIOPScienceHtmlHashFilterFactory.java,v 1.6 2014-12-03 22:48:15 etenbrink Exp $
+ * $Id$
  */
 
 /*
 
-Copyright (c) 2000-2013 Board of Trustees of Leland Stanford Jr. University,
+Copyright (c) 2000-2015 Board of Trustees of Leland Stanford Jr. University,
 all rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -167,7 +167,7 @@ public class TestIOPScienceHtmlHashFilterFactory extends LockssTestCase {
       "\n" + 
       "</div>" +
       "" +
-      "<dl class=\"videoList\">\n" + 
+      "<dl class=\"list\">\n" + 
       "      <dt>Metrics</dt>\n" + 
       "        <dd>\n" + 
       "          <p>\n" + 
@@ -187,11 +187,14 @@ public class TestIOPScienceHtmlHashFilterFactory extends LockssTestCase {
       "      </dd>\n" + 
       "</dl>\n";
   private static final String metricsHtmlFiltered =
-      "<dl class=\"videoList\"> <dt>Metrics</dt> </dl> ";
+      "<dl class=\"list\"> <dt>Metrics</dt> </dl> ";
   
   // test removal of sideTabBar, viewingLinks, metrics-panel, 
   private static final String miscHtml =
       "\n<body>stuff" +
+      "<div id=\"sideTabBar\">\n" + 
+      "  <input type=\"hidden\" value=\"0268-1242/27/1/015002\" name=\"articleId\">\n" + 
+      "\n" + 
       "<div class=\"sideTabBar\">\n" + 
       "  <input type=\"hidden\" value=\"0268-1242/27/1/015002\" name=\"articleId\">\n" + 
       "\n" + 
@@ -208,6 +211,32 @@ public class TestIOPScienceHtmlHashFilterFactory extends LockssTestCase {
       "  <a href=\"/1742-6596/475/1\" class=\"nextprevious\">« previous issue</a> \n" + 
       "  <a href=\"/1742-6596/477/1\" class=\"nextprevious\">next issue »</a>\n" + 
       "</div>" +
+      "<dl class=\"videoList\">\n" + 
+      "  <dt>PACS</dt>\n" + 
+      "  <dd>\n" + 
+      "                <p>\n" + 
+      "                    <a href=\"/search?searchType=selectedPacsMscCode&amp;primarypacs=04.62.%2bv\">\n" + 
+      "                        04.62.+v&nbsp;Quantum fields in curved spacetime\n" + 
+      "                    </a>\n" + 
+      "                </p>\n" + 
+      "                <p>\n" + 
+      "                    <a href=\"/search?searchType=selectedPacsMscCode&amp;primarypacs=03.65.-w\">\n" + 
+      "                        03.65.-w&nbsp;Quantum mechanics\n" + 
+      "                    </a>\n" + 
+      "                </p>\n" + 
+      "  </dd>\n" + 
+      "  <dt>Subjects</dt>\n" + 
+      "  <dd>\n" + 
+      "            <p>\n" + 
+      "               <a class=\"pacsLink linkArrow\" href=\"/search?searchType=category&amp;categorys=Gravitation+and+cosmology\">\n" + 
+      "                   Gravitation and cosmology </a>\n" + 
+      "            </p>\n" + 
+      "            <p>\n" + 
+      "               <a class=\"pacsLink linkArrow\" href=\"/search?searchType=category&amp;categorys=Quantum+information+and+quantum+mechanics\">\n" + 
+      "                   Quantum information and quantum mechanics </a>\n" + 
+      "            </p>\n" + 
+      "  </dd>\n" + 
+      "  </dl>" +
       "</body>\n";
   private static final String miscHtmlFiltered =
       " <body>stuff</body> ";

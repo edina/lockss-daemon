@@ -1,7 +1,7 @@
 <map>
   <entry>
     <string>plugin_status</string>
-    <string>testing - mep/audrey</string>
+    <string>ready</string>
   </entry>
   <entry>
     <string>plugin_identifier</string>
@@ -9,7 +9,7 @@
   </entry>
   <entry>
     <string>plugin_version</string>
-    <string>16</string>
+    <string>21</string>
   </entry>
 <!--  updating out of sync with parent, must have own feature_version_map -->  
   <entry>
@@ -17,11 +17,11 @@
     <map>
       <entry>
         <string>Metadata</string>
-        <string>11</string>
+        <string>12</string>
       </entry>
       <entry>
         <string>Poll</string>
-        <string>14</string>
+        <string>15</string>
       </entry>
       <entry>
         <string>Substance</string>
@@ -31,7 +31,7 @@
   </entry>
   <entry>
     <string>plugin_name</string>
-    <string>NRC Research Plugin (CLOCKSS)</string>
+    <string>NRC Research Press Plugin (CLOCKSS)</string>
   </entry>
   <entry>
     <string>plugin_parent</string>
@@ -39,11 +39,11 @@
   </entry>
     <entry>
     <string>plugin_parent_version</string>
-    <string>18</string>
+    <string>34</string>
   </entry>
   <entry>
     <string>au_name</string>
-    <string>"NRC Research Plugin (CLOCKSS), Base URL %s, Journal ID %s, Volume %s", base_url, journal_id, volume_name</string>
+    <string>"NRC Research Press Plugin (CLOCKSS), Base URL %s, Journal ID %s, Volume %s", base_url, journal_id, volume_name</string>
   </entry>
   <entry>
     <string>au_start_url</string>

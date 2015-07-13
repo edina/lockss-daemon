@@ -1,10 +1,10 @@
 /*
- * $Id: OJS2HtmlLinkExtractor.java,v 1.4 2013-10-18 17:35:10 etenbrink Exp $
+ * $Id$
  */
 
 /*
 
-Copyright (c) 2000-2008 Board of Trustees of Leland Stanford Jr. University,
+Copyright (c) 2000-2015 Board of Trustees of Leland Stanford Jr. University,
 all rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -43,7 +43,12 @@ import org.lockss.util.*;
 
 public class OJS2HtmlLinkExtractor extends GoslingHtmlLinkExtractor {
 
-  protected static Logger log = Logger.getLogger(OJS2HtmlLinkExtractor.class);
+  protected static final Logger log = Logger.getLogger(OJS2HtmlLinkExtractor.class);
+  
+  protected static final String NAME = "name";
+  protected static final String PDF_NAME = "citation_pdf_url";
+  protected static final String FT_NAME = "citation_fulltext_html_url";
+  protected static final String CONTENT = "content";
 
   protected static final org.apache.oro.text.regex.Pattern OPEN_RT_WINDOW_PATTERN = 
       RegexpUtil.uncheckedCompile("javascript:openRTWindow\\('([^']*)'\\);",
@@ -99,7 +104,7 @@ public class OJS2HtmlLinkExtractor extends GoslingHtmlLinkExtractor {
       case 'm':
       case 'M':
         if (beginsWithTag(link,"meta")) {
-          if ("refresh".equalsIgnoreCase(getAttributeValue(HTTP_EQUIV, link))) {
+          if (REFRESH.equalsIgnoreCase(getAttributeValue(HTTP_EQUIV, link))) {
             String value = getAttributeValue(HTTP_EQUIV_CONTENT, link);
             if (value != null) {
               // <meta http-equiv="refresh" content="...">
@@ -117,11 +122,20 @@ public class OJS2HtmlLinkExtractor extends GoslingHtmlLinkExtractor {
                 }
               }
             }
+          } else {
+            if (PDF_NAME.equalsIgnoreCase(getAttributeValue(NAME, link)) ||
+                FT_NAME.equalsIgnoreCase(getAttributeValue(NAME, link))) {
+              
+              String url = getAttributeValue(CONTENT, link);
+              if (url != null) {
+                cb.foundLink(url);
+              }
+            }
           }
         }
         break;
     }
-      
+    
     return super.extractLinkFromTag(link, au, cb);
   }
   

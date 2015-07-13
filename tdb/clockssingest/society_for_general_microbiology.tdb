@@ -118,6 +118,7 @@
       au < finished ; frozen ; 2012 ; International Journal of Systematic and Evolutionary Microbiology Volume 62 ; 62 >
       au < crawling ; exists ; 2013 ; International Journal of Systematic and Evolutionary Microbiology Volume 63 ; 63 >
       au < crawling ; exists ; 2014 ; International Journal of Systematic and Evolutionary Microbiology Volume 64 ; 64 >
+      au < manifest ; exists ; 2015 ; International Journal of Systematic and Evolutionary Microbiology Volume 65 ; 65 >
 
   }
 
@@ -380,6 +381,7 @@
       au < finished ; frozen ; 2012 ; Journal of General Virology Volume 93 ; 93 >
       au < crawling ; exists ; 2013 ; Journal of General Virology Volume 94 ; 94 >
       au < crawling ; exists ; 2014 ; Journal of General Virology Volume 95 ; 95 >
+      au < manifest ; exists ; 2015 ; Journal of General Virology Volume 96 ; 96 >
 
   }
 
@@ -457,6 +459,7 @@
       au < finished ; frozen ; 2012 ; Journal of Medical Microbiology Volume 61 ; 61 >
       au < crawling ; exists ; 2013 ; Journal of Medical Microbiology Volume 62 ; 62 >
       au < crawling ; exists ; 2014 ; Journal of Medical Microbiology Volume 63 ; 63 >
+      au < manifest ; exists ; 2015 ; Journal of Medical Microbiology Volume 64 ; 64 >
 
   }
 
@@ -472,7 +475,26 @@
       pluginSuffix = ClockssHighWirePressH20Plugin
       param[base_url] = http://jmmcr.sgmjournals.org/
 
-      au < expected ; exists ; 2014 ; JMM Case Reports Volume 1 ; 1 >
+      au < exists ; exists ; 2014 ; JMM Case Reports Volume 1 ; 1 >
+      au < exists ; exists ; 2015 ; JMM Case Reports Volume 2 ; 2 >
+
+    }
+
+  }
+
+  {
+    title <
+      name = Microbial Genomics ;
+      eissn = 
+    >
+
+    {
+
+      rights = openaccess
+      pluginSuffix = ClockssHighWirePressH20Plugin
+      param[base_url] = http://mgen.sgmjournals.org/
+
+      au < expected ; exists ; 2015 ; Microbial Genomics Volume 1 ; 1 >
 
     }
 
@@ -512,6 +534,7 @@
       au < finished ; frozen ; 2012 ; Microbiology Volume 158 ; 158 >
       au < crawling ; exists ; 2013 ; Microbiology Volume 159 ; 159 >
       au < crawling ; exists ; 2014 ; Microbiology Volume 160 ; 160 >
+      au < manifest ; exists ; 2015 ; Microbiology Volume 161 ; 161 >
 
   }
 

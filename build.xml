@@ -2,11 +2,11 @@
 <!--
 
 ========================================================================
- $Id: build.xml,v 1.387 2014-12-08 04:10:05 tlipkis Exp $
+ $Id$
  Ant build file for LOCKSS daemon
 ========================================================================
 
-Copyright (c) 2000-2014 Board of Trustees of Leland Stanford Jr. University,
+Copyright (c) 2000-2015 Board of Trustees of Leland Stanford Jr. University,
 all rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -50,7 +50,7 @@ Args:
   -Dforkc=true             Run compiler in a separate jvm.
   -Dhalt=false             Run all tests in group, even if some fail.
   -Dinclude=path           Include matching tests.
-  -Djavaversion=1.6        The version of Java accepted/targeted.
+  -Djavaversion=1.7        The version of Java accepted/targeted.
   -Dkeeptempfiles=true     Don't delete temp files after tests run.
   -Dlistfiles=true         List the source files that will be compiled.  Use if
                               a compile step runs when nothing should need to
@@ -103,7 +103,7 @@ Args:
   <property file="${user.home}/.lockssprops"/>
 
   <!-- Defaults -->
-  <property name="javaversion" value="1.6" />
+  <property name="javaversion" value="1.7" />
   <property name="loglevel" value="" />
   <property name="showoutput" value="no" />
   <property name="filtertrace" value="yes" />
@@ -138,6 +138,8 @@ Args:
   <!--  svn-related -->
   <property name="svn.module.default" value="lockss-daemon" />
   <property name="svn.dir"       value="lockss-daemon" />
+  <property name="svn.anon.root"
+		  value="svn://svn.code.sf.net/p/lockss/svn/lockss-daemon" />
   <!-- XXX should get this from -->
 
   <!--  Directories -->
@@ -223,7 +225,7 @@ Args:
   <property name="mailapi.jar"    value="${lib}/javamail-mailapi-1.3.2.jar"/>
   <property name="activation.jar" value="${lib}/activation-1.0.2.jar"/>
   <property name="castor.jar"     value="${lib}/castor-0.9.4.1-xml.jar"/>
-  <property name="xerces.jar"     value="${lib}/xercesImpl-2.7.1.jar"/>
+  <property name="xerces.jar"     value="${lib}/xerces-xercesImpl.jar"/>
   <property name="xml-apis.jar"   value="${lib}/xml-apis.jar"/>
   <property name="jimi.jar"       value="${lib}/JimiProClasses.jar"/>
   <property name="jetty.jar"      value="${lib}/jetty-5.1.5L.jar"/>
@@ -285,7 +287,7 @@ Args:
   <property name="javatar.jar" value="${lib}/javagnutar.jar" />
   <property name="concurrent.jar" value="${lib}/concurrent.jar"/>
   <property name="htmlparser.jar" value="${lib}/htmlparser-1.6p.jar"/>
-  <property name="jsoup.jar" value="${lib}/jsoup-1.7.3.jar"/>
+  <property name="jsoup.jar" value="${lib}/jsoup-1.8.2.jar"/>
   <property name="apiviz.jar"     value="${lib}/apiviz-1.3.1.jar"/>
   <!-- W3C RDF Parser -->
   <property name="rdf.jar"        value="${lib}/rdf-api-2001-01-19.jar" />
@@ -310,8 +312,8 @@ Args:
   
   <!-- Needed by XOAI -->
   <property name="xoai-common.jar" value="${lib}/xoai-common-4.1.0.jar"/>
-  <property name="xoai-service-provider.jar" value="${lib}/xoai-service-provider-4.1.0.jar"/>
-  <property name="xml-io.jar" value="${lib}/xml-io-1.0.3-p1.jar"/>
+  <property name="xoai-service-provider.jar" value="${lib}/xoai-service-provider-4.1.0-p1.jar"/>
+  <property name="xml-io.jar" value="${lib}/xml-io-1.0.3-p2.jar"/>
   <property name="httpcore.jar" value="${lib}/httpcore-4.3.2.jar"/>
   <property name="hamcrest-all.jar" value="${lib}/hamcrest-all-1.3.jar"/>
   <property name="stax2-api.jar" value="${lib}/stax2-api-3.0.4.jar"/>
@@ -319,13 +321,13 @@ Args:
   <property name="httpclient.jar" value="${lib}/httpclient-4.3.1.jar"/>
   
   <!-- PDFBox -->
-  <property name="pdfbox.version" value="1.8.7" />
+  <property name="pdfbox.version" value="1.8.9" />
   <property name="pdfbox.jar" value="${lib}/pdfbox-${pdfbox.version}.jar" />
-  <!-- Next 9 JARs needed by PDFBox: -->
+  <!-- Next 8 JARs needed by PDFBox: -->
   <property name="fontbox.jar" value="${lib}/fontbox-${pdfbox.version}.jar" />
   <property name="jempbox.jar" value="${lib}/jempbox-${pdfbox.version}.jar" />
   <property name="xmpbox.jar" value="${lib}/xmpbox-${pdfbox.version}.jar" />
-  <property name="bouncycastle.version" value="jdk15on-151" />
+  <property name="bouncycastle.version" value="jdk15on-152" />
   <property name="bouncycastle-provider.jar" value="${lib}/bcprov-${bouncycastle.version}.jar" />
   <property name="bouncycastle-mail.jar" value="${lib}/bcmail-${bouncycastle.version}.jar" />
   <property name="icu4j.version" value="54_1_1" />
@@ -415,6 +417,35 @@ Args:
   <property name="xmlschema-core.jar" value="${lib}/xmlschema-core-2.0.3.jar" />
   <property name="JoSQL.jar" value="${lib}/JoSQL-2.2.jar" />
   <property name="gentlyWEB-utils.jar" value="${lib}/gentlyWEB-utils-1.1.jar" />
+
+  <!-- Needed by OIOSAML -->
+  <property name="commons-digester-commons-digester.jar"
+    value="${lib}/commons-digester-commons-digester.jar" />
+  <property name="commons-fileupload-commons-fileupload.jar"
+  	value="${lib}/commons-fileupload-commons-fileupload.jar" />
+  <property name="esapi-2.0GA.jar" value="${lib}/esapi-2.0GA.jar" />
+  <property name="joda-time-joda-time.jar"
+  	value="${lib}/joda-time-joda-time.jar" />
+  <property name="not-yet-commons-ssl-0.3.9.jar"
+  	value="${lib}/not-yet-commons-ssl-0.3.9.jar" />
+  <property name="oiosaml.java-21188-PATCHED.jar"
+  	value="${lib}/oiosaml.java-21188-PATCHED.jar" />
+  <property name="opensaml-2.5.1.jar" value="${lib}/opensaml-2.5.1.jar" />
+  <property name="openws-1.4.2.jar" value="${lib}/openws-1.4.2.jar" />
+  <property name="org.apache.santuario-xmlsec.jar"
+    value="${lib}/org.apache.santuario-xmlsec.jar" />
+  <property name="org.bouncycastle-pkix.jar"
+    value="${lib}/org.bouncycastle-bcpkix-jdk15on.jar" />
+  <property name="org.fishwife-jrugged-core.jar"
+    value="${lib}/org.fishwife-jrugged-core.jar" />
+  <property name="org.slf4j-slf4j-api.jar"
+  	value="${lib}/org.slf4j-slf4j-api.jar" />
+  <property name="org.slf4j-slf4j-log4j12.jar"
+  	value="${lib}/org.slf4j-slf4j-log4j12.jar" />
+  <property name="xml-resolver-xml-resolver.jar"
+    value="${lib}/xml-resolver-xml-resolver.jar" />
+  <property name="xalan-serializer.jar" value="${lib}/xalan-serializer.jar" />
+  <property name="xmltooling-1.3.2.jar" value="${lib}/xmltooling-1.3.2.jar" />
 
   <property name="empty.db.parent.dir" value="${tmpdir}" />
   <property name="empty.db.dir" value="${empty.db.parent.dir}/db" />
@@ -547,6 +578,23 @@ Args:
     <pathelement path="${stax2-api.jar}" />
     <pathelement path="${test-support.jar}" />
     <pathelement path="${httpclient.jar}" />
+    <!-- Needed by OIOSAML -->
+    <pathelement path="${commons-digester-commons-digester.jar}" />
+    <pathelement path="${commons-fileupload-commons-fileupload.jar}" />
+    <pathelement path="${esapi-2.0GA.jar}" />
+    <pathelement path="${joda-time-joda-time.jar}" />
+    <pathelement path="${not-yet-commons-ssl-0.3.9.jar}" />
+    <pathelement path="${oiosaml.java-21188-PATCHED.jar}" />
+    <pathelement path="${opensaml-2.5.1.jar}" />
+    <pathelement path="${openws-1.4.2.jar}" />
+    <pathelement path="${org.apache.santuario-xmlsec.jar}" />
+    <pathelement path="${org.bouncycastle-pkix.jar}" />
+    <pathelement path="${org.fishwife-jrugged-core.jar}" />
+  	<pathelement path="${org.slf4j-slf4j-api.jar}" />
+    <pathelement path="${org.slf4j-slf4j-log4j12.jar}" />
+    <pathelement path="${xalan-serializer.jar}" />
+    <pathelement path="${xml-resolver-xml-resolver.jar}" />
+    <pathelement path="${xmltooling-1.3.2.jar}" />
   </path>
 
   <path id="run.classpath">
@@ -668,7 +716,7 @@ Args:
            debug="${javac.debug}"
            optimize="${javac.optimize}"
            deprecation="${javac.deprecation}"
-           encoding="iso8859-1"
+           encoding="utf-8"
            fork="${forkc}"
            listfiles="${listfiles}"
            nowarn="${nowarn}"
@@ -811,6 +859,12 @@ Test results in ${test.results}
      </or>
     </condition>
 
+    <condition property="is-java-eq-1.7">
+     <or>
+      <equals arg1="1.7" arg2="${my.ant.java.version}"/>
+     </or>
+    </condition>
+
     <condition property="is-java-ge-1.7">
      <or>
       <equals arg1="1.7" arg2="${my.ant.java.version}"/>
@@ -824,23 +878,23 @@ Test results in ${test.results}
      </or>
     </condition>
 
-    <!-- Require at least Java 1.6, but allow builds if force is set -->
+    <!-- Require at least Java 1.7, but allow builds if force is set -->
     <condition property="is-satisfy-java-min-version">
      <or>
-      <istrue value="${is-java-ge-1.6}" />
+      <istrue value="${is-java-ge-1.7}" />
       <istrue value="${force}" />
      </or>
     </condition>
 
     <fail unless="is-satisfy-java-min-version">
-Java ${my.ant.java.version} found, 1.6 required
+Java ${my.ant.java.version} found, 1.7 required
     </fail>
 
     <!-- Determine whether java version is compatible with release
 	 requirements -->
     <condition property="is-satisfy-java-max-version">
      <or>
-      <istrue value="${is-java-le-1.6}" />
+      <istrue value="${is-java-eq-1.7}" />
      </or>
     </condition>
 
@@ -854,7 +908,7 @@ Java ${my.ant.java.version} found, 1.6 required
 
   <target name="require.release.java.version" depends="prepare">
     <fail unless="is-satisfy-java-max-version"
-          message="This target must be run with Java 1.6; you are using Java ${my.ant.java.version}"/>
+          message="This target must be run with Java 1.7; you are using Java ${my.ant.java.version}"/>
   </target>
 
   <!-- ==================================================================== -->
@@ -1048,6 +1102,7 @@ The target you have selected requires compiling under JDK 1.7.
           <include name="i18n.properties"/> <!-- gettext-commons config -->
           <include name="DefaultBundle.properties"/> <!-- default resource bundle -->
           <include name="org/lockss/htdocs/**/*"/>
+          <include name="oiosaml.tar" /> <!-- OIOSAML (Shibboleth) support -->
 	  <include name="**/errorpagetemplate.html"/>
 	  <include name="**/urlrewriter.js"/> <!-- IA/WERA javascript -->
        </fileset>
@@ -1278,9 +1333,6 @@ The target you have selected requires compiling under JDK 1.7.
 		     input="${svn.info}"
 		     regexp="Repository Root: (.*)"
 		     select="\1" />
-      <echo message="svn.info: ${svn.info}" />
-      <echo message="branch.name: ${branch.name}" />
-      <echo message="svn.root: ${svn.root}" />
     </then>
     <else>
       <property name="branch.name" value="branches/${branch}"/>
@@ -2748,40 +2800,55 @@ Test results in ${test.results}
 	 <isfalse value="${nosvn}" />
 	 <then>
            <if>
-             <istrue value="${copylib}" />
+             <isfalse value="${copylib}" />
              <then>
-	       <echo message="copylib not supported yet."/>
-<!--                <echo message="copying lib dir"/> -->
-<!--                <property name="cvs.module" value="lockss-daemon-butlib" /> -->
-<!--                <copy todir="${temp.proj.dir}" -->
-<!--                      preservelastmodified="true" > -->
-<!-- 		 <fileset dir="${basedir}" > -->
-<!--                    <include name="lib/"/> -->
-<!--                    <exclude name="lib/lockss.jar"/> -->
-<!--                    <exclude name="lib/lockss-*.jar"/> -->
-<!-- 		 </fileset> -->
-<!--                </copy> -->
+	       <exec executable="svn" dir="${temp.build.dir}"
+		     failonerror="true">
+		 <arg value="checkout" />
+		 <arg value="-q" />
+		 <arg value="--non-interactive" />
+		 <arg value="${svn.anon.root}/${branch.name}" />
+		 <arg value="${svn.dir}" />
+	       </exec>
              </then>
              <else>        
+	       <!-- First check out just 1st-level files & dirs -->
+	       <exec executable="svn" dir="${temp.build.dir}"
+		     failonerror="true">
+		 <arg value="checkout" />
+		 <arg value="-q" />
+		 <arg value="--non-interactive" />
+		 <arg value="--depth=immediates" />
+		 <arg value="${svn.anon.root}/${branch.name}" />
+		 <arg value="${svn.dir}" />
+	       </exec>
+	       <!-- Then update to infinite depth all but lib dir -->
+	       <pathconvert pathsep=" " property="temp.proj.subdirs">
+		 <dirset dir="${temp.proj.dir}" >
+		   <include name="*" />
+		   <exclude name="lib" />
+		 </dirset>
+		 <map from="${temp.proj.dir}/" to=""/>
+	       </pathconvert>
+	       <exec executable="svn" dir="${temp.proj.dir}"
+		     failonerror="true">
+		 <arg value="update" />
+                 <arg value="-q" />
+		 <arg value="--non-interactive" />
+ 		 <arg value="--set-depth=infinity" />
+ 		 <arg line="${temp.proj.subdirs}" />
+	       </exec>
+               <echo message="copying lib dir"/>
+               <copy todir="${temp.proj.dir}"
+                     preservelastmodified="true" >
+		 <fileset dir="${basedir}" >
+                   <include name="lib/"/>
+                   <exclude name="lib/lockss.jar"/>
+                   <exclude name="lib/lockss-*.jar"/>
+		 </fileset>
+               </copy>
              </else>
            </if>
-           <if>
-             <or>
-               <not> <isset property="svn.root" /> </not>
-               <equals arg1="${svn.root}" arg2="" />
-             </or>
-             <then>
-               <fail message="Couldn't file root"/>
-             </then>
-           </if>
-	   <exec executable="svn" dir="${temp.build.dir}"
-		 failonerror="true">
-	     <arg value="checkout" />
-	     <arg value="-q" />
-	     <arg value="--non-interactive" />
-	     <arg value="svn://svn.code.sf.net/p/lockss/svn/lockss-daemon/${branch.name}" />
-	     <arg value="${svn.dir}" />
-	   </exec>
 	 </then>
 	 <else>
 	   <echo>No svn, copying from ${basedir}</echo>

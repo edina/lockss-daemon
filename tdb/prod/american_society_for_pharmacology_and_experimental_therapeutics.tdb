@@ -61,6 +61,7 @@
     au < HighWirePressH20Plugin ; released ; 2012 ; Drug Metabolism and Disposition Volume 40 ; 40 >
     au < HighWirePressH20Plugin ; manifest ; 2013 ; Drug Metabolism and Disposition Volume 41 ; 41 >
     au < HighWirePressH20Plugin ; manifest ; 2014 ; Drug Metabolism and Disposition Volume 42 ; 42 >
+    au < HighWirePressH20Plugin ; manifest ; 2015 ; Drug Metabolism and Disposition Volume 43 ; 43 >
 
   }
 
@@ -426,6 +427,8 @@
     au < HighWirePressH20Plugin ; manifest ; 2014 ; Journal of Pharmacology and Experimental Therapeutics Volume 349 ; 349 >
     au < HighWirePressH20Plugin ; manifest ; 2014 ; Journal of Pharmacology and Experimental Therapeutics Volume 350 ; 350 >
     au < HighWirePressH20Plugin ; manifest ; 2014 ; Journal of Pharmacology and Experimental Therapeutics Volume 351 ; 351 >
+    au < HighWirePressH20Plugin ; manifest ; 2015 ; Journal of Pharmacology and Experimental Therapeutics Volume 352 ; 352 >
+    au < HighWirePressH20Plugin ; manifest ; 2015 ; Journal of Pharmacology and Experimental Therapeutics Volume 353 ; 353 >
 
   }
 
@@ -464,17 +467,17 @@
       comment[down] = ceased publication, offline as of 2011-08-15
       param[base_url] = http://molinterv.aspetjournals.org/
 
-      au < HighWirePressH20Plugin ; down ; 2001 ; Molecular Interventions Volume 1 ; 1 >
-      au < HighWirePressH20Plugin ; down ; 2002 ; Molecular Interventions Volume 2 ; 2 >
-      au < HighWirePressH20Plugin ; down ; 2003 ; Molecular Interventions Volume 3 ; 3 >
-      au < HighWirePressH20Plugin ; down ; 2004 ; Molecular Interventions Volume 4 ; 4 >
-      au < HighWirePressH20Plugin ; down ; 2005 ; Molecular Interventions Volume 5 ; 5 >
-      au < HighWirePressH20Plugin ; down ; 2006 ; Molecular Interventions Volume 6 ; 6 >
-      au < HighWirePressH20Plugin ; down ; 2007 ; Molecular Interventions Volume 7 ; 7 >
-      au < HighWirePressH20Plugin ; down ; 2008 ; Molecular Interventions Volume 8 ; 8 >
-      au < HighWirePressH20Plugin ; down ; 2009 ; Molecular Interventions Volume 9 ; 9 >
-      au < HighWirePressH20Plugin ; down ; 2010 ; Molecular Interventions Volume 10 ; 10 >
-      au < HighWirePressH20Plugin ; down ; 2011 ; Molecular Interventions Volume 11 ; 11 >
+      au < HighWirePressH20Plugin ; superseded ; 2001 ; Molecular Interventions Volume 1 [superseded] ; 1 >
+      au < HighWirePressH20Plugin ; superseded ; 2002 ; Molecular Interventions Volume 2 [superseded] ; 2 >
+      au < HighWirePressH20Plugin ; superseded ; 2003 ; Molecular Interventions Volume 3 [superseded] ; 3 >
+      au < HighWirePressH20Plugin ; superseded ; 2004 ; Molecular Interventions Volume 4 [superseded] ; 4 >
+      au < HighWirePressH20Plugin ; superseded ; 2005 ; Molecular Interventions Volume 5 [superseded] ; 5 >
+      au < HighWirePressH20Plugin ; superseded ; 2006 ; Molecular Interventions Volume 6 [superseded] ; 6 >
+      au < HighWirePressH20Plugin ; superseded ; 2007 ; Molecular Interventions Volume 7 [superseded] ; 7 >
+      au < HighWirePressH20Plugin ; superseded ; 2008 ; Molecular Interventions Volume 8 [superseded] ; 8 >
+      au < HighWirePressH20Plugin ; superseded ; 2009 ; Molecular Interventions Volume 9 [superseded] ; 9 >
+      au < HighWirePressH20Plugin ; superseded ; 2010 ; Molecular Interventions Volume 10 [superseded] ; 10 >
+      au < HighWirePressH20Plugin ; superseded ; 2011 ; Molecular Interventions Volume 11 [superseded] ; 11 >
     }
 
   }
@@ -576,6 +579,7 @@
     au < HighWirePressH20Plugin ; manifest ; 2013 ; Molecular Pharmacology Volume 84 ; 84 >
     au < HighWirePressH20Plugin ; manifest ; 2014 ; Molecular Pharmacology Volume 85 ; 85 >
     au < HighWirePressH20Plugin ; manifest ; 2014 ; Molecular Pharmacology Volume 86 ; 86 >
+    au < HighWirePressH20Plugin ; manifest ; 2015 ; Molecular Pharmacology Volume 87 ; 87 >
 
   }
 
@@ -656,6 +660,7 @@
     au < HighWirePressH20Plugin ; released ; 2012 ; Pharmacological Reviews Volume 64 ; 64 >
     au < HighWirePressH20Plugin ; released ; 2013 ; Pharmacological Reviews Volume 65 ; 65 >
     au < HighWirePressH20Plugin ; manifest ; 2014 ; Pharmacological Reviews Volume 66 ; 66 >
+    au < HighWirePressH20Plugin ; manifest ; 2015 ; Pharmacological Reviews Volume 67 ; 67 >
 
   }
 

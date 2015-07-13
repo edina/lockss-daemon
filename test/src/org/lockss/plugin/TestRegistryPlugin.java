@@ -1,5 +1,5 @@
 /*
- * $Id: TestRegistryPlugin.java,v 1.10 2014-11-12 20:11:54 wkwilson Exp $
+ * $Id$
  */
 
 /*
@@ -98,6 +98,9 @@ public class TestRegistryPlugin extends LockssTestCase {
 	       "http://foo.com/bar");
     ArchivalUnit au = m_plugin.createAu(auConf);
     assertTrue(au instanceof RegistryArchivalUnit);
+    MockNodeManager nm = new MockNodeManager();
+    nm.setAuState(new MockAuState(au));
+    getMockLockssDaemon().setNodeManager(nm, au);
     assertSameElements(ListUtil.list("http://foo.com/"), au.getUrlStems());
   }
 

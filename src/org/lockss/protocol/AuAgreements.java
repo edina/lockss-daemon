@@ -1,5 +1,5 @@
 /*
- * $Id: AuAgreements.java,v 1.3.14.1 2014-12-28 08:36:36 tlipkis Exp $
+ * $Id$
  */
 
 /*

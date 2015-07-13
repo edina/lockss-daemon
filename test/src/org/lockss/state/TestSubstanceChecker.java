@@ -1,5 +1,5 @@
 /*
- * $Id: TestSubstanceChecker.java,v 1.3 2014-11-12 20:12:00 wkwilson Exp $
+ * $Id$
  */
 
 /*
@@ -132,6 +132,27 @@ public class TestSubstanceChecker extends LockssTestCase {
     check("http://perm/");
     assertEquals(State.No, checker.hasSubstance());
     check("http://other/");
+    assertEquals(State.Yes, checker.hasSubstance());
+  }
+
+  public void testFindSubstNo() throws Exception {
+    mau.setSubstanceUrlPatterns(compileRegexps(ListUtil.list("one", "two" )));
+    mau.addUrl("http://four/", false, true);
+    mau.addUrl("http://three/", false, true);
+    mau.populateAuCachedUrlSet();
+    checker = new SubstanceChecker(mau);
+    assertEquals(State.No, checker.findSubstance());
+    assertEquals(State.No, checker.hasSubstance());
+  }
+
+  public void testFindSubstYes() throws Exception {
+    mau.setSubstanceUrlPatterns(compileRegexps(ListUtil.list("one", "two" )));
+    mau.addUrl("http://four/", false, true);
+    mau.addUrl("http://two/", false, true);
+    mau.addUrl("http://three/", false, true);
+    mau.populateAuCachedUrlSet();
+    checker = new SubstanceChecker(mau);
+    assertEquals(State.Yes, checker.findSubstance());
     assertEquals(State.Yes, checker.hasSubstance());
   }
 

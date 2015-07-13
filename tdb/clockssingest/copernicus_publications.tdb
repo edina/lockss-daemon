@@ -9,6 +9,7 @@
 
     plugin = org.lockss.plugin.copernicus.ClockssCopernicusPublicationsPlugin
     implicit < status ; status2 ; year ; param[year] ; name ; param[volume_name] >
+    comment[year] = year as param, not really use in plugin
 
   {
     title <
@@ -19,6 +20,7 @@
       attr[journal_id] = ADGEO
       param[base_url] = http://www.adv-geosci.net/
       param[home_url] = http://www.advances-in-geosciences.net/
+      comment[v37] = publication year is 2013 to 2014, publisher puts it under 2013, we collect it under 2014
 
       au < manifest ; exists ; 2003 ; 2003 ; Advances in Geosciences Volume 1 ; 1 >
       au < manifest ; exists ; 2005 ; 2005 ; Advances in Geosciences Volume 2 ; 2 >
@@ -56,8 +58,13 @@
       au < crawling ; exists ; 2013 ; 2013 ; Advances in Geosciences Volume 34 ; 34 >
       au < crawling ; exists ; 2013 ; 2013 ; Advances in Geosciences Volume 35 ; 35 >
       au < crawling ; exists ; 2013 ; 2013 ; Advances in Geosciences Volume 36 ; 36 >
-      au < crawling ; exists ; 2014 ; 2014 ; Advances in Geosciences Volume 37 ; 37 >
+      au < crawling ; exists ; 2013-2014 ; 2014 ; Advances in Geosciences Volume 37 ; 37 >
       au < crawling ; exists ; 2014 ; 2014 ; Advances in Geosciences Volume 38 ; 38 >
+      au < crawling ; exists ; 2014 ; 2014 ; Advances in Geosciences Volume 39 ; 39 >
+      au < crawling ; exists ; 2014 ; 2014 ; Advances in Geosciences Volume 40 ; 40 >
+      au < expected ; exists ; 2015 ; 2015 ; Advances in Geosciences Volume 41 ; 41 >
+      au < expected ; exists ; 2015 ; 2015 ; Advances in Geosciences Volume 42 ; 42 >
+      au < expected ; exists ; 2015 ; 2015 ; Advances in Geosciences Volume 43 ; 43 >
     
    }
     
@@ -82,7 +89,8 @@
       au < manifest ; exists ; 2011 ; 2011 ; Advances in Radio Science 2010 Volume 9 ; 9 >
       au < finished ; crawling ; 2012 ; 2012 ; Advances in Radio Science 2011 Volume 10 ; 10 >
       au < crawling ; exists ; 2013 ; 2013 ; Advances in Radio Science 2012 Volume 11 ; 11 >
-      au < manifest ; exists ; 2014 ; 2014 ; Advances in Radio Science 2013 Volume 12 ; 12 >
+      au < crawling ; exists ; 2014 ; 2014 ; Advances in Radio Science 2013 Volume 12 ; 12 >
+      au < expected ; exists ; 2015 ; 2015 ; Advances in Radio Science 2014 Volume 13 ; 13 >
     
    }
     
@@ -107,8 +115,22 @@
       au < doesNotExist ; doesNotExist ; 2012 ; 0 ; Advances in Science and Research Volume 9 ; 0 >
       au < crawling ; exists ; 2013 ; 2013 ; Advances in Science and Research Volume 10 ; 10 >
       au < crawling ; exists ; 2014 ; 2014 ; Advances in Science and Research Volume 11 ; 11 >
-      au < expected ; exists ; 2014 ; 2014 ; Advances in Science and Research Volume 12 ; 12 >
+      au < manifest ; exists ; 2015 ; 2015 ; Advances in Science and Research Volume 12 ; 12 >
     
+   }
+    
+  {
+    title <
+      name = Advances in Statistical Climatology, Meteorology and Oceanography ;
+      issn = 2364-3579 ;
+      eissn = 2364-3587
+    >
+      attr[journal_id] = ASCMO 
+      param[base_url] = http://www.adv-stat-clim-meteorol-oceanogr.net/
+      param[home_url] = http://www.advances-statistical-climatology-meteorology-oceanography.net/
+
+      au < manifest ; exists ; 2015 ; 2015 ; Advances in Statistical Climatology, Meteorology and Oceanography Volume 1 ; 1 >
+
    }
     
   {
@@ -146,7 +168,47 @@
       au < finished ; crawling ; 2012 ; 2012 ; Annales Geophysicae Volume 30 ; 30 >
       au < crawling ; exists ; 2013 ; 2013 ; Annales Geophysicae Volume 31 ; 31 >
       au < crawling ; exists ; 2014 ; 2014 ; Annales Geophysicae Volume 32 ; 32 >
+      au < manifest ; exists ; 2015 ; 2015 ; Annales Geophysicae Volume 33 ; 33 >
     
+   }
+    
+  {
+    title <
+      name = Archives Animal Breeding ;
+      issn = 0003-9438 ;
+      eissn = 2363-9822 
+    >
+      attr[journal_id] = AAB
+      param[home_url] = http://archives-animal-breeding.net/
+      
+      {
+      param[base_url] = http://www.archanimbreed.com/
+      comment[pdf] = http://doi.fbn-dummerstorf.de/ for 2013 & 2014
+
+      au < exists ; exists ; 1999 ; 1999 ; Archives Animal Breeding Volume 17 ; 17 >
+      au < exists ; exists ; 2000 ; 2000 ; Archives Animal Breeding Volume 18 ; 18 >
+      au < exists ; exists ; 2001 ; 2001 ; Archives Animal Breeding Volume 19 ; 19 >
+      au < exists ; exists ; 2002 ; 2002 ; Archives Animal Breeding Volume 20 ; 20 >
+      au < exists ; exists ; 2003 ; 2003 ; Archives Animal Breeding Volume 21 ; 21 >
+      au < exists ; exists ; 2004 ; 2004 ; Archives Animal Breeding Volume 22 ; 22 >
+      au < exists ; exists ; 2005 ; 2005 ; Archives Animal Breeding Volume 23 ; 23 >
+      au < exists ; exists ; 2006 ; 2006 ; Archives Animal Breeding Volume 24 ; 24 >
+      au < exists ; exists ; 2007 ; 2007 ; Archives Animal Breeding Volume 25 ; 25 >
+      au < exists ; exists ; 2008 ; 2008 ; Archives Animal Breeding Volume 26 ; 26 >
+      au < exists ; exists ; 2009 ; 2009 ; Archives Animal Breeding Volume 27 ; 27 >
+      au < exists ; exists ; 2010 ; 2010 ; Archives Animal Breeding Volume 28 ; 28 >
+      au < exists ; exists ; 2011 ; 2011 ; Archives Animal Breeding Volume 29 ; 29 >
+      au < exists ; exists ; 2012 ; 2012 ; Archives Animal Breeding Volume 30 ; 30 >
+      au < exists ; exists ; 2013 ; 2013 ; Archives Animal Breeding Volume 31 ; 31 >
+      au < exists ; exists ; 2014 ; 2014 ; Archives Animal Breeding Volume 32 ; 32 >
+      }
+
+      {
+      param[base_url] = http://www.arch-anim-breed.net/
+
+      au < manifest ; exists ; 2015 ; 2015 ; Archives Animal Breeding Volume 58 ; 58 >
+      }
+
    }
     
   {
@@ -160,6 +222,7 @@
       param[home_url] = http://www.astra-proceedings.net/
 
       au < crawling ; exists ; 2014 ; 2014 ; ASTRA Proceedings Volume 1 ; 1 >
+      au < expected ; exists ; 2015 ; 2015 ; ASTRA Proceedings Volume 2 ; 2 >
 
    }
     
@@ -194,7 +257,6 @@
       attr[journal_id] = ACP   
       param[base_url] = http://www.atmos-chem-phys.net/
       param[home_url] = http://www.atmospheric-chemistry-and-physics.net/
-      comment[notReady] = content not completely online
 
       au < manifest ; exists ; 2001 ; 2001 ; Atmospheric Chemistry and Physics Volume 1 ; 1 >
       au < manifest ; exists ; 2002 ; 2002 ; Atmospheric Chemistry and Physics Volume 2 ; 2 >
@@ -209,7 +271,8 @@
       au < manifest ; exists ; 2011 ; 2011 ; Atmospheric Chemistry and Physics Volume 11 ; 11 >
       au < finished ; crawling ; 2012 ; 2012 ; Atmospheric Chemistry and Physics Volume 12 ; 12 >
       au < crawling ; exists ; 2013 ; 2013 ; Atmospheric Chemistry and Physics Volume 13 ; 13 >
-      au < notReady ; exists ; 2014 ; 2014 ; Atmospheric Chemistry and Physics Volume 14 ; 14 >
+      au < crawling ; exists ; 2014 ; 2014 ; Atmospheric Chemistry and Physics Volume 14 ; 14 >
+      au < manifest ; exists ; 2015 ; 2015 ; Atmospheric Chemistry and Physics Volume 15 ; 15 >
     
    }
     
@@ -222,7 +285,6 @@
       attr[journal_id] =  AMT  
       param[base_url] = http://www.atmos-meas-tech.net/
       param[home_url] = http://www.atmospheric-measurement-techniques.net/
-      comment[notReady] = content not completely online
 
       au < manifest ; exists ; 2008 ; 2008 ; Atmospheric Measurement Techniques Volume 1 ; 1 >
       au < manifest ; exists ; 2009 ; 2009 ; Atmospheric Measurement Techniques Volume 2 ; 2 >
@@ -230,7 +292,8 @@
       au < manifest ; exists ; 2011 ; 2011 ; Atmospheric Measurement Techniques Volume 4 ; 4 >
       au < finished ; frozen ; 2012 ; 2012 ; Atmospheric Measurement Techniques Volume 5 ; 5 >
       au < crawling ; exists ; 2013 ; 2013 ; Atmospheric Measurement Techniques Volume 6 ; 6 >
-      au < notReady ; exists ; 2014 ; 2014 ; Atmospheric Measurement Techniques Volume 7 ; 7 >
+      au < crawling ; exists ; 2014 ; 2014 ; Atmospheric Measurement Techniques Volume 7 ; 7 >
+      au < manifest ; exists ; 2015 ; 2015 ; Atmospheric Measurement Techniques Volume 8 ; 8 >
     
    }
     
@@ -255,6 +318,7 @@
       au < finished ; crawling ; 2012 ; 2012 ; Biogeosciences Volume 9 ; 9 >
       au < crawling ; exists ; 2013 ; 2013 ; Biogeosciences Volume 10 ; 10 >
       au < crawling ; exists ; 2014 ; 2014 ; Biogeosciences Volume 11 ; 11 >
+      au < manifest ; exists ; 2015 ; 2015 ; Biogeosciences Volume 12 ; 12 >
     
    }
     
@@ -278,6 +342,7 @@
       au < finished ; frozen ; 2012 ; 2012 ; Climate of the Past Volume 8 ; 8 >
       au < crawling ; exists ; 2013 ; 2013 ; Climate of the Past Volume 9 ; 9 >
       au < crawling ; exists ; 2014 ; 2014 ; Climate of the Past Volume 10 ; 10 >
+      au < manifest ; exists ; 2015 ; 2015 ; Climate of the Past Volume 11 ; 11 >
     
    }
     
@@ -298,6 +363,7 @@
       au < finished ; frozen ; 2012 ; 2012 ; Drinking Water Engineering and Science Volume 5 ; 5 >
       au < crawling ; exists ; 2013 ; 2013 ; Drinking Water Engineering and Science Volume 6 ; 6 >
       au < crawling ; exists ; 2014 ; 2014 ; Drinking Water Engineering and Science Volume 7 ; 7 >
+      au < manifest ; exists ; 2015 ; 2015 ; Drinking Water Engineering and Science Volume 8 ; 8 >
     
    }
     
@@ -313,6 +379,7 @@
 
       au < crawling ; exists ; 2013 ; 2013 ; Earth Surface Dynamics Volume 1 ; 1 >
       au < crawling ; exists ; 2014 ; 2014 ; Earth Surface Dynamics Volume 2 ; 2 >
+      au < manifest ; exists ; 2015 ; 2015 ; Earth Surface Dynamics Volume 3 ; 3 >
     
    }
     
@@ -327,6 +394,7 @@
 
       au < crawling ; exists ; 2013 ; 2013 ; Earth Surface Dynamics Discussions Volume 1 ; 1 >
       au < crawling ; exists ; 2014 ; 2014 ; Earth Surface Dynamics Discussions Volume 2 ; 2 >
+      au < manifest ; exists ; 2015 ; 2015 ; Earth Surface Dynamics Discussions Volume 3 ; 3 >
     
    }
     
@@ -345,6 +413,7 @@
       au < finished ; crawling ; 2012 ; 2012 ; Earth System Dynamics Volume 3 ; 3 >
       au < crawling ; exists ; 2013 ; 2013 ; Earth System Dynamics Volume 4 ; 4 >
       au < crawling ; exists ; 2014 ; 2014 ; Earth System Dynamics Volume 5 ; 5 >
+      au < manifest ; exists ; 2015 ; 2015 ; Earth System Dynamics Volume 6 ; 6 >
     
    }
     
@@ -364,6 +433,7 @@
       au < finished ; crawling ; 2012 ; 2012 ; Earth System Science Data Volume 4 ; 4 >
       au < crawling ; exists ; 2013 ; 2013 ; Earth System Science Data Volume 5 ; 5 >
       au < crawling ; exists ; 2014 ; 2014 ; Earth System Science Data Volume 6 ; 6 >
+      au < manifest ; exists ; 2015 ; 2015 ; Earth System Science Data Volume 7 ; 7 >
     
    }
     
@@ -373,7 +443,7 @@
       issn = 1815-381X ;
       eissn = 1815-3828
     >
-      attr[journal_id] = eE   
+      attr[journal_id] = eE 
       param[base_url] = http://www.electronic-earth.net/
       param[home_url] = http://www.electronic-earth.net/
 
@@ -387,10 +457,26 @@
     
   {
     title <
+      name = eEarth Discussions;
+      eissn = 1815-3844
+    >
+      attr[journal_id] = eED 
+      param[base_url] = http://www.electronic-earth-discuss.net/
+      param[home_url] = http://www.electronic-earth.net/
+
+      au < manifest ; exists ; 2006 ; 2006 ; eEarth Discussions Volume 1 ; 1 >
+      au < manifest ; exists ; 2007 ; 2007 ; eEarth Discussions Volume 2 ; 2 >
+      au < manifest ; exists ; 2008 ; 2008 ; eEarth Discussions Volume 3 ; 3 >
+      au < manifest ; exists ; 2009 ; 2009 ; eEarth Discussions Volume 4 ; 4 >
+    
+   }
+
+  {
+    title <
       name = Field Actions Science Reports ;
       eissn = 1867-8521
     >
-      attr[journal_id] = FACTS   
+      attr[journal_id] = FACTS 
       param[base_url] = http://www.field-actions-sci-rep.net/
       param[home_url] = http://www.field-actions-science-reports.net/
 
@@ -430,6 +516,7 @@
       }
       
       au < crawling ; exists ; 2014 ; 2014 ; Fossil Record Reports Volume 17 ; 17 >
+      au < manifest ; exists ; 2015 ; 2015 ; Fossil Record Reports Volume 18 ; 18 >
       
    }
     
@@ -513,6 +600,7 @@
       au < crawling ; exists ; 2012 ; 2012 ; Geographica Helvetica Volume 67 ; 67 >
       au < ingNotReady ; exists ; 2013 ; 2013 ; Geographica Helvetica Volume 68 ; 68 >
       au < notReady ; exists ; 2014 ; 2014 ; Geographica Helvetica Volume 69 ; 69 >
+      au < manifest ; exists ; 2015 ; 2015 ; Geographica Helvetica Volume 70 ; 70 >
     
    }
     
@@ -529,6 +617,7 @@
       au < finished ; crawling ; 2012 ; 2012 ; Geoscientific Instrumentation, Methods and Data Systems Volume 1 ; 1 >
       au < crawling ; exists ; 2013 ; 2013 ; Geoscientific Instrumentation, Methods and Data Systems Volume 2 ; 2 >
       au < crawling ; exists ; 2014 ; 2014 ; Geoscientific Instrumentation, Methods and Data Systems Volume 3 ; 3 >
+      au < manifest ; exists ; 2015 ; 2015 ; Geoscientific Instrumentation, Methods and Data Systems Volume 4 ; 4 >
     
    }
    
@@ -541,7 +630,6 @@
       attr[journal_id] = GMD   
       param[base_url] = http://www.geosci-model-dev.net/
       param[home_url] = http://www.geoscientific-model-development.net/
-      comment[notReady] = content not completely online
 
       au < manifest ; exists ; 2008 ; 2008 ; Geoscientific Model Development Volume 1 ; 1 >
       au < manifest ; exists ; 2009 ; 2009 ; Geoscientific Model Development Volume 2 ; 2 >
@@ -549,7 +637,8 @@
       au < manifest ; exists ; 2011 ; 2011 ; Geoscientific Model Development Volume 4 ; 4 >
       au < finished ; frozen ; 2012 ; 2012 ; Geoscientific Model Development Volume 5 ; 5 >
       au < crawling ; exists ; 2013 ; 2013 ; Geoscientific Model Development Volume 6 ; 6 >
-      au < notReady ; exists ; 2014 ; 2014 ; Geoscientific Model Development Volume 7 ; 7 >
+      au < crawling ; exists ; 2014 ; 2014 ; Geoscientific Model Development Volume 7 ; 7 >
+      au < manifest ; exists ; 2015 ; 2015 ; Geoscientific Model Development Volume 8 ; 8 >
     
    }
     
@@ -565,6 +654,7 @@
 
       au < crawling ; exists ; 2013 ; 2013 ; Geothermal Energy Science Volume 1 ; 1 >
       au < crawling ; exists ; 2014 ; 2014 ; Geothermal Energy Science Volume 2 ; 2 >
+      au < manifest ; exists ; 2015 ; 2015 ; Geothermal Energy Science Volume 3 ; 3 >
     
    }
     
@@ -583,6 +673,7 @@
       au < finished ; crawling ; 2012 ; 2012 ; History of Geo- and Space Sciences Volume 3 ; 3 >
       au < crawling ; exists ; 2013 ; 2013 ; History of Geo- and Space Sciences Volume 4 ; 4 >
       au < crawling ; exists ; 2014 ; 2014 ; History of Geo- and Space Sciences Volume 5 ; 5 >
+      au < manifest ; exists ; 2015 ; 2015 ; History of Geo- and Space Sciences Volume 6 ; 6 >
     
    }
     
@@ -614,6 +705,7 @@
       au < finished ; frozen ; 2012 ; 2012 ; Hydrology and Earth System Sciences Volume 16 ; 16 >
       au < crawling ; exists ; 2013 ; 2013 ; Hydrology and Earth System Sciences Volume 17 ; 17 >
       au < crawling ; exists ; 2014 ; 2014 ; Hydrology and Earth System Sciences Volume 18 ; 18 >
+      au < manifest ; exists ; 2015 ; 2015 ; Hydrology and Earth System Sciences Volume 19 ; 19 >
     
    }
     
@@ -638,9 +730,14 @@
       au < crawling ; exists ; 2013 ; 2013 ; ISPRS Annals Volume II-3/W3 ; II-3-W3 >
       au < crawling ; exists ; 2013 ; 2013 ; ISPRS Annals Volume II-2/W1 ; II-2-W1 >
       au < crawling ; exists ; 2013 ; 2013 ; ISPRS Annals Volume II-4/W1 ; II-4-W1 >
+      au < crawling ; exists ; 2014 ; 2014 ; ISPRS Annals Volume II-1 ; II-1 >
+      au < crawling ; exists ; 2014 ; 2014 ; ISPRS Annals Volume II-2 ; II-2 >
+      au < crawling ; exists ; 2014 ; 2014 ; ISPRS Annals Volume II-3 ; II-3 >
       au < crawling ; exists ; 2014 ; 2014 ; ISPRS Annals Volume II-4 ; II-4 >
       au < crawling ; exists ; 2014 ; 2014 ; ISPRS Annals Volume II-5 ; II-5 >
       au < crawling ; exists ; 2014 ; 2014 ; ISPRS Annals Volume II-6 ; II-6 >
+      au < crawling ; exists ; 2014 ; 2014 ; ISPRS Annals Volume II-7 ; II-7 >
+      au < crawling ; exists ; 2014 ; 2014 ; ISPRS Annals Volume II-8 ; II-8 >
     
    }
 
@@ -722,11 +819,17 @@
       au < crawling ; exists ; 2013 ; 2013 ; ISPRS Archives Volume XL-5/W3 ; XL-5-W3 >
       au < crawling ; exists ; 2013 ; 2013 ; ISPRS Archives Volume XL-7/W1 ; XL-7-W1 >
       au < crawling ; exists ; 2013 ; 2013 ; ISPRS Archives Volume XL-7/W2 ; XL-7-W2 >
+      au < crawling ; exists ; 2014 ; 2014 ; ISPRS Archives Volume XL-2/W3 ; XL-2-W3 >
       au < crawling ; exists ; 2014 ; 2014 ; ISPRS Archives Volume XL-3/W1 ; XL-3-W1 >
       au < crawling ; exists ; 2014 ; 2014 ; ISPRS Archives Volume XL-5/W2 ; XL-5-W2 >
+      au < crawling ; exists ; 2014 ; 2014 ; ISPRS Archives Volume XL-1 ; XL-1 >
+      au < crawling ; exists ; 2014 ; 2014 ; ISPRS Archives Volume XL-2 ; XL-2 >
+      au < crawling ; exists ; 2014 ; 2014 ; ISPRS Archives Volume XL-3 ; XL-3 >
       au < crawling ; exists ; 2014 ; 2014 ; ISPRS Archives Volume XL-4 ; XL-4 >
       au < crawling ; exists ; 2014 ; 2014 ; ISPRS Archives Volume XL-5 ; XL-5 >
       au < crawling ; exists ; 2014 ; 2014 ; ISPRS Archives Volume XL-6 ; XL-6 >
+      au < crawling ; exists ; 2014 ; 2014 ; ISPRS Archives Volume XL-7 ; XL-7 >
+      au < crawling ; exists ; 2014 ; 2014 ; ISPRS Archives Volume XL-8 ; XL-8 >
      }
    }
 
@@ -743,6 +846,7 @@
       au < finished ; crawling ; 2012 ; 2012 ; Journal of Sensors and Sensor Systems Volume 1 ; 1 >
       au < crawling ; exists ; 2013 ; 2013 ; Journal of Sensors and Sensor Systems Volume 2 ; 2 >
       au < crawling ; exists ; 2014 ; 2014 ; Journal of Sensors and Sensor Systems Volume 3 ; 3 >
+      au < manifest ; exists ; 2015 ; 2015 ; Journal of Sensors and Sensor Systems Volume 4 ; 4 >
     
    }
    
@@ -761,6 +865,7 @@
       au < finished ; crawling ; 2012 ; 2012 ; Mechanical Sciences Volume 3 ; 3 >
       au < crawling ; exists ; 2013 ; 2013 ; Mechanical Sciences Volume 4 ; 4 >
       au < crawling ; exists ; 2014 ; 2014 ; Mechanical Sciences Volume 5 ; 5 >
+      au < manifest ; exists ; 2015 ; 2015 ; Mechanical Sciences Volume 6 ; 6 >
     
    }
     
@@ -788,6 +893,7 @@
       au < finished ; crawling ; 2012 ; 2012 ; Natural Hazards and Earth System Sciences Volume 12 ; 12 >
       au < crawling ; exists ; 2013 ; 2013 ; Natural Hazards and Earth System Sciences Volume 13 ; 13 >
       au < crawling ; exists ; 2014 ; 2014 ; Natural Hazards and Earth System Sciences Volume 14 ; 14 >
+      au < manifest ; exists ; 2015 ; 2015 ; Natural Hazards and Earth System Sciences Volume 15 ; 15 >
     
    }
    
@@ -803,6 +909,7 @@
 
       au < crawling ; exists ; 2013 ; 2013 ; Natural Hazards and Earth System Sciences Discussions Volume 1 ; 1 >
       au < notReady ; exists ; 2014 ; 2014 ; Natural Hazards and Earth System Sciences Discussions Volume 2 ; 2 >
+      au < manifest ; exists ; 2015 ; 2015 ; Natural Hazards and Earth System Sciences Discussions Volume 3 ; 3 >
  
    }
     
@@ -837,6 +944,7 @@
       au < finished ; crawling ; 2012 ; 2012 ; Nonlinear Processes in Geophysics Volume 19 ; 19 >
       au < crawling ; exists ; 2013 ; 2013 ; Nonlinear Processes in Geophysics Volume 20 ; 20 >
       au < crawling ; exists ; 2014 ; 2014 ; Nonlinear Processes in Geophysics Volume 21 ; 21 >
+      au < manifest ; exists ; 2015 ; 2015 ; Nonlinear Processes in Geophysics Volume 22 ; 22 >
     
    }
 
@@ -850,6 +958,7 @@
       param[home_url] = http://www.nonlinear-processes-in-geophysics.net/
 
       au < crawling ; exists ; 2014 ; 2014 ; Nonlinear Processes in Geophysics Discussions Volume 1 ; 1 >
+      au < manifest ; exists ; 2015 ; 2015 ; Nonlinear Processes in Geophysics Discussions Volume 2 ; 2 >
 
    }
     
@@ -859,7 +968,7 @@
       issn = 1812-0784 ;
       eissn = 1812-0792
     >
-      attr[journal_id] = OS   
+      attr[journal_id] = OS 
       param[base_url] = http://www.ocean-sci.net/
       param[home_url] = http://www.ocean-science.net/
 
@@ -873,6 +982,7 @@
       au < finished ; crawling ; 2012 ; 2012 ; Ocean Science Volume 8 ; 8 >
       au < crawling ; exists ; 2013 ; 2013 ; Ocean Science Volume 9 ; 9 >
       au < crawling ; exists ; 2014 ; 2014 ; Ocean Science Volume 10 ; 10 >
+      au < manifest ; exists ; 2015 ; 2015 ; Ocean Science Volume 11 ; 11 >
     
    }
     
@@ -888,6 +998,7 @@
 
       au < crawling ; exists ; 2013 ; 2013 ; Pattern Recognition in Physics Volume 1 ; 1 >
       au < crawling ; exists ; 2014 ; 2014 ; Pattern Recognition in Physics Volume 2 ; 2 >
+      au < expected ; exists ; 2015 ; 2015 ; Pattern Recognition in Physics Volume 3 ; 3 >
     
    }
     
@@ -901,7 +1012,8 @@
       param[base_url] = http://www.primate-biol.net/
       param[home_url] = http://www.primate-biology.net/
 
-      au < manifest ; exists ; 2014 ; 2014 ; Primate Biology Volume 1 ; 1 >
+      au < crawling ; exists ; 2014 ; 2014 ; Primate Biology Volume 1 ; 1 >
+      au < manifest ; exists ; 2015 ; 2015 ; Primate Biology Volume 2 ; 2 >
     
    }
 
@@ -917,7 +1029,8 @@
       param[base_url] = http://www.proc-iahs.net/
       param[home_url] = http://www.proceedings-international-association-of-hydrological-sciences.net/
 
-      au < manifest ; exists ; 2014 ; 2014 ; Proceedings of the International Association of Hydrological Sciences Volume 364 ; 364 >
+      au < crawling ; exists ; 2014 ; 2014 ; Proceedings of the International Association of Hydrological Sciences Volume 364 ; 364 >
+      au < manifest ; exists ; 2015 ; 2015 ; Proceedings of the International Association of Hydrological Sciences Volume 365 ; 365 >
     
    }
 
@@ -949,7 +1062,8 @@
       au < crawling ; exists ; 2013 ; 2013 ; Scientific Drilling Volume 15 ; 15 >
       au < crawling ; exists ; 2013 ; 2013 ; Scientific Drilling Volume 16 ; 16 >
       au < crawling ; exists ; 2014 ; 2014 ; Scientific Drilling Volume 17 ; 17 >
-      au < expected ; exists ; 2014 ; 2014 ; Scientific Drilling Volume 18 ; 18 >
+      au < crawling ; exists ; 2014 ; 2014 ; Scientific Drilling Volume 18 ; 18 >
+      au < expected ; exists ; 2015 ; 2015 ; Scientific Drilling Volume 19 ; 19 >
     
    }
     
@@ -971,9 +1085,21 @@
       au < manifest ; exists ; 2010 ; 2010 ; Social Geography Volume 5 ; 5 >
       au < manifest ; exists ; 2011 ; 2011 ; Social Geography Volume 6 ; 6 >
       au < finished ; frozen ; 2012 ; 2012 ; Social Geography Volume 7 ; 7 >
-      au < expected ; exists ; 2013 ; 2013 ; Social Geography Volume 8 ; 8 >
-      au < expected ; exists ; 2014 ; 2014 ; Social Geography Volume 9 ; 9 >
     
+   }
+    
+  {
+    title <
+      name = SOIL ;
+      issn = 2199-3971 ; 
+      eissn = 2199-398X
+    >
+      attr[journal_id] = soil 
+      param[base_url] = http://www.soil-journal.net/
+      param[home_url] = http://www.soil-journal.net/
+
+      au < manifest ; exists ; 2015 ; 2015 ; SOIL Volume 1 ; 1 >
+
    }
     
   {
@@ -986,6 +1112,7 @@
       param[home_url] = http://www.soil-discuss.net/
 
       au < crawling ; exists ; 2014 ; 2014 ; SOIL Discussions Volume 1 ; 1 >
+      au < manifest ; exists ; 2015 ; 2015 ; SOIL Discussions Volume 2 ; 2 >
 
    }
     
@@ -1004,6 +1131,7 @@
       au < finished ; frozen ; 2012 ; 2012 ; Solid Earth Volume 3 ; 3 >
       au < crawling ; exists ; 2013 ; 2013 ; Solid Earth Volume 4 ; 4 >
       au < crawling ; exists ; 2014 ; 2014 ; Solid Earth Volume 5 ; 5 >
+      au < manifest ; exists ; 2015 ; 2015 ; Solid Earth Volume 6 ; 6 >
     
    }
     
@@ -1046,7 +1174,6 @@
       attr[journal_id] = TC   
       param[base_url] = http://www.the-cryosphere.net/
       param[home_url] = http://www.the-cryosphere.net/
-      comment[notReady] = content not completely online
 
       au < manifest ; exists ; 2007 ; 2007 ; The Cryosphere Volume 1 ; 1 >
       au < manifest ; exists ; 2008 ; 2008 ; The Cryosphere Volume 2 ; 2 >
@@ -1055,7 +1182,8 @@
       au < manifest ; exists ; 2011 ; 2011 ; The Cryosphere Volume 5 ; 5 >
       au < finished ; crawling ; 2012 ; 2012 ; The Cryosphere Volume 6 ; 6 >
       au < crawling ; exists ; 2013 ; 2013 ; The Cryosphere Volume 7 ; 7 >
-      au < notReady ; exists ; 2014 ; 2014 ; The Cryosphere Volume 8 ; 8 >
+      au < crawling ; exists ; 2014 ; 2014 ; The Cryosphere Volume 8 ; 8 >
+      au < manifest ; exists ; 2015 ; 2015 ; The Cryosphere Volume 9 ; 9 >
     
    }
     
@@ -1083,6 +1211,7 @@
       au < finished ; crawling ; 2012 ; 2012 ; Web Ecology Volume 12 ; 12 >
       au < crawling ; exists ; 2013 ; 2013 ; Web Ecology Volume 13 ; 13 >
       au < crawling ; exists ; 2014 ; 2014 ; Web Ecology Volume 14 ; 14 >
+      au < manifest ; exists ; 2015 ; 2015 ; Web Ecology Volume 15 ; 15 >
     
    }
     

@@ -1,10 +1,10 @@
 /*
- * $Id: KnowledgeUnlatchedSourceXmlMetadataExtractorFactory.java,v 1.2 2014-11-20 18:31:25 alexandraohlson Exp $
+ * $Id$
  */
 
 /*
 
- Copyright (c) 2000-2014 Board of Trustees of Leland Stanford Jr. University,
+ Copyright (c) 2000-2015 Board of Trustees of Leland Stanford Jr. University,
  all rights reserved.
 
  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -33,6 +33,8 @@
 package org.lockss.plugin.clockss.knowledge;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.io.FilenameUtils;
 import org.lockss.util.*;
 import org.lockss.daemon.*;
@@ -43,7 +45,7 @@ import org.lockss.plugin.clockss.SourceXmlSchemaHelper;
 
 
 public class KnowledgeUnlatchedSourceXmlMetadataExtractorFactory extends SourceXmlMetadataExtractorFactory {
-  static Logger log = Logger.getLogger(KnowledgeUnlatchedSourceXmlMetadataExtractorFactory.class);
+  private static final Logger log = Logger.getLogger(KnowledgeUnlatchedSourceXmlMetadataExtractorFactory.class);
   private static final String KNOWLEDGE_UNLATCHED_PROVIDER = "Knowledge Unlatched";
   
   private static SourceXmlSchemaHelper MARCHelper = null;
@@ -58,13 +60,6 @@ public class KnowledgeUnlatchedSourceXmlMetadataExtractorFactory extends SourceX
   public class KnowledgeSourceXmlMetadataExtractor extends SourceXmlMetadataExtractor {
 
     @Override
-    protected SourceXmlSchemaHelper setUpSchema() {
-      // this version of this routine is abstract, but should not get called 
-      // because we have the other implementation (with the CachedUrl argument)
-      return null; // will cause a plugin exception to get thrown
-    }
-
-    @Override
     protected SourceXmlSchemaHelper setUpSchema(CachedUrl cu) {
       // Once you have it, just keep returning the same one. It won't change.
       if (MARCHelper != null) {
@@ -77,16 +72,15 @@ public class KnowledgeUnlatchedSourceXmlMetadataExtractorFactory extends SourceX
     
     // TODO - if we get full text XML without a matching pdf we must still emit
     @Override
-    protected ArrayList<String> getFilenamesAssociatedWithRecord(SourceXmlSchemaHelper helper, CachedUrl cu,
+    protected List<String> getFilenamesAssociatedWithRecord(SourceXmlSchemaHelper helper, CachedUrl cu,
         ArticleMetadata oneAM) {
 
-      // filename is just the same a the XML filename but with .stamped.pdf 
-      // instead of .xml
+      // filename is just the same a the XML filename but with
       String url_string = cu.getUrl();
-      String filenameValue = FilenameUtils.getBaseName(url_string);
-      String cuBase = FilenameUtils.getFullPath(url_string);
-      ArrayList<String> returnList = new ArrayList<String>();
-      returnList.add(cuBase + filenameValue + ".pdf");
+      String pdfName = url_string.substring(0,url_string.length() - 3) + "pdf";
+      log.debug3("pdfName is " + pdfName);
+      List<String> returnList = new ArrayList<String>();
+      returnList.add(pdfName);
       return returnList;
     }
     
@@ -99,14 +93,11 @@ public class KnowledgeUnlatchedSourceXmlMetadataExtractorFactory extends SourceX
         String filenameValue = FilenameUtils.getBaseName(url_string);
         thisAM.put(MetadataField.FIELD_ISBN,  filenameValue);
       }
-      //TODO 1.67 - just uncomment; also in plugin, make required_daemon_version 1.67
-      /*
       if (thisAM.get(MetadataField.FIELD_PROVIDER)== null ) {
         // this plugin delivers content from Knowledge Unlatched 
         thisAM.put(MetadataField.FIELD_PROVIDER,  KNOWLEDGE_UNLATCHED_PROVIDER);
         log.debug3("Provider is now set to  " + thisAM.get(MetadataField.FIELD_PROVIDER));
       }
-      */
       log.debug3("in KnowledgeUnlatched postEmitProcess");
     }
 

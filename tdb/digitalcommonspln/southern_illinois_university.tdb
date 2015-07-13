@@ -16,18 +16,542 @@
     param[collection] = cwrl_fr
     implicit < status ; year ; name ; param[collection_heading] >
   
-    au < manifest ; 1995 ; Cooperative Wildlife Research Laboratory Final Reports 1995 ; 1995 >
-    au < manifest ; 1997 ; Cooperative Wildlife Research Laboratory Final Reports 1997 ; 1997 >
-    au < manifest ; 1998 ; Cooperative Wildlife Research Laboratory Final Reports 1998 ; 1998 >
-    au < manifest ; 1999 ; Cooperative Wildlife Research Laboratory Final Reports 1999 ; 1999 >
-    au < manifest ; 2001 ; Cooperative Wildlife Research Laboratory Final Reports 2001 ; 2001 >
-    au < manifest ; 2002 ; Cooperative Wildlife Research Laboratory Final Reports 2002 ; 2002 >
-    au < manifest ; 2003 ; Cooperative Wildlife Research Laboratory Final Reports 2003 ; 2003 >
-    au < manifest ; 2005 ; Cooperative Wildlife Research Laboratory Final Reports 2005 ; 2005 >
-    au < manifest ; 2008 ; Cooperative Wildlife Research Laboratory Final Reports 2008 ; 2008 >
-    au < manifest ; 2009 ; Cooperative Wildlife Research Laboratory Final Reports 2009 ; 2009 >
-    au < manifest ; 2010 ; Cooperative Wildlife Research Laboratory Final Reports 2010 ; 2010 >
+    au < released ; 1995 ; Cooperative Wildlife Research Laboratory Final Reports 1995 ; 1995 >
+    au < released ; 1997 ; Cooperative Wildlife Research Laboratory Final Reports 1997 ; 1997 >
+    au < released ; 1998 ; Cooperative Wildlife Research Laboratory Final Reports 1998 ; 1998 >
+    au < released ; 1999 ; Cooperative Wildlife Research Laboratory Final Reports 1999 ; 1999 >
+    au < released ; 2001 ; Cooperative Wildlife Research Laboratory Final Reports 2001 ; 2001 >
+    au < released ; 2002 ; Cooperative Wildlife Research Laboratory Final Reports 2002 ; 2002 >
+    au < released ; 2003 ; Cooperative Wildlife Research Laboratory Final Reports 2003 ; 2003 >
+    au < released ; 2005 ; Cooperative Wildlife Research Laboratory Final Reports 2005 ; 2005 >
+    au < released ; 2008 ; Cooperative Wildlife Research Laboratory Final Reports 2008 ; 2008 >
+    au < released ; 2009 ; Cooperative Wildlife Research Laboratory Final Reports 2009 ; 2009 >
+    au < released ; 2010 ; Cooperative Wildlife Research Laboratory Final Reports 2010 ; 2010 >
   
+  }
+
+  {
+  
+    title <
+      name = Daily Egyptian
+    >
+    
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_series
+    implicit < status ; year ; name ; param[collection] ; param[collection_heading] >
+
+    # Some of the released pages below were found by a script but did not appear in lockss-sitemap.html e.g. 1964
+
+    au < released ; 1888 ; Normal Gazette 1888 ; de_1888 ; 1888 >
+    au < released ; 1889 ; Normal Gazette 1889 ; de_1889 ; 1889 >
+    # None found for 1890-1915
+    au < released ; 1916 ; The Egyptian 1916 ; de_1916 ; 1916 >
+    au < released ; 1917 ; The Egyptian 1917 ; de_1917 ; 1917 >
+    au < released ; 1918 ; The Egyptian 1918 ; de_1918 ; 1918 >
+    # None found for 1919-February 1920
+    au < exists ; 1921 ; The Egyptian January 1921 ; de_January1921 ; 1921 >
+    au < exists ; 1921 ; The Egyptian February 1921 ; de_February1921 ; 1921 >
+    au < released ; 1921 ; The Egyptian March 1921 ; de_March1921 ; 1921 >
+    au < released ; 1921 ; The Egyptian April 1921 ; de_April1921 ; 1921 >
+    au < released ; 1921 ; The Egyptian May 1921 ; de_May1921 ; 1921 >
+    au < released ; 1921 ; The Egyptian June 1921 ; de_June1921 ; 1921 >
+    au < exists ; 1921 ; The Egyptian July 1921 ; de_July1921 ; 1921 >
+    au < exists ; 1921 ; The Egyptian August 1921 ; de_August1921 ; 1921 >
+    au < exists ; 1921 ; The Egyptian September 1921 ; de_September1921 ; 1921 >
+    au < released ; 1921 ; The Egyptian October 1921 ; de_October1921 ; 1921 >
+    au < released ; 1921 ; The Egyptian November 1921 ; de_November1921 ; 1921 >
+    au < released ; 1921 ; The Egyptian December 1921 ; de_December1921 ; 1921 >
+    au < released ; 1922 ; The Egyptian January 1922 ; de_January1922 ; 1922 >
+    au < released ; 1922 ; The Egyptian February 1922 ; de_February1922 ; 1922 >
+    au < released ; 1922 ; The Egyptian March 1922 ; de_March1922 ; 1922 >
+    au < released ; 1922 ; The Egyptian April 1922 ; de_April1922 ; 1922 >
+    au < released ; 1922 ; The Egyptian May 1922 ; de_May1922 ; 1922 >
+    au < released ; 1922 ; The Egyptian June 1922 ; de_June1922 ; 1922 >
+    au < exists ; 1922 ; The Egyptian July 1922 ; de_July1922 ; 1922 >
+    au < exists ; 1922 ; The Egyptian August 1922 ; de_August1922 ; 1922 >
+    au < exists ; 1922 ; The Egyptian September 1922 ; de_September1922 ; 1922 >
+    au < released ; 1922 ; The Egyptian October 1922 ; de_October1922 ; 1922 >
+    au < released ; 1922 ; The Egyptian November 1922 ; de_November1922 ; 1922 >
+    au < released ; 1922 ; The Egyptian December 1922 ; de_December1922 ; 1922 >
+    au < released ; 1923 ; The Egyptian January 1923 ; de_January1923 ; 1923 >
+    au < released ; 1923 ; The Egyptian February 1923 ; de_February1923 ; 1923 >
+    au < released ; 1923 ; The Egyptian March 1923 ; de_March1923 ; 1923 >
+    au < released ; 1923 ; The Egyptian April 1923 ; de_April1923 ; 1923 >
+    au < released ; 1923 ; The Egyptian May 1923 ; de_May1923 ; 1923 >
+    au < released ; 1923 ; The Egyptian June 1923 ; de_June1923 ; 1923 >
+    au < exists ; 1923 ; The Egyptian July 1923 ; de_July1923 ; 1923 >
+    au < exists ; 1923 ; The Egyptian August 1923 ; de_August1923 ; 1923 >
+    au < exists ; 1923 ; The Egyptian September 1923 ; de_September1923 ; 1923 >
+    au < released ; 1923 ; The Egyptian October 1923 ; de_October1923 ; 1923 >
+    au < released ; 1923 ; The Egyptian November 1923 ; de_November1923 ; 1923 >
+    au < released ; 1923 ; The Egyptian December 1923 ; de_December1923 ; 1923 >
+    au < released ; 1924 ; The Egyptian January 1924 ; de_January1924 ; 1924 >
+    au < released ; 1924 ; The Egyptian February 1924 ; de_February1924 ; 1924 >
+    au < released ; 1924 ; The Egyptian March 1924 ; de_March1924 ; 1924 >
+    au < released ; 1924 ; The Egyptian April 1924 ; de_April1924 ; 1924 >
+    au < released ; 1924 ; The Egyptian May 1924 ; de_May1924 ; 1924 >
+    au < released ; 1924 ; The Egyptian June 1924 ; de_June1924 ; 1924 >
+    au < exists ; 1924 ; The Egyptian July 1924 ; de_July1924 ; 1924 >
+    au < exists ; 1924 ; The Egyptian August 1924 ; de_August1924 ; 1924 >
+    au < released ; 1924 ; The Egyptian September 1924 ; de_September1924 ; 1924 >
+    au < released ; 1924 ; The Egyptian October 1924 ; de_October1924 ; 1924 >
+    au < released ; 1924 ; The Egyptian November 1924 ; de_November1924 ; 1924 >
+    au < released ; 1924 ; The Egyptian December 1924 ; de_December1924 ; 1924 >
+    au < released ; 1925 ; The Egyptian January 1925 ; de_January1925 ; 1925 >
+    au < released ; 1925 ; The Egyptian February 1925 ; de_February1925 ; 1925 >
+    au < released ; 1925 ; The Egyptian March 1925 ; de_March1925 ; 1925 >
+    au < released ; 1925 ; The Egyptian April 1925 ; de_April1925 ; 1925 >
+    au < released ; 1925 ; The Egyptian May 1925 ; de_May1925 ; 1925 >
+    au < released ; 1925 ; The Egyptian June 1925 ; de_June1925 ; 1925 >
+    # None in July 1925-August 1931
+    au < released ; 1931 ; The Egyptian September 1931 ; de_September1931 ; 1931 >
+    au < released ; 1931 ; The Egyptian October 1931 ; de_October1931 ; 1931 >
+    au < released ; 1931 ; The Egyptian November 1931 ; de_November1931 ; 1931 >
+    au < released ; 1931 ; The Egyptian December 1931 ; de_December1931 ; 1931 >
+    au < released ; 1932 ; The Egyptian January 1932 ; de_January1932 ; 1932 >
+    au < released ; 1932 ; The Egyptian February 1932 ; de_February1932 ; 1932 >
+    au < released ; 1932 ; The Egyptian March 1932 ; de_March1932 ; 1932 >
+    au < released ; 1932 ; The Egyptian April 1932 ; de_April1932 ; 1932 >
+    au < released ; 1932 ; The Egyptian May 1932 ; de_May1932 ; 1932 >
+    au < released ; 1932 ; The Egyptian June 1932 ; de_June1932 ; 1932 >
+    au < exists ; 1932 ; The Egyptian July 1932 ; de_July1932 ; 1932 >
+    au < exists ; 1932 ; The Egyptian August 1932 ; de_August1932 ; 1932 >
+    au < released ; 1932 ; The Egyptian September 1932 ; de_September1932 ; 1932 >
+    au < released ; 1932 ; The Egyptian October 1932 ; de_October1932 ; 1932 >
+    au < released ; 1932 ; The Egyptian November 1932 ; de_November1932 ; 1932 >
+    au < released ; 1932 ; The Egyptian December 1932 ; de_December1932 ; 1932 >
+    au < released ; 1933 ; The Egyptian January 1933 ; de_January1933 ; 1933 >
+    au < released ; 1933 ; The Egyptian February 1933 ; de_February1933 ; 1933 >
+    au < released ; 1933 ; The Egyptian March 1933 ; de_March1933 ; 1933 >
+    au < released ; 1933 ; The Egyptian April 1933 ; de_April1933 ; 1933 >
+    au < released ; 1933 ; The Egyptian May 1933 ; de_May1933 ; 1933 >
+    au < exists ; 1933 ; The Egyptian June 1933 ; de_June1933 ; 1933 >
+    au < exists ; 1933 ; The Egyptian July 1933 ; de_July1933 ; 1933 >
+    au < exists ; 1933 ; The Egyptian August 1933 ; de_August1933 ; 1933 >
+    au < released ; 1933 ; The Egyptian September 1933 ; de_September1933 ; 1933 >
+    au < released ; 1933 ; The Egyptian October 1933 ; de_October1933 ; 1933 >
+    au < released ; 1933 ; The Egyptian November 1933 ; de_November1933 ; 1933 >
+    au < released ; 1933 ; The Egyptian December 1933 ; de_December1933 ; 1933 >
+    au < released ; 1934 ; The Egyptian January 1934 ; de_January1934 ; 1934 >
+    au < released ; 1934 ; The Egyptian February 1934 ; de_February1934 ; 1934 >
+    au < released ; 1934 ; The Egyptian March 1934 ; de_March1934 ; 1934 >
+    au < released ; 1934 ; The Egyptian April 1934 ; de_April1934 ; 1934 >
+    au < released ; 1934 ; The Egyptian May 1934 ; de_May1934 ; 1934 >
+    au < released ; 1934 ; The Egyptian June 1934 ; de_June1934 ; 1934 >
+    au < exists ; 1934 ; The Egyptian July 1934 ; de_July1934 ; 1934 >
+    au < exists ; 1934 ; The Egyptian August 1934 ; de_August1934 ; 1934 >
+    au < released ; 1934 ; The Egyptian September 1934 ; de_September1934 ; 1934 >
+    au < released ; 1934 ; The Egyptian October 1934 ; de_October1934 ; 1934 >
+    au < released ; 1934 ; The Egyptian November 1934 ; de_November1934 ; 1934 >
+    au < released ; 1934 ; The Egyptian December 1934 ; de_December1934 ; 1934 >
+    au < released ; 1935 ; The Egyptian January 1935 ; de_January1935 ; 1935 >
+    au < released ; 1935 ; The Egyptian February 1935 ; de_February1935 ; 1935 >
+    au < released ; 1935 ; The Egyptian March 1935 ; de_March1935 ; 1935 >
+    au < released ; 1935 ; The Egyptian April 1935 ; de_April1935 ; 1935 >
+    au < released ; 1935 ; The Egyptian May 1935 ; de_May1935 ; 1935 >
+    au < released ; 1935 ; The Egyptian June 1935 ; de_June1935 ; 1935 >
+    au < exists ; 1935 ; The Egyptian July 1935 ; de_July1935 ; 1935 >
+    au < exists ; 1935 ; The Egyptian August 1935 ; de_August1935 ; 1935 >
+    au < released ; 1935 ; The Egyptian September 1935 ; de_September1935 ; 1935 >
+    au < released ; 1935 ; The Egyptian October 1935 ; de_October1935 ; 1935 >
+    au < released ; 1935 ; The Egyptian November 1935 ; de_November1935 ; 1935 >
+    au < released ; 1935 ; The Egyptian December 1935 ; de_December1935 ; 1935 >
+    au < released ; 1936 ; The Egyptian January 1936 ; de_January1936 ; 1936 >
+    au < released ; 1936 ; The Egyptian February 1936 ; de_February1936 ; 1936 >
+    au < released ; 1936 ; The Egyptian March 1936 ; de_March1936 ; 1936 >
+    au < released ; 1936 ; The Egyptian April 1936 ; de_April1936 ; 1936 >
+    au < released ; 1936 ; The Egyptian May 1936 ; de_May1936 ; 1936 >
+    au < released ; 1936 ; The Egyptian June 1936 ; de_June1936 ; 1936 >
+    au < released ; 1936 ; The Egyptian July 1936 ; de_July1936 ; 1936 >
+    au < exists ; 1936 ; The Egyptian August 1936 ; de_August1936 ; 1936 >
+    au < released ; 1936 ; The Egyptian September 1936 ; de_September1936 ; 1936 >
+    au < released ; 1936 ; The Egyptian October 1936 ; de_October1936 ; 1936 >
+    au < released ; 1936 ; The Egyptian November 1936 ; de_November1936 ; 1936 >
+    au < released ; 1936 ; The Egyptian December 1936 ; de_December1936 ; 1936 >
+    au < released ; 1937 ; The Egyptian January 1937 ; de_January1937 ; 1937 >
+    au < released ; 1937 ; The Egyptian February 1937 ; de_February1937 ; 1937 >
+    au < released ; 1937 ; The Egyptian March 1937 ; de_March1937 ; 1937 >
+    au < released ; 1937 ; The Egyptian April 1937 ; de_April1937 ; 1937 >
+    au < released ; 1937 ; The Egyptian May 1937 ; de_May1937 ; 1937 >
+    au < released ; 1937 ; The Egyptian June 1937 ; de_June1937 ; 1937 >
+    au < released ; 1937 ; The Egyptian July 1937 ; de_July1937 ; 1937 >
+    au < exists ; 1937 ; The Egyptian August 1937 ; de_August1937 ; 1937 >
+    au < released ; 1937 ; The Egyptian September 1937 ; de_September1937 ; 1937 >
+    au < released ; 1937 ; The Egyptian October 1937 ; de_October1937 ; 1937 >
+    au < released ; 1937 ; The Egyptian November 1937 ; de_November1937 ; 1937 >
+    au < released ; 1937 ; The Egyptian December 1937 ; de_December1937 ; 1937 >
+    au < released ; 1938 ; The Egyptian January 1938 ; de_January1938 ; 1938 >
+    au < released ; 1938 ; The Egyptian February 1938 ; de_February1938 ; 1938 >
+    au < released ; 1938 ; The Egyptian March 1938 ; de_March1938 ; 1938 >
+    au < released ; 1938 ; The Egyptian April 1938 ; de_April1938 ; 1938 >
+    au < released ; 1938 ; The Egyptian May 1938 ; de_May1938 ; 1938 >
+    au < released ; 1938 ; The Egyptian June 1938 ; de_June1938 ; 1938 >
+    au < released ; 1938 ; The Egyptian July 1938 ; de_July1938 ; 1938 >
+    au < exists ; 1938 ; The Egyptian August 1938 ; de_August1938 ; 1938 >
+    au < released ; 1938 ; The Egyptian September 1938 ; de_September1938 ; 1938 >
+    au < released ; 1938 ; The Egyptian October 1938 ; de_October1938 ; 1938 >
+    au < released ; 1938 ; The Egyptian November 1938 ; de_November1938 ; 1938 >
+    au < released ; 1938 ; The Egyptian December 1938 ; de_December1938 ; 1938 >
+    au < released ; 1939 ; The Egyptian January 1939 ; de_January1939 ; 1939 >
+    au < released ; 1939 ; The Egyptian February 1939 ; de_February1939 ; 1939 >
+    au < released ; 1939 ; The Egyptian March 1939 ; de_March1939 ; 1939 >
+    au < released ; 1939 ; The Egyptian April 1939 ; de_April1939 ; 1939 >
+    au < released ; 1939 ; The Egyptian May 1939 ; de_May1939 ; 1939 >
+    au < released ; 1939 ; The Egyptian June 1939 ; de_June1939 ; 1939 >
+    au < released ; 1939 ; The Egyptian July 1939 ; de_July1939 ; 1939 >
+    au < exists ; 1939 ; The Egyptian August 1939 ; de_August1939 ; 1939 >
+    au < released ; 1939 ; The Egyptian September 1939 ; de_September1939 ; 1939 >
+    au < released ; 1939 ; The Egyptian October 1939 ; de_October1939 ; 1939 >
+    au < released ; 1939 ; The Egyptian November 1939 ; de_November1939 ; 1939 >
+    au < released ; 1939 ; The Egyptian December 1939 ; de_December1939 ; 1939 >
+    au < released ; 1940 ; The Egyptian January 1940 ; de_January_1940 ; 1940 >
+    au < released ; 1940 ; The Egyptian February 1940 ; de_February_1940 ; 1940 >
+    au < released ; 1940 ; The Egyptian March 1940 ; de_March_1940 ; 1940 >
+    au < released ; 1940 ; The Egyptian April 1940 ; de_April_1940 ; 1940 >
+    au < released ; 1940 ; The Egyptian May 1940 ; de_May_1940 ; 1940 >
+    au < released ; 1940 ; The Egyptian June 1940 ; de_June_1940 ; 1940 >
+    au < released ; 1940 ; The Egyptian July 1940 ; de_July_1940 ; 1940 >
+    au < exists ; 1940 ; The Egyptian August 1940 ; de_August_1940 ; 1940 >
+    au < released ; 1940 ; The Egyptian September 1940 ; de_September_1940 ; 1940 >
+    au < released ; 1940 ; The Egyptian October 1940 ; de_October_1940 ; 1940 >
+    au < released ; 1940 ; The Egyptian November 1940 ; de_November_1940 ; 1940 >
+    au < released ; 1940 ; The Egyptian December 1940 ; de_December_1940 ; 1940 >
+    au < released ; 1941 ; The Egyptian January 1941 ; de_January1941 ; 1941 >
+    au < released ; 1941 ; The Egyptian February 1941 ; de_February1941 ; 1941 >
+    au < released ; 1941 ; The Egyptian March 1941 ; de_March1941 ; 1941 >
+    au < released ; 1941 ; The Egyptian April 1941 ; de_April1941 ; 1941 >
+    au < released ; 1941 ; The Egyptian May 1941 ; de_May1941 ; 1941 >
+    au < released ; 1941 ; The Egyptian June 1941 ; de_June1941 ; 1941 >
+    au < released ; 1941 ; The Egyptian July 1941 ; de_July1941 ; 1941 >
+    au < exists ; 1941 ; The Egyptian August 1941 ; de_August1941 ; 1941 >
+    au < released ; 1941 ; The Egyptian September 1941 ; de_September1941 ; 1941 >
+    au < released ; 1941 ; The Egyptian October 1941 ; de_October1941 ; 1941 >
+    au < released ; 1941 ; The Egyptian November 1941 ; de_November1941 ; 1941 >
+    au < released ; 1941 ; The Egyptian December 1941 ; de_December1941 ; 1941 >
+    au < released ; 1942 ; The Egyptian January 1942 ; de_January1942 ; 1942 >
+    au < released ; 1942 ; The Egyptian February 1942 ; de_February1942 ; 1942 >
+    au < released ; 1942 ; The Egyptian March 1942 ; de_March1942 ; 1942 >
+    au < released ; 1942 ; The Egyptian April 1942 ; de_April1942 ; 1942 >
+    au < released ; 1942 ; The Egyptian May 1942 ; de_May1942 ; 1942 >
+    au < released ; 1942 ; The Egyptian June 1942 ; de_June1942 ; 1942 >
+    au < released ; 1942 ; The Egyptian July 1942 ; de_July1942 ; 1942 >
+    au < released ; 1942 ; The Egyptian August 1942 ; de_August1942 ; 1942 >
+    au < released ; 1942 ; The Egyptian September 1942 ; de_September1942 ; 1942 >
+    au < released ; 1942 ; The Egyptian October 1942 ; de_October1942 ; 1942 >
+    au < released ; 1942 ; The Egyptian November 1942 ; de_November1942 ; 1942 >
+    au < released ; 1942 ; The Egyptian December 1942 ; de_December1942 ; 1942 >
+    au < released ; 1943 ; The Egyptian January 1943 ; de_January1943 ; 1943 >
+    au < released ; 1943 ; The Egyptian February 1943 ; de_February1943 ; 1943 >
+    au < released ; 1943 ; The Egyptian March 1943 ; de_March1943 ; 1943 >
+    au < released ; 1943 ; The Egyptian April 1943 ; de_April1943 ; 1943 >
+    au < released ; 1943 ; The Egyptian May 1943 ; de_May1943 ; 1943 >
+    au < exists ; 1943 ; The Egyptian June 1943 ; de_June1943 ; 1943 >
+    au < exists ; 1943 ; The Egyptian July 1943 ; de_July1943 ; 1943 >
+    au < exists ; 1943 ; The Egyptian August 1943 ; de_August1943 ; 1943 >
+    au < released ; 1943 ; The Egyptian September 1943 ; de_September1943 ; 1943 >
+    au < released ; 1943 ; The Egyptian October 1943 ; de_October1943 ; 1943 >
+    au < released ; 1943 ; The Egyptian November 1943 ; de_November1943 ; 1943 >
+    au < released ; 1943 ; The Egyptian December 1943 ; de_December1943 ; 1943 >
+    au < released ; 1944 ; The Egyptian January 1944 ; de_January1944 ; 1944 >
+    au < released ; 1944 ; The Egyptian February 1944 ; de_February1944 ; 1944 >
+    au < released ; 1944 ; The Egyptian March 1944 ; de_March1944 ; 1944 >
+    au < released ; 1944 ; The Egyptian April 1944 ; de_April1944 ; 1944 >
+    au < released ; 1944 ; The Egyptian May 1944 ; de_May1944 ; 1944 >
+    au < released ; 1944 ; The Egyptian June 1944 ; de_June1944 ; 1944 >
+    au < exists ; 1944 ; The Egyptian July 1944 ; de_July1944 ; 1944 >
+    au < exists ; 1944 ; The Egyptian August 1944 ; de_August1944 ; 1944 >
+    au < released ; 1944 ; The Egyptian September 1944 ; de_September1944 ; 1944 >
+    au < released ; 1944 ; The Egyptian October 1944 ; de_October1944 ; 1944 >
+    au < released ; 1944 ; The Egyptian November 1944 ; de_November1944 ; 1944 >
+    au < released ; 1944 ; The Egyptian December 1944 ; de_December1944 ; 1944 >
+    au < released ; 1945 ; The Egyptian January 1945 ; de_January1945 ; 1945 >
+    au < released ; 1945 ; The Egyptian February 1945 ; de_February1945 ; 1945 >
+    au < released ; 1945 ; The Egyptian March 1945 ; de_March1945 ; 1945 >
+    au < released ; 1945 ; The Egyptian April 1945 ; de_April1945 ; 1945 >
+    au < released ; 1945 ; The Egyptian May 1945 ; de_May1945 ; 1945 >
+    au < released ; 1945 ; The Egyptian June 1945 ; de_June1945 ; 1945 >
+    au < exists ; 1945 ; The Egyptian July 1945 ; de_July1945 ; 1945 >
+    au < exists ; 1945 ; The Egyptian August 1945 ; de_August1945 ; 1945 >
+    au < released ; 1945 ; The Egyptian September 1945 ; de_September1945 ; 1945 >
+    au < released ; 1945 ; The Egyptian October 1945 ; de_October1945 ; 1945 >
+    au < released ; 1945 ; The Egyptian November 1945 ; de_November1945 ; 1945 >
+    au < released ; 1945 ; The Egyptian December 1945 ; de_December1945 ; 1945 >
+    au < released ; 1946 ; The Egyptian January 1946 ; de_January1946 ; 1946 >
+    au < released ; 1946 ; The Egyptian February 1946 ; de_February1946 ; 1946 >
+    au < released ; 1946 ; The Egyptian March 1946 ; de_March1946 ; 1946 >
+    au < released ; 1946 ; The Egyptian April 1946 ; de_April1946 ; 1946 >
+    au < released ; 1946 ; The Egyptian May 1946 ; de_May1946 ; 1946 >
+    au < released ; 1946 ; The Egyptian June 1946 ; de_June1946 ; 1946 >
+    au < released ; 1946 ; The Egyptian July 1946 ; de_July1946 ; 1946 >
+    au < exists ; 1946 ; The Egyptian August 1946 ; de_August1946 ; 1946 >
+    au < released ; 1946 ; The Egyptian September 1946 ; de_September1946 ; 1946 >
+    au < released ; 1946 ; The Egyptian October 1946 ; de_October1946 ; 1946 >
+    au < released ; 1946 ; The Egyptian November 1946 ; de_November1946 ; 1946 >
+    au < released ; 1946 ; The Egyptian December 1946 ; de_December1946 ; 1946 >
+    au < released ; 1947 ; The Egyptian January 1947 ; de_January1947 ; 1947 >
+    au < released ; 1947 ; The Egyptian February 1947 ; de_February1947 ; 1947 >
+    au < released ; 1947 ; The Egyptian March 1947 ; de_March1947 ; 1947 >
+    au < released ; 1947 ; The Egyptian April 1947 ; de_April1947 ; 1947 >
+    au < released ; 1947 ; The Egyptian May 1947 ; de_May1947 ; 1947 >
+    au < released ; 1947 ; The Egyptian June 1947 ; de_June1947 ; 1947 >
+    au < released ; 1947 ; The Egyptian July 1947 ; de_July1947 ; 1947 >
+    au < exists ; 1947 ; The Egyptian August 1947 ; de_August1947 ; 1947 >
+    au < released ; 1947 ; The Egyptian September 1947 ; de_September1947 ; 1947 >
+    au < released ; 1947 ; The Egyptian October 1947 ; de_October1947 ; 1947 >
+    au < released ; 1947 ; The Egyptian November 1947 ; de_November1947 ; 1947 >
+    au < released ; 1947 ; The Egyptian December 1947 ; de_December1947 ; 1947 >
+    au < released ; 1948 ; The Egyptian January 1948 ; de_January1948 ; 1948 >
+    au < released ; 1948 ; The Egyptian February 1948 ; de_February1948 ; 1948 >
+    au < released ; 1948 ; The Egyptian March 1948 ; de_March1948 ; 1948 >
+    au < released ; 1948 ; The Egyptian April 1948 ; de_April1948 ; 1948 >
+    au < released ; 1948 ; The Egyptian May 1948 ; de_May1948 ; 1948 >
+    au < released ; 1948 ; The Egyptian June 1948 ; de_June1948 ; 1948 >
+    au < released ; 1948 ; The Egyptian July 1948 ; de_July1948 ; 1948 >
+    au < exists ; 1948 ; The Egyptian August 1948 ; de_August1948 ; 1948 >
+    au < released ; 1948 ; The Egyptian September 1948 ; de_September1948 ; 1948 >
+    au < released ; 1948 ; The Egyptian October 1948 ; de_October1948 ; 1948 >
+    au < released ; 1948 ; The Egyptian November 1948 ; de_November1948 ; 1948 >
+    au < released ; 1948 ; The Egyptian December 1948 ; de_December1948 ; 1948 >
+    au < released ; 1949 ; The Egyptian January 1949 ; de_January1949 ; 1949 >
+    au < released ; 1949 ; The Egyptian February 1949 ; de_February1949 ; 1949 >
+    au < released ; 1949 ; The Egyptian March 1949 ; de_March1949 ; 1949 >
+    au < released ; 1949 ; The Egyptian April 1949 ; de_April1949 ; 1949 >
+    au < released ; 1949 ; The Egyptian May 1949 ; de_May1949 ; 1949 >
+    au < released ; 1949 ; The Egyptian June 1949 ; de_June1949 ; 1949 >
+    au < released ; 1949 ; The Egyptian July 1949 ; de_July1949 ; 1949 >
+    au < exists ; 1949 ; The Egyptian August 1949 ; de_August1949 ; 1949 >
+    au < released ; 1949 ; The Egyptian September 1949 ; de_September1949 ; 1949 >
+    au < released ; 1949 ; The Egyptian October 1949 ; de_October1949 ; 1949 >
+    au < released ; 1949 ; The Egyptian November 1949 ; de_November1949 ; 1949 >
+    au < released ; 1949 ; The Egyptian December 1949 ; de_December1949 ; 1949 >
+    au < released ; 1950 ; The Egyptian January 1950 ; de_January1950 ; 1950 >
+    au < released ; 1950 ; The Egyptian February 1950 ; de_February1950 ; 1950 >
+    au < released ; 1950 ; The Egyptian March 1950 ; de_March1950 ; 1950 >
+    au < released ; 1950 ; The Egyptian April 1950 ; de_April1950 ; 1950 >
+    au < released ; 1950 ; The Egyptian May 1950 ; de_May1950 ; 1950 >
+    au < released ; 1950 ; The Egyptian June 1950 ; de_June1950 ; 1950 >
+    au < released ; 1950 ; The Egyptian July 1950 ; de_July1950 ; 1950 >
+    au < exists ; 1950 ; The Egyptian August 1950 ; de_August1950 ; 1950 >
+    au < released ; 1950 ; The Egyptian September 1950 ; de_September1950 ; 1950 >
+    au < released ; 1950 ; The Egyptian October 1950 ; de_October1950 ; 1950 >
+    au < released ; 1950 ; The Egyptian November 1950 ; de_November1950 ; 1950 >
+    au < released ; 1950 ; The Egyptian December 1950 ; de_December1950 ; 1950 >
+    au < released ; 1951 ; The Egyptian January 1951 ; de_January1951 ; 1951 >
+    au < released ; 1951 ; The Egyptian February 1951 ; de_February1951 ; 1951 >
+    au < released ; 1951 ; The Egyptian March 1951 ; de_March1951 ; 1951 >
+    au < released ; 1951 ; The Egyptian April 1951 ; de_April1951 ; 1951 >
+    au < released ; 1951 ; The Egyptian May 1951 ; de_May1951 ; 1951 >
+    au < released ; 1951 ; The Egyptian June 1951 ; de_June1951 ; 1951 >
+    au < released ; 1951 ; The Egyptian July 1951 ; de_July1951 ; 1951 >
+    au < released ; 1951 ; The Egyptian August 1951 ; de_August1951 ; 1951 >
+    au < released ; 1951 ; The Egyptian September 1951 ; de_September1951 ; 1951 >
+    au < released ; 1951 ; The Egyptian October 1951 ; de_October1951 ; 1951 >
+    au < released ; 1951 ; The Egyptian November 1951 ; de_November1951 ; 1951 >
+    au < released ; 1951 ; The Egyptian December 1951 ; de_December1951 ; 1951 >
+    au < released ; 1952 ; The Egyptian January 1952 ; de_January1952 ; 1952 >
+    au < released ; 1952 ; The Egyptian February 1952 ; de_February1952 ; 1952 >
+    au < released ; 1952 ; The Egyptian March 1952 ; de_March1952 ; 1952 >
+    au < released ; 1952 ; The Egyptian April 1952 ; de_April1952 ; 1952 >
+    au < released ; 1952 ; The Egyptian May 1952 ; de_May1952 ; 1952 >
+    au < released ; 1952 ; The Egyptian June 1952 ; de_June1952 ; 1952 >
+    au < released ; 1952 ; The Egyptian July 1952 ; de_July1952 ; 1952 >
+    au < exists ; 1952 ; The Egyptian August 1952 ; de_August1952 ; 1952 >
+    au < released ; 1952 ; The Egyptian September 1952 ; de_September1952 ; 1952 >
+    au < released ; 1952 ; The Egyptian October 1952 ; de_October1952 ; 1952 >
+    au < released ; 1952 ; The Egyptian November 1952 ; de_November1952 ; 1952 >
+    au < released ; 1952 ; The Egyptian December 1952 ; de_December1952 ; 1952 >
+    au < released ; 1953 ; The Egyptian January 1953 ; de_January1953 ; 1953 >
+    au < released ; 1953 ; The Egyptian February 1953 ; de_February1953 ; 1953 >
+    au < released ; 1953 ; The Egyptian March 1953 ; de_March1953 ; 1953 >
+    au < released ; 1953 ; The Egyptian April 1953 ; de_April1953 ; 1953 >
+    au < released ; 1953 ; The Egyptian May 1953 ; de_May1953 ; 1953 >
+    au < released ; 1953 ; The Egyptian June 1953 ; de_June1953 ; 1953 >
+    au < released ; 1953 ; The Egyptian July 1953 ; de_July1953 ; 1953 >
+    au < exists ; 1953 ; The Egyptian August 1953 ; de_August1953 ; 1953 >
+    au < released ; 1953 ; The Egyptian September 1953 ; de_September1953 ; 1953 >
+    au < released ; 1953 ; The Egyptian October 1953 ; de_October1953 ; 1953 >
+    au < released ; 1953 ; The Egyptian November 1953 ; de_November1953 ; 1953 >
+    au < released ; 1953 ; The Egyptian December 1953 ; de_December1953 ; 1953 >
+    au < released ; 1954 ; The Egyptian January 1954 ; de_January1954 ; 1954 >
+    au < released ; 1954 ; The Egyptian February 1954 ; de_February1954 ; 1954 >
+    au < released ; 1954 ; The Egyptian March 1954 ; de_March1954 ; 1954 >
+    au < released ; 1954 ; The Egyptian April 1954 ; de_April1954 ; 1954 >
+    au < released ; 1954 ; The Egyptian May 1954 ; de_May1954 ; 1954 >
+    au < released ; 1954 ; The Egyptian June 1954 ; de_June1954 ; 1954 >
+    au < released ; 1954 ; The Egyptian July 1954 ; de_July1954 ; 1954 >
+    au < released ; 1954 ; The Egyptian August 1954 ; de_August1954 ; 1954 >
+    au < released ; 1954 ; The Egyptian September 1954 ; de_September1954 ; 1954 >
+    au < released ; 1954 ; The Egyptian October 1954 ; de_October1954 ; 1954 >
+    au < released ; 1954 ; The Egyptian November 1954 ; de_November1954 ; 1954 >
+    au < released ; 1954 ; The Egyptian December 1954 ; de_December1954 ; 1954 >
+    au < released ; 1955 ; The Egyptian January 1955 ; de_January1955 ; 1955 >
+    au < released ; 1955 ; The Egyptian February 1955 ; de_February1955 ; 1955 >
+    au < released ; 1955 ; The Egyptian March 1955 ; de_March1955 ; 1955 >
+    au < released ; 1955 ; The Egyptian April 1955 ; de_April1955 ; 1955 >
+    au < released ; 1955 ; The Egyptian May 1955 ; de_May1955 ; 1955 >
+    au < released ; 1955 ; The Egyptian June 1955 ; de_June1955 ; 1955 >
+    au < released ; 1955 ; The Egyptian July 1955 ; de_July1955 ; 1955 >
+    au < released ; 1955 ; The Egyptian August 1955 ; de_August1955 ; 1955 >
+    au < released ; 1955 ; The Egyptian September 1955 ; de_September1955 ; 1955 >
+    au < released ; 1955 ; The Egyptian October 1955 ; de_October1955 ; 1955 >
+    au < released ; 1955 ; The Egyptian November 1955 ; de_November1955 ; 1955 >
+    au < released ; 1955 ; The Egyptian December 1955 ; de_December1955 ; 1955 >
+    au < released ; 1956 ; The Egyptian January 1956 ; de_January1956 ; 1956 >
+    au < released ; 1956 ; The Egyptian February 1956 ; de_February1956 ; 1956 >
+    au < released ; 1956 ; The Egyptian March 1956 ; de_March1956 ; 1956 >
+    au < released ; 1956 ; The Egyptian April 1956 ; de_April1956 ; 1956 >
+    au < released ; 1956 ; The Egyptian May 1956 ; de_May1956 ; 1956 >
+    au < released ; 1956 ; The Egyptian June 1956 ; de_June1956 ; 1956 >
+    au < released ; 1956 ; The Egyptian July 1956 ; de_July1956 ; 1956 >
+    au < released ; 1956 ; The Egyptian August 1956 ; de_August1956 ; 1956 >
+    au < released ; 1956 ; The Egyptian September 1956 ; de_September1956 ; 1956 >
+    au < released ; 1956 ; The Egyptian October 1956 ; de_October1956 ; 1956 >
+    au < released ; 1956 ; The Egyptian November 1956 ; de_November1956 ; 1956 >
+    au < released ; 1956 ; The Egyptian December 1956 ; de_December1956 ; 1956 >
+    au < released ; 1957 ; The Egyptian January 1957 ; de_January1957 ; 1957 >
+    au < released ; 1957 ; The Egyptian February 1957 ; de_February1957 ; 1957 >
+    au < released ; 1957 ; The Egyptian March 1957 ; de_March1957 ; 1957 >
+    au < released ; 1957 ; The Egyptian April 1957 ; de_April1957 ; 1957 >
+    au < released ; 1957 ; The Egyptian May 1957 ; de_May1957 ; 1957 >
+    au < released ; 1957 ; The Egyptian June 1957 ; de_June1957 ; 1957 >
+    au < released ; 1957 ; The Egyptian July 1957 ; de_July1957 ; 1957 >
+    au < released ; 1957 ; The Egyptian August 1957 ; de_August1957 ; 1957 >
+    au < released ; 1957 ; The Egyptian September 1957 ; de_September1957 ; 1957 >
+    au < released ; 1957 ; The Egyptian October 1957 ; de_October1957 ; 1957 >
+    au < released ; 1957 ; The Egyptian November 1957 ; de_November1957 ; 1957 >
+    au < released ; 1957 ; The Egyptian December 1957 ; de_December1957 ; 1957 >
+    au < released ; 1958 ; The Egyptian January 1958 ; de_January1958 ; 1958 >
+    au < released ; 1958 ; The Egyptian February 1958 ; de_February1958 ; 1958 >
+    au < released ; 1958 ; The Egyptian March 1958 ; de_March1958 ; 1958 >
+    au < released ; 1958 ; The Egyptian April 1958 ; de_April1958 ; 1958 >
+    au < released ; 1958 ; The Egyptian May 1958 ; de_May1958 ; 1958 >
+    au < released ; 1958 ; The Egyptian June 1958 ; de_June1958 ; 1958 >
+    au < released ; 1958 ; The Egyptian July 1958 ; de_July1958 ; 1958 >
+    au < released ; 1958 ; The Egyptian August 1958 ; de_August1958 ; 1958 >
+    au < released ; 1958 ; The Egyptian September 1958 ; de_September1958 ; 1958 >
+    au < released ; 1958 ; The Egyptian October 1958 ; de_October1958 ; 1958 >
+    au < released ; 1958 ; The Egyptian November 1958 ; de_November1958 ; 1958 >
+    au < released ; 1958 ; The Egyptian December 1958 ; de_December1958 ; 1958 >
+    au < released ; 1959 ; The Egyptian January 1959 ; de_January1959 ; 1959 >
+    au < released ; 1959 ; The Egyptian February 1959 ; de_February1959 ; 1959 >
+    au < released ; 1959 ; The Egyptian March 1959 ; de_March1959 ; 1959 >
+    au < released ; 1959 ; The Egyptian April 1959 ; de_April1959 ; 1959 >
+    au < released ; 1959 ; The Egyptian May 1959 ; de_May1959 ; 1959 >
+    au < released ; 1959 ; The Egyptian June 1959 ; de_June1959 ; 1959 >
+    au < released ; 1959 ; The Egyptian July 1959 ; de_July1959 ; 1959 >
+    au < released ; 1959 ; The Egyptian August 1959 ; de_August1959 ; 1959 >
+    au < exists ; 1959 ; The Egyptian September 1959 ; de_September1959 ; 1959 >
+    au < released ; 1959 ; The Egyptian October 1959 ; de_October1959 ; 1959 >
+    au < released ; 1959 ; The Egyptian November 1959 ; de_November1959 ; 1959 >
+    au < released ; 1959 ; The Egyptian December 1959 ; de_December1959 ; 1959 >
+    au < released ; 1960 ; The Egyptian January 1960 ; de_January1960 ; 1960 >
+    au < released ; 1960 ; The Egyptian February 1960 ; de_February1960 ; 1960 >
+    au < released ; 1960 ; The Egyptian March 1960 ; de_March1960 ; 1960 >
+    au < released ; 1960 ; The Egyptian April 1960 ; de_April1960 ; 1960 >
+    au < released ; 1960 ; The Egyptian May 1960 ; de_May1960 ; 1960 >
+    au < released ; 1960 ; The Egyptian June 1960 ; de_June1960 ; 1960 >
+    au < released ; 1960 ; The Egyptian July 1960 ; de_July1960 ; 1960 >
+    au < released ; 1960 ; The Egyptian August 1960 ; de_August1960 ; 1960 >
+    au < released ; 1960 ; The Egyptian September 1960 ; de_September1960 ; 1960 >
+    au < released ; 1960 ; The Egyptian October 1960 ; de_October1960 ; 1960 >
+    au < released ; 1960 ; The Egyptian November 1960 ; de_November1960 ; 1960 >
+    au < released ; 1960 ; The Egyptian December 1960 ; de_December1960 ; 1960 >
+    au < released ; 1961 ; The Egyptian January 1961 ; de_January1961 ; 1961 >
+    au < released ; 1961 ; The Egyptian February 1961 ; de_February1961 ; 1961 >
+    au < released ; 1961 ; The Egyptian March 1961 ; de_March1961 ; 1961 >
+    au < released ; 1961 ; The Egyptian April 1961 ; de_April1961 ; 1961 >
+    au < released ; 1961 ; The Egyptian May 1961 ; de_May1961 ; 1961 >
+    au < released ; 1961 ; The Egyptian June 1961 ; de_June1961 ; 1961 >
+    au < released ; 1961 ; The Egyptian July 1961 ; de_July1961 ; 1961 >
+    au < released ; 1961 ; The Egyptian August 1961 ; de_August1961 ; 1961 >
+    au < released ; 1961 ; The Egyptian September 1961 ; de_September1961 ; 1961 >
+    au < released ; 1961 ; The Egyptian October 1961 ; de_October1961 ; 1961 >
+    au < released ; 1961 ; The Egyptian November 1961 ; de_November1961 ; 1961 >
+    au < released ; 1961 ; The Egyptian December 1961 ; de_December1961 ; 1961 >
+    au < released ; 1962 ; The Egyptian January 1962 ; de_January1962 ; 1962 >
+    au < released ; 1962 ; The Egyptian February 1962 ; de_February1962 ; 1962 >
+    au < released ; 1962 ; The Egyptian March 1962 ; de_March1962 ; 1962 >
+    au < released ; 1962 ; The Egyptian April 1962 ; de_April1962 ; 1962 >
+    au < released ; 1962 ; The Egyptian May 1962 ; de_May1962 ; 1962 >
+    au < released ; 1962 ; The Egyptian June 1962 ; de_June1962 ; 1962 >
+    au < released ; 1962 ; The Egyptian July 1962 ; de_July1962 ; 1962 >
+    au < exists ; 1962 ; The Egyptian August 1962 ; de_August1962 ; 1962 >
+    au < released ; 1962 ; The Egyptian September 1962 ; de_September1962 ; 1962 >
+    au < released ; 1962 ; The Egyptian October 1962 ; de_October1962 ; 1962 >
+    au < released ; 1962 ; The Egyptian November 1962 ; de_November1962 ; 1962 >
+    au < released ; 1962 ; The Egyptian December 1962 ; de_December1962 ; 1962 >
+    au < released ; 1963 ; The Egyptian January 1963 ; de_January1963 ; 1963 >
+    au < released ; 1963 ; The Egyptian February 1963 ; de_February1963 ; 1963 >
+    au < released ; 1963 ; The Egyptian March 1963 ; de_March1963 ; 1963 >
+    au < released ; 1963 ; The Egyptian April 1963 ; de_April1963 ; 1963 >
+    au < released ; 1963 ; The Egyptian May 1963 ; de_May1963 ; 1963 >
+    au < released ; 1963 ; The Egyptian June 1963 ; de_June1963 ; 1963 >
+    au < released ; 1963 ; The Egyptian July 1963 ; de_July1963 ; 1963 >
+    au < released ; 1963 ; The Egyptian August 1963 ; de_August1963 ; 1963 >
+    au < released ; 1963 ; The Egyptian September 1963 ; de_September1963 ; 1963 >
+    au < released ; 1963 ; The Egyptian October 1963 ; de_October1963 ; 1963 >
+    au < released ; 1963 ; The Egyptian November 1963 ; de_November1963 ; 1963 >
+    au < released ; 1963 ; The Egyptian December 1963 ; de_December1963 ; 1963 >
+    au < released ; 1964 ; The Egyptian January 1964 ; de_January1964 ; 1964 >
+    au < released ; 1964 ; The Egyptian February 1964 ; de_February1964 ; 1964 >
+    au < released ; 1964 ; The Egyptian March 1964 ; de_March1964 ; 1964 >
+    au < released ; 1964 ; The Egyptian April 1964 ; de_April1964 ; 1964 >
+    au < released ; 1964 ; The Egyptian May 1964 ; de_May1964 ; 1964 >
+    au < released ; 1964 ; The Egyptian June 1964 ; de_June1964 ; 1964 >
+    au < released ; 1964 ; The Egyptian July 1964 ; de_July1964 ; 1964 >
+    au < released ; 1964 ; The Egyptian August 1964 ; de_August1964 ; 1964 >
+    au < released ; 1964 ; The Egyptian September 1964 ; de_September1964 ; 1964 >
+    au < released ; 1964 ; The Egyptian October 1964 ; de_October1964 ; 1964 >
+    au < released ; 1964 ; The Egyptian November 1964 ; de_November1964 ; 1964 >
+    au < released ; 1964 ; The Egyptian December 1964 ; de_December1964 ; 1964 >
+    # None found in 1965 or later
+        
+  }
+
+  {
+  
+    title <
+      name = Ethnobotanical Leaflets
+    >
+    
+    plugin = org.lockss.plugin.bepress.BePressPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[journal_abbr] = ebl
+    implicit < status ; year ; volume ; name ; param[volume] >
+    
+    # Volume 1997 had slightly different title
+    
+    au < released ; 1997 ; 1997 ; Economic Leaflets Volume 1997 ; 1997 >
+    au < released ; 1998 ; 1998 ; Ethnobotanical Leaflets Volume 1998 ; 1998 >
+    au < released ; 1999 ; 1999 ; Ethnobotanical Leaflets Volume 1999 ; 1999 >
+    au < released ; 2000 ; 2000 ; Ethnobotanical Leaflets Volume 2000 ; 2000 >
+    au < released ; 2001-2002 ; 2001-2002 ; Ethnobotanical Leaflets Volume 2001-2002 ; 2001 >
+    au < released ; 2003 ; 2003 ; Ethnobotanical Leaflets Volume 2003 ; 2003 >
+    au < released ; 2004 ; 2004 ; Ethnobotanical Leaflets Volume 2004 ; 2004 >
+    au < released ; 2005 ; 2005 ; Ethnobotanical Leaflets Volume 2005 ; 2005 >
+    au < released ; 2006 ; 2006 ; Ethnobotanical Leaflets Volume 2006 ; 2006 >
+    au < released ; 2007 ; 2007 ; Ethnobotanical Leaflets Volume 2007 ; 2007 >
+    au < released ; 2008 ; 2008 ; Ethnobotanical Leaflets Volume 2008 ; 2008 >
+    au < released ; 2009 ; 2009 ; Ethnobotanical Leaflets Volume 2009 ; 2009 >
+    au < released ; 2010 ; 2010 ; Ethnobotanical Leaflets Volume 2010 ; 2010 >
+  
+  }
+
+  {
+
+    title <
+      name = Global Cinema
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_series
+    param[collection] = gmrc_gc
+    implicit < status ; year ; name ; param[collection_heading] >  
+
+    au < released ; 2013 ; Global Cinema 2013 ; 2013 >
+
   }
 
   {
@@ -42,12 +566,340 @@
     param[collection] = arch_hepc
     implicit < status ; year ; name ; param[collection_heading] >
   
-    au < manifest ; 2009 ; Higher Education Policy Commentary 2009 ; 2009 >
-    au < manifest ; 2010 ; Higher Education Policy Commentary 2010 ; 2010 >
-    au < manifest ; 2011 ; Higher Education Policy Commentary 2011 ; 2011 >
-    au < manifest ; 2012 ; Higher Education Policy Commentary 2012 ; 2012 >
-    au < manifest ; 2013 ; Higher Education Policy Commentary 2013 ; 2013 >
+    au < released ; 2009 ; Higher Education Policy Commentary 2009 ; 2009 >
+    au < released ; 2010 ; Higher Education Policy Commentary 2010 ; 2010 >
+    au < released ; 2011 ; Higher Education Policy Commentary 2011 ; 2011 >
+    au < released ; 2012 ; Higher Education Policy Commentary 2012 ; 2012 >
+    au < released ; 2013 ; Higher Education Policy Commentary 2013 ; 2013 >
   
+  }
+
+  {
+  
+    title <
+      name = Journal of Contemporary Water Research and Education
+    >
+    
+    plugin = org.lockss.plugin.bepress.BePressPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[journal_abbr] = jcwre
+    implicit < status ; year ; volume ; name ; param[volume] >
+
+    # Some of these manifests were found by a script but had no entry in lockss-sitemap.html
+
+    au < released ; 1988 ; 77 ; Water Resources Update Volume 77 ; 77 >
+    au < released ; 1988 ; 78 ; Water Resources Update Volume 78 ; 78 >
+    au < released ; 1989 ; 79 ; Water Resources Update Volume 79 ; 79 >
+    au < released ; 1989 ; 80 ; Water Resources Update Volume 80 ; 80 >
+    au < released ; 1990 ; 81 ; Water Resources Update Volume 81 ; 81 >
+    au < released ; 1990 ; 82 ; Water Resources Update Volume 82 ; 82 >
+    au < released ; 1990 ; 83 ; Water Resources Update Volume 83 ; 83 >
+    au < released ; 1991 ; 84 ; Water Resources Update Volume 84 ; 84 >
+    au < released ; 1991 ; 85 ; Water Resources Update Volume 85 ; 85 >
+    au < released ; 1991 ; 86 ; Water Resources Update Volume 86 ; 86 >
+    au < released ; 1992 ; 87 ; Water Resources Update Volume 87 ; 87 >
+    au < released ; 1992 ; 88 ; Water Resources Update Volume 88 ; 88 >
+    au < released ; 1992 ; 89 ; Water Resources Update Volume 89 ; 89 >
+    au < released ; 1993 ; 90 ; Water Resources Update Volume 90 ; 90 >
+    au < released ; 1993 ; 91 ; Water Resources Update Volume 91 ; 91 >
+    au < released ; 1993 ; 92 ; Water Resources Update Volume 92 ; 92 >
+    au < released ; 1993 ; 93 ; Water Resources Update Volume 93 ; 93 >
+    au < released ; 1994 ; 94 ; Water Resources Update Volume 94 ; 94 >
+    au < released ; 1994 ; 95 ; Water Resources Update Volume 95 ; 95 >
+    au < released ; 1994 ; 96 ; Water Resources Update Volume 96 ; 96 >
+    au < released ; 1994 ; 97 ; Water Resources Update Volume 97 ; 97 >
+    au < released ; 1995 ; 98 ; Water Resources Update Volume 98 ; 98 >
+    au < released ; 1995 ; 99 ; Water Resources Update Volume 99 ; 99 >
+    au < released ; 1995 ; 100 ; Water Resources Update Volume 100 ; 100 >
+    au < released ; 1995 ; 101 ; Water Resources Update Volume 101 ; 101 >
+    au < released ; 1996 ; 102 ; Water Resources Update Volume 102 ; 102 >
+    au < released ; 1996 ; 103 ; Water Resources Update Volume 103 ; 103 >
+    au < released ; 1996 ; 104 ; Water Resources Update Volume 104 ; 104 >
+    au < released ; 1996 ; 105 ; Water Resources Update Volume 105 ; 105 >
+    au < released ; 1997 ; 106 ; Water Resources Update Volume 106 ; 106 >
+    au < released ; 1997 ; 107 ; Water Resources Update Volume 107 ; 107 >
+    au < doesNotExist ; 1997 ; 108 ; Water Resources Update Volume 108 ; 108 >
+    au < doesNotExist ; 1997 ; 109 ; Water Resources Update Volume 109 ; 109 >
+    au < doesNotExist ; 1998 ; 110 ; Water Resources Update Volume 110 ; 110 >
+    au < doesNotExist ; 1998 ; 111 ; Water Resources Update Volume 111 ; 111 >
+    au < released ; 1998 ; 112 ; Water Resources Update Volume 112 ; 112 >
+    au < released ; 1998 ; 113 ; Water Resources Update Volume 113 ; 113 >
+    au < released ; 1999 ; 114 ; Water Resources Update Volume 114 ; 114 >
+    au < released ; 1999 ; 115 ; Water Resources Update Volume 115 ; 115 >
+    au < released ; 2000 ; 116 ; Water Resources Update Volume 116 ; 116 >
+    au < released ; 2000 ; 117 ; Water Resources Update Volume 117 ; 117 >
+    au < released ; 2001 ; 118 ; Water Resources Update Volume 118 ; 118 >
+    au < released ; 2001 ; 119 ; Water Resources Update Volume 119 ; 119 >
+    au < released ; 2001 ; 120 ; Water Resources Update Volume 120 ; 120 >
+    au < released ; 2002 ; 121 ; Water Resources Update Volume 121 ; 121 >
+    au < released ; 2002 ; 122 ; Water Resources Update Volume 122 ; 122 >
+    au < released ; 2002 ; 123 ; Water Resources Update Volume 123 ; 123 >
+    au < released ; 2011 ; 124 ; Water Resources Update Volume 124 ; 124 > # (year sic; should be 2003?)
+    au < doesNotExist ; 2003 ; 125 ; Water Resources Update Volume 125 ; 125 >
+    au < released ; 2003 ; 126 ; Water Resources Update Volume 126 ; 126 >
+    au < released ; 2004 ; 127 ; Water Resources Update Volume 127 ; 127 >
+    au < released ; 2004 ; 128 ; Journal of Contemporary Water Research and Education Volume 128 ; 128 >
+    au < released ; 2004 ; 129 ; Journal of Contemporary Water Research and Education Volume 129 ; 129 >
+    au < released ; 2005 ; 130 ; Journal of Contemporary Water Research and Education Volume 130 ; 130 >
+    au < released ; 2005 ; 131 ; Journal of Contemporary Water Research and Education Volume 131 ; 131 >
+    au < released ; 2005 ; 132 ; Journal of Contemporary Water Research and Education Volume 132 ; 132 >
+    au < released ; 2006 ; 133 ; Journal of Contemporary Water Research and Education Volume 133 ; 133 >
+    au < released ; 2006 ; 134 ; Journal of Contemporary Water Research and Education Volume 134 ; 134 >
+    au < released ; 2006 ; 135 ; Journal of Contemporary Water Research and Education Volume 135 ; 135 >
+    au < released ; 2007 ; 136 ; Journal of Contemporary Water Research and Education Volume 136 ; 136 >
+    au < released ; 2007 ; 137 ; Journal of Contemporary Water Research and Education Volume 137 ; 137 >
+
+  }
+
+  {
+  
+    title <
+      name = Kaleidoscope: A Graduate Journal of Qualitative Communication Research
+    >
+    
+    plugin = org.lockss.plugin.bepress.BePressPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[journal_abbr] = kaleidoscope
+    implicit < status ; year ; volume ; name ; param[volume] >
+
+    au < released ; 2009 ; 8 ; Kaleidoscope: A Graduate Journal of Qualitative Communication Research Volume 8 ; 8 >
+    au < released ; 2010 ; 9 ; Kaleidoscope: A Graduate Journal of Qualitative Communication Research Volume 9 ; 9 >
+    au < released ; 2011 ; 10 ; Kaleidoscope: A Graduate Journal of Qualitative Communication Research Volume 10 ; 10 >
+    au < released ; 2012 ; 11 ; Kaleidoscope: A Graduate Journal of Qualitative Communication Research Volume 11 ; 11 >
+    au < released ; 2013 ; 12 ; Kaleidoscope: A Graduate Journal of Qualitative Communication Research Volume 12 ; 12 >
+    
+  }
+    
+  {
+  
+    title <
+      name = Legacy: A Journal of Student Research
+    >
+    
+    plugin = org.lockss.plugin.bepress.BePressPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[journal_abbr] = legacy
+    implicit < status ; year ; volume ; name ; param[volume] >
+
+    au < released ; 2010 ; 10 ; Legacy: A Journal of Student Research Volume 10 ; 10 >
+    au < released ; 2011 ; 11 ; Legacy: A Journal of Student Research Volume 11 ; 11 >
+    
+  }
+    
+  {
+
+    title <
+      name = Neoliberalism and Media
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_series
+    param[collection] = gmrc_nm
+    implicit < status ; year ; name ; param[collection_heading] >  
+
+    au < released ; 2012 ; Neoliberalism and Media 2012 ; 2012 >
+
+  }
+
+  {
+  
+    title <
+      name = Online Journal for Workforce Education and Development
+    >
+    
+    plugin = org.lockss.plugin.bepress.BePressPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[journal_abbr] = ojwed
+    implicit < status ; year ; volume ; name ; param[volume] >
+
+    # Volume 8 has a released page that is not listed in lockss-sitemap.html
+
+    au < released ; 2005-2006 ; 1 ; Online Journal for Workforce Education and Development Volume 1 ; 1 >
+    au < released ; 2006-2007 ; 2 ; Online Journal for Workforce Education and Development Volume 2 ; 2 >
+    au < released ; 2007-2009 ; 3 ; Online Journal for Workforce Education and Development Volume 3 ; 3 >
+    au < released ; 2009-2010 ; 4 ; Online Journal for Workforce Education and Development Volume 4 ; 4 >
+    au < released ; 2011-2012 ; 5 ; Online Journal for Workforce Education and Development Volume 5 ; 5 >
+    au < released ; 2013 ; 6 ; Online Journal for Workforce Education and Development Volume 6 ; 6 >
+    au < released ; 2014 ; 7 ; Online Journal for Workforce Education and Development Volume 7 ; 7 >
+    au < released ; 2015 ; 8 ; Online Journal for Workforce Education and Development Volume 8 ; 8 >
+    
+  }
+    
+  {
+  
+    title <
+      name = The Open Court
+    >
+    
+    plugin = org.lockss.plugin.bepress.BePressPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[journal_abbr] = ocj
+    implicit < status ; year ; volume ; name ; param[volume] >
+
+    # Some manifests were found by a script but had no entry in lockss-sitemap.html
+
+    au < released ; 1887 ; 1887 ; The Open Court Volume 1887 ; 1887 >
+    au < released ; 1888 ; 1888 ; The Open Court Volume 1888 ; 1888 >
+    au < released ; 1889 ; 1889 ; The Open Court Volume 1889 ; 1889 >
+    au < released ; 1890 ; 1890 ; The Open Court Volume 1890 ; 1890 >
+    au < released ; 1891 ; 1891 ; The Open Court Volume 1891 ; 1891 >
+    au < released ; 1892 ; 1892 ; The Open Court Volume 1892 ; 1892 >
+    au < manifest ; 1893 ; 1893 ; The Open Court Volume 1893 ; 1893 >
+    au < manifest ; 1894 ; 1894 ; The Open Court Volume 1894 ; 1894 >
+    au < manifest ; 1895 ; 1895 ; The Open Court Volume 1895 ; 1895 >
+    au < manifest ; 1896 ; 1896 ; The Open Court Volume 1896 ; 1896 >
+    au < manifest ; 1897 ; 1897 ; The Open Court Volume 1897 ; 1897 >
+    au < manifest ; 1898 ; 1898 ; The Open Court Volume 1898 ; 1898 >
+    au < released ; 1899 ; 1899 ; The Open Court Volume 1899 ; 1899 >
+    au < released ; 1900 ; 1900 ; The Open Court Volume 1900 ; 1900 >
+    au < released ; 1901 ; 1901 ; The Open Court Volume 1901 ; 1901 >
+    au < released ; 1902 ; 1902 ; The Open Court Volume 1902 ; 1902 >
+    au < released ; 1903 ; 1903 ; The Open Court Volume 1903 ; 1903 >
+    au < released ; 1904 ; 1904 ; The Open Court Volume 1904 ; 1904 >
+    au < released ; 1905 ; 1905 ; The Open Court Volume 1905 ; 1905 >
+    au < released ; 1906 ; 1906 ; The Open Court Volume 1906 ; 1906 >
+    au < released ; 1907 ; 1907 ; The Open Court Volume 1907 ; 1907 >
+    au < released ; 1908 ; 1908 ; The Open Court Volume 1908 ; 1908 >
+    au < released ; 1909 ; 1909 ; The Open Court Volume 1909 ; 1909 >
+    au < released ; 1910 ; 1910 ; The Open Court Volume 1910 ; 1910 >
+    au < released ; 1911 ; 1911 ; The Open Court Volume 1911 ; 1911 >
+    au < released ; 1912 ; 1912 ; The Open Court Volume 1912 ; 1912 >
+    au < released ; 1913 ; 1913 ; The Open Court Volume 1913 ; 1913 >
+    au < released ; 1914 ; 1914 ; The Open Court Volume 1914 ; 1914 >
+    au < released ; 1915 ; 1915 ; The Open Court Volume 1915 ; 1915 >
+    au < released ; 1916 ; 1916 ; The Open Court Volume 1916 ; 1916 >
+    au < released ; 1917 ; 1917 ; The Open Court Volume 1917 ; 1917 >
+    au < released ; 1918 ; 1918 ; The Open Court Volume 1918 ; 1918 >
+    au < released ; 1919 ; 1919 ; The Open Court Volume 1919 ; 1919 >
+    au < released ; 1920 ; 1920 ; The Open Court Volume 1920 ; 1920 >
+    au < released ; 1921 ; 1921 ; The Open Court Volume 1921 ; 1921 >
+    au < released ; 1922 ; 1922 ; The Open Court Volume 1922 ; 1922 >
+    au < released ; 1923 ; 1923 ; The Open Court Volume 1923 ; 1923 >
+    au < released ; 1924 ; 1924 ; The Open Court Volume 1924 ; 1924 >
+    au < released ; 1925 ; 1925 ; The Open Court Volume 1925 ; 1925 >
+    au < released ; 1926 ; 1926 ; The Open Court Volume 1926 ; 1926 >
+    au < released ; 1927 ; 1927 ; The Open Court Volume 1927 ; 1927 >
+    au < released ; 1928 ; 1928 ; The Open Court Volume 1928 ; 1928 >
+    au < released ; 1929 ; 1929 ; The Open Court Volume 1929 ; 1929 >
+    au < released ; 1930 ; 1930 ; The Open Court Volume 1930 ; 1930 >
+    au < released ; 1931 ; 1931 ; The Open Court Volume 1931 ; 1931 >
+    au < released ; 1932 ; 1932 ; The Open Court Volume 1932 ; 1932 >
+    au < released ; 1933 ; 1933 ; The Open Court Volume 1933 ; 1933 >
+    au < released ; 1934 ; 1934 ; The Open Court Volume 1934 ; 1934 >
+    au < released ; 1935 ; 1935 ; The Open Court Volume 1935 ; 1935 >
+    au < released ; 1936 ; 1936 ; The Open Court Volume 1936 ; 1936 >
+    
+  }
+    
+  {
+
+    title <
+      name = Perspectives: Research and Creative Activities at Southern Illinois University Carbondale
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_series
+    param[collection] = orda_pers
+    implicit < status ; year ; name ; param[collection_heading] >  
+
+    au < released ; 2003 ; Perspectives: Research and Creative Activities at Southern Illinois University Carbondale 2003 ; 2003 >
+    au < released ; 2004 ; Perspectives: Research and Creative Activities at Southern Illinois University Carbondale 2004 ; 2004 >
+    au < released ; 2005 ; Perspectives: Research and Creative Activities at Southern Illinois University Carbondale 2005 ; 2005 >
+    au < released ; 2006 ; Perspectives: Research and Creative Activities at Southern Illinois University Carbondale 2006 ; 2006 >
+    au < released ; 2007 ; Perspectives: Research and Creative Activities at Southern Illinois University Carbondale 2007 ; 2007 >
+    au < released ; 2008 ; Perspectives: Research and Creative Activities at Southern Illinois University Carbondale 2008 ; 2008 >
+    au < released ; 2009 ; Perspectives: Research and Creative Activities at Southern Illinois University Carbondale 2009 ; 2009 >
+
+  }
+
+  {
+
+    title <
+      name = A Privileged Past
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_series
+    param[collection] = histcw_pp
+    implicit < status ; year ; name ; param[collection_heading] >  
+
+    # Type book
+    # No LOCKSS markup found
+
+  }
+
+  {
+  
+    title <
+      name = The Psychological Record
+    >
+    
+    plugin = org.lockss.plugin.bepress.BePressPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[journal_abbr] = tpr
+    implicit < status ; year ; volume ; name ; param[volume] >
+
+    au < released ; 1997 ; 47 ; The Psychological Record Volume 47 ; 47 >
+    au < released ; 1998 ; 48 ; The Psychological Record Volume 48 ; 48 >
+    au < released ; 1999 ; 49 ; The Psychological Record Volume 49 ; 49 >
+    au < released ; 2000 ; 50 ; The Psychological Record Volume 50 ; 50 >
+    au < released ; 2001 ; 51 ; The Psychological Record Volume 51 ; 51 >
+    au < released ; 2002 ; 52 ; The Psychological Record Volume 52 ; 52 >
+    au < released ; 2003 ; 53 ; The Psychological Record Volume 53 ; 53 >
+    au < released ; 2004 ; 54 ; The Psychological Record Volume 54 ; 54 >
+    au < released ; 2005 ; 55 ; The Psychological Record Volume 55 ; 55 >
+    au < released ; 2006 ; 56 ; The Psychological Record Volume 56 ; 56 >
+    au < released ; 2007 ; 57 ; The Psychological Record Volume 57 ; 57 >
+    au < released ; 2008 ; 58 ; The Psychological Record Volume 58 ; 58 >
+    au < released ; 2009 ; 59 ; The Psychological Record Volume 59 ; 59 >
+    au < released ; 2010 ; 60 ; The Psychological Record Volume 60 ; 60 >
+    au < released ; 2011 ; 61 ; The Psychological Record Volume 61 ; 61 >
+    
+  }
+    
+  {
+
+    title <
+      name = The Simon Review: Occasional Papers of the Paul Simon Public Policy Institute
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_series
+    param[collection] = ppi_papers
+    implicit < status ; year ; name ; param[collection_heading] >  
+
+    au < released ; 2004 ; The Simon Review: Occasional Papers of the Paul Simon Public Policy Institute 2004 ; 2004 >
+    au < released ; 2005 ; The Simon Review: Occasional Papers of the Paul Simon Public Policy Institute 2005 ; 2005 >
+    au < released ; 2006 ; The Simon Review: Occasional Papers of the Paul Simon Public Policy Institute 2006 ; 2006 >
+    au < released ; 2007 ; The Simon Review: Occasional Papers of the Paul Simon Public Policy Institute 2007 ; 2007 >
+    au < released ; 2008 ; The Simon Review: Occasional Papers of the Paul Simon Public Policy Institute 2008 ; 2008 >
+    au < released ; 2009 ; The Simon Review: Occasional Papers of the Paul Simon Public Policy Institute 2009 ; 2009 >
+    au < released ; 2010 ; The Simon Review: Occasional Papers of the Paul Simon Public Policy Institute 2010 ; 2010 >
+    au < released ; 2011 ; The Simon Review: Occasional Papers of the Paul Simon Public Policy Institute 2011 ; 2011 >
+    au < released ; 2012 ; The Simon Review: Occasional Papers of the Paul Simon Public Policy Institute 2012 ; 2012 >
+    au < released ; 2013 ; The Simon Review: Occasional Papers of the Paul Simon Public Policy Institute 2013 ; 2013 >
+    au < released ; 2014 ; The Simon Review: Occasional Papers of the Paul Simon Public Policy Institute 2014 ; 2014 >
+
+  }
+
+  {
+
+    title <
+      name = Southern Illinois University Accreditation 2010
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_series
+    param[collection] = uc_accred2010
+    implicit < status ; year ; name ; param[collection_heading] >
+
+    au < released ; 2010 ; Southern Illinois University Accreditation 2010 2010 ; 2010 >
+
   }
 
   {
@@ -62,15 +914,31 @@
     param[collection] = bot_ar
     implicit < status ; year ; name ; param[collection_heading] >
   
-    au < manifest ; 2006 ; Southern Illinois University Board of Trustees Annual Report 2006 ; 2006 >
-    au < manifest ; 2007 ; Southern Illinois University Board of Trustees Annual Report 2007 ; 2007 >
-    au < manifest ; 2008 ; Southern Illinois University Board of Trustees Annual Report 2008 ; 2008 >
-    au < manifest ; 2009 ; Southern Illinois University Board of Trustees Annual Report 2009 ; 2009 >
-    au < manifest ; 2010 ; Southern Illinois University Board of Trustees Annual Report 2010 ; 2010 >
-    au < manifest ; 2011 ; Southern Illinois University Board of Trustees Annual Report 2011 ; 2011 >
-    au < manifest ; 2012 ; Southern Illinois University Board of Trustees Annual Report 2012 ; 2012 >
-    au < manifest ; 2013 ; Southern Illinois University Board of Trustees Annual Report 2013 ; 2013 >
+    au < released ; 2006 ; Southern Illinois University Board of Trustees Annual Report 2006 ; 2006 >
+    au < released ; 2007 ; Southern Illinois University Board of Trustees Annual Report 2007 ; 2007 >
+    au < released ; 2008 ; Southern Illinois University Board of Trustees Annual Report 2008 ; 2008 >
+    au < released ; 2009 ; Southern Illinois University Board of Trustees Annual Report 2009 ; 2009 >
+    au < released ; 2010 ; Southern Illinois University Board of Trustees Annual Report 2010 ; 2010 >
+    au < released ; 2011 ; Southern Illinois University Board of Trustees Annual Report 2011 ; 2011 >
+    au < released ; 2012 ; Southern Illinois University Board of Trustees Annual Report 2012 ; 2012 >
+    au < released ; 2013 ; Southern Illinois University Board of Trustees Annual Report 2013 ; 2013 >
   
+  }
+
+  {
+
+    title <
+      name = Southern Illinois University Cache River Symposium
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_series
+    param[collection] = igert_cache
+    implicit < status ; year ; name ; param[collection_heading] >  
+
+    au < released ; 2010 ; Southern Illinois University Cache River Symposium 2010 ; 2010 >
+
   }
 
   {
@@ -85,10 +953,10 @@
     param[collection] = agecon_articles
     implicit < status ; year ; name ; param[collection_heading] >
   
-    au < manifest ; 2005 ; Southern Illinois University Department of Agribusiness Economics Articles 2005 ; 2005 >
-    au < manifest ; 2007 ; Southern Illinois University Department of Agribusiness Economics Articles 2007 ; 2007 >
-    au < manifest ; 2010 ; Southern Illinois University Department of Agribusiness Economics Articles 2010 ; 2010 >
-    au < manifest ; 2011 ; Southern Illinois University Department of Agribusiness Economics Articles 2011 ; 2011 >
+    au < released ; 2005 ; Southern Illinois University Department of Agribusiness Economics Articles 2005 ; 2005 >
+    au < released ; 2007 ; Southern Illinois University Department of Agribusiness Economics Articles 2007 ; 2007 >
+    au < released ; 2010 ; Southern Illinois University Department of Agribusiness Economics Articles 2010 ; 2010 >
+    au < released ; 2011 ; Southern Illinois University Department of Agribusiness Economics Articles 2011 ; 2011 >
   
   }
 
@@ -104,10 +972,10 @@
     param[collection] = anat_pubs
     implicit < status ; year ; name ; param[collection_heading] >
   
-    au < manifest ; 1983 ; Southern Illinois University Department of Anatomy Publications 1983 ; 1983 >
-    au < manifest ; 2006 ; Southern Illinois University Department of Anatomy Publications 2006 ; 2006 >
-    au < manifest ; 2007 ; Southern Illinois University Department of Anatomy Publications 2007 ; 2007 >
-    au < manifest ; 2009 ; Southern Illinois University Department of Anatomy Publications 2009 ; 2009 >
+    au < released ; 1983 ; Southern Illinois University Department of Anatomy Publications 1983 ; 1983 >
+    au < released ; 2006 ; Southern Illinois University Department of Anatomy Publications 2006 ; 2006 >
+    au < released ; 2007 ; Southern Illinois University Department of Anatomy Publications 2007 ; 2007 >
+    au < released ; 2009 ; Southern Illinois University Department of Anatomy Publications 2009 ; 2009 >
   
   }
 
@@ -123,8 +991,8 @@
     param[collection] = asfn_articles
     implicit < status ; year ; name ; param[collection_heading] >
   
-    au < manifest ; 2007 ; Southern Illinois University Department of Animal Science, Food and Nutrition Peer-Reviewed Articles 2007 ; 2007 >
-    au < manifest ; 2013 ; Southern Illinois University Department of Animal Science, Food and Nutrition Peer-Reviewed Articles 2013 ; 2013 >
+    au < released ; 2007 ; Southern Illinois University Department of Animal Science, Food and Nutrition Peer-Reviewed Articles 2007 ; 2007 >
+    au < released ; 2013 ; Southern Illinois University Department of Animal Science, Food and Nutrition Peer-Reviewed Articles 2013 ; 2013 >
   
   }
 
@@ -140,9 +1008,9 @@
     param[collection] = anthro_pubs
     implicit < status ; year ; name ; param[collection_heading] >
   
-    au < manifest ; 1999 ; Southern Illinois University Department of Anthropology Publications 1999 ; 1999 >
-    au < manifest ; 2004 ; Southern Illinois University Department of Anthropology Publications 2004 ; 2004 >
-    au < manifest ; 2005 ; Southern Illinois University Department of Anthropology Publications 2005 ; 2005 >
+    au < released ; 1999 ; Southern Illinois University Department of Anthropology Publications 1999 ; 1999 >
+    au < released ; 2004 ; Southern Illinois University Department of Anthropology Publications 2004 ; 2004 >
+    au < released ; 2005 ; Southern Illinois University Department of Anthropology Publications 2005 ; 2005 >
   
   }
 
@@ -158,12 +1026,12 @@
     param[collection] = auto_pres
     implicit < status ; year ; name ; param[collection_heading] >
   
-    au < manifest ; 2008 ; Southern Illinois University Department of Automotive Technology Presentations 2008 ; 2008 >
-    au < manifest ; 2009 ; Southern Illinois University Department of Automotive Technology Presentations 2009 ; 2009 >
-    au < manifest ; 2010 ; Southern Illinois University Department of Automotive Technology Presentations 2010 ; 2010 >
-    au < manifest ; 2011 ; Southern Illinois University Department of Automotive Technology Presentations 2011 ; 2011 >
-    au < manifest ; 2012 ; Southern Illinois University Department of Automotive Technology Presentations 2012 ; 2012 >
-    au < manifest ; 2013 ; Southern Illinois University Department of Automotive Technology Presentations 2013 ; 2013 >
+    au < released ; 2008 ; Southern Illinois University Department of Automotive Technology Presentations 2008 ; 2008 >
+    au < released ; 2009 ; Southern Illinois University Department of Automotive Technology Presentations 2009 ; 2009 >
+    au < released ; 2010 ; Southern Illinois University Department of Automotive Technology Presentations 2010 ; 2010 >
+    au < released ; 2011 ; Southern Illinois University Department of Automotive Technology Presentations 2011 ; 2011 >
+    au < released ; 2012 ; Southern Illinois University Department of Automotive Technology Presentations 2012 ; 2012 >
+    au < released ; 2013 ; Southern Illinois University Department of Automotive Technology Presentations 2013 ; 2013 >
   
   }
 
@@ -176,12 +1044,12 @@
     plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
     param[base_url] = http://opensiuc.lib.siu.edu/
     param[collection_type] = ir_series
-    param[collection] = ccj_articles
+    param[collection] = cee_pubs
     implicit < status ; year ; name ; param[collection_heading] >
   
-    au < manifest ; 2002 ; Southern Illinois University Department of Civil and Environmental Engineering Publications 2002 ; 2002 >
-    au < manifest ; 2006 ; Southern Illinois University Department of Civil and Environmental Engineering Publications 2006 ; 2006 >
-    au < manifest ; 2008 ; Southern Illinois University Department of Civil and Environmental Engineering Publications 2008 ; 2008 >
+    au < released ; 2002 ; Southern Illinois University Department of Civil and Environmental Engineering Publications 2002 ; 2002 >
+    au < released ; 2006 ; Southern Illinois University Department of Civil and Environmental Engineering Publications 2006 ; 2006 >
+    au < released ; 2008 ; Southern Illinois University Department of Civil and Environmental Engineering Publications 2008 ; 2008 >
   
   }
 
@@ -197,7 +1065,7 @@
     param[collection] = chem_mdata
     implicit < status ; year ; name ; param[collection_heading] >
   
-    au < manifest ; 2010 ; Southern Illinois University Department of Chemistry and Biochemistry Microarray Data Sets 2010 ; 2010 >
+    au < released ; 2010 ; Southern Illinois University Department of Chemistry and Biochemistry Microarray Data Sets 2010 ; 2010 >
   
   }
 
@@ -213,17 +1081,1334 @@
     param[collection] = cs_pubs
     implicit < status ; year ; name ; param[collection_heading] >
   
-    au < manifest ; 2002 ; Southern Illinois University Department of Computer Science Publications 2002 ; 2002 >
-    au < manifest ; 2003 ; Southern Illinois University Department of Computer Science Publications 2003 ; 2003 >
-    au < manifest ; 2004 ; Southern Illinois University Department of Computer Science Publications 2004 ; 2004 >
-    au < manifest ; 2005 ; Southern Illinois University Department of Computer Science Publications 2005 ; 2005 >
-    au < manifest ; 2006 ; Southern Illinois University Department of Computer Science Publications 2006 ; 2006 >
-    au < manifest ; 2007 ; Southern Illinois University Department of Computer Science Publications 2007 ; 2007 >
-    au < manifest ; 2008 ; Southern Illinois University Department of Computer Science Publications 2008 ; 2008 >
-    au < manifest ; 2009 ; Southern Illinois University Department of Computer Science Publications 2009 ; 2009 >
-    au < manifest ; 2010 ; Southern Illinois University Department of Computer Science Publications 2010 ; 2010 >
-    au < manifest ; 2012 ; Southern Illinois University Department of Computer Science Publications 2012 ; 2012 >
+    au < released ; 2002 ; Southern Illinois University Department of Computer Science Publications 2002 ; 2002 >
+    au < released ; 2003 ; Southern Illinois University Department of Computer Science Publications 2003 ; 2003 >
+    au < released ; 2004 ; Southern Illinois University Department of Computer Science Publications 2004 ; 2004 >
+    au < released ; 2005 ; Southern Illinois University Department of Computer Science Publications 2005 ; 2005 >
+    au < released ; 2006 ; Southern Illinois University Department of Computer Science Publications 2006 ; 2006 >
+    au < released ; 2007 ; Southern Illinois University Department of Computer Science Publications 2007 ; 2007 >
+    au < released ; 2008 ; Southern Illinois University Department of Computer Science Publications 2008 ; 2008 >
+    au < released ; 2009 ; Southern Illinois University Department of Computer Science Publications 2009 ; 2009 >
+    au < released ; 2010 ; Southern Illinois University Department of Computer Science Publications 2010 ; 2010 >
+    au < released ; 2012 ; Southern Illinois University Department of Computer Science Publications 2012 ; 2012 >
   
+  }
+
+  {
+  
+    title <
+      name = Southern Illinois University Department of Criminology and Criminal Justice Articles
+    >
+    
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_series
+    param[collection] = ccj_articles
+    implicit < status ; year ; name ; param[collection_heading] >
+  
+    au < released ; 2008 ; Southern Illinois University Department of Criminology and Criminal Justice Articles 2008 ; 2008 >
+    au < released ; 2009 ; Southern Illinois University Department of Criminology and Criminal Justice Articles 2009 ; 2009 >
+    au < released ; 2010 ; Southern Illinois University Department of Criminology and Criminal Justice Articles 2010 ; 2010 >
+    au < released ; 2011 ; Southern Illinois University Department of Criminology and Criminal Justice Articles 2011 ; 2011 >
+  
+  }
+
+  {
+
+    title <
+      name = Southern Illinois University Department of Dental Hygiene Journal Articles
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_series
+    param[collection] = dh_articles
+    implicit < status ; year ; name ; param[collection_heading] >  
+
+    au < released ; 2005 ; Southern Illinois University Department of Dental Hygiene Journal Articles 2005 ; 2005 >
+    au < released ; 2010 ; Southern Illinois University Department of Dental Hygiene Journal Articles 2010 ; 2010 >
+    au < released ; 2012 ; Southern Illinois University Department of Dental Hygiene Journal Articles 2012 ; 2012 >
+
+  }
+
+  {
+
+    title <
+      name = Southern Illinois University Department of Economics Discussion Papers
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_series
+    param[collection] = econ_dp
+    implicit < status ; year ; name ; param[collection_heading] >  
+
+    au < released ; 2001 ; Southern Illinois University Department of Economics Discussion Papers 2001 ; 2001 >
+    au < released ; 2002 ; Southern Illinois University Department of Economics Discussion Papers 2002 ; 2002 >
+    au < released ; 2004 ; Southern Illinois University Department of Economics Discussion Papers 2004 ; 2004 >
+    au < released ; 2005 ; Southern Illinois University Department of Economics Discussion Papers 2005 ; 2005 >
+    au < released ; 2006 ; Southern Illinois University Department of Economics Discussion Papers 2006 ; 2006 >
+    au < released ; 2007 ; Southern Illinois University Department of Economics Discussion Papers 2007 ; 2007 >
+    au < released ; 2008 ; Southern Illinois University Department of Economics Discussion Papers 2008 ; 2008 >
+    au < released ; 2009 ; Southern Illinois University Department of Economics Discussion Papers 2009 ; 2009 >
+    au < released ; 2010 ; Southern Illinois University Department of Economics Discussion Papers 2010 ; 2010 >
+    au < released ; 2011 ; Southern Illinois University Department of Economics Discussion Papers 2011 ; 2011 >
+
+  }
+
+  {
+
+    title <
+      name = Southern Illinois University Department of Educational Psychology and Special Education Book Chapters
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_series
+    param[collection] = epse_books
+    implicit < status ; year ; name ; param[collection_heading] >  
+
+    au < released ; 2013 ; Southern Illinois University Department of Educational Psychology and Special Education Book Chapters 2013 ; 2013 >
+
+  }
+
+  {
+
+    title <
+      name = Southern Illinois University Department of Educational Psychology and Special Education Conference Proceedings
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_series
+    param[collection] = epse_confs
+    implicit < status ; year ; name ; param[collection_heading] >  
+
+    au < released ; 2013 ; Southern Illinois University Department of Educational Psychology and Special Education Conference Proceedings 2013 ; 2013 >
+
+  }
+
+  {
+
+    title <
+      name = Southern Illinois University Department of Educational Psychology and Special Education Publications
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_series
+    param[collection] = epse_pubs
+    implicit < status ; year ; name ; param[collection_heading] >  
+
+    au < released ; 2001 ; Southern Illinois University Department of Educational Psychology and Special Education Publications 2001 ; 2001 >
+    au < released ; 2002 ; Southern Illinois University Department of Educational Psychology and Special Education Publications 2002 ; 2002 >
+    au < released ; 2003 ; Southern Illinois University Department of Educational Psychology and Special Education Publications 2003 ; 2003 >
+    au < released ; 2004 ; Southern Illinois University Department of Educational Psychology and Special Education Publications 2004 ; 2004 >
+    au < released ; 2006 ; Southern Illinois University Department of Educational Psychology and Special Education Publications 2006 ; 2006 >
+    au < released ; 2007 ; Southern Illinois University Department of Educational Psychology and Special Education Publications 2007 ; 2007 >
+    au < released ; 2008 ; Southern Illinois University Department of Educational Psychology and Special Education Publications 2008 ; 2008 >
+    au < released ; 2009 ; Southern Illinois University Department of Educational Psychology and Special Education Publications 2009 ; 2009 >
+    au < released ; 2010 ; Southern Illinois University Department of Educational Psychology and Special Education Publications 2010 ; 2010 >
+    au < released ; 2011 ; Southern Illinois University Department of Educational Psychology and Special Education Publications 2011 ; 2011 >
+    au < released ; 2012 ; Southern Illinois University Department of Educational Psychology and Special Education Publications 2012 ; 2012 >
+    au < released ; 2013 ; Southern Illinois University Department of Educational Psychology and Special Education Publications 2013 ; 2013 >
+    au < released ; 2014 ; Southern Illinois University Department of Educational Psychology and Special Education Publications 2014 ; 2014 >
+
+  }
+
+  {
+
+    title <
+      name = Southern Illinois University Department of Electrical and Computer Engineering Articles
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_series
+    param[collection] = ece_articles
+    implicit < status ; year ; name ; param[collection_heading] >  
+
+    au < released ; 1970 ; Southern Illinois University Department of Electrical and Computer Engineering Articles 1970 ; 1970 >
+    au < released ; 1974 ; Southern Illinois University Department of Electrical and Computer Engineering Articles 1974 ; 1974 >
+    au < released ; 1983 ; Southern Illinois University Department of Electrical and Computer Engineering Articles 1983 ; 1983 >
+    au < released ; 1984 ; Southern Illinois University Department of Electrical and Computer Engineering Articles 1984 ; 1984 >
+    au < released ; 1985 ; Southern Illinois University Department of Electrical and Computer Engineering Articles 1985 ; 1985 >
+    au < released ; 1986 ; Southern Illinois University Department of Electrical and Computer Engineering Articles 1986 ; 1986 >
+    au < released ; 1987 ; Southern Illinois University Department of Electrical and Computer Engineering Articles 1987 ; 1987 >
+    au < released ; 1988 ; Southern Illinois University Department of Electrical and Computer Engineering Articles 1988 ; 1988 >
+    au < released ; 1989 ; Southern Illinois University Department of Electrical and Computer Engineering Articles 1989 ; 1989 >
+    au < released ; 1992 ; Southern Illinois University Department of Electrical and Computer Engineering Articles 1992 ; 1992 >
+    au < released ; 1993 ; Southern Illinois University Department of Electrical and Computer Engineering Articles 1993 ; 1993 >
+    au < released ; 1994 ; Southern Illinois University Department of Electrical and Computer Engineering Articles 1994 ; 1994 >
+    au < released ; 1995 ; Southern Illinois University Department of Electrical and Computer Engineering Articles 1995 ; 1995 >
+    au < released ; 1996 ; Southern Illinois University Department of Electrical and Computer Engineering Articles 1996 ; 1996 >
+    au < released ; 1997 ; Southern Illinois University Department of Electrical and Computer Engineering Articles 1997 ; 1997 >
+    au < released ; 1998 ; Southern Illinois University Department of Electrical and Computer Engineering Articles 1998 ; 1998 >
+    au < released ; 1999 ; Southern Illinois University Department of Electrical and Computer Engineering Articles 1999 ; 1999 >
+    au < released ; 2000 ; Southern Illinois University Department of Electrical and Computer Engineering Articles 2000 ; 2000 >
+    au < released ; 2002 ; Southern Illinois University Department of Electrical and Computer Engineering Articles 2002 ; 2002 >
+    au < released ; 2005 ; Southern Illinois University Department of Electrical and Computer Engineering Articles 2005 ; 2005 >
+    au < released ; 2006 ; Southern Illinois University Department of Electrical and Computer Engineering Articles 2006 ; 2006 >
+    au < released ; 2008 ; Southern Illinois University Department of Electrical and Computer Engineering Articles 2008 ; 2008 >
+    au < released ; 2009 ; Southern Illinois University Department of Electrical and Computer Engineering Articles 2009 ; 2009 >
+
+  }
+
+  {
+
+    title <
+      name = Southern Illinois University Department of Electrical and Computer Engineering Books
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_series
+    param[collection] = ece_books
+    implicit < status ; year ; name ; param[collection_heading] >  
+
+    au < released ; 2010 ; Southern Illinois University Department of Electrical and Computer Engineering Books 2010 ; 2010 >
+
+  }
+
+  {
+
+    title <
+      name = Southern Illinois University Department of Electrical and Computer Engineering Conference Proceedings
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_series
+    param[collection] = ece_confs
+    implicit < status ; year ; name ; param[collection_heading] >  
+
+    au < released ; 1987 ; Southern Illinois University Department of Electrical and Computer Engineering Conference Proceedings 1987 ; 1987 >
+    au < released ; 1988 ; Southern Illinois University Department of Electrical and Computer Engineering Conference Proceedings 1988 ; 1988 >
+    au < released ; 1990 ; Southern Illinois University Department of Electrical and Computer Engineering Conference Proceedings 1990 ; 1990 >
+    au < released ; 1991 ; Southern Illinois University Department of Electrical and Computer Engineering Conference Proceedings 1991 ; 1991 >
+    au < released ; 1992 ; Southern Illinois University Department of Electrical and Computer Engineering Conference Proceedings 1992 ; 1992 >
+    au < released ; 1993 ; Southern Illinois University Department of Electrical and Computer Engineering Conference Proceedings 1993 ; 1993 >
+    au < released ; 1994 ; Southern Illinois University Department of Electrical and Computer Engineering Conference Proceedings 1994 ; 1994 >
+    au < released ; 1995 ; Southern Illinois University Department of Electrical and Computer Engineering Conference Proceedings 1995 ; 1995 >
+    au < released ; 1996 ; Southern Illinois University Department of Electrical and Computer Engineering Conference Proceedings 1996 ; 1996 >
+    au < released ; 1997 ; Southern Illinois University Department of Electrical and Computer Engineering Conference Proceedings 1997 ; 1997 >
+    au < released ; 1998 ; Southern Illinois University Department of Electrical and Computer Engineering Conference Proceedings 1998 ; 1998 >
+    au < released ; 1999 ; Southern Illinois University Department of Electrical and Computer Engineering Conference Proceedings 1999 ; 1999 >
+    au < released ; 2000 ; Southern Illinois University Department of Electrical and Computer Engineering Conference Proceedings 2000 ; 2000 >
+    au < released ; 2002 ; Southern Illinois University Department of Electrical and Computer Engineering Conference Proceedings 2002 ; 2002 >
+    au < released ; 2003 ; Southern Illinois University Department of Electrical and Computer Engineering Conference Proceedings 2003 ; 2003 >
+    au < released ; 2004 ; Southern Illinois University Department of Electrical and Computer Engineering Conference Proceedings 2004 ; 2004 >
+    au < released ; 2005 ; Southern Illinois University Department of Electrical and Computer Engineering Conference Proceedings 2005 ; 2005 >
+    au < released ; 2006 ; Southern Illinois University Department of Electrical and Computer Engineering Conference Proceedings 2006 ; 2006 >
+    au < released ; 2007 ; Southern Illinois University Department of Electrical and Computer Engineering Conference Proceedings 2007 ; 2007 >
+    au < released ; 2008 ; Southern Illinois University Department of Electrical and Computer Engineering Conference Proceedings 2008 ; 2008 >
+    au < released ; 2009 ; Southern Illinois University Department of Electrical and Computer Engineering Conference Proceedings 2009 ; 2009 >
+
+  }
+
+  {
+
+    title <
+      name = Southern Illinois University Department of Finance Publications
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_series
+    param[collection] = fin_pubs
+    implicit < status ; year ; name ; param[collection_heading] >  
+
+    au < released ; 2002 ; Southern Illinois University Department of Finance Publications 2002 ; 2002 >
+    au < released ; 2007 ; Southern Illinois University Department of Finance Publications 2007 ; 2007 >
+    au < released ; 2008 ; Southern Illinois University Department of Finance Publications 2008 ; 2008 >
+    au < released ; 2009 ; Southern Illinois University Department of Finance Publications 2009 ; 2009 >
+    au < released ; 2010 ; Southern Illinois University Department of Finance Publications 2010 ; 2010 >
+
+  }
+
+  {
+
+    title <
+      name = Southern Illinois University Department of Forestry Articles
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_series
+    param[collection] = for_articles
+    implicit < status ; year ; name ; param[collection_heading] >  
+
+    au < released ; 2011 ; Southern Illinois University Department of Forestry Articles 2011 ; 2011 >
+    au < released ; 2012 ; Southern Illinois University Department of Forestry Articles 2012 ; 2012 >
+
+  }
+
+  {
+
+    title <
+      name = Southern Illinois University Department of Geography and Environmental Resources Publications
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_series
+    param[collection] = gers_pubs
+    implicit < status ; year ; name ; param[collection_heading] >  
+
+    au < released ; 1998 ; Southern Illinois University Department of Geography and Environmental Resources Publications 1998 ; 1998 >
+    au < released ; 1999 ; Southern Illinois University Department of Geography and Environmental Resources Publications 1999 ; 1999 >
+    au < released ; 2000 ; Southern Illinois University Department of Geography and Environmental Resources Publications 2000 ; 2000 >
+    au < released ; 2001 ; Southern Illinois University Department of Geography and Environmental Resources Publications 2001 ; 2001 >
+    au < released ; 2003 ; Southern Illinois University Department of Geography and Environmental Resources Publications 2003 ; 2003 >
+    au < released ; 2005 ; Southern Illinois University Department of Geography and Environmental Resources Publications 2005 ; 2005 >
+    au < released ; 2006 ; Southern Illinois University Department of Geography and Environmental Resources Publications 2006 ; 2006 >
+    au < released ; 2007 ; Southern Illinois University Department of Geography and Environmental Resources Publications 2007 ; 2007 >
+    au < released ; 2008 ; Southern Illinois University Department of Geography and Environmental Resources Publications 2008 ; 2008 >
+    au < released ; 2010 ; Southern Illinois University Department of Geography and Environmental Resources Publications 2010 ; 2010 >
+    au < released ; 2012 ; Southern Illinois University Department of Geography and Environmental Resources Publications 2012 ; 2012 >
+    au < released ; 2013 ; Southern Illinois University Department of Geography and Environmental Resources Publications 2013 ; 2013 >
+
+  }
+
+  {
+
+    title <
+      name = Southern Illinois University Department of Geography and Environmental Resources Student Research Showcase
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_series
+    implicit < status ; year ; name ; param[collection] ; param[collection_heading] >  
+
+    au < released ; 2009 ; Southern Illinois University Department of Geography and Environmental Resources Student Research Showcase 2009 ; srs_2009 ; 2009 >
+
+  }
+
+  {
+
+    title <
+      name = Southern Illinois University Department of Geology Computer Programs and Code
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_series
+    param[collection] = geol_comp
+    implicit < status ; year ; name ; param[collection_heading] >
+    
+    # All with external links so far
+    attr[au_coverage_depth] = abstracts  
+
+    au < released ; 2009 ; Southern Illinois University Department of Geology Computer Programs and Code 2009 [abstracts only] ; 2009 >
+    au < released ; 2011 ; Southern Illinois University Department of Geology Computer Programs and Code 2011 [abstracts only] ; 2011 >
+    au < released ; 2014 ; Southern Illinois University Department of Geology Computer Programs and Code 2014 [abstracts only] ; 2014 >
+
+  }
+
+  {
+
+    title <
+      name = Southern Illinois University Department of Health Education and Recreation, Division of Public Health Education Presentations
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_series
+    param[collection] = phe_pres
+    implicit < status ; year ; name ; param[collection_heading] >  
+
+    au < released ; 2009 ; Southern Illinois University Department of Health Education and Recreation, Division of Public Health Education Presentations 2009 ; 2009 >
+    au < released ; 2010 ; Southern Illinois University Department of Health Education and Recreation, Division of Public Health Education Presentations 2010 ; 2010 >
+
+  }
+
+  {
+
+    title <
+      name = Southern Illinois University Department of Health Education and Recreation, Division of Public Health Education Publications
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_series
+    param[collection] = phe_pubs
+    implicit < status ; year ; name ; param[collection_heading] >  
+
+    au < released ; 2009 ; Southern Illinois University Department of Health Education and Recreation, Division of Public Health Education Publications 2009 ; 2009 >
+
+  }
+
+  {
+
+    title <
+      name = Southern Illinois University Department of History Publications
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_series
+    param[collection] = hist_pubs
+    implicit < status ; year ; name ; param[collection_heading] >  
+
+    au < released ; 2007 ; Southern Illinois University Department of History Publications 2007 ; 2007 >
+    au < released ; 2008 ; Southern Illinois University Department of History Publications 2008 ; 2008 >
+    au < released ; 2010 ; Southern Illinois University Department of History Publications 2010 ; 2010 >
+
+  }
+
+  {
+
+    title <
+      name = Southern Illinois University Department of Internal Medicine Publications
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_series
+    param[collection] = im_pubs
+    implicit < status ; year ; name ; param[collection_heading] >  
+
+    au < released ; 1988 ; Southern Illinois University Department of Internal Medicine Publications 1988 ; 1988 >
+
+  }
+
+  {
+
+    title <
+      name = Southern Illinois University Department of Mathematics Articles and Preprints
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_series
+    param[collection] = math_articles
+    implicit < status ; year ; name ; param[collection_heading] >  
+
+    au < released ; 1993 ; Southern Illinois University Department of Mathematics Articles and Preprints 1993 ; 1993 >
+    au < released ; 1994 ; Southern Illinois University Department of Mathematics Articles and Preprints 1994 ; 1994 >
+    au < released ; 1995 ; Southern Illinois University Department of Mathematics Articles and Preprints 1995 ; 1995 >
+    au < released ; 1996 ; Southern Illinois University Department of Mathematics Articles and Preprints 1996 ; 1996 >
+    au < released ; 1997 ; Southern Illinois University Department of Mathematics Articles and Preprints 1997 ; 1997 >
+    au < released ; 1998 ; Southern Illinois University Department of Mathematics Articles and Preprints 1998 ; 1998 >
+    au < released ; 1999 ; Southern Illinois University Department of Mathematics Articles and Preprints 1999 ; 1999 >
+    au < released ; 2000 ; Southern Illinois University Department of Mathematics Articles and Preprints 2000 ; 2000 >
+    au < released ; 2001 ; Southern Illinois University Department of Mathematics Articles and Preprints 2001 ; 2001 >
+    au < released ; 2002 ; Southern Illinois University Department of Mathematics Articles and Preprints 2002 ; 2002 >
+    au < released ; 2003 ; Southern Illinois University Department of Mathematics Articles and Preprints 2003 ; 2003 >
+    au < released ; 2004 ; Southern Illinois University Department of Mathematics Articles and Preprints 2004 ; 2004 >
+    au < released ; 2005 ; Southern Illinois University Department of Mathematics Articles and Preprints 2005 ; 2005 >
+    au < released ; 2006 ; Southern Illinois University Department of Mathematics Articles and Preprints 2006 ; 2006 >
+    au < released ; 2007 ; Southern Illinois University Department of Mathematics Articles and Preprints 2007 ; 2007 >
+    au < released ; 2008 ; Southern Illinois University Department of Mathematics Articles and Preprints 2008 ; 2008 >
+    au < released ; 2009 ; Southern Illinois University Department of Mathematics Articles and Preprints 2009 ; 2009 >
+    au < released ; 2010 ; Southern Illinois University Department of Mathematics Articles and Preprints 2010 ; 2010 >
+    au < released ; 2012 ; Southern Illinois University Department of Mathematics Articles and Preprints 2012 ; 2012 >
+    au < released ; 2014 ; Southern Illinois University Department of Mathematics Articles and Preprints 2014 ; 2014 >
+
+  }
+
+  {
+
+    title <
+      name = Southern Illinois University Department of Mathematics Books, Monographs and Lecture Notes
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_series
+    param[collection] = math_books
+    implicit < status ; year ; name ; param[collection_heading] >  
+
+    au < released ; 1997 ; Southern Illinois University Department of Mathematics Books, Monographs and Lecture Notes 1997 ; 1997 >
+
+  }
+
+  {
+
+    title <
+      name = Southern Illinois University Department of Mathematics Miscellaneous
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_series
+    param[collection] = math_misc
+    implicit < status ; year ; name ; param[collection_heading] >  
+
+    au < released ; 1996 ; Southern Illinois University Department of Mathematics Miscellaneous 1996 ; 1996 >
+    au < released ; 1997 ; Southern Illinois University Department of Mathematics Miscellaneous 1997 ; 1997 >
+    au < released ; 1998 ; Southern Illinois University Department of Mathematics Miscellaneous 1998 ; 1998 >
+    au < released ; 1999 ; Southern Illinois University Department of Mathematics Miscellaneous 1999 ; 1999 >
+    au < released ; 2000 ; Southern Illinois University Department of Mathematics Miscellaneous 2000 ; 2000 >
+    au < released ; 2001 ; Southern Illinois University Department of Mathematics Miscellaneous 2001 ; 2001 >
+    au < released ; 2002 ; Southern Illinois University Department of Mathematics Miscellaneous 2002 ; 2002 >
+    au < released ; 2003 ; Southern Illinois University Department of Mathematics Miscellaneous 2003 ; 2003 >
+    au < released ; 2004 ; Southern Illinois University Department of Mathematics Miscellaneous 2004 ; 2004 >
+    au < released ; 2005 ; Southern Illinois University Department of Mathematics Miscellaneous 2005 ; 2005 >
+    au < released ; 2006 ; Southern Illinois University Department of Mathematics Miscellaneous 2006 ; 2006 >
+    au < released ; 2007 ; Southern Illinois University Department of Mathematics Miscellaneous 2007 ; 2007 >
+    au < released ; 2008 ; Southern Illinois University Department of Mathematics Miscellaneous 2008 ; 2008 >
+    au < released ; 2009 ; Southern Illinois University Department of Mathematics Miscellaneous 2009 ; 2009 >
+    au < released ; 2010 ; Southern Illinois University Department of Mathematics Miscellaneous 2010 ; 2010 >
+    au < released ; 2011 ; Southern Illinois University Department of Mathematics Miscellaneous 2011 ; 2011 >
+    au < released ; 2012 ; Southern Illinois University Department of Mathematics Miscellaneous 2012 ; 2012 >
+
+  }
+
+  {
+
+    title <
+      name = Southern Illinois University Department of Mechanical Engineering and Energy Processes Articles
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_series
+    param[collection] = meep_articles
+    implicit < status ; year ; name ; param[collection_heading] >  
+
+    au < released ; 2001 ; Southern Illinois University Department of Mechanical Engineering and Energy Processes Articles 2001 ; 2001 >
+    au < released ; 2007 ; Southern Illinois University Department of Mechanical Engineering and Energy Processes Articles 2007 ; 2007 >
+    au < released ; 2008 ; Southern Illinois University Department of Mechanical Engineering and Energy Processes Articles 2008 ; 2008 >
+    au < released ; 2009 ; Southern Illinois University Department of Mechanical Engineering and Energy Processes Articles 2009 ; 2009 >
+
+  }
+
+  {
+
+    title <
+      name = Southern Illinois University Department of Medical Education Book Chapters
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_series
+    param[collection] = meded_books
+    implicit < status ; year ; name ; param[collection_heading] >  
+
+    au < released ; 1996 ; Southern Illinois University Department of Medical Education Book Chapters 1996 ; 1996 >
+    au < released ; 2000 ; Southern Illinois University Department of Medical Education Book Chapters 2000 ; 2000 >
+    au < released ; 2001 ; Southern Illinois University Department of Medical Education Book Chapters 2001 ; 2001 >
+    au < released ; 2007 ; Southern Illinois University Department of Medical Education Book Chapters 2007 ; 2007 >
+    au < released ; 2012 ; Southern Illinois University Department of Medical Education Book Chapters 2012 ; 2012 >
+    au < released ; 2013 ; Southern Illinois University Department of Medical Education Book Chapters 2013 ; 2013 >
+
+  }
+
+  {
+
+    title <
+      name = Southern Illinois University Department of Medical Education Conference Proceedings
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_series
+    param[collection] = meded_confs
+    implicit < status ; year ; name ; param[collection_heading] >  
+
+    au < released ; 2001 ; Southern Illinois University Department of Medical Education Conference Proceedings 2001 ; 2001 >
+    au < released ; 2003 ; Southern Illinois University Department of Medical Education Conference Proceedings 2003 ; 2003 >
+
+  }
+
+  {
+
+    title <
+      name = Southern Illinois University Department of Medical Education Publications
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_series
+    param[collection] = meded_pubs
+    implicit < status ; year ; name ; param[collection_heading] >  
+
+    au < released ; 1988 ; Southern Illinois University Department of Medical Education Publications 1988 ; 1988 >
+    au < released ; 1997 ; Southern Illinois University Department of Medical Education Publications 1997 ; 1997 >
+    au < released ; 2002 ; Southern Illinois University Department of Medical Education Publications 2002 ; 2002 >
+    au < released ; 2007 ; Southern Illinois University Department of Medical Education Publications 2007 ; 2007 >
+    au < released ; 2008 ; Southern Illinois University Department of Medical Education Publications 2008 ; 2008 >
+    au < released ; 2009 ; Southern Illinois University Department of Medical Education Publications 2009 ; 2009 >
+    au < released ; 2010 ; Southern Illinois University Department of Medical Education Publications 2010 ; 2010 >
+
+  }
+
+  {
+
+    title <
+      name = Southern Illinois University Department of Microbiology Publications
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_series
+    param[collection] = micro_pubs
+    implicit < status ; year ; name ; param[collection_heading] >  
+
+    au < released ; 2006 ; Southern Illinois University Department of Microbiology Publications 2006 ; 2006 >
+    au < released ; 2014 ; Southern Illinois University Department of Microbiology Publications 2014 ; 2014 >
+
+  }
+
+  {
+
+    title <
+      name = Southern Illinois University Department of Physics Publications
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_series
+    param[collection] = phys_pubs
+    implicit < status ; year ; name ; param[collection_heading] >  
+
+    au < released ; 1997 ; Southern Illinois University Department of Physics Publications 1997 ; 1997 >
+    au < released ; 1999 ; Southern Illinois University Department of Physics Publications 1999 ; 1999 >
+    au < released ; 2000 ; Southern Illinois University Department of Physics Publications 2000 ; 2000 >
+    au < released ; 2001 ; Southern Illinois University Department of Physics Publications 2001 ; 2001 >
+    au < released ; 2002 ; Southern Illinois University Department of Physics Publications 2002 ; 2002 >
+    au < released ; 2003 ; Southern Illinois University Department of Physics Publications 2003 ; 2003 >
+    au < released ; 2004 ; Southern Illinois University Department of Physics Publications 2004 ; 2004 >
+    au < released ; 2005 ; Southern Illinois University Department of Physics Publications 2005 ; 2005 >
+    au < released ; 2006 ; Southern Illinois University Department of Physics Publications 2006 ; 2006 >
+    au < released ; 2007 ; Southern Illinois University Department of Physics Publications 2007 ; 2007 >
+    au < released ; 2008 ; Southern Illinois University Department of Physics Publications 2008 ; 2008 >
+    au < released ; 2009 ; Southern Illinois University Department of Physics Publications 2009 ; 2009 >
+    au < released ; 2010 ; Southern Illinois University Department of Physics Publications 2010 ; 2010 >
+    au < released ; 2011 ; Southern Illinois University Department of Physics Publications 2011 ; 2011 >
+    au < released ; 2012 ; Southern Illinois University Department of Physics Publications 2012 ; 2012 >
+    au < released ; 2013 ; Southern Illinois University Department of Physics Publications 2013 ; 2013 >
+
+  }
+
+  {
+
+    title <
+      name = Southern Illinois University Department of Physics Videos
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_series
+    param[collection] = phys_vids
+    implicit < status ; year ; name ; param[collection_heading] >  
+
+    au < released ; 2008 ; Southern Illinois University Department of Physics Videos 2008 ; 2008 >
+
+  }
+
+  {
+
+    title <
+      name = Southern Illinois University Dissertations
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_etd
+    param[collection] = dissertations
+    implicit < status ; year ; name ; param[collection_heading] >  
+
+    # No LOCKSS markup found
+
+  }
+
+  {
+
+    title <
+      name = Southern Illinois University Department of Plant Biology Publications
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_series
+    param[collection] = pb_pubs
+    implicit < status ; year ; name ; param[collection_heading] >  
+
+    au < released ; 1994 ; Southern Illinois University Department of Plant Biology Publications 1994 ; 1994 >
+    au < released ; 1995 ; Southern Illinois University Department of Plant Biology Publications 1995 ; 1995 >
+    au < released ; 1998 ; Southern Illinois University Department of Plant Biology Publications 1998 ; 1998 >
+    au < released ; 2001 ; Southern Illinois University Department of Plant Biology Publications 2001 ; 2001 >
+    au < released ; 2002 ; Southern Illinois University Department of Plant Biology Publications 2002 ; 2002 >
+    au < released ; 2005 ; Southern Illinois University Department of Plant Biology Publications 2005 ; 2005 >
+    au < released ; 2007 ; Southern Illinois University Department of Plant Biology Publications 2007 ; 2007 >
+    au < released ; 2008 ; Southern Illinois University Department of Plant Biology Publications 2008 ; 2008 >
+    au < released ; 2013 ; Southern Illinois University Department of Plant Biology Publications 2013 ; 2013 >
+
+  }
+
+  {
+
+    title <
+      name = Southern Illinois University Department of Plant Biology Reports
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_series
+    param[collection] = pb_reports
+    implicit < status ; year ; name ; param[collection_heading] >  
+
+    au < released ; 2006 ; Southern Illinois University Department of Plant Biology Reports 2006 ; 2006 >
+    au < released ; 2008 ; Southern Illinois University Department of Plant Biology Reports 2008 ; 2008 >
+    au < released ; 2011 ; Southern Illinois University Department of Plant Biology Reports 2011 ; 2011 >
+
+  }
+
+  {
+
+    title <
+      name = Southern Illinois University Department of Plant, Soils, and Agricultural Systems Articles
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_series
+    param[collection] = psas_articles
+    implicit < status ; year ; name ; param[collection_heading] ; attr[au_coverage_depth] >  
+
+    au < released ; 2003 ; Southern Illinois University Department of Plant, Soils, and Agricultural Systems Articles 2003 ; 2003 ; fulltext >
+    au < released ; 2005 ; Southern Illinois University Department of Plant, Soils, and Agricultural Systems Articles 2005 ; 2005 ; fulltext >
+    au < released ; 2007 ; Southern Illinois University Department of Plant, Soils, and Agricultural Systems Articles 2007 [abstracts only] ; 2007 ; abstracts >
+    au < released ; 2008 ; Southern Illinois University Department of Plant, Soils, and Agricultural Systems Articles 2008 ; 2008 ; fulltext >
+    au < released ; 2009 ; Southern Illinois University Department of Plant, Soils, and Agricultural Systems Articles 2009 ; 2009 ; fulltext >
+    au < released ; 2010 ; Southern Illinois University Department of Plant, Soils, and Agricultural Systems Articles 2010 ; 2010 ; fulltext >
+    au < released ; 2012 ; Southern Illinois University Department of Plant, Soils, and Agricultural Systems Articles 2012 ; 2012 ; fulltext >
+    au < released ; 2013 ; Southern Illinois University Department of Plant, Soils, and Agricultural Systems Articles 2013 ; 2013 ; fulltext >
+    au < released ; 2014 ; Southern Illinois University Department of Plant, Soils, and Agricultural Systems Articles 2014 ; 2014 ; fulltext >
+
+  }
+
+  {
+
+    title <
+      name = Southern Illinois University Department of Political Science Data Repository
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_series
+    param[collection] = ps_dr
+    implicit < status ; year ; name ; param[collection_heading] >  
+
+    attr[au_coverage_depth] = abstracts
+
+    au < released ; 2010 ; Southern Illinois University Department of Political Science Data Repository 2010 [abstracts only] ; 2010 >
+
+  }
+
+  {
+
+    title <
+      name = Southern Illinois University Department of Political Science Publications
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_series
+    param[collection] = ps_pubs
+    implicit < status ; year ; name ; param[collection_heading] >  
+
+    au < released ; 2003 ; Southern Illinois University Department of Political Science Publications 2003 ; 2003 >
+    au < released ; 2004 ; Southern Illinois University Department of Political Science Publications 2004 ; 2004 >
+    au < released ; 2005 ; Southern Illinois University Department of Political Science Publications 2005 ; 2005 >
+    au < released ; 2007 ; Southern Illinois University Department of Political Science Publications 2007 ; 2007 >
+    au < released ; 2009 ; Southern Illinois University Department of Political Science Publications 2009 ; 2009 >
+    au < released ; 2010 ; Southern Illinois University Department of Political Science Publications 2010 ; 2010 >
+
+  }
+
+  {
+
+    title <
+      name = Southern Illinois University Department of Political Science Working Papers
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_series
+    param[collection] = ps_wp
+    implicit < status ; year ; name ; param[collection_heading] >  
+
+    au < released ; 2009 ; Southern Illinois University Department of Political Science Working Papers 2009 ; 2009 >
+    au < released ; 2012 ; Southern Illinois University Department of Political Science Working Papers 2012 ; 2012 >
+    au < released ; 2013 ; Southern Illinois University Department of Political Science Working Papers 2013 ; 2013 >
+
+  }
+
+  {
+
+    title <
+      name = Southern Illinois University Department of Psychology Publications
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_series
+    param[collection] = psych_pubs
+    implicit < status ; year ; name ; param[collection_heading] >  
+
+    au < released ; 1988 ; Southern Illinois University Department of Psychology Publications 1988 ; 1988 >
+    au < released ; 2013 ; Southern Illinois University Department of Psychology Publications 2013 ; 2013 >
+    au < released ; 2014 ; Southern Illinois University Department of Psychology Publications 2014 ; 2014 >
+
+  }
+
+  {
+
+    title <
+      name = Southern Illinois University Emma Smith Hough Library Research Scholarship Awards
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_series
+    param[collection] = esh_2014
+    implicit < status ; year ; name ; param[collection_heading] >  
+
+    au < released ; 2013 ; Southern Illinois University Emma Smith Hough Library Research Scholarship Awards 2013 ; 2013 >
+    au < released ; 2014 ; Southern Illinois University Emma Smith Hough Library Research Scholarship Awards 2014 ; 2014 >
+
+  }
+
+  {
+
+    title <
+      name = Southern Illinois University Fisheries and Illinois Aquaculture Center Publications
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_series
+    param[collection] = fiaq_pubs
+    implicit < status ; year ; name ; param[collection_heading] >  
+
+    au < released ; 1964 ; Southern Illinois University Fisheries and Illinois Aquaculture Center Publications 1964 ; 1964 >
+    au < released ; 1967 ; Southern Illinois University Fisheries and Illinois Aquaculture Center Publications 1967 ; 1967 >
+    au < released ; 1968 ; Southern Illinois University Fisheries and Illinois Aquaculture Center Publications 1968 ; 1968 >
+    au < released ; 1971 ; Southern Illinois University Fisheries and Illinois Aquaculture Center Publications 1971 ; 1971 >
+    au < released ; 1972 ; Southern Illinois University Fisheries and Illinois Aquaculture Center Publications 1972 ; 1972 >
+    au < released ; 1974 ; Southern Illinois University Fisheries and Illinois Aquaculture Center Publications 1974 ; 1974 >
+    au < released ; 1975 ; Southern Illinois University Fisheries and Illinois Aquaculture Center Publications 1975 ; 1975 >
+    au < released ; 1976 ; Southern Illinois University Fisheries and Illinois Aquaculture Center Publications 1976 ; 1976 >
+    au < released ; 1977 ; Southern Illinois University Fisheries and Illinois Aquaculture Center Publications 1977 ; 1977 >
+    au < released ; 1978 ; Southern Illinois University Fisheries and Illinois Aquaculture Center Publications 1978 ; 1978 >
+    au < released ; 1979 ; Southern Illinois University Fisheries and Illinois Aquaculture Center Publications 1979 ; 1979 >
+    au < released ; 1982 ; Southern Illinois University Fisheries and Illinois Aquaculture Center Publications 1982 ; 1982 >
+    au < released ; 1983 ; Southern Illinois University Fisheries and Illinois Aquaculture Center Publications 1983 ; 1983 >
+    au < released ; 1990 ; Southern Illinois University Fisheries and Illinois Aquaculture Center Publications 1990 ; 1990 >
+    au < released ; 1992 ; Southern Illinois University Fisheries and Illinois Aquaculture Center Publications 1992 ; 1992 >
+    au < released ; 1994 ; Southern Illinois University Fisheries and Illinois Aquaculture Center Publications 1994 ; 1994 >
+    au < released ; 1998 ; Southern Illinois University Fisheries and Illinois Aquaculture Center Publications 1998 ; 1998 >
+    au < released ; 1999 ; Southern Illinois University Fisheries and Illinois Aquaculture Center Publications 1999 ; 1999 >
+    au < released ; 2000 ; Southern Illinois University Fisheries and Illinois Aquaculture Center Publications 2000 ; 2000 >
+    au < released ; 2002 ; Southern Illinois University Fisheries and Illinois Aquaculture Center Publications 2002 ; 2002 >
+    au < released ; 2003 ; Southern Illinois University Fisheries and Illinois Aquaculture Center Publications 2003 ; 2003 >
+    au < released ; 2004 ; Southern Illinois University Fisheries and Illinois Aquaculture Center Publications 2004 ; 2004 >
+    au < released ; 2005 ; Southern Illinois University Fisheries and Illinois Aquaculture Center Publications 2005 ; 2005 >
+    au < released ; 2006 ; Southern Illinois University Fisheries and Illinois Aquaculture Center Publications 2006 ; 2006 >
+    au < released ; 2007 ; Southern Illinois University Fisheries and Illinois Aquaculture Center Publications 2007 ; 2007 >
+    au < released ; 2008 ; Southern Illinois University Fisheries and Illinois Aquaculture Center Publications 2008 ; 2008 >
+    au < released ; 2009 ; Southern Illinois University Fisheries and Illinois Aquaculture Center Publications 2009 ; 2009 >
+    au < released ; 2012 ; Southern Illinois University Fisheries and Illinois Aquaculture Center Publications 2012 ; 2012 >
+
+  }
+
+  {
+
+    title <
+      name = Southern Illinois University Fisheries and Illinois Aquaculture Center Reports
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_series
+    param[collection] = fiaq_reports
+    implicit < status ; year ; name ; param[collection_heading] >  
+
+    au < released ; 1981 ; Southern Illinois University Fisheries and Illinois Aquaculture Center Reports 1981 ; 1981 >
+    au < released ; 1990 ; Southern Illinois University Fisheries and Illinois Aquaculture Center Reports 1990 ; 1990 >
+    au < released ; 1994 ; Southern Illinois University Fisheries and Illinois Aquaculture Center Reports 1994 ; 1994 >
+    au < released ; 1997 ; Southern Illinois University Fisheries and Illinois Aquaculture Center Reports 1997 ; 1997 >
+    au < released ; 2002 ; Southern Illinois University Fisheries and Illinois Aquaculture Center Reports 2002 ; 2002 >
+    au < released ; 2003 ; Southern Illinois University Fisheries and Illinois Aquaculture Center Reports 2003 ; 2003 >
+    au < released ; 2006 ; Southern Illinois University Fisheries and Illinois Aquaculture Center Reports 2006 ; 2006 >
+    au < released ; 2007 ; Southern Illinois University Fisheries and Illinois Aquaculture Center Reports 2007 ; 2007 >
+    au < released ; 2008 ; Southern Illinois University Fisheries and Illinois Aquaculture Center Reports 2008 ; 2008 >
+    au < released ; 2009 ; Southern Illinois University Fisheries and Illinois Aquaculture Center Reports 2009 ; 2009 >
+
+  }
+
+  {
+
+    title <
+      name = Southern Illinois University Graduate Highlights
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_series
+    param[collection] = grad_highlights
+    implicit < status ; year ; name ; param[collection_heading] >  
+
+    au < released ; 2002 ; Southern Illinois University Graduate Highlights 2002 ; 2002 >
+    au < released ; 2003 ; Southern Illinois University Graduate Highlights 2003 ; 2003 >
+    au < released ; 2004 ; Southern Illinois University Graduate Highlights 2004 ; 2004 >
+    au < released ; 2005 ; Southern Illinois University Graduate Highlights 2005 ; 2005 >
+    au < released ; 2006 ; Southern Illinois University Graduate Highlights 2006 ; 2006 >
+    au < released ; 2007 ; Southern Illinois University Graduate Highlights 2007 ; 2007 >
+    au < released ; 2008 ; Southern Illinois University Graduate Highlights 2008 ; 2008 >
+
+  }
+
+  {
+
+    title <
+      name = Southern Illinois University Graduate School Research Papers
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_series
+    param[collection] = gs_rp
+    implicit < status ; year ; name ; param[collection_heading] >  
+
+    au < released ; 1985 ; Southern Illinois University Graduate School Research Papers 1985 ; 1985 >
+    au < released ; 1998 ; Southern Illinois University Graduate School Research Papers 1998 ; 1998 >
+    au < released ; 2005 ; Southern Illinois University Graduate School Research Papers 2005 ; 2005 >
+    au < released ; 2009 ; Southern Illinois University Graduate School Research Papers 2009 ; 2009 >
+    au < released ; 2010 ; Southern Illinois University Graduate School Research Papers 2010 ; 2010 >
+    au < released ; 2011 ; Southern Illinois University Graduate School Research Papers 2011 ; 2011 >
+    au < released ; 2012 ; Southern Illinois University Graduate School Research Papers 2012 ; 2012 >
+    au < released ; 2013 ; Southern Illinois University Graduate School Research Papers 2013 ; 2013 >
+    au < released ; 2014 ; Southern Illinois University Graduate School Research Papers 2014 ; 2014 >
+
+  }
+
+  {
+
+    title <
+      name = Southern Illinois University Honors Theses
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_etd
+    param[collection] = uhp_theses
+    implicit < status ; year ; name ; param[collection_heading] >
+
+    au < released ; 1987 ; Southern Illinois University Honors Theses 1987 ; 1987 >
+    au < released ; 1988 ; Southern Illinois University Honors Theses 1988 ; 1988 >
+    au < released ; 1989 ; Southern Illinois University Honors Theses 1989 ; 1989 >
+    au < released ; 1990 ; Southern Illinois University Honors Theses 1990 ; 1990 >
+    au < released ; 1991 ; Southern Illinois University Honors Theses 1991 ; 1991 >
+    au < released ; 1992 ; Southern Illinois University Honors Theses 1992 ; 1992 >
+    au < released ; 1993 ; Southern Illinois University Honors Theses 1993 ; 1993 >
+    au < released ; 1994 ; Southern Illinois University Honors Theses 1994 ; 1994 >
+    au < released ; 1995 ; Southern Illinois University Honors Theses 1995 ; 1995 >
+    au < released ; 1996 ; Southern Illinois University Honors Theses 1996 ; 1996 >
+    au < released ; 1997 ; Southern Illinois University Honors Theses 1997 ; 1997 >
+    au < released ; 1998 ; Southern Illinois University Honors Theses 1998 ; 1998 >
+    au < released ; 1999 ; Southern Illinois University Honors Theses 1999 ; 1999 >
+    au < released ; 2000 ; Southern Illinois University Honors Theses 2000 ; 2000 >
+    au < released ; 2001 ; Southern Illinois University Honors Theses 2001 ; 2001 >
+    au < released ; 2002 ; Southern Illinois University Honors Theses 2002 ; 2002 >
+    au < released ; 2003 ; Southern Illinois University Honors Theses 2003 ; 2003 >
+    au < released ; 2004 ; Southern Illinois University Honors Theses 2004 ; 2004 >
+    au < released ; 2005 ; Southern Illinois University Honors Theses 2005 ; 2005 >
+    au < released ; 2006 ; Southern Illinois University Honors Theses 2006 ; 2006 >
+    au < released ; 2007 ; Southern Illinois University Honors Theses 2007 ; 2007 >
+    au < released ; 2009 ; Southern Illinois University Honors Theses 2009 ; 2009 >
+    au < released ; 2011 ; Southern Illinois University Honors Theses 2011 ; 2011 >
+    au < released ; 2012 ; Southern Illinois University Honors Theses 2012 ; 2012 >
+    au < released ; 2013 ; Southern Illinois University Honors Theses 2013 ; 2013 >
+    au < released ; 2014 ; Southern Illinois University Honors Theses 2014 ; 2014 >
+
+  }
+
+  {
+
+    title <
+      name = Southern Illinois University Illinois Junior Science and Humanities Symposium
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_series
+    param[collection] = ijshs_2014
+    implicit < status ; year ; name ; param[collection_heading] >  
+
+    au < released ; 2014 ; Southern Illinois University Illinois Junior Science and Humanities Symposium 2014 ; 2014 >
+
+  }
+
+  {
+
+    title <
+      name = Southern Illinois University Integrative Graduate Education and Research Traineeship in Watershed Science and Policy Reports
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_series
+    param[collection] = igert_reports
+    implicit < status ; year ; name ; param[collection_heading] >  
+
+    au < released ; 2012 ; Southern Illinois University Integrative Graduate Education and Research Traineeship in Watershed Science and Policy Reports 2012 ; 2012 >
+    au < released ; 2013 ; Southern Illinois University Integrative Graduate Education and Research Traineeship in Watershed Science and Policy Reports 2013 ; 2013 >
+
+  }
+
+  {
+
+    title <
+      name = Southern Illinois University International Advisory Board Presentations
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_series
+    param[collection] = iab_pres
+    implicit < status ; year ; name ; param[collection_heading] >  
+
+    au < released ; 2009 ; Southern Illinois University International Advisory Board Presentations 2009 ; 2009 >
+    au < released ; 2010 ; Southern Illinois University International Advisory Board Presentations 2010 ; 2010 >
+
+  }
+
+  {
+  
+    title <
+      name = Southern Illinois University Law Journal
+    >
+    
+    plugin = org.lockss.plugin.bepress.BePressPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[journal_abbr] = siulj
+    implicit < status ; year ; volume ; name ; param[volume] >
+
+    au < released ; 2003 ; 28 ; Southern Illinois University Law Journal Volume 28 ; 28 >
+    
+  }
+    
+  {
+
+    title <
+      name = Southern Illinois University McNair Scholars Journal
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_series
+    param[collection] = ugr_mcnair
+    implicit < status ; year ; name ; param[collection_heading] >
+
+    au < released ; 2006 ; Southern Illinois University McNair Scholars Journal 2006 ; 2006 >
+    au < released ; 2009 ; Southern Illinois University McNair Scholars Journal 2009 ; 2009 >
+
+  }
+
+  {
+
+    title <
+      name = Southern Illinois University Morris Library Articles
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_series
+    param[collection] = morris_articles
+    implicit < status ; year ; name ; param[collection_heading] >  
+
+    au < released ; 1996 ; Southern Illinois University Morris Library Articles 1996 ; 1996 >
+    au < released ; 2005 ; Southern Illinois University Morris Library Articles 2005 ; 2005 >
+    au < released ; 2006 ; Southern Illinois University Morris Library Articles 2006 ; 2006 >
+    au < released ; 2007 ; Southern Illinois University Morris Library Articles 2007 ; 2007 >
+    au < released ; 2008 ; Southern Illinois University Morris Library Articles 2008 ; 2008 >
+    au < released ; 2009 ; Southern Illinois University Morris Library Articles 2009 ; 2009 >
+    au < released ; 2010 ; Southern Illinois University Morris Library Articles 2010 ; 2010 >
+    au < released ; 2011 ; Southern Illinois University Morris Library Articles 2011 ; 2011 >
+    au < released ; 2012 ; Southern Illinois University Morris Library Articles 2012 ; 2012 >
+    au < released ; 2013 ; Southern Illinois University Morris Library Articles 2013 ; 2013 >
+
+  }
+
+  {
+
+    title <
+      name = Southern Illinois University Morris Library Conference Papers and Presentations
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_series
+    param[collection] = morris_confs
+    implicit < status ; year ; name ; param[collection_heading] >  
+
+    au < released ; 2005 ; Southern Illinois University Morris Library Conference Papers and Presentations 2005 ; 2005 >
+    au < released ; 2006 ; Southern Illinois University Morris Library Conference Papers and Presentations 2006 ; 2006 >
+    au < released ; 2009 ; Southern Illinois University Morris Library Conference Papers and Presentations 2009 ; 2009 >
+    au < released ; 2010 ; Southern Illinois University Morris Library Conference Papers and Presentations 2010 ; 2010 >
+    au < released ; 2011 ; Southern Illinois University Morris Library Conference Papers and Presentations 2011 ; 2011 >
+    au < released ; 2012 ; Southern Illinois University Morris Library Conference Papers and Presentations 2012 ; 2012 >
+    au < released ; 2013 ; Southern Illinois University Morris Library Conference Papers and Presentations 2013 ; 2013 >
+
+  }
+
+  {
+
+    title <
+      name = Southern Illinois University Morris Library Cornerstone
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_series
+    param[collection] = morrisnews_cornerstone
+    implicit < status ; year ; name ; param[collection_heading] >  
+
+    au < released ; 2005 ; Southern Illinois University Morris Library Cornerstone 2005 ; 2005 >
+    au < released ; 2006 ; Southern Illinois University Morris Library Cornerstone 2006 ; 2006 >
+    au < released ; 2007 ; Southern Illinois University Morris Library Cornerstone 2007 ; 2007 >
+    au < released ; 2008 ; Southern Illinois University Morris Library Cornerstone 2008 ; 2008 >
+    au < released ; 2009 ; Southern Illinois University Morris Library Cornerstone 2009 ; 2009 >
+    au < released ; 2010 ; Southern Illinois University Morris Library Cornerstone 2010 ; 2010 >
+    au < released ; 2011 ; Southern Illinois University Morris Library Cornerstone 2011 ; 2011 >
+    au < released ; 2012 ; Southern Illinois University Morris Library Cornerstone 2012 ; 2012 >
+    au < released ; 2013 ; Southern Illinois University Morris Library Cornerstone 2013 ; 2013 >
+    au < released ; 2014 ; Southern Illinois University Morris Library Cornerstone 2014 ; 2014 >
+
+  }
+
+  {
+
+    title <
+      name = Southern Illinois University Morris Library Events
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_series
+    param[collection] = morris_events
+    implicit < status ; year ; name ; param[collection_heading] >  
+
+    au < released ; 2010 ; Southern Illinois University Morris Library Events 2010 ; 2010 >
+    au < released ; 2011 ; Southern Illinois University Morris Library Events 2011 ; 2011 >
+    au < released ; 2014 ; Southern Illinois University Morris Library Events 2014 ; 2014 >
+
+  }
+
+  {
+
+    title <
+      name = Southern Illinois University Morris Library Strategic Planning Documents
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_series
+    param[collection] = morris_sp
+    implicit < status ; year ; name ; param[collection_heading] >  
+
+    au < released ; 2011 ; Southern Illinois University Morris Library Strategic Planning Documents 2011 ; 2011 >
+
+  }
+
+  {
+
+    title <
+      name = Southern Illinois University Morris Library Surveys
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_series
+    param[collection] = morris_surveys
+    implicit < status ; year ; name ; param[collection_heading] >  
+
+    au < released ; 2010 ; Southern Illinois University Morris Library Surveys 2010 ; 2010 >
+
+  }
+
+  {
+
+    title <
+      name = Southern Illinois University Morris Library Videos
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_series
+    param[collection] = morris_vids
+    implicit < status ; year ; name ; param[collection_heading] >  
+
+    au < released ; 2009 ; Southern Illinois University Morris Library Videos 2009 ; 2009 >
+
+  }
+
+  {
+
+    title <
+      name = Southern Illinois University News and Newsletters
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_series
+    param[collection] = ua_news
+    implicit < status ; year ; name ; param[collection_heading] >
+
+    au < released ; 1949 ; Southern Illinois University News and Newsletters 1949 ; 1949 >
+    au < released ; 1963 ; Southern Illinois University News and Newsletters 1963 ; 1963 >
+    au < released ; 1969 ; Southern Illinois University News and Newsletters 1969 ; 1969 >
+
+  }
+
+  {
+
+    title <
+      name = Southern Illinois University OpenSIUC Documents
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_series
+    param[collection] = morris_opensiuc
+    implicit < status ; year ; name ; param[collection_heading] >  
+
+    au < released ; 2008 ; Southern Illinois University OpenSIUC Documents 2008 ; 2008 >
+    au < released ; 2009 ; Southern Illinois University OpenSIUC Documents 2009 ; 2009 >
+    au < released ; 2010 ; Southern Illinois University OpenSIUC Documents 2010 ; 2010 >
+
+  }
+
+  {
+
+    title <
+      name = Southern Illinois University Paul Simon Public Policy Institute: Southern Illinois Polls
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_series
+    param[collection] = ppi_sipolls
+    implicit < status ; year ; name ; param[collection_heading] >  
+
+    au < released ; 2010 ; Southern Illinois University Paul Simon Public Policy Institute: Southern Illinois Polls 2010 ; 2010 >
+    au < released ; 2011 ; Southern Illinois University Paul Simon Public Policy Institute: Southern Illinois Polls 2011 ; 2011 >
+    au < released ; 2012 ; Southern Illinois University Paul Simon Public Policy Institute: Southern Illinois Polls 2012 ; 2012 >
+    au < released ; 2013 ; Southern Illinois University Paul Simon Public Policy Institute: Southern Illinois Polls 2013 ; 2013 >
+
+  }
+
+  {
+
+    title <
+      name = Southern Illinois University Paul Simon Public Policy Institute: Statewide Polls
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_series
+    param[collection] = ppi_statepolls
+    implicit < status ; year ; name ; param[collection_heading] >  
+
+    au < released ; 2008 ; Southern Illinois University Paul Simon Public Policy Institute: Statewide Polls 2008 ; 2008 >
+    au < released ; 2009 ; Southern Illinois University Paul Simon Public Policy Institute: Statewide Polls 2009 ; 2009 >
+    au < released ; 2010 ; Southern Illinois University Paul Simon Public Policy Institute: Statewide Polls 2010 ; 2010 >
+    au < released ; 2011 ; Southern Illinois University Paul Simon Public Policy Institute: Statewide Polls 2011 ; 2011 >
+    au < released ; 2012 ; Southern Illinois University Paul Simon Public Policy Institute: Statewide Polls 2012 ; 2012 >
+    au < released ; 2013 ; Southern Illinois University Paul Simon Public Policy Institute: Statewide Polls 2013 ; 2013 >
+    au < released ; 2014 ; Southern Illinois University Paul Simon Public Policy Institute: Statewide Polls 2014 ; 2014 >
+
+  }
+
+  {
+
+    title <
+      name = Southern Illinois University Political Networks Paper Archive: Conference Proceedings
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_series
+    implicit < status ; year ; name ; param[collection] ; param[collection_heading] >  
+
+    au < released ; 2010 ; Southern Illinois University Political Networks Paper Archive: Conference Proceedings 2010 ; pnconfs_2010 ; 2010 >
+    au < released ; 2011 ; Southern Illinois University Political Networks Paper Archive: Conference Proceedings 2011 ; pnconfs_2011 ; 2011 >
+    au < released ; 2012 ; Southern Illinois University Political Networks Paper Archive: Conference Proceedings 2012 ; pnconfs_2012 ; 2012 >
+
+  }
+
+  {
+
+    title <
+      name = Southern Illinois University Political Networks Paper Archive: Working Papers
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_series
+    param[collection] = pn_wp
+    implicit < status ; year ; name ; param[collection_heading] >  
+
+    au < released ; 2008 ; Southern Illinois University Political Networks Paper Archive: Working Papers 2008 ; 2008 >
+    au < released ; 2009 ; Southern Illinois University Political Networks Paper Archive: Working Papers 2009 ; 2009 >
+    au < released ; 2010 ; Southern Illinois University Political Networks Paper Archive: Working Papers 2010 ; 2010 >
+    au < released ; 2011 ; Southern Illinois University Political Networks Paper Archive: Working Papers 2011 ; 2011 >
+    au < released ; 2012 ; Southern Illinois University Political Networks Paper Archive: Working Papers 2012 ; 2012 >
+    au < released ; 2013 ; Southern Illinois University Political Networks Paper Archive: Working Papers 2013 ; 2013 >
+
+  }
+
+  {
+
+    title <
+      name = Southern Illinois University REACH Posters
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_series
+    param[collection] = reach_posters
+    implicit < status ; year ; name ; param[collection_heading] >  
+
+    au < released ; 2010 ; Southern Illinois University REACH Posters 2010 ; 2010 >
+
+  }
+
+  {
+
+    title <
+      name = Southern Illinois University Rehabilitation Institute Publications
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_series
+    param[collection] = rehab_pubs
+    implicit < status ; year ; name ; param[collection_heading] >  
+
+    au < released ; 2009 ; Southern Illinois University Rehabilitation Institute Publications 2009 ; 2009 >
+
+  }
+
+  {
+
+    title <
+      name = Southern Illinois University Research Matters
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_series
+    param[collection] = orda_rema
+    implicit < status ; year ; name ; param[collection_heading] >  
+
+    au < released ; 2008 ; Southern Illinois University Research Matters 2008 ; 2008 >
+
   }
 
   {
@@ -238,10 +2423,10 @@
     param[collection] = ad_pubs
     implicit < status ; year ; name ; param[collection_heading] >
   
-    au < manifest ; 2005 ; Southern Illinois University School of Art and Design Publications 2005 ; 2005 >
-    au < manifest ; 2006 ; Southern Illinois University School of Art and Design Publications 2006 ; 2006 >
-    au < manifest ; 2008 ; Southern Illinois University School of Art and Design Publications 2008 ; 2008 >
-    au < manifest ; 2011 ; Southern Illinois University School of Art and Design Publications 2011 ; 2011 >
+    au < released ; 2005 ; Southern Illinois University School of Art and Design Publications 2005 ; 2005 >
+    au < released ; 2006 ; Southern Illinois University School of Art and Design Publications 2006 ; 2006 >
+    au < released ; 2008 ; Southern Illinois University School of Art and Design Publications 2008 ; 2008 >
+    au < released ; 2011 ; Southern Illinois University School of Art and Design Publications 2011 ; 2011 >
   
   }
 
@@ -257,8 +2442,170 @@
     param[collection] = arch_videos
     implicit < status ; year ; name ; param[collection_heading] >
   
-    au < manifest ; 2011 ; Southern Illinois University School of Architecture Videos 2011 ; 2011 >
+    au < released ; 2011 ; Southern Illinois University School of Architecture Videos 2011 ; 2011 >
   
+  }
+
+  {
+
+    title <
+      name = Southern Illinois University School of Law Publications
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_series
+    param[collection] = law_pubs
+    implicit < status ; year ; name ; param[collection_heading] >  
+
+    au < released ; 2001 ; Southern Illinois University School of Law Publications 2001 ; 2001 >
+    au < released ; 2002 ; Southern Illinois University School of Law Publications 2002 ; 2002 >
+    au < released ; 2005 ; Southern Illinois University School of Law Publications 2005 ; 2005 >
+    au < released ; 2006 ; Southern Illinois University School of Law Publications 2006 ; 2006 >
+    au < released ; 2007 ; Southern Illinois University School of Law Publications 2007 ; 2007 >
+    au < released ; 2008 ; Southern Illinois University School of Law Publications 2008 ; 2008 >
+
+  }
+
+  {
+
+    title <
+      name = Southern Illinois University School of Music Graduate Student Work
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_series
+    param[collection] = music_gradworks
+    implicit < status ; year ; name ; param[collection_heading] >  
+
+    au < released ; 2009 ; Southern Illinois University School of Music Graduate Student Work 2009 ; 2009 >
+    au < released ; 2011 ; Southern Illinois University School of Music Graduate Student Work 2011 ; 2011 >
+    au < released ; 2012 ; Southern Illinois University School of Music Graduate Student Work 2012 ; 2012 >
+    au < released ; 2013 ; Southern Illinois University School of Music Graduate Student Work 2013 ; 2013 >
+    au < released ; 2014 ; Southern Illinois University School of Music Graduate Student Work 2014 ; 2014 >
+
+  }
+
+  {
+
+    title <
+      name = Southern Illinois University Semiotics Analysis Forum: Music Faculty Charts
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_series
+    param[collection] = safmusiccharts_faculty
+    implicit < status ; year ; name ; param[collection_heading] >  
+
+    au < released ; 2008 ; Southern Illinois University Semiotics Analysis Forum: Music Faculty Charts 2008 ; 2008 >
+    au < released ; 2010 ; Southern Illinois University Semiotics Analysis Forum: Music Faculty Charts 2010 ; 2010 >
+
+  }
+
+  {
+
+    title <
+      name = Southern Illinois University Semiotics Analysis Forum: Music Faculty Papers
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_series
+    param[collection] = safmusicpapers_faculty
+    implicit < status ; year ; name ; param[collection_heading] >  
+
+    au < released ; 2010 ; Southern Illinois University Semiotics Analysis Forum: Music Faculty Papers 2010 ; 2010 >
+
+  }
+
+  {
+
+    title <
+      name = Southern Illinois University Semiotics Analysis Forum: Music Student Charts
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_series
+    param[collection] = safmusiccharts_students
+    implicit < status ; year ; name ; param[collection_heading] >  
+
+    au < released ; 2010 ; Southern Illinois University Semiotics Analysis Forum: Music Student Charts 2010 ; 2010 >
+
+  }
+
+  {
+
+    title <
+      name = Southern Illinois University Theses
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_etd
+    param[collection] = theses
+    implicit < status ; year ; name ; param[collection_heading] >  
+
+    # No LOCKSS markup found
+
+  }
+
+  {
+
+    title <
+      name = Southern Illinois University: Undergraduate Research at SIUC
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_series
+    param[collection] = ugr_ugr
+    implicit < status ; year ; name ; param[collection_heading] >
+
+    au < released ; 2006 ; Southern Illinois University: Undergraduate Research at SIUC 2006 ; 2006 >
+    au < released ; 2007 ; Southern Illinois University: Undergraduate Research at SIUC 2007 ; 2007 >
+    au < released ; 2008 ; Southern Illinois University: Undergraduate Research at SIUC 2008 ; 2008 >
+    au < released ; 2009 ; Southern Illinois University: Undergraduate Research at SIUC 2009 ; 2009 >
+
+  }
+
+  {
+
+    title <
+      name = Southern Illinois University: Universities Council on Water Resources Conference Proceedings
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_series
+    implicit < status ; year ; name ; param[collection] ; param[collection_heading] >
+
+    au < released ; 2003 ; Southern Illinois University: Universities Council on Water Resources Conference Proceedings 2003 ; ucowrconfs_2003 ; 2003 >
+    au < released ; 2004 ; Southern Illinois University: Universities Council on Water Resources Conference Proceedings 2004 ; ucowrconfs_2004 ; 2004 >
+    au < released ; 2005 ; Southern Illinois University: Universities Council on Water Resources Conference Proceedings 2005 ; ucowrconfs_2005 ; 2005 >
+    au < released ; 2006 ; Southern Illinois University: Universities Council on Water Resources Conference Proceedings 2006 ; ucowrconfs_2006 ; 2006 >
+    au < released ; 2007 ; Southern Illinois University: Universities Council on Water Resources Conference Proceedings 2007 ; ucowrconfs_2007 ; 2007 >
+    au < released ; 2008 ; Southern Illinois University: Universities Council on Water Resources Conference Proceedings 2008 ; ucowrconfs_2008 ; 2008 >
+    au < released ; 2009 ; Southern Illinois University: Universities Council on Water Resources Conference Proceedings 2009 ; ucowrconfs_2009 ; 2009 >
+
+  }
+
+  {
+
+    title <
+      name = Southern Illinois University World River Day 2011
+    >
+
+    plugin = org.lockss.plugin.bepress.DigitalCommonsRepositoryPlugin
+    param[base_url] = http://opensiuc.lib.siu.edu/
+    param[collection_type] = ir_series
+    implicit < status ; year ; name ; param[collection] ; param[collection_heading] >
+
+    au < released ; 2011 ; Southern Illinois University World River Day 2011: Keynote Presentation ; wrd2011_keynote ; 2011 >
+    au < released ; 2011 ; Southern Illinois University World River Day 2011: World Rivers in the 21st Century ; wrd2011_pres ; 2011 >
+
   }
 
 }

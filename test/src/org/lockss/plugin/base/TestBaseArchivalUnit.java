@@ -1,10 +1,10 @@
 /*
- * $Id: TestBaseArchivalUnit.java,v 1.66 2014-11-12 20:11:56 wkwilson Exp $
+ * $Id$
  */
 
 /*
 
-Copyright (c) 2000-2010 Board of Trustees of Leland Stanford Jr. University,
+Copyright (c) 2000-2015 Board of Trustees of Leland Stanford Jr. University,
 all rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -39,6 +39,7 @@ import java.net.*;
 import org.lockss.daemon.*;
 import org.lockss.test.*;
 import org.lockss.plugin.*;
+import org.lockss.state.*;
 import org.lockss.util.*;
 import org.lockss.poller.*;
 import org.lockss.config.*;
@@ -93,6 +94,9 @@ public class TestBaseArchivalUnit extends LockssTestCase {
 
     TestableBaseArchivalUnit au =
       new TestableBaseArchivalUnit(mplug, name, rule, startUrl);
+    MockNodeManager nm = new MockNodeManager();
+    nm.setAuState(new MockAuState(au));
+    getMockLockssDaemon().setNodeManager(nm, au);
     return au;
   }
 
@@ -121,6 +125,7 @@ public class TestBaseArchivalUnit extends LockssTestCase {
     Configuration exp = ConfigurationUtil.fromProps(props);
     mbau.setConfiguration(exp);
     assertEquals(exp, mbau.getConfiguration());
+    assertNotSame(exp, mbau.getConfiguration());
     BaseArchivalUnit.ParamHandlerMap paramMap = mbau.getParamMap();
     assertEquals(BASE_URL,
 		 paramMap.getUrl(BaseArchivalUnit.KEY_AU_BASE_URL).toString());
@@ -431,14 +436,17 @@ public class TestBaseArchivalUnit extends LockssTestCase {
     TestableBaseArchivalUnit mbau2 = new TestableBaseArchivalUnit(mplug);
     TestableBaseArchivalUnit mbau3 = new TestableBaseArchivalUnit(mplug);
     TestableBaseArchivalUnit mbau4 = new TestableBaseArchivalUnit(mplug);
+    TestableBaseArchivalUnit mbau5 = new TestableBaseArchivalUnit(mplug);
     mbau.getParamMap().putString(src, "title_attribute:server");
     mbau2.getParamMap().putString(src, "title_attribute:server");
     mbau3.getParamMap().putString(src, "title_attribute:client");
     mbau4.getParamMap().putString(src, "title_attribute:server");
+    mbau5.getParamMap().putString(src, "title_attribute:server:s1");
     setTCAttrs(mbau, "server", "s1");
     setTCAttrs(mbau2, "server", "s2");
     setTCAttrs(mbau3, "server", "s1").put("client", "s1");
     setTCAttrs(mbau4, "server", "s1");
+    // None for mbau5
     Properties props = new Properties();
     props.setProperty(ConfigParamDescr.BASE_URL.getKey(), BASE_URL);
     props.setProperty(ConfigParamDescr.VOLUME_NUMBER.getKey(), "10");
@@ -447,14 +455,17 @@ public class TestBaseArchivalUnit extends LockssTestCase {
     mbau2.setConfiguration(config);
     mbau3.setConfiguration(config);
     mbau4.setConfiguration(config);
+    mbau5.setConfiguration(config);
 
     RateLimiter limit = mbau.findFetchRateLimiter();
     RateLimiter limit2 = mbau2.findFetchRateLimiter();
     RateLimiter limit3 = mbau3.findFetchRateLimiter();
     RateLimiter limit4 = mbau4.findFetchRateLimiter();
+    RateLimiter limit5 = mbau5.findFetchRateLimiter();
     assertNotSame(limit, limit2);
     assertNotSame(limit, limit3);
     assertSame(limit, limit4);
+    assertSame(limit, limit5);
     RateLimiter.Pool pool = RateLimiter.getPool();
     assertSame(pool.findNamedRateLimiter("server:s1", 1, 1),
 	       limit);
@@ -463,6 +474,7 @@ public class TestBaseArchivalUnit extends LockssTestCase {
     assertSame(pool.findNamedRateLimiter("client:s1", 1, 1),
 	       limit3);
     assertEquals("server:s1", mbau.getFetchRateLimiterKey());
+    assertEquals("server:s1", mbau5.getFetchRateLimiterKey());
   }
 
   public Map setTCAttrs(TestableBaseArchivalUnit mau, String key, String val) {
@@ -586,6 +598,7 @@ public class TestBaseArchivalUnit extends LockssTestCase {
   public void testGetUrlStems() throws Exception  {
     // uncofigured base url - return an empty list
     mbau = makeMbau(AU_NAME, BASE_URL, START_URL);
+
     mbau.setStartUrl(null);
     assertEmpty(mbau.getUrlStems());
     Configuration config =
@@ -612,7 +625,37 @@ public class TestBaseArchivalUnit extends LockssTestCase {
     assertSameElements(ListUtil.list("http://www.example.com/",
 				     "http://foo.other.com:8080/"),
 		       mbau.getUrlStems());
+
+    AuState aus = AuUtil.getAuState(mbau);
+    // ensure that adding a cdn host causes stems to be recomputed
+    aus.addCdnStem("http://cdn.host/");
+    Collection stems = mbau.getUrlStems();
+    assertSameElements(ListUtil.list("http://www.example.com/",
+				     "http://foo.other.com:8080/",
+				     "http://cdn.host/"),
+		       stems);
+    // and that they're not recomputed if cdn hosts haven't changed
+    assertSame(stems, mbau.getUrlStems());
+
+    ConfigParamDescr nondefUrl = new ConfigParamDescr();
+    nondefUrl.setDefinitional(false)
+      .setKey("base_url17")
+      .setType(ConfigParamDescr.TYPE_URL);
+
+    // Add another param of type URL, ensure its value gets added to stems
+    // even though isn't used in start or permission URLs
+    mplug.setAuConfigDescrs(ListUtil.list(ConfigParamDescr.BASE_URL,
+					  ConfigParamDescr.VOLUME_NUMBER,
+					  nondefUrl));
+    config.put(nondefUrl.getKey(), "http://base2.url/");
+    mbau.setConfiguration(config);
+    assertSameElements(ListUtil.list("http://www.example.com/",
+				     "http://foo.other.com:8080/",
+				     "http://cdn.host/",
+				     "http://base2.url/"),
+		       mbau.getUrlStems());
   }
+
 
 
   public void testSiteNormalizeUrl() {

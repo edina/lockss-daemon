@@ -1,5 +1,5 @@
 /*
- * $Id: MockCrawler.java,v 1.19 2014-11-24 10:17:45 tlipkis Exp $
+ * $Id$
  */
 
 /*
@@ -318,6 +318,15 @@ public class MockCrawler extends NullCrawler {
     @Override
     public boolean isAllowedPluginPermittedHost(String host) {
       return allowedPluginPermittedHost.contains(host);
+    }
+
+    @Override
+    public void updateCdnStems(String url) {
+    }
+
+    @Override
+    public CrawlUrl addChild(CrawlUrl curl, String url) {
+      return null;
     }
   }
 }

@@ -1,10 +1,10 @@
 /*
- * $Id: NAPSourceXmlMetadataExtractorFactory.java,v 1.4 2014-09-24 22:14:46 thib_gc Exp $
+ * $Id$
  */
 
 /*
 
- Copyright (c) 2000-2014 Board of Trustees of Leland Stanford Jr. University,
+ Copyright (c) 2000-2015 Board of Trustees of Leland Stanford Jr. University,
  all rights reserved.
 
  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -33,7 +33,8 @@
 package org.lockss.plugin.clockss.nap;
 
 import java.util.ArrayList;
-import org.apache.commons.io.FilenameUtils;
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.lockss.util.*;
 import org.lockss.daemon.*;
@@ -44,7 +45,7 @@ import org.lockss.plugin.clockss.SourceXmlSchemaHelper;
 
 
 public class NAPSourceXmlMetadataExtractorFactory extends SourceXmlMetadataExtractorFactory {
-  static Logger log = Logger.getLogger(NAPSourceXmlMetadataExtractorFactory.class);
+  private static final Logger log = Logger.getLogger(NAPSourceXmlMetadataExtractorFactory.class);
   
   private static SourceXmlSchemaHelper NAPHelper = null;
   
@@ -59,13 +60,6 @@ public class NAPSourceXmlMetadataExtractorFactory extends SourceXmlMetadataExtra
     Logger log = Logger.getLogger(NAPSourceXmlMetadataExtractor.class);
     
     @Override
-    protected SourceXmlSchemaHelper setUpSchema() {
-      // this version of this routine is abstract, but should not get called 
-      // because we have the other implementation (with the CachedUrl argument)
-      return null; // will cause a plugin exception to get thrown
-    }
-
-    @Override
     protected SourceXmlSchemaHelper setUpSchema(CachedUrl cu) {
       // Once you have it, just keep returning the same one. It won't change.
       if (NAPHelper == null) {
@@ -77,16 +71,16 @@ public class NAPSourceXmlMetadataExtractorFactory extends SourceXmlMetadataExtra
     
     // TODO - if we get full text XML without a matching pdf we must still emit
     @Override
-    protected ArrayList<String> getFilenamesAssociatedWithRecord(SourceXmlSchemaHelper helper, CachedUrl cu,
+    protected List<String> getFilenamesAssociatedWithRecord(SourceXmlSchemaHelper helper, CachedUrl cu,
         ArticleMetadata oneAM) {
 
       // filename is just the same a the XML filename but with .stamped.pdf 
       // instead of .xml
       String url_string = cu.getUrl();
-      String filenameValue = FilenameUtils.getBaseName(url_string);
-      String cuBase = FilenameUtils.getFullPath(url_string);
-      ArrayList<String> returnList = new ArrayList<String>();
-      returnList.add(cuBase + filenameValue + ".stamped.pdf");
+      String pdfName = url_string.substring(0,url_string.length() - 3) + "stamped.pdf";
+      log.debug3("pdfName is " + pdfName);
+      List<String> returnList = new ArrayList<String>();
+      returnList.add(pdfName);
       return returnList;
     }
     

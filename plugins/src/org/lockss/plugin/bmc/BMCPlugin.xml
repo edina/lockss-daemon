@@ -1,9 +1,9 @@
-<!--  $Id: BMCPlugin.xml,v 1.51 2014-11-05 22:02:34 aishizaki Exp $
+<!--  $Id$
    -->
 <map>
   <entry>
    <string>plugin_status</string>
-   <string>testing - Audrey/Collin</string>
+   <string>ready</string>
   </entry>
   <entry>
     <string>plugin_identifier</string>
@@ -15,7 +15,7 @@
   </entry>
   <entry>
     <string>plugin_version</string>
-    <string>37</string>
+    <string>40</string>
   </entry>
   <entry>
     <string>plugin_feature_version_map</string>
@@ -30,7 +30,7 @@
       </entry>
       <entry>
         <string>Poll</string>
-        <string>12</string>
+        <string>15</string>
       </entry>
     </map>
   </entry>

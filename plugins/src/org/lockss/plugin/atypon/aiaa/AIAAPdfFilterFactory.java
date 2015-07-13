@@ -1,10 +1,10 @@
 /*
- * $Id: AIAAPdfFilterFactory.java,v 1.5 2014-11-26 23:58:15 thib_gc Exp $
+ * $Id$
  */
 
 /*
 
- Copyright (c) 2000-2014 Board of Trustees of Leland Stanford Jr. University,
+ Copyright (c) 2000-2015 Board of Trustees of Leland Stanford Jr. University,
  all rights reserved.
 
  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -32,69 +32,33 @@
 
 package org.lockss.plugin.atypon.aiaa;
 
-import org.lockss.filter.pdf.ExtractingPdfFilterFactory;
-import org.lockss.pdf.*;
-import org.lockss.plugin.*;
-import org.lockss.plugin.atypon.BaseAtyponPdfDocumentFactory;
+import java.util.regex.Pattern;
+
+import org.lockss.plugin.atypon.BaseAtyponScrapingPdfFilterFactory;
 
 /*
  * The AIAA pdf files have the CreationDate and ModDate and the two ID numbers in the trailer
  * vary from collection to collection. Filter them out to avoid incorrect hash failures.
  * Because of varying BASEFONT values, must also extract text/images for hash comparison
  */
-public class AIAAPdfFilterFactory extends ExtractingPdfFilterFactory {
-
-  /*
-   * FIXME 1.67: extend PdfTokenStreamStateMachine
-   */
-  /*
-   * Example URL: http://arc.aiaa.org/doi/pdfplus/10.2514/3.59603
-   */
-  protected static class CitedByWorker extends PdfTokenStreamWorker {
-    
-    protected boolean result;
-    
-    @Override
-    public void setUp() throws PdfException {
-      super.setUp();
-      this.result = false;
-    }
-    
-    @Override
-    public void operatorCallback() throws PdfException {
-      if (isShowTextGlyphPositioningEquals("This article has been cited by:")) {
-        this.result = true;
-        stop();
-      }
-      else if (isShowText() || isShowTextGlyphPositioning() || isNextLineShowText() || isSetSpacingNextLineShowText()) {
-        stop(); // No need to process other strings
-      }
-    }
-    
-  }
-
-  public AIAAPdfFilterFactory() {
-    super(new BaseAtyponPdfDocumentFactory()); // FIXME 1.67
-  }
+public class AIAAPdfFilterFactory extends BaseAtyponScrapingPdfFilterFactory {
   
+  public static final Pattern AIAA_DOWNLOAD_PATTERN = Pattern.compile("^Downloaded by");
+
+  /* 
+   * Turn on removal of "This article cited by:" pages - the default string is correct
+   */
   @Override
-  public void transform(ArchivalUnit au,
-                        PdfDocument pdfDocument)
-      throws PdfException {
-    pdfDocument.unsetCreationDate();
-    pdfDocument.unsetModificationDate();
-    PdfUtil.normalizeTrailerId(pdfDocument);
-
-    CitedByWorker worker = new CitedByWorker();
-    for (int p = pdfDocument.getNumberOfPages() - 1 ; p >= 0 ; --p) {
-      worker.process(pdfDocument.getPage(p).getPageTokenStream());
-      if (worker.result) {
-        for (int r = pdfDocument.getNumberOfPages() - 1 ; r >= p ; --r) {
-          pdfDocument.removePage(r);
-        }
-        break;
-      }
-    }
+  public boolean doRemoveCitedByPage() {
+    return true;    
+  }  
+  @Override
+  public boolean doRemoveDownloadStrip() {
+    return true;
   }
-  
+  /* and set the correct string to use for this publisher */
+  @Override
+  public Pattern getDownloadStripPattern() {
+    return AIAA_DOWNLOAD_PATTERN;
+  }  
 }

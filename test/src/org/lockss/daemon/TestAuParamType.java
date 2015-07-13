@@ -1,5 +1,5 @@
 /*
- * $Id: TestAuParamType.java,v 1.1.2.1 2015-02-09 05:36:49 tlipkis Exp $
+ * $Id$
  */
 
 /*

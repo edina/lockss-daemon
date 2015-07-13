@@ -62,7 +62,7 @@
       au < released ; 2011 ; 13 ; Caderno de Educação Física e Esporte Volume 2011 ; 2011 ; >
       au < expected ; 2012 ; 14 ; Caderno de Educação Física e Esporte Volume 2012 ; 2012 ; >
       au < released ; 2013 ; 15 ; Caderno de Educação Física e Esporte Volume 2013 ; 2013 ; >
-      au < manifest ; 2014 ; 16 ; Caderno de Educação Física e Esporte Volume 2014 ; 2014 ; >
+      au < ready ; 2014 ; 16 ; Caderno de Educação Física e Esporte Volume 2014 ; 2014 ; >
 
   }
 
@@ -85,7 +85,7 @@
       au < released ; 2010 ; 5 ; Ciências Sociais Aplicadas em Revista Volume 2010 ; 2010 ; >
       au < released ; 2011 ; 6 ; Ciências Sociais Aplicadas em Revista Volume 2011 ; 2011 ; >
       au < released ; 2012 ; 7 ; Ciências Sociais Aplicadas em Revista Volume 2012 ; 2012 ; >
-      au < manifest ; 2013 ; 8 ; Ciências Sociais Aplicadas em Revista Volume 2013 ; 2013 ; >
+      au < released ; 2013 ; 8 ; Ciências Sociais Aplicadas em Revista Volume 2013 ; 2013 ; >
       au < expected ; 2014 ; 9 ; Ciências Sociais Aplicadas em Revista Volume 2014 ; 2014 ; >
 
   }
@@ -110,7 +110,7 @@
       au < released ; 2011 ; 6 ; Ciências Sociais em Perspectiva Volume 2011 ; 2011 ; >
       au < released ; 2012 ; 7 ; Ciências Sociais em Perspectiva Volume 2012 ; 2012 ; >
       au < released ; 2013 ; 8 ; Ciências Sociais em Perspectiva Volume 2013 ; 2013 ; >
-      au < manifest ; 2014 ; 9 ; Ciências Sociais em Perspectiva Volume 2014 ; 2014 ; >
+      au < ready ; 2014 ; 9 ; Ciências Sociais em Perspectiva Volume 2014 ; 2014 ; >
 
   }
 
@@ -134,7 +134,7 @@
       au < released ; 2011 ; 6 ; Educere et Educare Volume 2011 ; 2011 ; >
       au < released ; 2012 ; 7 ; Educere et Educare Volume 2012 ; 2012 ; >
       au < released ; 2013 ; 8 ; Educere et Educare Volume 2013 ; 2013 ; >
-      au < manifest ; 2014 ; 9 ; Educere et Educare Volume 2014 ; 2014 ; >
+      au < ready ; 2014 ; 9 ; Educere et Educare Volume 2014 ; 2014 ; >
 
   }
 
@@ -161,7 +161,7 @@
       au < released ; 2011 ; 9 ; Espaço Plural Volume 2011 ; 2011 ; >
       au < released ; 2012 ; 10 ; Espaço Plural Volume 2012 ; 2012 ; >
       au < released ; 2013 ; 11 ; Espaço Plural Volume 2013 ; 2013 ; >
-      au < manifest ; 2014 ; 12 ; Espaço Plural Volume 2014 ; 2014 ; >
+      au < ready ; 2014 ; 12 ; Espaço Plural Volume 2014 ; 2014 ; >
 
   }
 
@@ -181,7 +181,7 @@
       au < released ; 2011 ; 3 ; Geografia em Questão Volume 2011 ; 2011 ; >
       au < released ; 2012 ; 4 ; Geografia em Questão Volume 2012 ; 2012 ; >
       au < released ; 2013 ; 5 ; Geografia em Questão Volume 2013 ; 2013 ; >
-      au < manifest ; 2014 ; 6 ; Geografia em Questão Volume 2014 ; 2014 ; >
+      au < ready ; 2014 ; 6 ; Geografia em Questão Volume 2014 ; 2014 ; >
 
   }
 
@@ -209,7 +209,7 @@
       au < released ; 2011 ; 9 ; Ideação Volume 2011 ; 2011 ; >
       au < notReady ; 2012 ; 10 ; Ideação Volume 2012 ; 2012 ; no colon on url on bio 6054>
       au < released ; 2013 ; 11 ; Ideação Volume 2013 ; 2013 ; >
-      au < manifest ; 2014 ; 12 ; Ideação Volume 2014 ; 2014 ; >
+      au < ready ; 2014 ; 12 ; Ideação Volume 2014 ; 2014 ; >
 
   }
 
@@ -240,7 +240,7 @@
       au < released ; 2011 ; 9 ; Informe GEPEC Volume 2011 ; 2011 ; >
       au < notReady ; 2012 ; 10 ; Informe GEPEC Volume 2012 ; 2012 ; url with no http on bio 5581 >
       au < released ; 2013 ; 11 ; Informe GEPEC Volume 2013 ; 2013 ; >
-      au < manifest ; 2014 ; 12 ; Informe GEPEC Volume 2014 ; 2014 ; >
+      au < ready ; 2014 ; 12 ; Informe GEPEC Volume 2014 ; 2014 ; >
 
   }
 
@@ -256,16 +256,16 @@
       param[base_url] = http://e-revista.unioeste.br/
       param[journal_id] = linguaseletras
 
-      au < ready ; 2005 ; 1 ; Línguas & Letras Volume 2005 ; 2005 ; >
+      au < released ; 2005 ; 1 ; Línguas & Letras Volume 2005 ; 2005 ; >
       au < released ; 2006 ; 2 ; Línguas & Letras Volume 2006 ; 2006 ; >
       au < released ; 2007 ; 3 ; Línguas & Letras Volume 2007 ; 2007 ; >
-      au < ready ; 2008 ; 4 ; Línguas & Letras Volume 2008 ; 2008 ; >
+      au < released ; 2008 ; 4 ; Línguas & Letras Volume 2008 ; 2008 ; >
       au < released ; 2009 ; 5 ; Línguas & Letras Volume 2009 ; 2009 ; >
-      au < ready ; 2010 ; 6 ; Línguas & Letras Volume 2010 ; 2010 ; >
-      au < ready ; 2011 ; 7 ; Línguas & Letras Volume 2011 ; 2011 ; >
-      au < ready ; 2012 ; 8 ; Línguas & Letras Volume 2012 ; 2012 ; >
+      au < released ; 2010 ; 6 ; Línguas & Letras Volume 2010 ; 2010 ; >
+      au < released ; 2011 ; 7 ; Línguas & Letras Volume 2011 ; 2011 ; >
+      au < released ; 2012 ; 8 ; Línguas & Letras Volume 2012 ; 2012 ; >
       au < released ; 2013 ; 9 ; Línguas & Letras Volume 2013 ; 2013 ; >
-      au < manifest ; 2014 ; 10 ; Línguas & Letras Volume 2014 ; 2014 ; >
+      au < ready ; 2014 ; 10 ; Línguas & Letras Volume 2014 ; 2014 ; >
 
   }
 
@@ -289,7 +289,7 @@
       au < released ; 2011 ; 7 ; Literatura, História e Memória Volume 2011 ; 2011 ; >
       au < released ; 2012 ; 8 ; Literatura, História e Memória Volume 2012 ; 2012 ; >
       au < released ; 2013 ; 9 ; Literatura, História e Memória Volume 2013 ; 2013 ; >
-      au < expected ; 2014 ; 10 ; Literatura, História e Memória Volume 2014 ; 2014 ; >
+      au < ready ; 2014 ; 10 ; Literatura, História e Memória Volume 2014 ; 2014 ; >
 
   }
 
@@ -316,7 +316,7 @@
       au < released ; 2011 ; 7 ; Perspectiva Geográfica Volume 2011 ; 2011 ; >
       au < released ; 2012 ; 8 ; Perspectiva Geográfica Volume 2012 ; 2012 ; >
       au < released ; 2013 ; 9 ; Perspectiva Geográfica Volume 2013 ; 2013 ; >
-      au < manifest ; 2014 ; 10 ; Perspectiva Geográfica Volume 2014 ; 2014 ; >
+      au < ready ; 2014 ; 10 ; Perspectiva Geográfica Volume 2014 ; 2014 ; >
 
   }
 
@@ -344,7 +344,8 @@
       au < released ; 2011 ; 11 ; Revista Expectativa Volume 2011 ; 2011 ; >
       au < released ; 2012 ; 12 ; Revista Expectativa Volume 2012 ; 2012 ; >
       au < released ; 2013 ; 13 ; Revista Expectativa Volume 2013 ; 2013 ; >
-      au < manifest ; 2014 ; 14 ; Revista Expectativa Volume 2014 ; 2014 ; >
+      au < ready ; 2014 ; 14 ; Revista Expectativa Volume 2014 ; 2014 ; >
+      au < manifest ; 2015 ; 15 ; Revista Expectativa Volume 2015 ; 2015 ; >
 
   }
 
@@ -375,7 +376,7 @@
       au < released ; 2011 ; 15 ; Revista Faz Ciência Volume 2011 ; 2011 ; >
       au < released ; 2012 ; 16 ; Revista Faz Ciência Volume 2012 ; 2012 ; >
       au < released ; 2013 ; 17 ; Revista Faz Ciência Volume 2013 ; 2013 ; >
-      au < manifest ; 2014 ; 18 ; Revista Faz Ciência Volume 2014 ; 2014 ; >
+      au < ready ; 2014 ; 18 ; Revista Faz Ciência Volume 2014 ; 2014 ; >
 
   }
 
@@ -400,7 +401,7 @@
       au < released ; 2011 ; 8 ; Scientia Agraria Paranaensis Volume 2011 ; 2011 ; >
       au < released ; 2012 ; 9 ; Scientia Agraria Paranaensis Volume 2012 ; 2012 ; >
       au < released ; 2013 ; 10 ; Scientia Agraria Paranaensis Volume 2013 ; 2013 ; >
-      au < manifest ; 2014 ; 11 ; Scientia Agraria Paranaensis Volume 2014 ; 2014 ; >
+      au < ready ; 2014 ; 11 ; Scientia Agraria Paranaensis Volume 2014 ; 2014 ; >
 
   }
 
@@ -452,7 +453,7 @@
       au < released ; 2011 ; 8 ; Tempo da Ciência Volume 2011 ; 2011 ; >
       au < released ; 2012 ; 9 ; Tempo da Ciência Volume 2012 ; 2012 ; >
       au < released ; 2013 ; 10 ; Tempo da Ciência Volume 2013 ; 2013 ; >
-      au < manifest ; 2014 ; 11 ; Tempo da Ciência Volume 2014 ; 2014 ; >
+      au < ready ; 2014 ; 11 ; Tempo da Ciência Volume 2014 ; 2014 ; >
 
   }
 
@@ -481,7 +482,7 @@
       au < released ; 2011 ; 13 ; Tempos Históricos Volume 2011 ; 2011 ; >
       au < released ; 2012 ; 14 ; Tempos Históricos Volume 2012 ; 2012 ; >
       au < released ; 2013 ; 15 ; Tempos Históricos Volume 2013 ; 2013 ; >
-      au < expected ; 2014 ; 16 ; Tempos Históricos Volume 2014 ; 2014 ; >
+      au < ready ; 2014 ; 16 ; Tempos Históricos Volume 2014 ; 2014 ; >
 
   }
 
@@ -497,16 +498,17 @@
       param[base_url] = http://e-revista.unioeste.br/
       param[journal_id] = trama
 
-      au < manifest ; 2005 ; 1 ; Trama Volume 2005 ; 2005 ; >
-      au < manifest ; 2006 ; 2 ; Trama Volume 2006 ; 2006 ; >
-      au < manifest ; 2007 ; 3 ; Trama Volume 2007 ; 2007 ; >
-      au < manifest ; 2008 ; 4 ; Trama Volume 2008 ; 2008 ; >
-      au < manifest ; 2009 ; 5 ; Trama Volume 2009 ; 2009 ; >
-      au < manifest ; 2010 ; 6 ; Trama Volume 2010 ; 2010 ; >
-      au < manifest ; 2011 ; 7 ; Trama Volume 2011 ; 2011 ; >
-      au < manifest ; 2012 ; 8 ; Trama Volume 2012 ; 2012 ; >
-      au < manifest ; 2013 ; 9 ; Trama Volume 2013 ; 2013 ; >
-      au < manifest ; 2014 ; 10 ; Trama Volume 2014 ; 2014 ; >
+      au < released ; 2005 ; 1 ; Trama Volume 2005 ; 2005 ; >
+      au < released ; 2006 ; 2 ; Trama Volume 2006 ; 2006 ; >
+      au < released ; 2007 ; 3 ; Trama Volume 2007 ; 2007 ; >
+      au < released ; 2008 ; 4 ; Trama Volume 2008 ; 2008 ; >
+      au < released ; 2009 ; 5 ; Trama Volume 2009 ; 2009 ; >
+      au < released ; 2010 ; 6 ; Trama Volume 2010 ; 2010 ; >
+      au < released ; 2011 ; 7 ; Trama Volume 2011 ; 2011 ; >
+      au < released ; 2012 ; 8 ; Trama Volume 2012 ; 2012 ; >
+      au < released ; 2013 ; 9 ; Trama Volume 2013 ; 2013 ; >
+      au < ready ; 2014 ; 10 ; Trama Volume 2014 ; 2014 ; >
+      au < manifest ; 2015 ; 11 ; Trama Volume 2015 ; 2015 ; >
 
   }
 
@@ -528,7 +530,7 @@
       au < released ; 2011 ; 5 ; Travessias Volume 2011 ; 2011 ; >
       au < released ; 2012 ; 6 ; Travessias Volume 2012 ; 2012 ; >
       au < released ; 2013 ; 7 ; Travessias Volume 2013 ; 2013 ; >
-      au < manifest ; 2014 ; 8 ; Travessias Volume 2014 ; 2014 ; >
+      au < ready ; 2014 ; 8 ; Travessias Volume 2014 ; 2014 ; >
 
   }
 

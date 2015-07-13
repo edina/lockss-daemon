@@ -1,5 +1,5 @@
 /*
- * $Id: TestHighWireDrupalUrlNormalizer.java,v 1.4 2014-07-04 04:03:28 etenbrink Exp $
+ * $Id$
  */
 
 /*
@@ -32,7 +32,13 @@ in this Software without prior written authorization from Stanford University.
 
 package org.lockss.plugin.highwire;
 
+import java.util.Properties;
+
+import org.lockss.config.Configuration;
+import org.lockss.daemon.ConfigParamDescr;
 import org.lockss.plugin.UrlNormalizer;
+import org.lockss.plugin.definable.DefinablePlugin;
+import org.lockss.test.ConfigurationUtil;
 import org.lockss.test.LockssTestCase;
 /*
  * UrlNormalizer removes  suffixes
@@ -52,7 +58,25 @@ import org.lockss.test.LockssTestCase;
  */
 
 public class TestHighWireDrupalUrlNormalizer extends LockssTestCase {
-
+  
+  static final String BASE_URL_KEY = ConfigParamDescr.BASE_URL.getKey();
+  static final String VOL_KEY = ConfigParamDescr.VOLUME_NAME.getKey();
+  private DefinablePlugin plugin;
+  
+  @Override
+  public void setUp() throws Exception {
+    super.setUp();
+    plugin = new DefinablePlugin();
+    plugin.initPlugin(getMockLockssDaemon(),
+        "org.lockss.plugin.highwire.HighWireDrupalPlugin");
+    Properties props = new Properties();
+    props.setProperty(VOL_KEY, "303");
+    props.setProperty(BASE_URL_KEY, "http://www.example.com/");
+    
+    Configuration config = ConfigurationUtil.fromProps(props);
+    plugin.configureAu(config, null);
+    }
+  
   public void testUrlNormalizer() throws Exception {
     UrlNormalizer normalizer = new HighWireDrupalUrlNormalizer();
     
@@ -75,6 +99,22 @@ public class TestHighWireDrupalUrlNormalizer extends LockssTestCase {
         normalizer.normalizeUrl("http://ajpheart.physiology.org/content/304/2/H253.full.pdf%2Bhtml", null));
     assertEquals("http://ajpheart.physiology.org/content/304/2/H253.full.pdf+html",
         normalizer.normalizeUrl("http://ajpheart.physiology.org/content/304/2/H253.full-text.pdf%2Bhtml", null));
+    
+    assertEquals("http://ajpcell.physiology.org/content/303/1/C1",
+        normalizer.normalizeUrl("http://ajpcell.physiology.org/content/303/1/C1?rss=foo", null));
+    assertEquals("http://ajpcell.physiology.org/content/303/1/C1",
+        normalizer.normalizeUrl("http://ajpcell.physiology.org/content/303/1/C1?ijkey=foo", null));
+    assertEquals("http://ajpcell.physiology.org/content/303/1/C1.e-letters",
+        normalizer.normalizeUrl("http://ajpcell.physiology.org/content/303/1/C1.e-letters?foo", null));
+    assertEquals("http://physrev.physiology.org/sites/all/modules/highwire/highwire/highwire_theme_tools/fonts/hwicons.eot",
+        normalizer.normalizeUrl("http://physrev.physiology.org/sites/all/modules/highwire/highwire/highwire_theme_tools/fonts/hwicons.eot?-2mifpm", null));
+    assertEquals("http://physrev.physiology.org/sites/all/modules/highwire/highwire/highwire_theme_tools/fonts/hwicons.svg",
+        normalizer.normalizeUrl("http://physrev.physiology.org/sites/all/modules/highwire/highwire/highwire_theme_tools/fonts/hwicons.svg?-2mifpm", null));
+    assertEquals("http://physrev.physiology.org/sites/all/modules/highwire/highwire/highwire_theme_tools/fonts/hwicons.woff",
+        normalizer.normalizeUrl("http://physrev.physiology.org/sites/all/modules/highwire/highwire/highwire_theme_tools/fonts/hwicons.woff?-2mifpm", null));
+    
+    assertEquals("http://physrev.physiology.org/sites/all/modules/highwire/highwire/highwire_theme_tools/fonts/hwicons.tiff?-2mifpm",
+        normalizer.normalizeUrl("http://physrev.physiology.org/sites/all/modules/highwire/highwire/highwire_theme_tools/fonts/hwicons.tiff?-2mifpm", null));
   }
   
 }

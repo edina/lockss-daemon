@@ -13,7 +13,7 @@
   </entry>
   <entry>
     <string>plugin_version</string>
-    <string>100</string>
+    <string>104</string>
   </entry>
   <entry>
     <string>plugin_feature_version_map</string>
@@ -24,17 +24,17 @@
       </entry>
       <entry>
         <string>Poll</string>
-        <string>26</string>
+        <string>29</string>
       </entry>
       <entry>
         <string>Metadata</string>
-        <string>9</string>
+        <string>10</string>
       </entry>
     </map>
   </entry>
   <entry>
     <string>required_daemon_version</string>
-    <string>1.63.0</string>
+    <string>1.67.0</string>
   </entry>
   <entry>
     <string>plugin_config_props</string>
@@ -116,7 +116,7 @@
      -->
     <list>
       <string>2,"^%s.*[.]cover[.]gif$", base_url</string>
-      <string>1,"^https?://%s/[^?]*[.](bmp|css|gif|ico|jpe?g|js|png|tif?f)$", base_url_host</string>
+      <string>1,"^https?://%s/[^?]*[.](bmp|css|gif|ico|jpe?g|js|png|tif?f)$", url_host(base_url)</string>
       <string>4,"^%s", base_url</string>
       <string>2,"^%s.*\?tab=(metrics|related|responses)", base_url</string>
       <string>2,"^%s(content|lookup/volpage)/%s/.*(cited-by|patientinform-links|related-urls)=yes", base_url, volume_name</string>
@@ -140,6 +140,10 @@
   <entry>
     <string>text/html_filter_factory</string>
     <string>org.lockss.plugin.highwire.HighWirePressH20HtmlFilterFactory</string>
+  </entry>
+  <entry>
+    <string>text/html_crawl_filter_factory</string>
+    <string>org.lockss.plugin.highwire.HighWirePressH20HtmlCrawlFilterFactory</string>
   </entry>
   <entry>
     <string>plugin_crawl_url_comparator_factory</string>
@@ -215,5 +219,13 @@
         <string>X-Lockss-Source:publisher</string>
       </entry>
     </map>
+  </entry>
+  <entry>
+    <string>au_repair_from_peer_if_missing_url_pattern</string>
+    <string>[.](css|js)$</string>
+  </entry>
+  <entry>
+    <string>au_exclude_urls_from_polls_pattern</string>
+    <string>[.](css|js)$</string>
   </entry>
 </map>

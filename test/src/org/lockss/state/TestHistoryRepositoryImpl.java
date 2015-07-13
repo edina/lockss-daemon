@@ -1,10 +1,10 @@
 /*
- * $Id: TestHistoryRepositoryImpl.java,v 1.85.10.2 2014-12-27 03:27:43 tlipkis Exp $
+ * $Id$
  */
 
 /*
 
-Copyright (c) 2000-2008 Board of Trustees of Leland Stanford Jr. University,
+Copyright (c) 2000-2015 Board of Trustees of Leland Stanford Jr. University,
 all rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -102,7 +102,7 @@ public abstract class TestHistoryRepositoryImpl extends LockssTestCase {
     super.setUp();
     theDaemon = getMockLockssDaemon();
     theDaemon.startDaemon();
-    mau = new MockArchivalUnit();
+    mau = new MockArchivalUnit(new MockPlugin(theDaemon));
     tempDirPath = getTempDir().getAbsolutePath() + File.separator;
     configHistoryParams(tempDirPath);
     repository = (HistoryRepositoryImpl)
@@ -292,6 +292,43 @@ public abstract class TestHistoryRepositoryImpl extends LockssTestCase {
     assertTrue(xmlFile.exists());
   }
 
+  public void testStoreAuEmptyState() throws Exception {
+    HashSet strCol = new HashSet();
+    strCol.add("test");
+    AuState origState = new AuState(mau, repository);
+    repository.storeAuState(origState);
+    AuState loadedState = repository.loadAuState();
+    assertEquals(-1, loadedState.getLastCrawlTime());
+    assertEquals(-1, loadedState.getLastCrawlAttempt());
+    assertEquals(-1, loadedState.getLastCrawlResult());
+    assertEquals("Unknown code -1", loadedState.getLastCrawlResultMsg());
+    assertEquals(-1, loadedState.getLastTopLevelPollTime());
+    assertEquals(-1, loadedState.getLastPollStart());
+    assertEquals(-1, loadedState.getLastPollResult());
+    assertEquals(null, loadedState.getLastPollResultMsg());
+
+    assertEquals(-1, loadedState.getLastPoPPoll());
+    assertEquals(-1, loadedState.getLastPoPPollResult());
+    assertEquals(-1, loadedState.getLastLocalHashScan());
+    assertEquals(0, loadedState.getNumAgreePeersLastPoR());
+    assertEquals(0, loadedState.getNumWillingRepairers());
+    assertEquals(0, loadedState.getNumCurrentSuspectVersions());
+    assertEmpty(loadedState.getCdnStems());
+    loadedState.addCdnStem("http://this.is.new/");
+    assertEquals(ListUtil.list("http://this.is.new/"), loadedState.getCdnStems());
+    loadedState.addCdnStem("http://this.is.new/");
+    assertEquals(ListUtil.list("http://this.is.new/"), loadedState.getCdnStems());
+
+    assertEquals(0, loadedState.getPollDuration());
+    assertEquals(0, loadedState.getClockssSubscriptionStatus());
+    assertEquals(null, loadedState.getAccessType());
+    assertEquals(SubstanceChecker.State.Unknown, loadedState.getSubstanceState());
+    assertEquals(null, loadedState.getFeatureVersion(Plugin.Feature.Substance));
+    assertEquals(null, loadedState.getFeatureVersion(Plugin.Feature.Metadata));
+    assertEquals(-1, loadedState.getLastMetadataIndex());
+    assertEquals(0, loadedState.getLastContentChange());
+    assertEquals(mau.getAuId(), loadedState.getArchivalUnit().getAuId());
+  }
 
   public void testStoreAuState() throws Exception {
     HashSet strCol = new HashSet();
@@ -308,10 +345,10 @@ public abstract class TestHistoryRepositoryImpl extends LockssTestCase {
 				    111222, // lastPoPPoll
 				    7, // lastPoPPollResult
 				    222333, // lastLocalHashScan
-				    222444, // lastLocalHashMismatch
 				    444777, // numAgreePeersLastPoR
 				    777444, // numWillingRepairers
 				    747474, // numCurrentSuspectVersions
+				    ListUtil.list("http://hos.t/pa/th"),
 				    repository);
 
     assertEquals("SubstVer3",
@@ -342,11 +379,16 @@ public abstract class TestHistoryRepositoryImpl extends LockssTestCase {
     assertEquals(111222, loadedState.getLastPoPPoll());
     assertEquals(7, loadedState.getLastPoPPollResult());
     assertEquals(222333, loadedState.getLastLocalHashScan());
-    // Disabled for 1.62
-//     assertEquals(222444, loadedState.getLastLocalHashMismatch());
 
     assertEquals(444777, loadedState.getNumAgreePeersLastPoR());
     assertEquals(777444, loadedState.getNumWillingRepairers());
+    assertEquals(747474, loadedState.getNumCurrentSuspectVersions());
+    assertEquals(ListUtil.list("http://hos.t/pa/th"),
+		 loadedState.getCdnStems());
+    loadedState.addCdnStem("http://this.is.new/");
+    assertEquals(ListUtil.list("http://hos.t/pa/th", "http://this.is.new/"),
+		 loadedState.getCdnStems());
+
     assertEquals(12345, loadedState.getPollDuration());
     assertEquals(2, loadedState.getClockssSubscriptionStatus());
     assertEquals(AuState.AccessType.OpenAccess, loadedState.getAccessType());
@@ -444,10 +486,10 @@ public abstract class TestHistoryRepositoryImpl extends LockssTestCase {
 				  444, // lastPoPPoll
 				  8, // lastPoPPollResult
 				  -1, // lastLocalHashScan
-				  -1, // lastLocalHashMismatch
 				  27, // numAgreePeersLastPoR
 				  72, // numWillingRepirers
 				  19, // numCurrentSuspectVersions
+				  ListUtil.list("http://foo/"), // cdnStems
 				  repository);
 
     repository.storeAuState(auState);
@@ -485,10 +527,10 @@ public abstract class TestHistoryRepositoryImpl extends LockssTestCase {
 			  -1, // lastPoPPoll
 			  -1, // lastPoPPollResult
 			  -1, // lastLocalHashScan
-			  -1, // lastLocalHashMismatch
 			  13, // numAgreePeersLastPoR
 			  31, // numWillingRepairers
 			  91, // numCurrentSuspectVersions
+			  ListUtil.list("http://foo/"), // cdnStems
 			  repository);
     repository.storeAuState(auState);
     assertEquals(1234, auState.getLastCrawlTime());
@@ -499,6 +541,7 @@ public abstract class TestHistoryRepositoryImpl extends LockssTestCase {
     assertEquals(31, auState.getNumWillingRepairers());
     assertEquals(91, auState.getNumCurrentSuspectVersions());
     assertEquals(mau.getAuId(), auState.getArchivalUnit().getAuId());
+    assertEquals(ListUtil.list("http://foo/"), auState.getCdnStems());
 
     fis = new FileInputStream(xmlFile);
     baos = new ByteArrayOutputStream(expectedStr.length());
@@ -541,10 +584,10 @@ public abstract class TestHistoryRepositoryImpl extends LockssTestCase {
 			  444, // lastPoPPoll
 			  8, // lastPoPPollResult
 			  -1, // lastLocalHashScan
-			  -1, // lastLocalHashMismatch
 			  27, // numAgreePeersLastPoR
 			  72, // numWillingRepairers
 			  19, // numCurrentSuspectVersions
+			  ListUtil.list("http://foo/"), // cdnStems
 			  repository);
     repository.storeAuState(auState);
     fis = new FileInputStream(xmlFile);

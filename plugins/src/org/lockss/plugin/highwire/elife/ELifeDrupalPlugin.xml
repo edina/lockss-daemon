@@ -1,7 +1,7 @@
 <map>
   <entry>
     <string>plugin_status</string>
-    <string>testing - Evan/Ly</string>
+    <string>ready</string>
   </entry>
   <!-- compare to ClockssELifeDrupalPlugin, the added entries should be in synch -->
   <entry>
@@ -10,11 +10,11 @@
   </entry>
   <entry>
     <string>plugin_name</string>
-    <string>HighWire eLife Drupal Plugin</string>
+    <string>eLife Sciences Plugin</string>
   </entry>
   <entry>
     <string>plugin_version</string>
-    <string>7</string>
+    <string>16</string>
   </entry>
   <entry>
     <string>plugin_parent</string>
@@ -22,50 +22,32 @@
   </entry>
   <entry>
     <string>plugin_parent_version</string>
-    <string>13</string>
+    <string>21</string>
   </entry>
   <entry>
     <string>plugin_feature_version_map</string>
     <map>
       <entry>
         <string>Substance</string>
-        <string>2</string>
+        <string>3</string>
       </entry>
       <entry>
         <string>Poll</string>
-        <string>7</string>
+        <string>14</string>
       </entry>
       <entry>
         <string>Metadata</string>
-        <string>2</string>
+        <string>4</string>
       </entry>
     </map>
   </entry>
   <entry>
     <string>au_name</string>
-    <string>"HighWire eLife Drupal Plugin, Base URL %s, Volume %s", base_url, volume_name</string>
+    <string>"eLife Sciences Plugin, Base URL %s, Volume %s", base_url, volume_name</string>
   </entry>
   <entry>
     <string>au_start_url</string>
     <string>"%slockss-manifest/elife_%s.html", base_url, volume_name</string>
-  </entry>
-  <entry>
-    <string>au_crawlrules</string>
-    <list>
-      <!-- no gifs from other volumes
-      <string>2,"^%scontent/(?!([^/]+/)?%s)[^?]*[.]gif", base_url, volume_name</string>
-      <string>1,"^https?://%s[^?]*/highwire/jcore", base_url_host</string>
-       -->
-      <!-- permission page & all resources on any CDN (cloudfront host) -->
-      <string>1,"^https?://[^.]+[.]cloudfront[.]net/(lockss[.]htm|[^?]+[.](bmp|gif|ico|jpe?g|png|tif?f|css|js))$"</string>
-      <!-- all images, resources, css, js, etc. -->
-      <string>1,"^https?://%s/[^?]*[.](bmp|gif|ico|jpe?g|png|tif?f|(css|js)([?].*)?)$", base_url_host</string>
-      <!-- Do not crawl unless from base url -->
-      <string>4,"^%s", base_url</string>
-      <string>1,"^%s(content/[^/]+/e[^/?]+$|highwire/(filestream|markup)/|elife/download-video/)", base_url</string>
-      <string>1,"^%scontent(/elife)?/[^/]+/e[^/?]+([.]full[.]pdf$|/article-(data|info)|/.*/embed/)", base_url</string>
-      <string>1,"^%shighwire/citation/[^/]+/ris$", base_url</string>
-    </list>
   </entry>
   <entry>
     <string>au_substance_url_pattern</string>
@@ -88,7 +70,23 @@
   <entry>
     <string>plugin_cache_result_list</string>
     <list>
+      <string>403=org.lockss.plugin.highwire.elife.ELifeDrupalHttpResponseHandler</string>
       <string>500=org.lockss.plugin.highwire.elife.ELifeDrupalHttpResponseHandler</string>
+      <string>504=org.lockss.plugin.highwire.elife.ELifeDrupalHttpResponseHandler</string>
     </list>
+  </entry>
+  <entry>
+    <!-- manifest to articles -->
+    <string>au_refetch_depth</string>
+    <int>1</int>
+  </entry>
+  <entry>
+    <string>plugin_crawl_url_comparator_factory</string>
+    <org.lockss.util.Default />
+  </entry>
+  <entry>
+    <string>au_permission_checker_factory</string>
+    <org.lockss.util.Default />
+    <!-- string>org.lockss.plugin.highwire.elife.ELifeDrupalPermissionCheckerFactory</string -->
   </entry>
 </map>

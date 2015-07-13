@@ -1,10 +1,10 @@
 /*
- * $Id: MassachusettsMedicalSocietyArticleIteratorFactory.java,v 1.1 2012-03-26 18:27:33 wkwilson Exp $
+ * $Id$
  */
 
 /*
 
-Copyright (c) 2000-2011 Board of Trustees of Leland Stanford Jr. University,
+Copyright (c) 2000-2015 Board of Trustees of Leland Stanford Jr. University,
 all rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -32,9 +32,7 @@ in this Software without prior written authorization from Stanford University.
 
 package org.lockss.plugin.massachusettsmedicalsociety;
 
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.regex.*;
 
 import org.lockss.daemon.*;
@@ -47,7 +45,7 @@ import org.lockss.util.Logger;
  * HTML Full Text: http://www.nejm.org/doi/full/10.1056/NEJMoa042957
  * PDF Full Text: http://www.nejm.org/doi/pdf/10.1056/NEJMoa042957
  * Citation (containing metadata): www.nejm.org/action/downloadCitation?format=(ris|endnote|bibTex|medlars|procite|referenceManager)&doi=10.1056%2FNEJMoa042957&include=cit&direct=checked
- * Supplemental Meterials: http://www.nejm.org/doi/suppl/10.1056/NEJMoa042957/suppl_file/nejmoa042957_(disclosures|protocol|appendix).pdf
+ * Supplemental Materials page: http://www.nejm.org/action/showSupplements?doi=10.1056%2FNEJMc1304053
  */
 
 public class MassachusettsMedicalSocietyArticleIteratorFactory
@@ -61,15 +59,11 @@ public class MassachusettsMedicalSocietyArticleIteratorFactory
   protected static final String ROLE_CITATION_MEDLARS = ArticleFiles.ROLE_CITATION + "Medlars";
   protected static final String ROLE_CITATION_PROCITE = ArticleFiles.ROLE_CITATION + "Procite";
   protected static final String ROLE_CITATION_REFMANAGER = ArticleFiles.ROLE_CITATION + "Refmanager";
-  protected static final String ROLE_SUPPLEMENTARY_MATERIALS_DISCLOSURES = ArticleFiles.ROLE_SUPPLEMENTARY_MATERIALS + "Disclosures";
-  protected static final String ROLE_SUPPLEMENTARY_MATERIALS_APPENDIX = ArticleFiles.ROLE_SUPPLEMENTARY_MATERIALS + "Appendix";
-  protected static final String ROLE_SUPPLEMENTARY_MATERIALS_PROTOCOL = ArticleFiles.ROLE_SUPPLEMENTARY_MATERIALS + "Protocol";
+  protected static final String ROLE_SUPPLEMENTARY_MATERIALS = ArticleFiles.ROLE_SUPPLEMENTARY_MATERIALS;
   
   protected static Logger log = Logger.getLogger("MassachusettsMedicalSocietyArticleIteratorFactory");
   
   protected static final String ROOT_TEMPLATE = "\"%sdoi\", base_url"; // params from tdb file corresponding to AU
-  // base_url/doi/
-  
   protected static final String PATTERN_TEMPLATE = "\"^%sdoi/(full|pdf)/\", base_url";
 
   
@@ -97,6 +91,7 @@ public class MassachusettsMedicalSocietyArticleIteratorFactory
     @Override
     protected ArticleFiles createArticleFiles(CachedUrl cu) {
       String url = cu.getUrl();
+      log.debug3("createArticleFiles: cu="+url);
       Matcher mat;
       mat = HTML_PATTERN.matcher(url);
       if (mat.find()) {
@@ -113,9 +108,6 @@ public class MassachusettsMedicalSocietyArticleIteratorFactory
       if (mat.find() && isPdf(cu)) {
         return processFullTextPdf(cu, mat);
       }
-      
-      
-
       //log.warning("Mismatch between article iterator factory and article iterator: " + url);
       return null;
     }
@@ -123,9 +115,10 @@ public class MassachusettsMedicalSocietyArticleIteratorFactory
     protected ArticleFiles processFullTextHtml(CachedUrl htmlCu,
                                                Matcher htmlMat) {
       ArticleFiles af = new ArticleFiles();
+      log.debug3("setFullTextCu: "+htmlCu);
       af.setFullTextCu(htmlCu);
       af.setRoleCu(ArticleFiles.ROLE_FULL_TEXT_HTML, htmlCu);
-      if (spec.getTarget() != MetadataTarget.Article) {
+      if (spec.getTarget() != MetadataTarget.Article()) {
         guessFullTextPdf(af, htmlMat);
         guessCitations(af, htmlMat);
         guessSupplements(af, htmlMat);
@@ -145,7 +138,7 @@ public class MassachusettsMedicalSocietyArticleIteratorFactory
       ArticleFiles af = new ArticleFiles();
       af.setFullTextCu(pdfCu);
       af.setRoleCu(ArticleFiles.ROLE_FULL_TEXT_PDF, pdfCu);
-      if (spec.getTarget() != MetadataTarget.Article) {
+      if (spec.getTarget() != MetadataTarget.Article()) {
         guessCitations(af, pdfMat);
         guessSupplements(af, pdfMat);
       }
@@ -200,26 +193,22 @@ public class MassachusettsMedicalSocietyArticleIteratorFactory
       af.setRoleCu(ArticleFiles.ROLE_CITATION, primCitCu);
     }
     
+    // Assigning the Supplementary_Materials role to the url (eg):
+    // http://www.nejm.org/action/showSupplements?doi=10.1056%2FNEJMc1304053
+    // which contain links to the appendix, disclosures and/or protocol page(s)
+    // Supplementary_Materials landing page doi case matches that of main article
+    // urls (whereas underlying specific supplementary data urls are always lower case
     protected void guessSupplements(ArticleFiles af, Matcher mat) {
-        String citDoi = mat.group(1);
-        String doiEnd = citDoi.substring(citDoi.indexOf('/') + 1).toLowerCase();
-        CachedUrl primSupplCu = null;
-        String[][] supplTypes = {{ROLE_SUPPLEMENTARY_MATERIALS_APPENDIX, "appendix"},
-        					     {ROLE_SUPPLEMENTARY_MATERIALS_DISCLOSURES, "disclosures"},
-        					     {ROLE_SUPPLEMENTARY_MATERIALS_PROTOCOL, "protocol"}};
-	        
-        for(String[] supplType : supplTypes){
-  	      CachedUrl citCu = au.makeCachedUrl(mat.replaceFirst("/doi/suppl/" + citDoi + "/suppl_file/" + doiEnd + "_" + supplType[1] + ".pdf"));
-  	      if (citCu != null && citCu.hasContent()) {
-  	    	if(primSupplCu == null){
-  	    		primSupplCu = citCu;
-  	    	}
-  	        af.setRoleCu(supplType[0], citCu);
-  	      }
-        }
-        af.setRoleCu(ArticleFiles.ROLE_SUPPLEMENTARY_MATERIALS, primSupplCu);
-      }
+      String origdoi = mat.group(1);
+      String supDoi = origdoi.replace("/", "%2F");
+      log.debug3("guessSupplements: "+ "/action/showSupplements?doi="+supDoi);   
+      CachedUrl supCu = au.makeCachedUrl(
+          mat.replaceFirst("/action/showSupplements?doi="+supDoi));
 
+      if (supCu != null && supCu.hasContent()) {
+        af.setRoleCu(ArticleFiles.ROLE_SUPPLEMENTARY_MATERIALS, supCu);
+      }  
+    }
   }
   
   @Override

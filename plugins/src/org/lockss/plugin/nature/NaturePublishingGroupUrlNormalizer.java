@@ -1,10 +1,10 @@
 /*
- * $Id: NaturePublishingGroupUrlNormalizer.java,v 1.1 2013-09-11 15:51:22 alexandraohlson Exp $
+ * $Id$
  */
 
 /*
 
-Copyright (c) 2000-2013 Board of Trustees of Leland Stanford Jr. University,
+Copyright (c) 2000-2015 Board of Trustees of Leland Stanford Jr. University,
 all rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -39,8 +39,8 @@ import org.lockss.util.Logger;
 
 
 public class NaturePublishingGroupUrlNormalizer implements UrlNormalizer {
-  protected static Logger log = 
-      Logger.getLogger("NaturePublishingGroupUrlNormalizer");  
+  protected static final Logger log = 
+      Logger.getLogger(NaturePublishingGroupUrlNormalizer.class);  
   
   private static final String MESSAGE_ENDING = "?message=remove";  
 

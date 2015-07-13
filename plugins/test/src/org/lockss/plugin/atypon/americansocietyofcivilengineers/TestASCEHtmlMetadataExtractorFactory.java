@@ -1,4 +1,4 @@
-/* $Id: TestASCEHtmlMetadataExtractorFactory.java,v 1.1 2013-05-13 21:16:06 ldoan Exp $
+/* $Id$
 
  Copyright (c) 2000-2012 Board of Trustees of Leland Stanford Jr. University,
  all rights reserved.
@@ -157,7 +157,8 @@ public class TestASCEHtmlMetadataExtractorFactory extends LockssTestCase {
     assertNotNull(md);
 
     assertEquals(goodDCTitle, md.get(MetadataField.FIELD_ARTICLE_TITLE));
-    assertEquals(goodDCPublisher, md.get(MetadataField.FIELD_PUBLISHER));
+    // we no longer set the MetadataField.FIELD_PUBLISHER from dc.publisher
+    assertEquals(goodDCPublisher, md.get(MetadataField.DC_FIELD_PUBLISHER));
     assertEquals(goodDCDate, md.get(MetadataField.FIELD_DATE));
     assertEquals(goodDCFormat, md.get(MetadataField.DC_FIELD_FORMAT));
     assertEquals(goodDCLanguage, md.get(MetadataField.DC_FIELD_LANGUAGE));

@@ -1,5 +1,5 @@
 /*
- * $Id: ASCEHtmlHashFilterFactory.java,v 1.5 2013-08-27 20:21:31 alexandraohlson Exp $
+ * $Id$
  */
 
 /*
@@ -41,7 +41,12 @@ import org.lockss.plugin.*;
 import org.lockss.plugin.atypon.BaseAtyponHtmlHashFilterFactory;
 
 public class ASCEHtmlHashFilterFactory extends BaseAtyponHtmlHashFilterFactory {
-
+  // include a whitespace filter
+  @Override
+  public boolean doWSFiltering() {
+    return true;
+  }
+  
   @Override
   public InputStream createFilteredInputStream(ArchivalUnit au,
       InputStream in, String encoding) {

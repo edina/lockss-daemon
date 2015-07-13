@@ -1,10 +1,10 @@
 /*
- * $Id: AuStateBean.java,v 1.33.10.2 2014-12-27 03:27:44 tlipkis Exp $
+ * $Id$
  */
 
 /*
 
-Copyright (c) 2000-2008 Board of Trustees of Leland Stanford Jr. University,
+Copyright (c) 2000-2015 Board of Trustees of Leland Stanford Jr. University,
 all rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -74,10 +74,10 @@ public class AuStateBean extends AuState {
 				      auState.lastPoPPoll,
 				      auState.lastPoPPollResult,
 				      auState.lastLocalHashScan,
-				      auState.lastLocalHashMismatch,
 				      auState.numAgreePeersLastPoR,
 				      auState.numWillingRepairers,
 				      auState.numCurrentSuspectVersions,
+				      auState.cdnStems,
 				      null);
   }
 

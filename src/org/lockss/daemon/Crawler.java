@@ -1,5 +1,5 @@
 /*
- * $Id: Crawler.java,v 1.63 2014-11-24 10:17:46 tlipkis Exp $
+ * $Id$
  */
 
 /*
@@ -194,7 +194,10 @@ public interface Crawler {
     public boolean isGloballyPermittedHost(String host);
 
     public boolean isAllowedPluginPermittedHost(String host);
+
+    public void updateCdnStems(String url);
+
+    public CrawlUrl addChild(CrawlUrl curl, String url);
   }
-  
 
 }

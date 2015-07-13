@@ -528,7 +528,7 @@
       param[base_url] = http://www.bioone.org/
       param[journal_id] = 0003-0090
   
-      au < down ; 2004 ; Bulletin of the American Museum of Natural History Volume 287 ; 287 >
+      au < superseded ; 2004 ; Bulletin of the American Museum of Natural History Volume 287 [superseded] ; 287 >
 
     }
 
@@ -678,23 +678,23 @@
       au < released ; 2013 ; Bulletin of the American Museum of Natural History Volume 380 ; 380 >
       au < released ; 2013 ; Bulletin of the American Museum of Natural History Volume 381 ; 381 >
       au < released ; 2013 ; Bulletin of the American Museum of Natural History Volume 382 ; 382 >
-      au < manifest ; 2014 ; Bulletin of the American Museum of Natural History Volume 383 ; 383 >
-      au < manifest ; 2014 ; Bulletin of the American Museum of Natural History Volume 384 ; 384 >
-      au < manifest ; 2014 ; Bulletin of the American Museum of Natural History Volume 385 ; 385 >
-      au < manifest ; 2014 ; Bulletin of the American Museum of Natural History Volume 386 ; 386 >
-      au < manifest ; 2014 ; Bulletin of the American Museum of Natural History Volume 387 ; 387 >
-      au < manifest ; 2014 ; Bulletin of the American Museum of Natural History Volume 388 ; 388 >
-      au < manifest ; 2014 ; Bulletin of the American Museum of Natural History Volume 389 ; 389 >
-      au < manifest ; 2014 ; Bulletin of the American Museum of Natural History Volume 390 ; 390 >
-      au < manifest ; 2014 ; Bulletin of the American Museum of Natural History Volume 391 ; 391 >
-      au < expected ; 2014 ; Bulletin of the American Museum of Natural History Volume 392 ; 392 >
-      au < expected ; 2014 ; Bulletin of the American Museum of Natural History Volume 393 ; 393 >
+      au < ready ; 2014 ; Bulletin of the American Museum of Natural History Volume 383 ; 383 >
+      au < ready ; 2014 ; Bulletin of the American Museum of Natural History Volume 384 ; 384 >
+      au < ready ; 2014 ; Bulletin of the American Museum of Natural History Volume 385 ; 385 >
+      au < ready ; 2014 ; Bulletin of the American Museum of Natural History Volume 386 ; 386 >
+      au < ready ; 2014 ; Bulletin of the American Museum of Natural History Volume 387 ; 387 >
+      au < ready ; 2014 ; Bulletin of the American Museum of Natural History Volume 388 ; 388 >
+      au < ready ; 2014 ; Bulletin of the American Museum of Natural History Volume 389 ; 389 >
+      au < ready ; 2014 ; Bulletin of the American Museum of Natural History Volume 390 ; 390 >
+      au < ready ; 2014 ; Bulletin of the American Museum of Natural History Volume 391 ; 391 >
+      au < ready ; 2014 ; Bulletin of the American Museum of Natural History Volume 392 ; 392 >
+      au < ready ; 2014 ; Bulletin of the American Museum of Natural History Volume 393 ; 393 >
       au < expected ; 2014 ; Bulletin of the American Museum of Natural History Volume 394 ; 394 >
-      au < expected ; 2014 ; Bulletin of the American Museum of Natural History Volume 395 ; 395 >
-      au < expected ; 2014 ; Bulletin of the American Museum of Natural History Volume 396 ; 396 >
-      au < expected ; 2014 ; Bulletin of the American Museum of Natural History Volume 397 ; 397 >
-      au < expected ; 2014 ; Bulletin of the American Museum of Natural History Volume 398 ; 398 >
-      au < expected ; 2014 ; Bulletin of the American Museum of Natural History Volume 399 ; 399 >
+      au < expected ; 2015 ; Bulletin of the American Museum of Natural History Volume 395 ; 395 >
+      au < expected ; 2015 ; Bulletin of the American Museum of Natural History Volume 396 ; 396 >
+      au < expected ; 2015 ; Bulletin of the American Museum of Natural History Volume 397 ; 397 >
+      au < expected ; 2015 ; Bulletin of the American Museum of Natural History Volume 398 ; 398 >
+      au < expected ; 2015 ; Bulletin of the American Museum of Natural History Volume 399 ; 399 >
 
 
     }

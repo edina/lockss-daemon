@@ -1,5 +1,5 @@
 /*
- * $Id: ClockssUrlFetcher.java,v 1.2 2014-11-19 22:46:24 wkwilson Exp $
+ * $Id$
  */
 
 /*
@@ -80,7 +80,11 @@ public class ClockssUrlFetcher implements UrlFetcher {
   public void setLocalAddress(IPAddr addr) {
     uf.setLocalAddress(addr);
   }
-
+  
+  public void setCrawlUrl(CrawlUrl curl) {
+    uf.setCrawlUrl(curl);
+  }
+  
   public void setFetchFlags(BitSet fetchFlags) {
     uf.setFetchFlags(fetchFlags);
   }

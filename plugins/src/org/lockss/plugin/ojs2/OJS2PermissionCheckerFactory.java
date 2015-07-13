@@ -1,10 +1,10 @@
 /*
- * $Id: OJS2PermissionCheckerFactory.java,v 1.6 2014-12-08 21:40:16 alexandraohlson Exp $
+ * $Id$
  */
 
 /*
 
-Copyright (c) 2000-2014 Board of Trustees of Leland Stanford Jr. University,
+Copyright (c) 2000-2015 Board of Trustees of Leland Stanford Jr. University,
 all rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -39,10 +39,11 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.lockss.daemon.Crawler.PermissionHelper;
+import org.lockss.daemon.Crawler.CrawlerFacade;
 import org.lockss.daemon.*;
 import org.lockss.plugin.*;
 import org.lockss.util.Logger;
+import org.lockss.util.urlconn.CacheException;
 
 public class OJS2PermissionCheckerFactory
   implements PermissionCheckerFactory{
@@ -52,20 +53,29 @@ public class OJS2PermissionCheckerFactory
    * the ProbePermissionChecker does have the PermissionHelper pHelper param
    * rather than the new in 1.67 CrawlerFacade crawlFacade param
    */
-  public class OJS2PermissionChecker extends ProbePermissionChecker {
+  public class OJS2PermissionChecker implements PermissionChecker {
     
     private final Logger logger = Logger.getLogger(OJS2PermissionCheckerFactory.class);
     protected String au_year;
     protected Pattern au_year_paren;
     protected Pattern au_year_colon;
     
+    private static final String CLOCKSS_FRAG = "about/editorialPolicies";
+    
+    public OJS2PermissionChecker(ArchivalUnit au) {
+      super();
+      au_year = au.getConfiguration().get(ConfigParamDescr.YEAR.getKey());
+      au_year_paren = Pattern.compile("[(]" + au_year + "[)]");
+      au_year_colon = Pattern.compile(":\\s+" + au_year + "[^0-9]");
+    }
+    
     @Override
-    public boolean checkPermission(PermissionHelper pHelper, Reader inputReader,
-        String permissionUrl) {
+    public boolean checkPermission(CrawlerFacade crawlFacade,
+        Reader inputReader, String permissionUrl) throws CacheException {
       
       // if the permissionUrl is for CLOCKSS, then just return True
       // XXX FIXME replace the entire PremissionChecker with CrawlSeed?
-      if (permissionUrl.contains("about/editorialPolicies")) {
+      if (permissionUrl.contains(CLOCKSS_FRAG)) {
         return true;
       }
       
@@ -98,16 +108,9 @@ public class OJS2PermissionCheckerFactory
       }
       return ret;
     }
-    
-    
-    public OJS2PermissionChecker(ArchivalUnit au) {
-      super(au);
-      au_year = au.getConfiguration().get(ConfigParamDescr.YEAR.getKey());
-      au_year_paren = Pattern.compile("[(]" + au_year + "[)]");
-      au_year_colon = Pattern.compile(":\\s+" + au_year + "[^0-9]");
-    }
   }
   
+  @Override
   public List<OJS2PermissionChecker> createPermissionCheckers(ArchivalUnit au) {
     List<OJS2PermissionChecker> list = new ArrayList<OJS2PermissionChecker>(1);
     list.add(new OJS2PermissionChecker(au));

@@ -1,10 +1,10 @@
 /*
- * $Id: DbManagerSql.java,v 1.9 2014-11-20 18:20:30 fergaloy-sf Exp $
+ * $Id$
  */
 
 /*
 
- Copyright (c) 2014 Board of Trustees of Leland Stanford Jr. University,
+ Copyright (c) 2014-2015 Board of Trustees of Leland Stanford Jr. University,
  all rights reserved.
 
  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -2183,6 +2183,28 @@ public class DbManagerSql {
       + "," + PROPRIETARY_ID_COLUMN
       + ") values (?,?)";
 
+  // SQL statement that obtains all existing plugin identifier/AU key pairs in
+  // the database for Archival Units that have an unknown provider.
+  private static final String GET_UNKNOWN_PROVIDER_PLUGIN_IDS_AU_KEYS_QUERY =
+    "select am." + AU_MD_SEQ_COLUMN
+      + ", a." + AU_KEY_COLUMN
+      + ", p." + PLUGIN_ID_COLUMN
+      + " from " + AU_MD_TABLE + " am"
+      + ", " + AU_TABLE + " a"
+      + ", " + PLUGIN_TABLE + " p"
+      + ", " + PROVIDER_TABLE + " pr"
+      + " where p." + PLUGIN_SEQ_COLUMN + " = a." + PLUGIN_SEQ_COLUMN
+      + " and a." + AU_SEQ_COLUMN + " = am." + AU_SEQ_COLUMN
+      + " and am." + PROVIDER_SEQ_COLUMN + " = pr." + PROVIDER_SEQ_COLUMN
+      + " and pr." + PROVIDER_NAME_COLUMN + " = '" + UNKNOWN_PROVIDER_NAME
+      + "'";
+
+  // SQL statements that create the necessary version 23 indices.
+  private static final String[] VERSION_23_INDEX_CREATE_QUERIES = new String[] {
+    "create index idx4_" + AU_MD_TABLE + " on " + AU_MD_TABLE
+    + "(" + PROVIDER_SEQ_COLUMN + ")"
+    };
+
   // The database data source.
   private DataSource dataSource = null;
 
@@ -3247,8 +3269,8 @@ public class DbManagerSql {
    * @return a String with the localized table creation query.
    */
   private String localizeCreateQueryForMysql(String query) {
-    return StringUtil.replaceString(query, "--BigintSerialPk--",
-	BIGINT_SERIAL_PK_MYSQL);
+    return StringUtil.replaceString(query + " ENGINE = INNODB",
+	"--BigintSerialPk--", BIGINT_SERIAL_PK_MYSQL);
   }
 
   /**
@@ -7294,19 +7316,23 @@ public class DbManagerSql {
 	tdbAu = au.getTdbAu();
 	if (log.isDebug3()) log.debug3(DEBUG_HEADER + "tdbAu = " + tdbAu);
 
-	// Get the provider LOCKSS identifier.
-	// TODO: Replace with tdbAu.getProvider().getLid() when available.
-	providerLid = null;
-	if (log.isDebug3())
-	  log.debug3(DEBUG_HEADER + "providerLid = '" + providerLid + "'");
+	if (tdbAu != null) {
+	  // Get the provider LOCKSS identifier.
+	  // TODO: Replace with tdbAu.getProvider().getLid() when available.
+	  providerLid = null;
+	  if (log.isDebug3())
+	    log.debug3(DEBUG_HEADER + "providerLid = '" + providerLid + "'");
 
-	// Get the provider name.
-	providerName = tdbAu.getProviderName();
-	if (log.isDebug3())
-	  log.debug3(DEBUG_HEADER + "providerName = '" + providerName + "'");
+	  // Get the provider name.
+	  providerName = tdbAu.getProviderName();
+	  if (log.isDebug3())
+	    log.debug3(DEBUG_HEADER + "providerName = '" + providerName + "'");
 
-	// Determine the provider.
-	providerSeq = findOrCreateProvider(conn, providerLid, providerName);
+	  // Determine the provider.
+	  providerSeq = findOrCreateProvider(conn, providerLid, providerName);
+	} else {
+	  if (log.isDebug()) log.debug("Cannot find tdbAU for au = " + au);
+	}
       } else {
 	if (log.isDebug()) log.debug("Cannot find archival unit for pluginId = "
 	    + pluginId + ", auKey = " + auKey);
@@ -7417,7 +7443,8 @@ public class DbManagerSql {
       stmt.setInt(1, version);
 
       resultSet = executeQuery(stmt);
-      result = resultSet.next();
+      resultSet.next();
+      result = resultSet.getLong(1) > 0;
     } catch (SQLException sqle) {
       log.error("Cannot find a database version", sqle);
       log.error("SQL = '" + COUNT_DATABASE_VERSION_QUERY + "'.");
@@ -7578,6 +7605,205 @@ public class DbManagerSql {
     } finally {
       JdbcBridge.safeCloseStatement(insertMdItemProprietaryId);
     }
+
+    if (log.isDebug2()) log.debug2(DEBUG_HEADER + "Done.");
+  }
+
+  /**
+   * Updates the database from version 21 to version 22.
+   * 
+   * @param conn
+   *          A Connection with the database connection to be used.
+   * @throws SQLException
+   *           if any problem occurred updating the database.
+   */
+  void updateDatabaseFrom21To22(Connection conn) throws SQLException {
+    final String DEBUG_HEADER = "updateDatabaseFrom21To22(): ";
+    if (log.isDebug2()) log.debug2(DEBUG_HEADER + "Starting...");
+
+    if (conn == null) {
+      throw new IllegalArgumentException("Null connection");
+    }
+
+    // Populate in a separate thread the unknown Archival Unit providers.
+    DbVersion21To22Migrator migrator = new DbVersion21To22Migrator();
+    Thread thread = new Thread(migrator, "DbVersion21To22Migrator");
+    LockssDaemon.getLockssDaemon().getDbManager().recordThread(thread);
+    thread.start();
+
+    if (log.isDebug2()) log.debug2(DEBUG_HEADER + "Done.");
+  }
+
+  /**
+   * Migrates the contents of the database from version 21 to version 22.
+   */
+  void migrateDatabaseFrom21To22() {
+    final String DEBUG_HEADER = "migrateDatabaseFrom21To22(): ";
+    if (log.isDebug2()) log.debug2(DEBUG_HEADER + "Starting...");
+    Connection conn = null;
+
+    try {
+      // Get a connection to the database.
+      conn = getConnection();
+
+      // Check whether the pre-requisite database upgrade has been completed.
+      if (isVersionCompleted(conn, 20)) {
+	// Yes: Populate the metadata provider for those Archival Units with an
+	// unknown metadata provider.
+	int populatedFlag = populateUnknownAuMetadataProvider(conn);
+	if (log.isDebug3())
+	  log.debug3(DEBUG_HEADER + "populatedFlag = " + populatedFlag);
+
+	// Check whether some unknown metadata providers have been populated.
+	if (populatedFlag > 0) {
+	  // Yes: Reset to zero the identifier of the last metadata item for
+	  // which the fetch time has been exported.
+	  zeroLastExportedMdItemId(conn);
+
+	  // Populate again the metadata provider for those Archival Units with
+	  // an unknown metadata provider.
+	  if (populateUnknownAuMetadataProvider(conn) == 0) {
+	    // Record the current database version in the database.
+	    addDbVersion(conn, 22);
+	  }
+
+	  // No: Check whether no unknown metadata providers remain in the
+	  // database.
+	} else if (populatedFlag == 0) {
+	  // Record the current database version in the database.
+	  addDbVersion(conn, 22);
+	}
+
+	JdbcBridge.commitOrRollback(conn, log);
+	if (log.isDebug()) log.debug("Database updated to version 22");
+      } else {
+	// No.
+	if (log.isDebug()) log.debug("Database update 22 requires update 20");
+      }
+    } catch (SQLException sqle) {
+      log.error("Cannot migrate the database from version 21 to 22", sqle);
+    } catch (RuntimeException re) {
+      log.error("Cannot migrate the database from version 21 to 22", re);
+    } finally {
+      JdbcBridge.safeRollbackAndClose(conn);
+    }
+
+    if (log.isDebug2()) log.debug2(DEBUG_HEADER + "Done.");
+  }
+
+  /**
+   * Populates the provider reference in the subscription table.
+   * 
+   * @param conn
+   *          A Connection with the database connection to be used.
+   * @return an int with the indication of whether previously unknown providers
+   *         have been populated (= 1), no unknown providers were found (= 0)
+   *         or no existing unknown providers have been populated and they
+   *         remain unknown (= -1).
+   * @throws SQLException
+   *           if any problem occurred accessing the database.
+   */
+  private int populateUnknownAuMetadataProvider(Connection conn)
+      throws SQLException {
+    final String DEBUG_HEADER = "populateUnknownAuMetadataProvider(): ";
+    if (log.isDebug2()) log.debug2(DEBUG_HEADER + "Starting...");
+
+    int populatedFlag = 0;
+
+    if (conn == null) {
+      throw new IllegalArgumentException("Null connection");
+    }
+
+    PreparedStatement statement = null;
+    ResultSet resultSet = null;
+
+    try {
+      // Get pairs of plugin identifier and AU key in the database for AUs with
+      // an unknown provider.
+      statement =
+	  prepareStatement(conn, GET_UNKNOWN_PROVIDER_PLUGIN_IDS_AU_KEYS_QUERY);
+      resultSet = executeQuery(statement);
+
+      // Loop through all the pairs of plugin identifier and AU key found.
+      while (resultSet.next()) {
+	// Remember that there are Archival Units with unknown providers.
+	if (populatedFlag == 0) {
+	  populatedFlag = -1;
+	  if (log.isDebug3())
+	    log.debug3(DEBUG_HEADER + "populatedFlag = " + populatedFlag);
+	}
+
+	// Get the AU_MD primary key.
+	Long auMdSeq = resultSet.getLong(AU_MD_SEQ_COLUMN);
+	if (log.isDebug3()) log.debug3(DEBUG_HEADER + "auMdSeq = " + auMdSeq);
+
+	// Get the plugin identifier.
+	String pluginId = resultSet.getString(PLUGIN_ID_COLUMN);
+	if (log.isDebug3())
+	  log.debug3(DEBUG_HEADER + "pluginId = '" + pluginId + "'");
+
+	// Get the AU key.
+	String auKey = resultSet.getString(AU_KEY_COLUMN);
+	if (log.isDebug3())
+	  log.debug3(DEBUG_HEADER + "auKey = '" + auKey + "'");
+
+	// Determine the provider.
+	Long providerSeq = getAuProvider(conn, pluginId, auKey);
+	if (log.isDebug3())
+	  log.debug3(DEBUG_HEADER + "providerSeq = " + providerSeq);
+
+	// Check whether a provider could be found or created.
+	if (providerSeq != null) {
+	  // Yes: Update it in the database.
+	  updateAuMdProvider(conn, auMdSeq, providerSeq);
+
+	  JdbcBridge.commitOrRollback(conn, log);
+
+	  // Remember that there are Archival Units that have unknown providers
+	  // replaced.
+	  populatedFlag = 1;
+	  if (log.isDebug3())
+	    log.debug3(DEBUG_HEADER + "populatedFlag = " + populatedFlag);
+	}
+      }
+    } catch (SQLException sqle) {
+      log.error("Cannot populate Archival Unit providers", sqle);
+      log.error("SQL = '" + GET_UNKNOWN_PROVIDER_PLUGIN_IDS_AU_KEYS_QUERY
+	  + "'.");
+      throw sqle;
+    } catch (RuntimeException re) {
+      log.error("Cannot populate Archival Unit providers", re);
+      log.error("SQL = '" + GET_UNKNOWN_PROVIDER_PLUGIN_IDS_AU_KEYS_QUERY
+	  + "'.");
+      throw re;
+    } finally {
+      JdbcBridge.safeCloseResultSet(resultSet);
+      JdbcBridge.safeCloseStatement(statement);
+    }
+
+    if (log.isDebug2())
+      log.debug2(DEBUG_HEADER + "populatedFlag = " + populatedFlag);
+    return populatedFlag;
+  }
+
+  /**
+   * Updates the database from version 22 to version 23.
+   * 
+   * @param conn
+   *          A Connection with the database connection to be used.
+   * @throws SQLException
+   *           if any problem occurred updating the database.
+   */
+  void updateDatabaseFrom22To23(Connection conn) throws SQLException {
+    final String DEBUG_HEADER = "updateDatabaseFrom22To23(): ";
+    if (log.isDebug2()) log.debug2(DEBUG_HEADER + "Starting...");
+
+    if (conn == null) {
+      throw new IllegalArgumentException("Null connection");
+    }
+
+    // Create the necessary indices.
+    executeDdlQueries(conn, VERSION_23_INDEX_CREATE_QUERIES);
 
     if (log.isDebug2()) log.debug2(DEBUG_HEADER + "Done.");
   }

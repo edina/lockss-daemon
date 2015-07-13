@@ -1,5 +1,5 @@
 /*
- * $Id: LockssResourceHandler.java,v 1.19.12.1 2015-01-22 04:22:42 thib_gc Exp $
+ * $Id$
  */
 
 /*
@@ -32,7 +32,7 @@ in this Software without prior written authorization from Stanford University.
 // Portions of this code are:
 // ===========================================================================
 // Copyright (c) 1996-2002 Mort Bay Consulting Pty. Ltd. All rights reserved.
-// $Id: LockssResourceHandler.java,v 1.19.12.1 2015-01-22 04:22:42 thib_gc Exp $
+// $Id$
 // ---------------------------------------------------------------------------
 
 package org.lockss.jetty;

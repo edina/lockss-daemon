@@ -31,6 +31,7 @@
     au < exists ; 2012 ; Clinical Medicine Volume 12 ; 12 >
     au < exists ; 2013 ; Clinical Medicine Volume 13 ; 13 >
     au < exists ; 2014 ; Clinical Medicine Volume 14 ; 14 >
+    au < expected ; 2015 ; Clinical Medicine Volume 15 ; 15 >
     
   }
     
@@ -43,8 +44,10 @@
     >
 
     param[base_url] = http://futurehospital.rcpjournal.org/
+    comment[notReady] = login required
 
-    au < manifest ; 2014 ; Future Hospital Journal Volume 1 ; 1 >
+    au < notReady ; 2014 ; Future Hospital Journal Volume 1 ; 1 >
+    au < manifest ; 2015 ; Future Hospital Journal Volume 2 ; 2 >
     
   }
 

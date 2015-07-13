@@ -46,7 +46,7 @@
       au < released ; 2011 ; 2 ; Aviation in Focus: Journal of Aeronautical Sciences Volume 2011 ; 2011 ; >
       au < released ; 2012 ; 3 ; Aviation in Focus: Journal of Aeronautical Sciences Volume 2012 ; 2012 ; >
       au < released ; 2013 ; 4 ; Aviation in Focus: Journal of Aeronautical Sciences Volume 2013 ; 2013 ; >
-      au < expected ; 2014 ; 5 ; Aviation in Focus: Journal of Aeronautical Sciences Volume 2014 ; 2014 ; >
+      au < released ; 2014 ; 5 ; Aviation in Focus: Journal of Aeronautical Sciences Volume 2014 ; 2014 ; >
 
   }
 
@@ -65,7 +65,7 @@
       au < released ; 2011 ; 2 ; BELT: Brazilian English Language Teaching Journal Volume 2011 ; 2011 ; >
       au < released ; 2012 ; 3 ; BELT: Brazilian English Language Teaching Journal Volume 2012 ; 2012 ; >
       au < released ; 2013 ; 4 ; BELT: Brazilian English Language Teaching Journal Volume 2013 ; 2013 ; >
-      au < manifest ; 2014 ; 5 ; BELT: Brazilian English Language Teaching Journal Volume 2014 ; 2014 ; >
+      au < released ; 2014 ; 5 ; BELT: Brazilian English Language Teaching Journal Volume 2014 ; 2014 ; >
 
   }
 
@@ -86,7 +86,7 @@
       au < released ; 2011 ; 4 ; Ciência & Saúde Volume 2011 ; 2011 ; >
       au < released ; 2012 ; 5 ; Ciência & Saúde Volume 2012 ; 2012 ; >
       au < released ; 2013 ; 6 ; Ciência & Saúde Volume 2013 ; 2013 ; >
-      au < manifest ; 2014 ; 7 ; Ciência & Saúde Volume 2014 ; 2014 ; >
+      au < released ; 2014 ; 7 ; Ciência & Saúde Volume 2014 ; 2014 ; >
 
   }
 
@@ -115,7 +115,7 @@
       au < released ; 2011 ; 11 ; Civitas: Revista de Ciências Sociais Volume 2011 ; 2011 ; >
       au < released ; 2012 ; 12 ; Civitas: Revista de Ciências Sociais Volume 2012 ; 2012 ; >
       au < released ; 2013 ; 13 ; Civitas: Revista de Ciências Sociais Volume 2013 ; 2013 ; >
-      au < manifest ; 2014 ; 14 ; Civitas: Revista de Ciências Sociais Volume 2014 ; 2014 ; >
+      au < released ; 2014 ; 14 ; Civitas: Revista de Ciências Sociais Volume 2014 ; 2014 ; >
 
   }
 
@@ -159,7 +159,8 @@
       au < released ; 2011 ; 7 ; Direito & Justiça: Revista de Direito da PUCRS Volume 2011 ; 2011 ; >
       au < released ; 2012 ; 8 ; Direito & Justiça: Revista de Direito da PUCRS Volume 2012 ; 2012 ; >
       au < released ; 2013 ; 9 ; Direito & Justiça: Revista de Direito da PUCRS Volume 2013 ; 2013 ; >
-      au < manifest ; 2014 ; 10 ; Direito & Justiça: Revista de Direito da PUCRS Volume 2014 ; 2014 ; >
+      au < released ; 2014 ; 10 ; Direito & Justiça: Revista de Direito da PUCRS Volume 2014 ; 2014 ; >
+      au < manifest ; 2015 ; 11 ; Direito & Justiça: Revista de Direito da PUCRS Volume 2015 ; 2015 ; >
 
   }
 
@@ -185,7 +186,8 @@
       au < released ; 2011 ; 8 ; Educação Volume 2011 ; 2011 ; >
       au < released ; 2012 ; 9 ; Educação Volume 2012 ; 2012 ; >
       au < released ; 2013 ; 10 ; Educação Volume 2013 ; 2013 ; >
-      au < manifest ; 2014 ; 11 ; Educação Volume 2014 ; 2014 ; >
+      au < released ; 2014 ; 11 ; Educação Volume 2014 ; 2014 ; >
+      au < manifest ; 2015 ; 12 ; Educação Volume 2015 ; 2015 ; >
 
   }
 
@@ -211,7 +213,7 @@
       au < released ; 2011 ; 8 ; Estudos Ibero-Americanos Volume 2011 ; 2011 ; >
       au < released ; 2012 ; 9 ; Estudos Ibero-Americanos Volume 2012 ; 2012 ; >
       au < released ; 2013 ; 10 ; Estudos Ibero-Americanos Volume 2013 ; 2013 ; >
-      au < expected ; 2014 ; 11 ; Estudos Ibero-Americanos Volume 2014 ; 2014 ; >
+      au < released ; 2014 ; 11 ; Estudos Ibero-Americanos Volume 2014 ; 2014 ; >
 
   }
 
@@ -232,7 +234,7 @@
       au < released ; 2011 ; 4 ; intuitio Volume 2011 ; 2011 ; >
       au < released ; 2012 ; 5 ; intuitio Volume 2012 ; 2012 ; >
       au < released ; 2013 ; 6 ; intuitio Volume 2013 ; 2013 ; >
-      au < manifest ; 2014 ; 7 ; intuitio Volume 2014 ; 2014 ; >
+      au < released ; 2014 ; 7 ; intuitio Volume 2014 ; 2014 ; >
 
   }
 
@@ -248,28 +250,29 @@
       param[base_url] = http://revistaseletronicas.pucrs.br/ojs/
       param[journal_id] = fale
 
-      au < released ; 1994 ; 1 ; Letras de Hoje: Estudos e debates de assuntos de linguística, literatura e língua portuguesa Volume 1994 ; 1994 ; >
-      au < released ; 1995 ; 2 ; Letras de Hoje: Estudos e debates de assuntos de linguística, literatura e língua portuguesa Volume 1995 ; 1995 ; >
-      au < released ; 1996 ; 3 ; Letras de Hoje: Estudos e debates de assuntos de linguística, literatura e língua portuguesa Volume 1996 ; 1996 ; >
-      au < released ; 1997 ; 4 ; Letras de Hoje: Estudos e debates de assuntos de linguística, literatura e língua portuguesa Volume 1997 ; 1997 ; >
-      au < released ; 1998 ; 5 ; Letras de Hoje: Estudos e debates de assuntos de linguística, literatura e língua portuguesa Volume 1998 ; 1998 ; >
-      au < released ; 1999 ; 6 ; Letras de Hoje: Estudos e debates de assuntos de linguística, literatura e língua portuguesa Volume 1999 ; 1999 ; >
-      au < released ; 2000 ; 7 ; Letras de Hoje: Estudos e debates de assuntos de linguística, literatura e língua portuguesa Volume 2000 ; 2000 ; >
-      au < released ; 2001 ; 8 ; Letras de Hoje: Estudos e debates de assuntos de linguística, literatura e língua portuguesa Volume 2001 ; 2001 ; >
-      au < released ; 2002 ; 9 ; Letras de Hoje: Estudos e debates de assuntos de linguística, literatura e língua portuguesa Volume 2002 ; 2002 ; >
-      au < released ; 2003 ; 10 ; Letras de Hoje: Estudos e debates de assuntos de linguística, literatura e língua portuguesa Volume 2003 ; 2003 ; >
-      au < released ; 2004 ; 11 ; Letras de Hoje: Estudos e debates de assuntos de linguística, literatura e língua portuguesa Volume 2004 ; 2004 ; >
-      au < released ; 2005 ; 12 ; Letras de Hoje: Estudos e debates de assuntos de linguística, literatura e língua portuguesa Volume 2005 ; 2005 ; >
-      au < released ; 2006 ; 13 ; Letras de Hoje: Estudos e debates de assuntos de linguística, literatura e língua portuguesa Volume 2006 ; 2006 ; >
-      au < released ; 2007 ; 14 ; Letras de Hoje: Estudos e debates de assuntos de linguística, literatura e língua portuguesa Volume 2007 ; 2007 ; >
-      au < released ; 2008 ; 15 ; Letras de Hoje: Estudos e debates de assuntos de linguística, literatura e língua portuguesa Volume 2008 ; 2008 ; >
-      au < released ; 2009 ; 16 ; Letras de Hoje: Estudos e debates de assuntos de linguística, literatura e língua portuguesa Volume 2009 ; 2009 ; >
-      au < released ; 2010 ; 17 ; Letras de Hoje: Estudos e debates de assuntos de linguística, literatura e língua portuguesa Volume 2010 ; 2010 ; >
-      au < released ; 2011 ; 18 ; Letras de Hoje: Estudos e debates de assuntos de linguística, literatura e língua portuguesa Volume 2011 ; 2011 ; >
-      au < released ; 2012 ; 19 ; Letras de Hoje: Estudos e debates de assuntos de linguística, literatura e língua portuguesa Volume 2012 ; 2012 ; >
-      au < released ; 2013 ; 20 ; Letras de Hoje: Estudos e debates de assuntos de linguística, literatura e língua portuguesa Volume 2013 ; 2013 ; >
-      au < manifest ; 2014 ; 21 ; Letras de Hoje: Estudos e debates de assuntos de linguística, literatura e língua portuguesa Volume 2014 ; 2014 ; >
-
+      au < manifest ; 1992 ; 1 ; Letras de Hoje: Estudos e debates de assuntos de linguística, literatura e língua portuguesa Volume 1992 ; 1992 ; >
+      au < manifest ; 1993 ; 2 ; Letras de Hoje: Estudos e debates de assuntos de linguística, literatura e língua portuguesa Volume 1993 ; 1993 ; >
+      au < released ; 1994 ; 3 ; Letras de Hoje: Estudos e debates de assuntos de linguística, literatura e língua portuguesa Volume 1994 ; 1994 ; >
+      au < released ; 1995 ; 4 ; Letras de Hoje: Estudos e debates de assuntos de linguística, literatura e língua portuguesa Volume 1995 ; 1995 ; >
+      au < released ; 1996 ; 5 ; Letras de Hoje: Estudos e debates de assuntos de linguística, literatura e língua portuguesa Volume 1996 ; 1996 ; >
+      au < released ; 1997 ; 6 ; Letras de Hoje: Estudos e debates de assuntos de linguística, literatura e língua portuguesa Volume 1997 ; 1997 ; >
+      au < released ; 1998 ; 7 ; Letras de Hoje: Estudos e debates de assuntos de linguística, literatura e língua portuguesa Volume 1998 ; 1998 ; >
+      au < released ; 1999 ; 8 ; Letras de Hoje: Estudos e debates de assuntos de linguística, literatura e língua portuguesa Volume 1999 ; 1999 ; >
+      au < released ; 2000 ; 9 ; Letras de Hoje: Estudos e debates de assuntos de linguística, literatura e língua portuguesa Volume 2000 ; 2000 ; >
+      au < released ; 2001 ; 10 ; Letras de Hoje: Estudos e debates de assuntos de linguística, literatura e língua portuguesa Volume 2001 ; 2001 ; >
+      au < released ; 2002 ; 11 ; Letras de Hoje: Estudos e debates de assuntos de linguística, literatura e língua portuguesa Volume 2002 ; 2002 ; >
+      au < released ; 2003 ; 12 ; Letras de Hoje: Estudos e debates de assuntos de linguística, literatura e língua portuguesa Volume 2003 ; 2003 ; >
+      au < released ; 2004 ; 13 ; Letras de Hoje: Estudos e debates de assuntos de linguística, literatura e língua portuguesa Volume 2004 ; 2004 ; >
+      au < released ; 2005 ; 14 ; Letras de Hoje: Estudos e debates de assuntos de linguística, literatura e língua portuguesa Volume 2005 ; 2005 ; >
+      au < released ; 2006 ; 15 ; Letras de Hoje: Estudos e debates de assuntos de linguística, literatura e língua portuguesa Volume 2006 ; 2006 ; >
+      au < released ; 2007 ; 16 ; Letras de Hoje: Estudos e debates de assuntos de linguística, literatura e língua portuguesa Volume 2007 ; 2007 ; >
+      au < released ; 2008 ; 17 ; Letras de Hoje: Estudos e debates de assuntos de linguística, literatura e língua portuguesa Volume 2008 ; 2008 ; >
+      au < released ; 2009 ; 18 ; Letras de Hoje: Estudos e debates de assuntos de linguística, literatura e língua portuguesa Volume 2009 ; 2009 ; >
+      au < released ; 2010 ; 19 ; Letras de Hoje: Estudos e debates de assuntos de linguística, literatura e língua portuguesa Volume 2010 ; 2010 ; >
+      au < released ; 2011 ; 20 ; Letras de Hoje: Estudos e debates de assuntos de linguística, literatura e língua portuguesa Volume 2011 ; 2011 ; >
+      au < released ; 2012 ; 21 ; Letras de Hoje: Estudos e debates de assuntos de linguística, literatura e língua portuguesa Volume 2012 ; 2012 ; >
+      au < released ; 2013 ; 22 ; Letras de Hoje: Estudos e debates de assuntos de linguística, literatura e língua portuguesa Volume 2013 ; 2013 ; >
+      au < released ; 2014 ; 23 ; Letras de Hoje: Estudos e debates de assuntos de linguística, literatura e língua portuguesa Volume 2014 ; 2014 ; >
   }
 
   {
@@ -289,7 +292,7 @@
       au < released ; 2011 ; 4 ; Letrônica: Revista Digital do PPGL Volume 2011 ; 2011 ; >
       au < released ; 2012 ; 5 ; Letrônica: Revista Digital do PPGL Volume 2012 ; 2012 ; >
       au < released ; 2013 ; 6 ; Letrônica: Revista Digital do PPGL Volume 2013 ; 2013 ; >
-      au < manifest ; 2014 ; 7 ; Letrônica: Revista Digital do PPGL Volume 2014 ; 2014 ; >
+      au < released ; 2014 ; 7 ; Letrônica: Revista Digital do PPGL Volume 2014 ; 2014 ; >
 
   }
 
@@ -311,7 +314,7 @@
       au < released ; 2011 ; 4 ; Navegações: Revista de Cultura e Literaturas de Língua Portuguesa Volume 2011 ; 2011 ; >
       au < released ; 2012 ; 5 ; Navegações: Revista de Cultura e Literaturas de Língua Portuguesa Volume 2012 ; 2012 ; >
       au < released ; 2013 ; 6 ; Navegações: Revista de Cultura e Literaturas de Língua Portuguesa Volume 2013 ; 2013 ; >
-      au < manifest ; 2014 ; 7 ; Navegações: Revista de Cultura e Literaturas de Língua Portuguesa Volume 2014 ; 2014 ; >
+      au < released ; 2014 ; 7 ; Navegações: Revista de Cultura e Literaturas de Língua Portuguesa Volume 2014 ; 2014 ; >
 
   }
 
@@ -330,7 +333,7 @@
       au < released ; 2011 ; 2 ; Oficina do Historiador Volume 2011 ; 2011 ; >
       au < released ; 2012 ; 3 ; Oficina do Historiador Volume 2012 ; 2012 ; >
       au < released ; 2013 ; 4 ; Oficina do Historiador Volume 2013 ; 2013 ; >
-      au < manifest ; 2014 ; 5 ; Oficina do Historiador Volume 2014 ; 2014 ; >
+      au < released ; 2014 ; 5 ; Oficina do Historiador Volume 2014 ; 2014 ; >
 
   }
 
@@ -355,7 +358,7 @@
       au < released ; 2011 ; 7 ; Psico Volume 2011 ; 2011 ; >
       au < released ; 2012 ; 8 ; Psico Volume 2012 ; 2012 ; >
       au < released ; 2013 ; 9 ; Psico Volume 2013 ; 2013 ; >
-      au < manifest ; 2014 ; 10 ; Psico Volume 2014 ; 2014 ; >
+      au < released ; 2014 ; 10 ; Psico Volume 2014 ; 2014 ; >
 
   }
 
@@ -412,7 +415,7 @@
       au < released ; 2011 ; 4 ; Revista da Graduação Volume 2011 ; 2011 ; >
       au < released ; 2012 ; 5 ; Revista da Graduação Volume 2012 ; 2012 ; >
       au < released ; 2013 ; 6 ; Revista da Graduação Volume 2013 ; 2013 ; >
-      au < manifest ; 2014 ; 7 ; Revista da Graduação Volume 2014 ; 2014 ; >
+      au < released ; 2014 ; 7 ; Revista da Graduação Volume 2014 ; 2014 ; >
 
   }
 
@@ -431,7 +434,7 @@
       au < released ; 2011 ; 2 ; Revista Educação Por Escrito Volume 2011 ; 2011 ; >
       au < released ; 2012 ; 3 ; Revista Educação Por Escrito Volume 2012 ; 2012 ; >
       au < released ; 2013 ; 4 ; Revista Educação Por Escrito Volume 2013 ; 2013 ; >
-      au < manifest ; 2014 ; 5 ; Revista Educação Por Escrito Volume 2014 ; 2014 ; >
+      au < released ; 2014 ; 5 ; Revista Educação Por Escrito Volume 2014 ; 2014 ; >
 
   }
 
@@ -467,7 +470,7 @@
       au < released ; 2011 ; 18 ; Revista FAMECOS: mídia, cultura e tecnologia Volume 2011 ; 2011 ; >
       au < released ; 2012 ; 19 ; Revista FAMECOS: mídia, cultura e tecnologia Volume 2012 ; 2012 ; >
       au < released ; 2013 ; 20 ; Revista FAMECOS: mídia, cultura e tecnologia Volume 2013 ; 2013 ; >
-      au < manifest ; 2014 ; 21 ; Revista FAMECOS: mídia, cultura e tecnologia Volume 2014 ; 2014 ; >
+      au < released ; 2014 ; 21 ; Revista FAMECOS: mídia, cultura e tecnologia Volume 2014 ; 2014 ; >
 
   }
 
@@ -491,8 +494,8 @@
       au < released ; 2010 ; 6 ; Revista Odonto Ciência Volume 2010 ; 2010 ; >
       au < released ; 2011 ; 7 ; Revista Odonto Ciência Volume 2011 ; 2011 ; >
       au < released ; 2012 ; 8 ; Revista Odonto Ciência Volume 2012 ; 2012 ; >
-      au < ready ; 2013 ; 9 ; Revista Odonto Ciência Volume 2013 ; 2013 ; >
-      au < manifest ; 2014 ; 10 ; Revista Odonto Ciência Volume 2014 ; 2014 ; >
+      au < released ; 2013 ; 9 ; Revista Odonto Ciência Volume 2013 ; 2013 ; >
+      au < released ; 2014 ; 10 ; Revista Odonto Ciência Volume 2014 ; 2014 ; >
 
   }
 
@@ -517,7 +520,8 @@
       au < released ; 2011 ; 7 ; Scientia Medica Volume 2011 ; 2011 ; >
       au < released ; 2012 ; 8 ; Scientia Medica Volume 2012 ; 2012 ; >
       au < released ; 2013 ; 9 ; Scientia Medica Volume 2013 ; 2013 ; >
-      au < manifest ; 2014 ; 10 ; Scientia Medica Volume 2014 ; 2014 ; >
+      au < released ; 2014 ; 10 ; Scientia Medica Volume 2014 ; 2014 ; >
+      au < manifest ; 2015 ; 11 ; Scientia Medica Volume 2015 ; 2015 ; >
 
   }
 
@@ -551,7 +555,7 @@
       au < released ; 2011 ; 16 ; Sessões do Imaginário: Cinema, Cibercultura, Tecnologias da Imagem Volume 2011 ; 2011 ; >
       au < released ; 2012 ; 17 ; Sessões do Imaginário: Cinema, Cibercultura, Tecnologias da Imagem Volume 2012 ; 2012 ; >
       au < released ; 2013 ; 18 ; Sessões do Imaginário: Cinema, Cibercultura, Tecnologias da Imagem Volume 2013 ; 2013 ; >
-      au < manifest ; 2014 ; 19 ; Sessões do Imaginário: Cinema, Cibercultura, Tecnologias da Imagem Volume 2014 ; 2014 ; >
+      au < released ; 2014 ; 19 ; Sessões do Imaginário: Cinema, Cibercultura, Tecnologias da Imagem Volume 2014 ; 2014 ; >
 
   }
 
@@ -571,7 +575,7 @@
       au < released ; 2011 ; 3 ; Sistema Penal & Violência Volume 2011 ; 2011 ; >
       au < released ; 2012 ; 4 ; Sistema Penal & Violência Volume 2012 ; 2012 ; >
       au < released ; 2013 ; 5 ; Sistema Penal & Violência Volume 2013 ; 2013 ; >
-      au < manifest ; 2014 ; 6 ; Sistema Penal & Violência Volume 2014 ; 2014 ; >
+      au < released ; 2014 ; 6 ; Sistema Penal & Violência Volume 2014 ; 2014 ; >
 
   }
 
@@ -596,7 +600,7 @@
       au < released ; 2011 ; 7 ; Teocomunicação – Revista da Teologia da PUCRS Volume 2011 ; 2011 ; >
       au < released ; 2012 ; 8 ; Teocomunicação – Revista da Teologia da PUCRS Volume 2012 ; 2012 ; >
       au < released ; 2013 ; 9 ; Teocomunicação – Revista da Teologia da PUCRS Volume 2013 ; 2013 ; >
-      au < manifest ; 2014 ; 10 ; Teocomunicação – Revista da Teologia da PUCRS Volume 2014 ; 2014 ; >
+      au < released ; 2014 ; 10 ; Teocomunicação – Revista da Teologia da PUCRS Volume 2014 ; 2014 ; >
 
   }
 
@@ -623,7 +627,7 @@
       au < released ; 2011 ; 10 ; Textos & Contextos: Porto Alegre Volume 2011 ; 2011 ; >
       au < released ; 2012 ; 11 ; Textos & Contextos: Porto Alegre Volume 2012 ; 2012 ; >
       au < released ; 2013 ; 12 ; Textos & Contextos: Porto Alegre Volume 2013 ; 2013 ; >
-      au < manifest ; 2014 ; 13 ; Textos & Contextos: Porto Alegre Volume 2014 ; 2014 ; >
+      au < released ; 2014 ; 13 ; Textos & Contextos: Porto Alegre Volume 2014 ; 2014 ; >
 
   }
 
@@ -648,7 +652,7 @@
       au < released ; 2011 ; 7 ; Veritas – Revista de Filosofia da PUCRS Volume 2011 ; 2011 ; >
       au < released ; 2012 ; 8 ; Veritas – Revista de Filosofia da PUCRS Volume 2012 ; 2012 ; >
       au < released ; 2013 ; 9 ; Veritas – Revista de Filosofia da PUCRS Volume 2013 ; 2013 ; >
-      au < manifest ; 2014 ; 10 ; Veritas – Revista de Filosofia da PUCRS Volume 2014 ; 2014 ; >
+      au < released ; 2014 ; 10 ; Veritas – Revista de Filosofia da PUCRS Volume 2014 ; 2014 ; >
 
   }
 

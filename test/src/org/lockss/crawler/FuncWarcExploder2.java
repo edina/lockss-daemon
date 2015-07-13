@@ -1,5 +1,5 @@
 /*
- * $Id: FuncWarcExploder2.java,v 1.7.2.1 2014-12-27 03:33:00 tlipkis Exp $
+ * $Id$
  */
 
 /*

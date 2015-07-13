@@ -1,10 +1,10 @@
 /*
- * $Id: HighWireDrupalHttpResponseHandler.java,v 1.1 2014-02-12 03:57:24 etenbrink Exp $
+ * $Id$
  */
 
 /*
 
-Copyright (c) 2000-2014 Board of Trustees of Leland Stanford Jr. University,
+Copyright (c) 2000-2015 Board of Trustees of Leland Stanford Jr. University,
 all rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -39,38 +39,86 @@ import org.lockss.util.urlconn.*;
 
 public class HighWireDrupalHttpResponseHandler implements CacheResultHandler {
   
-  protected static Logger logger = Logger.getLogger(HighWireDrupalHttpResponseHandler.class);
+  private static final Logger logger = Logger.getLogger(HighWireDrupalHttpResponseHandler.class);
   
+  @Override
   public void init(CacheResultMap crmap) {
     logger.warning("Unexpected call to init()");
-    throw new UnsupportedOperationException();
+    throw new UnsupportedOperationException("Unexpected call to HighWireDrupalHttpResponseHandler.init()");
   }
   
+  public static class NoFailRetryableNetworkException_3_60S
+  extends CacheException.RetryableNetworkException_3_60S {
+    
+    private static final long serialVersionUID = 1L;
+    
+    public NoFailRetryableNetworkException_3_60S(String message) {
+      super(message);
+    }
+    
+    @Override
+    protected void setAttributes() {
+      super.setAttributes();
+      attributeBits.clear(ATTRIBUTE_FAIL);
+    }
+  }
+  
+  public static class NoFailRetryableNetworkException_3_5M
+  extends CacheException.RetryableNetworkException_3_5M {
+    
+    private static final long serialVersionUID = 1L;
+    
+    public NoFailRetryableNetworkException_3_5M(String message) {
+      super(message);
+    }
+    
+    @Override
+    protected void setAttributes() {
+      super.setAttributes();
+      attributeBits.clear(ATTRIBUTE_FAIL);
+    }
+  }
+  
+  @Override
   public CacheException handleResult(ArchivalUnit au,
                                      String url,
                                      int responseCode) {
     logger.debug2(url);
     switch (responseCode) {
       case 500:
-        logger.debug2("500");
+        logger.debug2("500: " + url);
         if (url.endsWith("_manifest.html") || 
             url.endsWith(".toc")) {
           return new CacheException.RetrySameUrlException("500 Internal Server Error");
         }
-        else {
-          return new CacheException.NoRetryDeadLinkException("500 Internal Server Error (non-fatal)");
+        return new NoFailRetryableNetworkException_3_60S("500 Internal Server Error (non-fatal)");
+        
+      case 502:
+        logger.debug2("502: " + url);
+        if (url.endsWith(".index-by-author")) {
+          return new NoFailRetryableNetworkException_3_5M("502 Bad Gateway Error (non-fatal)");
         }
+        return new CacheException.RetryableNetworkException_3_60S("502 Bad Gateway Error");
+        
+      case 504:
+        logger.debug2("504: " + url);
+        if (url.contains("/content/")) {
+          return new CacheException.RetryableNetworkException_3_60S("504 Gateway Time-out Error");
+        }
+        return new NoFailRetryableNetworkException_3_60S("504 Gateway Time-out Error (non-fatal)");
+        
       default:
-        logger.debug2("default");
-        throw new UnsupportedOperationException();
+        logger.warning("Unexpected responseCode (" + responseCode + ") in handleResult(): AU " + au.getName() + "; URL " + url);
+        throw new UnsupportedOperationException("Unexpected responseCode (" + responseCode + ")");
     }
   }
   
+  @Override
   public CacheException handleResult(ArchivalUnit au,
                                      String url,
                                      Exception ex) {
     logger.warning("Unexpected call to handleResult(): AU " + au.getName() + "; URL " + url, ex);
-    throw new UnsupportedOperationException();
+    throw new UnsupportedOperationException("Unexpected call to handleResult(): AU " + au.getName() + "; URL " + url, ex);
   }
   
 }

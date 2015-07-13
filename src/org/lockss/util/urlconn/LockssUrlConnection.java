@@ -1,5 +1,5 @@
 /*
- * $Id: LockssUrlConnection.java,v 1.17 2012-09-25 23:01:42 tlipkis Exp $
+ * $Id$
  *
 
 Copyright (c) 2000-2003 Board of Trustees of Leland Stanford Jr. University,
@@ -121,6 +121,9 @@ public interface LockssUrlConnection {
 
   /** Set the cookie policy to "rfc2109", "netscape" or "compatibility". */
   public void setCookiePolicy(String policy);
+
+  /** Set the SO_KEEPALIVE flags for the socket factory. */
+  public void setKeepAlive(boolean val);
 
   /** Add a cookie to the request.  Cookies are normally processed
    * automatically; this is used only to send a cookie that wasn't

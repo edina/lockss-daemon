@@ -1,5 +1,5 @@
 /*
- * $Id: TestRSC2014HtmlHashFilterFactory.java,v 1.6 2014-08-26 19:33:13 etenbrink Exp $
+ * $Id$
  */
 
 /*
@@ -43,6 +43,7 @@ public class TestRSC2014HtmlHashFilterFactory extends LockssTestCase {
   private RSC2014HtmlHashFilterFactory fact;
   private MockArchivalUnit mau;
 
+  @Override
   public void setUp() throws Exception {
     super.setUp();
     fact = new RSC2014HtmlHashFilterFactory();
@@ -99,27 +100,38 @@ public class TestRSC2014HtmlHashFilterFactory extends LockssTestCase {
       ", <span>Jnl.</span>, year, <span>2</span>(1), 80 87" +
       "<a>Left</a><a><img src=\"http://pubs.rsc.org/en\"></a>.";
   
+  private static final String withNav = "<html>\n" +
+      " <div id=\"top\" class=\"navigation\" style=\"color: rgb(0, 0, 0);\">\n" + 
+      "  <h1>\nGap in\n</h1>\n" + 
+      "  <div class=\"open_access\">\n</div>" +
+      " </div>" +
+      "</html>";
+  
+  private static final String withoutNav = "<html>" +
+      " " +
+      "</html>";
+  
   private static final String genError = "" +
       "<html><body>" +
-      "<span id=\"top\"/>" +
-      "</body></html>";
-  
-  private static final String genError2 = "" +
-      "<html><body>" +
-      "<span id=\"top\"/>" +
+      "<span id=\"1\" />" +
       "</body></html>";
   
   private static final String noError = "" +
       "<html><body>" +
+      "<span/>" +
       "</body></html>";
   
   
   public void testFiltering() throws Exception {
-    assertFilterToSame(genError, noError);
-    assertFilterToSame(genError2, noError);
+    try {
+      assertFilterToSame(genError, noError);
+      fail("Didn't throw Exception");
+    } catch (Exception e) {
+    }
     assertFilterToSame(withScript, withoutScript);
     assertFilterToSame(withStuff, withoutStuff);
     assertFilterToSame(withLinks, withoutLinks);
+    assertFilterToSame(withNav, withoutNav);
   }
   
   private void assertFilterToSame(String str1, String str2) throws Exception {

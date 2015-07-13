@@ -1,5 +1,5 @@
 /*
- * $Id: EndocrineSocietyHtmlCrawlFilterFactory.java,v 1.2 2014-11-08 22:58:52 ldoan Exp $
+ * $Id$
  */
 
 /*
@@ -47,8 +47,7 @@ public class EndocrineSocietyHtmlCrawlFilterFactory
    
     // from issue toc or article: previous issue / next issue
     HtmlNodeFilters.tagWithAttributeRegex(
-        "section", "class", "literatumBookIssueNavigation"),
-                
+        "div", "class", "literatumBookIssueNavigation"),
     // related content near Erratum
     // http://press.endocrine.org/toc/endo/154/10       
     HtmlNodeFilters.tagWithAttributeRegex("div", "class", "relatedLayer"),

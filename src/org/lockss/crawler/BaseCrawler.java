@@ -1,5 +1,5 @@
 /*
- * $Id: BaseCrawler.java,v 1.57.2.1 2014-12-24 01:04:45 wkwilson Exp $
+ * $Id$
  */
 
 /*
@@ -133,6 +133,8 @@ public abstract class BaseCrawler implements Crawler {
   protected int maxRetries = DEFAULT_MAX_RETRY_COUNT;
   protected long defaultRetryDelay = DEFAULT_DEFAULT_RETRY_DELAY;
   protected long minRetryDelay = DEFAULT_MIN_RETRY_DELAY;
+  protected Set<String> origStems;
+  protected Set<String> cdnStems;
   
   public enum StorePermissionScheme {Legacy, StoreAllInSpec};
 
@@ -205,6 +207,8 @@ public abstract class BaseCrawler implements Crawler {
     this.aus = aus;
     alertMgr = getDaemon().getAlertManager();
     connectionPool = new LockssUrlConnectionPool();
+    origStems = new HashSet(au.getUrlStems());
+    cdnStems = new HashSet();
   }
   
   protected abstract boolean doCrawl0();
@@ -445,21 +449,10 @@ public abstract class BaseCrawler implements Crawler {
     Collection<String> permissionUrls = null;
     try {
       permissionUrls = getCrawlSeed().getPermissionUrls();
-    }
-    // FIXME Java 7
-    catch (ConfigurationException ce) {
-      logger.error("Could not compute permission URLs", ce);
-      crawlStatus.setCrawlStatus(Crawler.STATUS_NO_PUB_PERMISSION);
-      return false;
-    }
-    catch (PluginException pe) {
-      logger.error("Could not compute permission URLs", pe);
-      crawlStatus.setCrawlStatus(Crawler.STATUS_NO_PUB_PERMISSION);
-      return false;
-    }
-    catch (IOException ioe) {
-      logger.error("Could not compute permission URLs", ioe);
-      crawlStatus.setCrawlStatus(Crawler.STATUS_NO_PUB_PERMISSION);
+    } catch (ConfigurationException|PluginException|IOException e) {
+      logger.error("Could not compute permission URLs", e);
+      crawlStatus.setCrawlStatus(Crawler.STATUS_PLUGIN_ERROR, 
+                                 "Plugin failed to provide permission URLs");
       return false;
     }
 
@@ -490,6 +483,22 @@ public abstract class BaseCrawler implements Crawler {
       return permissionMap.hasPermission(url);
     }
     return false;
+  }
+
+  /** If this url was allowed due to globallyPermittedHosts or cdn host and
+   * its stem isn't already contained in the AU's stems, add it to the
+   * dynamic stem list */
+  protected void updateCdnStems(String url) {
+    try {
+      String stem = UrlUtil.getUrlPrefix(url);
+      if (!origStems.contains(stem) && !cdnStems.contains(stem)) {
+	aus.addCdnStem(stem);
+	cdnStems.add(stem);
+      }
+    } catch (MalformedURLException e) {
+      logger.error("updateCdnStems(" + url + ")", e);
+      // ignore
+    }
   }
 
   protected void updateCacheStats(FetchResult res, CrawlUrlData curl) {
@@ -591,6 +600,12 @@ public abstract class BaseCrawler implements Crawler {
     uc.setWatchdog(wdog);
     return uc;
   }
+  
+  public UrlFetcher makeUrlFetcher(CrawlUrlData curl) {
+    UrlFetcher uf = makeUrlFetcher(curl.getUrl());
+    uf.setCrawlUrl(curl);
+    return uf;
+  }
 
   /** All UrlFetchers should be made via this method, so they get their
    * connection pool set. */
@@ -662,12 +677,14 @@ public abstract class BaseCrawler implements Crawler {
   }
   
   protected boolean aborted() {
-    return aborted("");
+    return aborted(null);
   }
   
   protected boolean aborted(String msg) {
-    logger.info("Crawl aborted: "+au);
-    crawlStatus.setCrawlStatus(Crawler.STATUS_ABORTED, msg);
+    logger.info("Crawl aborted: " + au);
+    if(!crawlStatus.isCrawlError()) {
+      crawlStatus.setCrawlStatus(Crawler.STATUS_ABORTED, msg);
+    } 
     return false;
   }
 
@@ -788,6 +805,19 @@ public abstract class BaseCrawler implements Crawler {
     @Override
     public boolean isAllowedPluginPermittedHost(String host) {
       return crawler.crawlMgr.isAllowedPluginPermittedHost(host);
+    }
+
+    @Override
+    public void updateCdnStems(String url) {
+      crawler.updateCdnStems(url);
+    }
+
+    @Override
+    public CrawlUrl addChild(CrawlUrl curl, String url) {
+      CrawlUrlData curld = (CrawlUrlData)curl;
+      CrawlUrlData child = new CrawlUrlData(url, curld.getDepth()+1);
+      curld.addChild(child);
+      return child;
     }
   }
 

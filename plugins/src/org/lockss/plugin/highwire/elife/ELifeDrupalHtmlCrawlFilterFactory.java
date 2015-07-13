@@ -1,10 +1,10 @@
 /*
- * $Id: ELifeDrupalHtmlCrawlFilterFactory.java,v 1.2 2014-10-22 16:16:33 etenbrink Exp $
+ * $Id$
  */
 
 /*
 
-Copyright (c) 2000-2014 Board of Trustees of Leland Stanford Jr. University,
+Copyright (c) 2000-2015 Board of Trustees of Leland Stanford Jr. University,
 all rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -35,30 +35,32 @@ package org.lockss.plugin.highwire.elife;
 import java.io.InputStream;
 
 import org.htmlparser.NodeFilter;
-import org.htmlparser.filters.*;
 import org.lockss.daemon.PluginException;
 import org.lockss.filter.html.*;
 import org.lockss.plugin.*;
+import org.lockss.plugin.highwire.HighWireDrupalHtmlCrawlFilterFactory;
 
-public class ELifeDrupalHtmlCrawlFilterFactory implements FilterFactory {
-
+public class ELifeDrupalHtmlCrawlFilterFactory extends HighWireDrupalHtmlCrawlFilterFactory {
+  
+  protected static NodeFilter[] filters = new NodeFilter[] {
+    // Do not crawl responsive header or references as links not wanted here
+    HtmlNodeFilters.tagWithAttribute("div", "id", "region-responsive-header"),
+    HtmlNodeFilters.tagWithAttribute("div", "id", "references"),
+    // The following sections were a source of over-crawl (http://elifesciences.org/content/1/e00067)
+    HtmlNodeFilters.allExceptSubtree(
+        HtmlNodeFilters.tagWithAttributeRegex("div", "class", "sidebar-wrapper"),
+        HtmlNodeFilters.tagWithAttributeRegex("div", "class", "pane-elife-article-toolbox")),
+    // possible links out of AU
+    HtmlNodeFilters.tagWithAttributeRegex("div", "class", "elife-article-(corrections|criticalrelation)"),
+  };
+  
   @Override
   public InputStream createFilteredInputStream(ArchivalUnit au,
                                                InputStream in,
                                                String encoding)
       throws PluginException {
-    NodeFilter[] filters = new NodeFilter[] {
-        // Do not crawl responsive header or reflink-links-wrapper as links not wanted here
-        HtmlNodeFilters.tagWithAttribute("div", "id", "region-responsive-header"),
-        HtmlNodeFilters.tagWithAttribute("div", "class", "elife-reflink-links-wrapper"),
-        // The following sections were a source of over-crawl (http://elifesciences.org/content/1/e00067)
-        HtmlNodeFilters.tagWithAttribute("div", "id", "related-content"),
-        HtmlNodeFilters.tagWithAttributeRegex("div", "class", "elife-article-corrections"),
-    };
     
-    InputStream filtered = new HtmlFilterInputStream(in, encoding,
-        HtmlNodeFilterTransform.exclude(new OrFilter(filters)));
-    return filtered;
+    return super.createFilteredInputStream(au, in, encoding, filters);
   }
 
 }

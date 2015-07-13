@@ -1,5 +1,5 @@
 /*
- * $Id: BaseUrlFetcher.java,v 1.6 2014-11-25 05:13:08 tlipkis Exp $
+ * $Id$
  */
 
 /*
@@ -52,6 +52,11 @@ public class BaseUrlFetcher implements UrlFetcher {
   
   private static final Logger log = Logger.getLogger("BaseUrlFetcher");
   
+  /** If true, use so_keepalive on server connections. */
+  public static final String PARAM_SO_KEEPALIVE =
+    Configuration.PREFIX + "baseuc.socketKeepAlive";
+  public static final boolean DEFAULT_SO_KEEPALIVE = false;
+  
   /** Limit on rewinding the network input stream after checking for a
    * login page.  If LoginPageChecker returns false after reading father
    * than this the page will be refetched. */
@@ -100,6 +105,7 @@ public class BaseUrlFetcher implements UrlFetcher {
   protected CrawlerStatus crawlStatus;
   protected Crawler.CrawlerFacade crawlFacade;
   protected LockssWatchdog wdog;
+  protected CrawlUrl curl;
   
   public BaseUrlFetcher(Crawler.CrawlerFacade crawlFacade, String url) {
     this.origUrl = url;
@@ -123,6 +129,7 @@ public class BaseUrlFetcher implements UrlFetcher {
     return urlConsumerFactory;
   }
   
+  //This should only rethrow the CacheException if it is fatal
   public FetchResult fetch() throws CacheException {
     /*
      * If a RepositoryException is thrown, adds the URL to the fail set and
@@ -156,22 +163,22 @@ public class BaseUrlFetcher implements UrlFetcher {
       // Failed.  Don't try this one again during this crawl.
       crawlFacade.addToFailedUrls(origUrl);
       log.error("Repository error with "+this, ex);
-      crawlStatus.signalErrorForUrl(origUrl,
-				    "Can't store page: " + ex.getMessage(),
-				    Crawler.STATUS_REPO_ERR);
+      crawlStatus.signalErrorForUrl(origUrl, ex);
+      if(!crawlStatus.isCrawlError()) {
+        crawlStatus.setCrawlStatus(Crawler.STATUS_REPO_ERR);
+      }
     } catch (CacheException.RedirectOutsideCrawlSpecException ex) {
       // Count this as an excluded URL
       crawlStatus.signalUrlExcluded(origUrl, ex.getMessage());
     } catch (CacheException ex) {
       // Failed.  Don't try this one again during this crawl.
-      crawlStatus.signalErrorForUrl(origUrl, ex);
       crawlFacade.addToFailedUrls(origUrl);
+      crawlStatus.signalErrorForUrl(origUrl, ex);
       if (ex.isAttributeSet(CacheException.ATTRIBUTE_FAIL)) {
         log.siteError("Problem caching "+this+". Continuing", ex);
-        crawlStatus.signalErrorForUrl(origUrl, ex.getMessage(),
-				      Crawler.STATUS_FETCH_ERROR);
-      } else {
-        crawlStatus.signalErrorForUrl(origUrl, ex.getMessage());
+        if(!crawlStatus.isCrawlError()) {
+          crawlStatus.setCrawlStatus(Crawler.STATUS_FETCH_ERROR, ex.getMessage());
+        }
       }
       if (ex.isAttributeSet(CacheException.ATTRIBUTE_FATAL)) {
         throw ex;
@@ -181,8 +188,11 @@ public class BaseUrlFetcher implements UrlFetcher {
         log.debug("Expected exception while aborting crawl: " + ex);
       } else {
         crawlFacade.addToFailedUrls(origUrl);
-        crawlStatus.signalErrorForUrl(origUrl, ex.toString(),
-				      Crawler.STATUS_FETCH_ERROR);
+        crawlStatus.signalErrorForUrl(origUrl, ex.getMessage(),
+                                      CrawlerStatus.Severity.Error);
+        if(!crawlStatus.isCrawlError()) {
+          crawlStatus.setCrawlStatus(Crawler.STATUS_FETCH_ERROR);
+        }
         //XXX not expected
         log.error("Unexpected Exception during crawl, continuing", ex);
       }
@@ -281,6 +291,12 @@ public class BaseUrlFetcher implements UrlFetcher {
   public void setRedirectScheme(RedirectScheme scheme) {
     if (log.isDebug3()) log.debug3("setRedirectScheme: " + scheme);
     this.redirectScheme = scheme;
+  }
+  
+  public void setCrawlUrl(CrawlUrl curl) {
+    if(curl.getUrl().equals(origUrl)) {
+      this.curl = curl;
+    }
   }
   
   public void setProxy(String proxyHost, int proxyPort) {
@@ -445,6 +461,10 @@ public class BaseUrlFetcher implements UrlFetcher {
       }
       if (localAddr != null) {
         conn.setLocalAddress(localAddr);
+      }
+      if (CurrentConfig.getBooleanParam(PARAM_SO_KEEPALIVE,
+					DEFAULT_SO_KEEPALIVE)) {
+	conn.setKeepAlive(true);
       }
       for (String cookie : au.getHttpCookies()) {
         int pos = cookie.indexOf("=");

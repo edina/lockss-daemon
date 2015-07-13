@@ -1,10 +1,10 @@
 /*
- * $Id: TestDefinableArchivalUnit.java,v 1.72 2014-12-08 04:15:55 tlipkis Exp $
+ * $Id$
  */
 
 /*
 
-Copyright (c) 2000-2014 Board of Trustees of Leland Stanford Jr. University,
+Copyright (c) 2000-2015 Board of Trustees of Leland Stanford Jr. University,
 all rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -103,6 +103,10 @@ public class TestDefinableArchivalUnit extends LockssTestCase {
 	configMap.setMapElement((String)ent.getKey(), ent.getValue());
       }
     }
+    MockNodeManager nm = new MockNodeManager();
+    nm.setAuState(new MockAuState(cau));
+    getMockLockssDaemon().setNodeManager(nm, cau);
+
     return cau;
   }
 
@@ -1060,6 +1064,19 @@ public class TestDefinableArchivalUnit extends LockssTestCase {
 		     RegexpUtil.regexpCollection(cau.makeExcludeUrlsFromPollsPatterns()));
   }
 
+  public void testMakeExcludeUrlsFromPollResultsPatterns() throws Exception {
+    defMap.putCollection(DefinableArchivalUnit.KEY_AU_EXCLUDE_URLS_FROM_POLL_RESULTS_PATTERN,
+			 ListUtil.list("\"vol%d\\.ancillary\",volume",
+				       "\"%s/toc\",base_url"));
+    additionalAuConfig.putInt("volume", 125);
+    additionalAuConfig.putString("base_url", "http://si.te/path/");
+    setupAu(additionalAuConfig);
+
+    assertIsomorphic(ListUtil.list("vol125\\.ancillary",
+				   "http\\:\\/\\/si\\.te\\/path\\//toc"),
+		     RegexpUtil.regexpCollection(cau.makeExcludeUrlsFromPollResultsPatterns()));
+  }
+
   public void testMakeNonSubstanceUrlPatterns() throws Exception {
     defMap.putString(DefinableArchivalUnit.KEY_AU_NON_SUBSTANCE_URL_PATTERN,
 		     "\"vol%d/images/\",volume");
@@ -1463,6 +1480,10 @@ public class TestDefinableArchivalUnit extends LockssTestCase {
     assertEquals(ListUtil.list(".*\\.css$",
 				   "http\\:\\/\\/base\\.foo\\/base_path\\/img/"),
 		 RegexpUtil.regexpCollection(au.makeRepairFromPeerIfMissingUrlPatterns()));
+
+    assertEquals(ListUtil.list("http://resolv.er/",
+			       "http://base.foo/"),
+		 au.getUrlStems());
   }
 
   public void testFeatureUrls() throws Exception {

@@ -1,10 +1,10 @@
 /*
- * $Id: GPOFDSysHtmlFilterFactory.java,v 1.8 2014-08-12 21:42:42 thib_gc Exp $
+ * $Id$
  */
 
 /*
 
-Copyright (c) 2000-2014 Board of Trustees of Leland Stanford Jr. University,
+Copyright (c) 2000-2015 Board of Trustees of Leland Stanford Jr. University,
 all rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -33,7 +33,9 @@ in this Software without prior written authorization from Stanford University.
 package org.lockss.plugin.usdocspln.gov.gpo.fdsys;
 
 import java.io.*;
+import java.util.regex.*;
 
+import org.apache.commons.io.input.BoundedInputStream;
 import org.htmlparser.*;
 import org.htmlparser.filters.*;
 import org.htmlparser.util.*;
@@ -46,22 +48,78 @@ import org.lockss.util.*;
 
 public class GPOFDSysHtmlFilterFactory implements FilterFactory {
 
+  private static final Logger logger = Logger.getLogger(GPOFDSysHtmlFilterFactory.class);
+
+  private static final Pattern titlePat =
+      Pattern.compile("<title>U.S.C. Title 42 - THE PUBLIC HEALTH AND WELFARE",
+                      Pattern.CASE_INSENSITIVE); 
+  
+  private static final Pattern chapPat =
+      Pattern.compile("<span( [^>]*)?>CHAPTER",
+                      Pattern.CASE_INSENSITIVE); 
+  
+  public boolean shouldFilter(InputStream is, String encoding) throws IOException {
+    BufferedReader br = new BufferedReader(new InputStreamReader(new BoundedInputStream(is, 2000), encoding));
+    boolean title42 = false;
+    for (String line = br.readLine() ; line != null ; line = br.readLine()) {
+      if (logger.isDebug3()) {
+        logger.debug3("line: " + line);
+      }
+      if (title42) {
+        Matcher chapMat = chapPat.matcher(line);
+        if (chapMat.find()) {
+          logger.debug2("Chapter of Title 42");
+          return true;
+        }
+      }
+      else {
+        if (line.contains("<title>")) {
+          logger.debug2("<title> line");
+          Matcher titleMat = titlePat.matcher(line);
+          if (titleMat.find()) {
+            logger.debug2("Title 42");
+            title42 = true;
+          }
+          else {
+            logger.debug2("Not Title 42");
+            return true;
+          }
+        }
+      }
+    }
+    // Filter iff inside Title 42 but not a chapter thereof
+    logger.debug2(title42 ? "Title 42 but not a chapter thereof" : "Not Title 42 (final)");
+    return !title42;
+  }
+  
   public InputStream createFilteredInputStream(ArchivalUnit au,
                                                InputStream in,
                                                String encoding)
       throws PluginException {
-	
+    BufferedInputStream bis = new BufferedInputStream(in, 2048);
+    bis.mark(2048);
+    try {
+      boolean filter = shouldFilter(bis, encoding);
+      bis.reset();
+      if (!filter) {
+        return bis;
+      }
+    }
+    catch (IOException ioe) {
+      logger.debug("IOException while inspecting document to skip filtering", ioe);
+    }
+    
     NodeFilter[] filters = new NodeFilter[] {
         /*
          * Broad area filtering 
          */
         /* Document header */
         // Differences in the presence and order of <meta> tags and spacing of the <title> tag
-        new TagNameFilter("head"),
+        HtmlNodeFilters.tag("head"),
         /* Scripts, inline style */
-        new TagNameFilter("script"),
-        new TagNameFilter("noscript"),
-        new TagNameFilter("style"),
+        HtmlNodeFilters.tag("script"),
+        HtmlNodeFilters.tag("noscript"),
+        HtmlNodeFilters.tag("style"),
         /* Header */
         HtmlNodeFilters.tagWithAttributeRegex("div", "id", "top-menu-one"),
         HtmlNodeFilters.tagWithAttributeRegex("div", "id", "top-banner-inside"),
@@ -114,7 +172,7 @@ public class GPOFDSysHtmlFilterFactory implements FilterFactory {
     };
     
     InputStream prefilteredStream =
-        new HtmlFilterInputStream(in,
+        new HtmlFilterInputStream(bis, // NOTE: this is 'bis', not 'in'
                                   encoding,
                                   new HtmlCompoundTransform(HtmlNodeFilterTransform.exclude(new OrFilter(filters)),
                                                             xform));

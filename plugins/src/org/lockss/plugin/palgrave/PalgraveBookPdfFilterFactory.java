@@ -1,10 +1,10 @@
 /*
- * $Id: PalgraveBookPdfFilterFactory.java,v 1.2 2014-09-08 15:03:08 aishizaki Exp $
+ * $Id$
  */
 
 /*
 
-Copyright (c) 2000-2014 Board of Trustees of Leland Stanford Jr. University,
+Copyright (c) 2000-2015 Board of Trustees of Leland Stanford Jr. University,
 all rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -33,108 +33,80 @@ in this Software without prior written authorization from Stanford University.
 package org.lockss.plugin.palgrave;
 
 import java.util.List;
-
 import org.lockss.filter.pdf.SimplePdfFilterFactory;
 import org.lockss.pdf.*;
 import org.lockss.plugin.ArchivalUnit;
-import org.lockss.util.Logger;
+import java.util.regex.Pattern;
 
 public class PalgraveBookPdfFilterFactory extends SimplePdfFilterFactory {
-
-  private static final Logger logger = Logger.getLoggerWithInitialLevel(PalgraveBookPdfFilterFactory.class.getName(), Logger.LEVEL_DEBUG3);
+  private static final String searchPatternTemplate = "^Copyright material from www\\.palgraveconnect\\.com";
   
-  protected static class Worker extends PdfTokenStreamWorker {
-    
-    protected boolean result;
-
-    protected int beginIndex;
-    
-    protected int endIndex;
-    
-    protected int state;
-
-    public Worker() {
-      super(Direction.BACKWARD);
-    }
-    
-    @Override
-    public void setUp() throws PdfException {
-      super.setUp();
-      this.state = 0;
-      this.result = false;
-      this.beginIndex = -1;
-      this.endIndex = -1;
-    }
-
-    @Override
-    public void operatorCallback() throws PdfException {
-      if (logger.isDebug3()) {
-        logger.debug3("Worker: initial: " + state);
-        logger.debug3("Worker: index: " + getIndex());
-        logger.debug3("Worker: operator: " + getOpcode());
-      }
-      
-      switch (state) {
-        
-        case 0: {
-          if (isEndTextObject()) {
-            endIndex = getIndex();
-            ++state;
-          }
-        } break;
-        
-        case 1: {
-          if (isShowTextGlyphPositioningStartsWith("Copyright material from www.palgraveconnect.com")) {
-            ++state;
-          }
-          else if (isBeginTextObject()) {
-            stop();
-          }
-        } break;
-        
-        case 2: {
-          if (isBeginTextObject()) {
-            result = true;
-            beginIndex = getIndex();
-            stop();
-          }
-        } break;
-        
-        default: {
-          throw new PdfException("Invalid state in Worker: " + state);
-        }
-        
-      }
-      
-      if (logger.isDebug3()) {
-        logger.debug3("Worker: final: " + state);
-        logger.debug3("Worker: result: " + result);
-      }
-      
-    }
-
-  }
+  private final static Pattern DOWNLOADED_FROM_PATTERN = Pattern.compile(searchPatternTemplate);
   
   @Override
   public void transform(ArchivalUnit au, PdfDocument pdfDocument) throws PdfException {
     pdfDocument.unsetModificationDate();
     pdfDocument.unsetCreationDate();
     pdfDocument.unsetMetadata();
-    PdfUtil.normalizeTrailerId(pdfDocument);
-    
-    Worker worker = new Worker();
-    for (PdfPage pdfPage : pdfDocument.getPages()) {
-      // Pages seem to be made of concatenated token streams, and the
-      // target personalization is at the end -- get the last token stream
-      List<PdfTokenStream> pdfTokenstreams = pdfPage.getAllTokenStreams();
-      PdfTokenStream pdfTokenStream = pdfTokenstreams.get(pdfTokenstreams.size() - 1);
-      worker.process(pdfTokenStream);
-      if (worker.result) {
-        List<PdfToken> pdfTokens = pdfTokenStream.getTokens();
-        pdfTokens.subList(worker.beginIndex, worker.endIndex + 1).clear();
-        pdfTokenStream.setTokens(pdfTokens);
-      }
-    }
+    PdfUtil.normalizeTrailerId(pdfDocument);   
+    removeDownloadStrip(pdfDocument);
   }
   
+  private void removeDownloadStrip(PdfDocument pdfDocument) throws PdfException {
+    // using StateMachine which requires 1.67
+   PalgraveDownloadedFromStateMachine worker = new PalgraveDownloadedFromStateMachine();
+
+   // check each page for an access date set on the rhs of the page
+   for (PdfPage pdfPage : pdfDocument.getPages()) {
+     // Pages seem to be made of concatenated token streams, and while most
+     // target personalization is at the end (previously filtered the last
+     // token stream), some books (9781137023803 - on pages with "Left Intentianally
+     // Blank") had customization elsewhere in the token stream, so now checking all
+     List<PdfTokenStream> pdfTokenstreams = pdfPage.getAllTokenStreams();
+     for (PdfTokenStream pdfTokenStream : pdfTokenstreams) {
+       worker.process(pdfTokenStream);
+       if (worker.getResult()) {    // found it, fixing it
+         List<PdfToken> pdfTokens = pdfTokenStream.getTokens();
+         pdfTokens.subList(worker.getBegin(), worker.getEnd() + 1).clear();
+         pdfTokenStream.setTokens(pdfTokens);
+         break;        // now go check the next page
+       }
+     }
+   }
+  }
+  
+  public static class PalgraveDownloadedFromStateMachine extends PdfTokenStreamStateMachine {
+    // The footer is close to the bottom of each page
+    public PalgraveDownloadedFromStateMachine() {
+      super(Direction.BACKWARD);
+    }
+
+    @Override
+    public void state0() throws PdfException {
+      if (isEndTextObject()) {
+        setEnd(getIndex());
+        setState(1);
+      }
+    } 
+
+    @Override
+    public void state1() throws PdfException {
+      if (isShowTextGlyphPositioningFind(DOWNLOADED_FROM_PATTERN))  {
+        setState(2);
+      } else if (isBeginTextObject()) { // not the BT-ET we were looking for
+        //STOPPING HERE: assuming only one bt/et in the stream we want
+        setState(0); //we're stopping, but this is safe behavior for future changes
+        stop();
+      }
+    }
+
+    @Override
+    public void state2() throws PdfException {
+      if (isBeginTextObject()) {  
+          setResult(true);
+          setBegin(getIndex());
+          stop(); // found what we needed, stop processing this page
+      }  
+    }
+  }
 }

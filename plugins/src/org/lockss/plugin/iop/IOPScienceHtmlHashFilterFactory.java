@@ -1,10 +1,10 @@
 /*
- * $Id: IOPScienceHtmlHashFilterFactory.java,v 1.14 2014-12-03 21:02:26 etenbrink Exp $
+ * $Id$
  */
 
 /*
 
-Copyright (c) 2000-2014 Board of Trustees of Leland Stanford Jr. University,
+Copyright (c) 2000-2015 Board of Trustees of Leland Stanford Jr. University,
 all rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -42,13 +42,15 @@ import org.lockss.daemon.PluginException;
 import org.lockss.filter.*;
 import org.lockss.filter.html.*;
 import org.lockss.plugin.*;
-import org.lockss.util.ReaderInputStream;
+import org.lockss.util.*;
 
 
 public class IOPScienceHtmlHashFilterFactory implements FilterFactory {
 
+  private static final Logger log = Logger.getLogger(IOPScienceHtmlHashFilterFactory.class);
+  
   @Override
-  public InputStream createFilteredInputStream(ArchivalUnit au,
+  public InputStream createFilteredInputStream(final ArchivalUnit au,
                                                InputStream in,
                                                String encoding)
       throws PluginException {
@@ -95,23 +97,46 @@ public class IOPScienceHtmlHashFilterFactory implements FilterFactory {
         // Contains a jsessionid
         HtmlNodeFilters.tagWithAttributeRegex("form", "action", "jsessionid"),
         
-        // <div class="sideTabBar">
+        // <div class="sideTabBar"> & <div id="sideTabBox">
+        // <div class="sideTabBlock citBlock">
+        HtmlNodeFilters.tagWithAttributeRegex("div", "id", "sideTab(Bar|Box)"),
         HtmlNodeFilters.tagWithAttributeRegex("div", "class", "sideTab(Bar|Box)"),
         // <p class="viewingLinks">
         HtmlNodeFilters.tagWithAttributeRegex("p", "class", "viewingLinks"),
+        // <dl class="videoList"> PACS & Subjects appear, disappear, reappear
+        HtmlNodeFilters.tagWithAttribute("dl", "class", "videoList"),
         // <div class=" metrics-panel">
         HtmlNodeFilters.tagWithAttributeRegex("div", "class", "metrics-panel"),
         // <dd> <p> Total article downloads: <strong>1193</strong> </p>...</dd>
         new TagNameFilter("dd") {
+          // DEBUG
+          public void logException(Throwable thr, String plainText) {
+            StringBuilder sb = new StringBuilder();
+            sb.append("toLowerCase threw in AU ");
+            sb.append(au.getName());
+            sb.append(" on the following input: <begin quote>");
+            sb.append(plainText);
+            sb.append("<end quote>, which translates to:");
+            for (int i = 0 ; i < plainText.length() ; ++i) {
+              sb.append(String.format(" %04X", plainText.charAt(i)));
+            }
+            log.warning(sb.toString(), thr);
+          }
           @Override
           public boolean accept(Node node) {
             boolean ret = false;
             if (super.accept(node)) {
-              String allText = node.toPlainTextString().toLowerCase();
-              ret = allText.contains("total article downloads") ||
-                   (allText.contains("download data unavailable") &&
-                    allText.contains("more metrics"));
-              return ret;
+              String plainText = node.toPlainTextString();
+              try {
+                String allText = plainText.toLowerCase();
+                ret = allText.contains("total article downloads") ||
+                    (allText.contains("download data unavailable") &&
+                     allText.contains("more metrics"));
+                return ret;
+              }
+              catch (InternalError interr) {
+                logException(interr, plainText);
+              }
             }
             return ret;
           }
@@ -122,7 +147,6 @@ public class IOPScienceHtmlHashFilterFactory implements FilterFactory {
         HtmlNodeFilters.tagWithAttributeRegex("span", "class", "free-article"),
         // citation link was always not present, and display link is not content
         HtmlNodeFilters.tagWithAttributeRegex("a", "id", "DisplayLink"),
-        // <div class="sideTabBlock citBlock">
     };
     
     InputStream filtered = new HtmlFilterInputStream(in,

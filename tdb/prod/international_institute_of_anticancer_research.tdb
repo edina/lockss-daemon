@@ -28,7 +28,8 @@
     au < released ; 2011 ; Anticancer Research Volume 31 ; 31 >
     au < released ; 2012 ; Anticancer Research Volume 32 ; 32 >
     au < released ; 2013 ; Anticancer Research Volume 33 ; 33 >
-    au < manifest ; 2014 ; Anticancer Research Volume 34 ; 34 >
+    au < ready ; 2014 ; Anticancer Research Volume 34 ; 34 >
+    au < manifest ; 2015 ; Anticancer Research Volume 35 ; 35 >
 
   }
   
@@ -53,7 +54,8 @@
     au < released ; 2011 ; Cancer Genomics & Proteomics Volume 8 ; 8 >
     au < released ; 2012 ; Cancer Genomics & Proteomics Volume 9 ; 9 >
     au < released ; 2013 ; Cancer Genomics & Proteomics Volume 10 ; 10 >
-    au < manifest ; 2014 ; Cancer Genomics & Proteomics Volume 11 ; 11 >
+    au < ready ; 2014 ; Cancer Genomics & Proteomics Volume 11 ; 11 >
+    au < manifest ; 2015 ; Cancer Genomics & Proteomics Volume 12 ; 12 >
 
 
   }
@@ -77,9 +79,10 @@
     au < released ; 2009 ; In Vivo Volume 23 ; 23 >
     au < released ; 2010 ; In Vivo Volume 24 ; 24 >
     au < released ; 2011 ; In Vivo Volume 25 ; 25 >
-    au < released ; 2012 ; In Vivi Volume 26 ; 26 >
-    au < released ; 2013 ; In Vivi Volume 27 ; 27 >
-    au < manifest ; 2014 ; In Vivi Volume 28 ; 28 >
+    au < released ; 2012 ; In Vivo Volume 26 ; 26 >
+    au < released ; 2013 ; In Vivo Volume 27 ; 27 >
+    au < ready ; 2014 ; In Vivo Volume 28 ; 28 >
+    au < manifest ; 2015 ; In Vivo Volume 29 ; 29 >
 
 
   }
