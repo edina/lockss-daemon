@@ -61,6 +61,7 @@ import org.lockss.plugin.PluginManager.CuContentReq;
 import org.lockss.plugin.base.BaseUrlFetcher;
 import org.lockss.proxy.ProxyManager;
 import org.lockss.rewriter.LinkRewriterFactory;
+import org.lockss.safenet.EntitlementRegistryClient;
 import org.lockss.state.AuState;
 import org.lockss.util.*;
 import org.lockss.util.CloseCallbackInputStream.DeleteFileOnCloseInputStream;
@@ -223,7 +224,6 @@ public class SafeNetServeContent extends LockssServlet {
   private static boolean processForms = DEFAULT_PROCESS_FORMS;
   private static String candidates404Msg = DEFAULT_404_CANDIDATES_MSG;
 
-
   private ArchivalUnit au;
   private ArchivalUnit explicitAu;
   private String url;
@@ -236,6 +236,7 @@ public class SafeNetServeContent extends LockssServlet {
   private PluginManager pluginMgr;
   private ProxyManager proxyMgr;
   private OpenUrlResolver openUrlResolver;
+  private EntitlementRegistryClient entitlementRegistry;
 
   // don't hold onto objects after request finished
   protected void resetLocals() {
@@ -254,6 +255,7 @@ public class SafeNetServeContent extends LockssServlet {
     LockssDaemon daemon = getLockssDaemon();
     pluginMgr = daemon.getPluginManager();
     proxyMgr = daemon.getProxyManager();
+    entitlementRegistry = daemon.getEntitlementRegistryClient();
     openUrlResolver = new OpenUrlResolver(daemon);
   }
 
@@ -833,6 +835,11 @@ public class SafeNetServeContent extends LockssServlet {
     boolean isHostDown = proxyMgr.isHostDown(host);
     PublisherContacted pubContacted =
 	CounterReportsRequestRecorder.PublisherContacted.FALSE;
+
+    if (!isUserEntitled(au)) {
+        log.warning("TODO: Handle unentitled usage");
+        return;
+    }
 
     if (isNeverProxyForAu(au) || isMementoRequest()) {
       if (isInCache) {
@@ -2084,5 +2091,16 @@ public class SafeNetServeContent extends LockssServlet {
       return false;
     }
   }
+
+  boolean isUserEntitled(ArchivalUnit au) {
+      TdbAu tdbAu = au.getTdbAu();
+      String issn = tdbAu.getIssn();
+      String institution = "03bd5fc6-97f0-11e4-b270-8932ea886a12";
+      String start = tdbAu.getStartYear() + "0101";
+      String end = tdbAu.getEndYear() + "1231";
+      return entitlementRegistry.isUserEntitled(issn, institution, start, end);
+
+  }
+
 }
 
