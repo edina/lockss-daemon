@@ -33,13 +33,30 @@ in this Software without prior written authorization from Stanford University.
 package org.lockss.servlet;
 
 import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 import org.lockss.app.LockssDaemon;
-import org.lockss.plugin.*;
-import org.lockss.test.*;
-import org.lockss.util.*;
-import com.meterware.servletunit.*;
-import com.meterware.httpunit.*;
+import org.lockss.config.TdbAu;
+import org.lockss.daemon.TitleConfig;
+import org.lockss.plugin.ArchivalUnit;
+import org.lockss.plugin.CachedUrl;
+import org.lockss.plugin.Plugin;
+import org.lockss.plugin.PluginManager;
+import org.lockss.config.Tdb;
+import org.lockss.test.ConfigurationUtil;
+import org.lockss.test.MockArchivalUnit;
+import org.lockss.test.MockCachedUrl;
+import org.lockss.test.MockLockssDaemon;
+import org.lockss.test.MockNodeManager;
+import org.lockss.test.MockPlugin;
+import com.meterware.httpunit.WebRequest;
+import com.meterware.httpunit.WebResponse;
+import com.meterware.httpunit.WebTable;
+import com.meterware.httpunit.GetMethodWebRequest;
+import com.meterware.servletunit.InvocationContext;
 
 public class TestSafeNetServeContent extends LockssServletTestCase {
 
@@ -49,7 +66,7 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
   public void setUp() throws Exception {
     super.setUp();
     String tempDirPath = setUpDiskSpace();
-    pluginMgr = new MockPluginManager();
+    pluginMgr = new MockPluginManager(theDaemon);
     theDaemon.setPluginManager(pluginMgr);
     theDaemon.setIdentityManager(new org.lockss.protocol.MockIdentityManager());
     theDaemon.getServletManager();
@@ -60,14 +77,29 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
     pluginMgr.initService(theDaemon);
     pluginMgr.startService();
 
-    mau = new MockArchivalUnit(new MockPlugin(theDaemon), "TestAU");
-    mau.setStartUrls(Arrays.asList("http://dev-safenet.edina.ac.uk/test_journal/"));
-    List<ArchivalUnit> aus = Arrays.asList((ArchivalUnit) mau);
-    pluginMgr.setAus(aus);
-    theDaemon.setNodeManager(new MockNodeManager(), mau);
+    mau = makeAu();
 
     ConfigurationUtil.addFromArgs(ConfigManager.PARAM_PLATFORM_PROJECT, "safenet");
     //ConfigurationUtil.addFromArgs("org.lockss.log.default.level", "debug3");
+  }
+
+  private MockArchivalUnit makeAu() throws Exception {
+    Plugin plugin = new MockPlugin(theDaemon);
+    Tdb tdb = new Tdb();
+
+    // Tdb with values for some metadata fields
+    Properties tdbProps = new Properties();
+    tdbProps.setProperty("title", "Air and Space Volume 1");
+    tdbProps.setProperty("issn", "0740-2783");
+    tdbProps.setProperty("eissn", "0740-2783");
+    tdbProps.setProperty("plugin", plugin.getClass().toString());
+
+    TdbAu tdbAu = tdb.addTdbAuFromProperties(tdbProps);
+    TitleConfig titleConfig = new TitleConfig(tdbAu, plugin);
+    MockArchivalUnit au = new MockArchivalUnit(plugin, "TestAU");
+    au.setStartUrls(Arrays.asList("http://dev-safenet.edina.ac.uk/test_journal/"));
+    au.setTitleConfig(titleConfig);
+    return au;
   }
 
   protected void initServletRunner() {
@@ -76,8 +108,9 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
     sRunner.registerServlet("/SafeNetServeContent", SafeNetServeContent.class.getName() );
   }
 
-  public void testResponse() throws Exception {
+  public void testIndex() throws Exception {
     initServletRunner();
+    pluginMgr.addAu(mau, null);
     WebRequest request = new GetMethodWebRequest("http://null/SafeNetServeContent" );
     InvocationContext ic = sClient.newInvocation(request);
     SafeNetServeContent snsc = (SafeNetServeContent) ic.getServlet();
@@ -93,16 +126,59 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
     assertEquals("/SafeNetServeContent?url=http%3A%2F%2Fdev-safenet.edina.ac.uk%2Ftest_journal%2F&auid=TestAU", auTable.getTableCell(1, 1).getLinks()[0].getURLString());
   }
 
-  private static class MockPluginManager extends PluginManager {
-    private List<ArchivalUnit> aus;
+  public void testMissingUrl() throws Exception {
+    initServletRunner();
+    pluginMgr.addAu(mau, null);
+    sClient.setExceptionsThrownOnErrorStatus(false);
+    WebRequest request = new GetMethodWebRequest("http://null/SafeNetServeContent?url=http%3A%2F%2Fdev-safenet.edina.ac.uk%2Ftest_journal%2F&auid=MockAU0" );
+    InvocationContext ic = sClient.newInvocation(request);
+    SafeNetServeContent snsc = (SafeNetServeContent) ic.getServlet();
 
-    public void setAus(List<ArchivalUnit> aus) {
-      this.aus = aus;
+    WebResponse resp1 = sClient.getResponse(request);
+    assertEquals(404, resp1.getResponseCode());
+    assertTrue(resp1.getText().contains("<p>The requested URL is not preserved on this LOCKSS box. Select link<sup><font size=-1><a href=#foottag1>1</a></font></sup> to view it at the publisher:</p><a href=\"http://dev-safenet.edina.ac.uk/test_journal/\">http://dev-safenet.edina.ac.uk/test_journal/</a>"));
+  }
+
+  private static class MockPluginManager extends PluginManager {
+    private Map<ArchivalUnit, List<String>> aus;
+    private MockLockssDaemon theDaemon;
+    private MockNodeManager nodeManager;
+
+    public MockPluginManager(MockLockssDaemon theDaemon) {
+      this.aus = new HashMap<ArchivalUnit, List<String>>();
+      this.theDaemon = theDaemon;
+      this.nodeManager = new MockNodeManager();
+    }
+
+    public void addAu(ArchivalUnit au) {
+      aus.put(au, new ArrayList<String>(au.getStartUrls()));
+      theDaemon.setNodeManager(nodeManager, au);
+    }
+
+    public void addAu(ArchivalUnit au, List<String> urls) {
+      aus.put(au, urls);
+      theDaemon.setNodeManager(nodeManager, au);
     }
 
     @Override
     public List<ArchivalUnit> getAllAus() {
-      return aus;
+      return new ArrayList<ArchivalUnit>(aus.keySet());
+    }
+
+    @Override
+    public CachedUrl findCachedUrl(String url, CuContentReq req) {
+      return this.findCachedUrl(url);
+    }
+
+    @Override
+    public CachedUrl findCachedUrl(String url) {
+      for(ArchivalUnit au : aus.keySet()) {
+        List<String> urls = aus.get(au);
+        if(urls != null && urls.contains(url)) {
+          return new MockCachedUrl(url, au);
+        }
+      }
+      return null;
     }
   }
 }
