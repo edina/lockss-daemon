@@ -80,6 +80,7 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
     mau = makeAu();
 
     ConfigurationUtil.addFromArgs(ConfigManager.PARAM_PLATFORM_PROJECT, "safenet");
+    ConfigurationUtil.addFromArgs(SafeNetServeContent.PARAM_NEVER_PROXY, "true");
     //ConfigurationUtil.addFromArgs("org.lockss.log.default.level", "debug3");
   }
 
@@ -90,8 +91,17 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
     // Tdb with values for some metadata fields
     Properties tdbProps = new Properties();
     tdbProps.setProperty("title", "Air and Space Volume 1");
+    tdbProps.setProperty("journalTitle", "Air and Space");
+    tdbProps.setProperty("attributes.isbn", "976-1-58562-317-7");
     tdbProps.setProperty("issn", "0740-2783");
     tdbProps.setProperty("eissn", "0740-2783");
+    tdbProps.setProperty("attributes.publisher", "Publisher[10.0135/12345678]");
+    tdbProps.setProperty("attributes.provider", "Provider[10.0135/12345678]");
+
+    tdbProps.setProperty("param.1.key", "base_url");
+    tdbProps.setProperty("param.1.value", "http://dev-safenet.edina.ac.uk/test_journal/");
+    tdbProps.setProperty("param.2.key", "volume");
+    tdbProps.setProperty("param.2.value", "vol1");
     tdbProps.setProperty("plugin", plugin.getClass().toString());
 
     TdbAu tdbAu = tdb.addTdbAuFromProperties(tdbProps);
@@ -139,6 +149,19 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
     assertTrue(resp1.getText().contains("<p>The requested URL is not preserved on this LOCKSS box. Select link<sup><font size=-1><a href=#foottag1>1</a></font></sup> to view it at the publisher:</p><a href=\"http://dev-safenet.edina.ac.uk/test_journal/\">http://dev-safenet.edina.ac.uk/test_journal/</a>"));
   }
 
+  public void testCachedUrl() throws Exception {
+    initServletRunner();
+    pluginMgr.addAu(mau);
+    sClient.setExceptionsThrownOnErrorStatus(false);
+    WebRequest request = new GetMethodWebRequest("http://null/SafeNetServeContent?url=http%3A%2F%2Fdev-safenet.edina.ac.uk%2Ftest_journal%2F&auid=TestAU" );
+    InvocationContext ic = sClient.newInvocation(request);
+    SafeNetServeContent snsc = (SafeNetServeContent) ic.getServlet();
+
+    WebResponse resp1 = sClient.getResponse(request);
+    assertResponseOk(resp1);
+    assertEquals("<html><head><title>Blah</title></head><body>Blah blah blah</body></html>", resp1.getText());
+  }
+
   private static class MockPluginManager extends PluginManager {
     private Map<ArchivalUnit, List<String>> aus;
     private MockLockssDaemon theDaemon;
@@ -175,7 +198,10 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
       for(ArchivalUnit au : aus.keySet()) {
         List<String> urls = aus.get(au);
         if(urls != null && urls.contains(url)) {
-          return new MockCachedUrl(url, au);
+          MockCachedUrl cu = new MockCachedUrl(url, au);
+          cu.addProperty(CachedUrl.PROPERTY_CONTENT_TYPE, "text/html");
+          cu.setContent("<html><head><title>Blah</title></head><body>Blah blah blah</body></html>");
+          return cu;
         }
       }
       return null;
