@@ -26,49 +26,46 @@ public class BaseEntitlementRegistryClient extends BaseLockssManager implements 
   private static String erUri;
   private static String apiKey;
 
-  public void setConfig(Configuration config, Configuration oldConfig,
-			Configuration.Differences diffs) {
+  public void setConfig(Configuration config, Configuration oldConfig, Configuration.Differences diffs) {
     if (diffs.contains(PREFIX)) {
-      erUri = config.get(PARAM_ER_URI,
-          DEFAULT_ER_URI);
-      apiKey = config.get(PARAM_ER_APIKEY,
-          DEFAULT_ER_APIKEY);
+      erUri = config.get(PARAM_ER_URI, DEFAULT_ER_URI);
+      apiKey = config.get(PARAM_ER_APIKEY, DEFAULT_ER_APIKEY);
     }
   }
 
   public boolean isUserEntitled(String issn, String institution, String start, String end){
-      try {
-          URIBuilder builder = new URIBuilder(erUri);
-          builder.setPath(builder.getPath() + "/entitlements");
-          builder.setParameter("api_key", apiKey);
-          builder.setParameter("identifier_value", issn);
-          builder.setParameter("institution", institution);
-          builder.setParameter("start", start);
-          builder.setParameter("end", end);
+    try {
+      URIBuilder builder = new URIBuilder(erUri);
+      builder.setPath(builder.getPath() + "/entitlements");
+      builder.setParameter("api_key", apiKey);
+      builder.setParameter("identifier_value", issn);
+      builder.setParameter("institution", institution);
+      builder.setParameter("start", start);
+      builder.setParameter("end", end);
 
-          String url = builder.toString();
-          log.debug("Connecting to ER at " + url);
-          LockssUrlConnection connection = openConnection(url);
-          connection.execute();
-          int responseCode = connection.getResponseCode();
-          if (responseCode == 200) {
-              ObjectMapper mapper = new ObjectMapper();
-              JsonNode entitlements = mapper.readTree(connection.getResponseInputStream());
-              for(JsonNode entitlement : entitlements) {
-                  if (institution.equals(entitlement.get("institution").asText())) {
-                      log.warning("TODO: Verify title and dates");
-                      return true;
-                  }
-              }
+      String url = builder.toString();
+      log.debug("Connecting to ER at " + url);
+      LockssUrlConnection connection = openConnection(url);
+      connection.execute();
+      int responseCode = connection.getResponseCode();
+      if (responseCode == 200) {
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode entitlements = mapper.readTree(connection.getResponseInputStream());
+        for(JsonNode entitlement : entitlements) {
+          if (institution.equals(entitlement.get("institution").asText())) {
+            log.warning("TODO: Verify title and dates");
+            return true;
           }
+        }
       }
-      catch (IOException e) {
-          log.error("Couldn't contact entitlement registry", e);
-      }
-      catch (URISyntaxException e) {
-          log.error("Couldn't contact entitlement registry", e);
-      }
-      return false;
+    }
+    catch (IOException e) {
+      log.error("Couldn't contact entitlement registry", e);
+    }
+    catch (URISyntaxException e) {
+      log.error("Couldn't contact entitlement registry", e);
+    }
+    return false;
   }
 
   // protected so that it can be overriden with mock connections in tests
