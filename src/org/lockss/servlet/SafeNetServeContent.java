@@ -2092,7 +2092,7 @@ public class SafeNetServeContent extends LockssServlet {
     }
   }
 
-  boolean isUserEntitled(ArchivalUnit au) {
+  boolean isUserEntitled(ArchivalUnit au) throws IOException {
       TdbAu tdbAu = au.getTdbAu();
       String issn = tdbAu.getIssn();
       String institution = "03bd5fc6-97f0-11e4-b270-8932ea886a12";
