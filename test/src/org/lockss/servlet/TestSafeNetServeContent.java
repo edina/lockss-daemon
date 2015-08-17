@@ -39,13 +39,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import org.lockss.app.LockssDaemon;
+import org.lockss.config.ConfigManager;
+import org.lockss.config.Tdb;
 import org.lockss.config.TdbAu;
 import org.lockss.daemon.TitleConfig;
 import org.lockss.plugin.ArchivalUnit;
 import org.lockss.plugin.CachedUrl;
 import org.lockss.plugin.Plugin;
 import org.lockss.plugin.PluginManager;
-import org.lockss.config.Tdb;
+import org.lockss.safenet.BaseEntitlementRegistryClient;
+import org.lockss.safenet.EntitlementRegistryClient;
 import org.lockss.test.ConfigurationUtil;
 import org.lockss.test.MockArchivalUnit;
 import org.lockss.test.MockCachedUrl;
@@ -69,6 +72,7 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
     pluginMgr = new MockPluginManager(theDaemon);
     theDaemon.setPluginManager(pluginMgr);
     theDaemon.setIdentityManager(new org.lockss.protocol.MockIdentityManager());
+    theDaemon.setEntitlementRegistryClient(new MockEntitlementRegistryClient());
     theDaemon.getServletManager();
     theDaemon.setDaemonInited(true);
     theDaemon.setAusStarted(true);
@@ -140,7 +144,7 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
     initServletRunner();
     pluginMgr.addAu(mau, null);
     sClient.setExceptionsThrownOnErrorStatus(false);
-    WebRequest request = new GetMethodWebRequest("http://null/SafeNetServeContent?url=http%3A%2F%2Fdev-safenet.edina.ac.uk%2Ftest_journal%2F&auid=MockAU0" );
+    WebRequest request = new GetMethodWebRequest("http://null/SafeNetServeContent?url=http%3A%2F%2Fdev-safenet.edina.ac.uk%2Ftest_journal%2F&auid=TestAU" );
     InvocationContext ic = sClient.newInvocation(request);
     SafeNetServeContent snsc = (SafeNetServeContent) ic.getServlet();
 
@@ -205,6 +209,12 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
         }
       }
       return null;
+    }
+  }
+
+  private static class MockEntitlementRegistryClient extends BaseEntitlementRegistryClient {
+    public boolean isUserEntitled(String issn, String institution, String start, String end){
+      return true;
     }
   }
 }
