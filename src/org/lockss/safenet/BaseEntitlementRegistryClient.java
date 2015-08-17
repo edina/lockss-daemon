@@ -48,7 +48,7 @@ public class BaseEntitlementRegistryClient extends BaseLockssManager implements 
 
           String url = builder.toString();
           log.debug("Connecting to ER at " + url);
-          LockssUrlConnection connection = UrlUtil.openConnection(url);
+          LockssUrlConnection connection = openConnection(url);
           connection.execute();
           int responseCode = connection.getResponseCode();
           if (responseCode == 200) {
@@ -69,5 +69,10 @@ public class BaseEntitlementRegistryClient extends BaseLockssManager implements 
           log.error("Couldn't contact entitlement registry", e);
       }
       return false;
+  }
+
+  // protected so that it can be overriden with mock connections in tests
+  protected LockssUrlConnection openConnection(String url) throws IOException {
+    return UrlUtil.openConnection(url);
   }
 }
