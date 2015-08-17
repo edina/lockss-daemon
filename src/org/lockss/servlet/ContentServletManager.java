@@ -217,8 +217,7 @@ public class ContentServletManager
   };
 
   public ServletDescr[] getServletDescrs() {
-    if (CurrentConfig.getBooleanParam(PARAM_SAFENET,
-				      DEFAULT_SAFENET)) {
+    if (LockssDaemon.getLockssDaemon().isSafenet()) {
       return servletDescrsSafeNet;
     } else if (CurrentConfig.getBooleanParam(PARAM_CONTENT_ONLY,
 				      DEFAULT_CONTENT_ONLY)) {
