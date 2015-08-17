@@ -39,7 +39,7 @@ public class TestEntitlementRegistryClient extends LockssTestCase {
     client.startService();
   }
 
-  public void testIsUserEntitled() throws Exception {
+  public void testUserEntitled() throws Exception {
     Map<String,String> params = new HashMap<String, String>();
     params.put("api_key", "00000000-0000-0000-0000-000000000000");
     params.put("identifier_value", "0123-456X");
@@ -49,6 +49,18 @@ public class TestEntitlementRegistryClient extends LockssTestCase {
     client.expectValidSingleEntitlement(params);
 
     assertTrue(client.isUserEntitled("0123-456X", "11111111-1111-1111-1111-111111111111", "20120101", "20151231"));
+  }
+
+  public void testUserNotEntitled() throws Exception {
+    Map<String,String> params = new HashMap<String, String>();
+    params.put("api_key", "00000000-0000-0000-0000-000000000000");
+    params.put("identifier_value", "0123-456X");
+    params.put("institution", "11111111-1111-1111-1111-111111111111");
+    params.put("start", "20120101");
+    params.put("end", "20151231");
+    client.expectValidNoResponse(params);
+
+    assertFalse(client.isUserEntitled("0123-456X", "11111111-1111-1111-1111-111111111111", "20120101", "20151231"));
   }
 
   private static class MockEntitlementRegistryClient extends BaseEntitlementRegistryClient {
@@ -64,6 +76,10 @@ public class TestEntitlementRegistryClient extends LockssTestCase {
       Map<String, String> responseParams = new HashMap<String,String>(params);
       responseParams.remove("api_key");
       expectAndReturn(mapToPairs(params), 200, "[" + mapToJson(responseParams) + "]");
+    }
+
+    public void expectValidNoResponse(Map<String, String> params) throws IOException {
+      expectAndReturn(mapToPairs(params), 204, "");
     }
 
     public void expectAndReturn(List<NameValuePair> params, int responseCode, String response) {
