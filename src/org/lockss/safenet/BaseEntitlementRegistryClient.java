@@ -33,7 +33,7 @@ public class BaseEntitlementRegistryClient extends BaseLockssManager implements 
     }
   }
 
-  public boolean isUserEntitled(String issn, String institution, String start, String end){
+  public boolean isUserEntitled(String issn, String institution, String start, String end) throws IOException {
     try {
       URIBuilder builder = new URIBuilder(erUri);
       builder.setPath(builder.getPath() + "/entitlements");
@@ -57,15 +57,20 @@ public class BaseEntitlementRegistryClient extends BaseLockssManager implements 
             return true;
           }
         }
+        // Valid request, but the entitlements don't match the information we passed, which should never happen
+        throw new IOException("No matching entitlements returned from entitlement registry");
+      }
+      else if (responseCode == 204) {
+        // Valid request, no entitlements found
+        return false;
+      }
+      else {
+        throw new IOException("Error communicating with entitlement registry. Response was " + responseCode + " " + connection.getResponseMessage());
       }
     }
-    catch (IOException e) {
-      log.error("Couldn't contact entitlement registry", e);
-    }
     catch (URISyntaxException e) {
-      log.error("Couldn't contact entitlement registry", e);
+      throw new IOException("Couldn't contact entitlement registry", e);
     }
-    return false;
   }
 
   // protected so that it can be overriden with mock connections in tests

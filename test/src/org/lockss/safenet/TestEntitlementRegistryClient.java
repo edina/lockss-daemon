@@ -25,6 +25,8 @@ import org.lockss.util.urlconn.LockssUrlConnection;
 public class TestEntitlementRegistryClient extends LockssTestCase {
   private MockEntitlementRegistryClient client;
 
+  private Map<String,String> validParams;
+
   public void setUp() throws Exception {
     super.setUp();
     client = new MockEntitlementRegistryClient();
@@ -37,28 +39,59 @@ public class TestEntitlementRegistryClient extends LockssTestCase {
     ConfigurationUtil.setCurrentConfigFromProps(p);
     client.initService(daemon);
     client.startService();
+
+    validParams = new HashMap<String, String>();
+    validParams.put("api_key", "00000000-0000-0000-0000-000000000000");
+    validParams.put("identifier_value", "0123-456X");
+    validParams.put("institution", "11111111-1111-1111-1111-111111111111");
+    validParams.put("start", "20120101");
+    validParams.put("end", "20151231");
+  }
+
+  public void testEntitlementRegistryError() throws Exception {
+    client.expectAndReturn(client.mapToPairs(validParams), 500, "Internal server error");
+
+    try {
+      client.isUserEntitled("0123-456X", "11111111-1111-1111-1111-111111111111", "20120101", "20151231");
+      fail("Expected exception not thrown");
+    }
+    catch(IOException e) {
+      assertEquals("Error communicating with entitlement registry. Response was 500 null", e.getMessage());
+    }
+  }
+
+  public void testEntitlementRegistryInvalidResponse() throws Exception {
+    client.expectAndReturn(client.mapToPairs(validParams), 200, "[]");
+
+    try {
+      client.isUserEntitled("0123-456X", "11111111-1111-1111-1111-111111111111", "20120101", "20151231");
+      fail("Expected exception not thrown");
+    }
+    catch(IOException e) {
+      assertEquals("No matching entitlements returned from entitlement registry", e.getMessage());
+    }
+  }
+
+  public void testEntitlementRegistryInvalidJson() throws Exception {
+    client.expectAndReturn(client.mapToPairs(validParams), 200, "[{\"this\": isn't, JSON}]");
+
+    try {
+      client.isUserEntitled("0123-456X", "11111111-1111-1111-1111-111111111111", "20120101", "20151231");
+      fail("Expected exception not thrown");
+    }
+    catch(IOException e) {
+      assertTrue(e.getMessage().startsWith("Unrecognized token 'isn': was expecting ('true', 'false' or 'null')"));
+    }
   }
 
   public void testUserEntitled() throws Exception {
-    Map<String,String> params = new HashMap<String, String>();
-    params.put("api_key", "00000000-0000-0000-0000-000000000000");
-    params.put("identifier_value", "0123-456X");
-    params.put("institution", "11111111-1111-1111-1111-111111111111");
-    params.put("start", "20120101");
-    params.put("end", "20151231");
-    client.expectValidSingleEntitlement(params);
+    client.expectValidSingleEntitlement(validParams);
 
     assertTrue(client.isUserEntitled("0123-456X", "11111111-1111-1111-1111-111111111111", "20120101", "20151231"));
   }
 
   public void testUserNotEntitled() throws Exception {
-    Map<String,String> params = new HashMap<String, String>();
-    params.put("api_key", "00000000-0000-0000-0000-000000000000");
-    params.put("identifier_value", "0123-456X");
-    params.put("institution", "11111111-1111-1111-1111-111111111111");
-    params.put("start", "20120101");
-    params.put("end", "20151231");
-    client.expectValidNoResponse(params);
+    client.expectValidNoResponse(validParams);
 
     assertFalse(client.isUserEntitled("0123-456X", "11111111-1111-1111-1111-111111111111", "20120101", "20151231"));
   }
