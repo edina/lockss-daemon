@@ -66,7 +66,6 @@ import com.meterware.servletunit.InvocationContext;
 
 public class TestSafeNetServeContent extends LockssServletTestCase {
 
-  private MockArchivalUnit mau = null;
   private MockPluginManager pluginMgr = null;
   private MockEntitlementRegistryClient entitlementRegistryClient = null;
 
@@ -85,8 +84,6 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
 
     pluginMgr.initService(theDaemon);
     pluginMgr.startService();
-
-    mau = makeAu();
 
     ConfigurationUtil.addFromArgs(ConfigManager.PARAM_PLATFORM_PROJECT, "safenet");
     ConfigurationUtil.addFromArgs(SafeNetServeContent.PARAM_NEVER_PROXY, "true");
@@ -130,7 +127,7 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
 
   public void testIndex() throws Exception {
     initServletRunner();
-    pluginMgr.addAu(mau, null);
+    pluginMgr.addAu(makeAu(), null);
     WebRequest request = new GetMethodWebRequest("http://null/SafeNetServeContent" );
     InvocationContext ic = sClient.newInvocation(request);
     SafeNetServeContent snsc = (SafeNetServeContent) ic.getServlet();
@@ -148,7 +145,7 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
 
   public void testMissingUrl() throws Exception {
     initServletRunner();
-    pluginMgr.addAu(mau, null);
+    pluginMgr.addAu(makeAu(), null);
     sClient.setExceptionsThrownOnErrorStatus(false);
     WebRequest request = new GetMethodWebRequest("http://null/SafeNetServeContent?url=http%3A%2F%2Fdev-safenet.edina.ac.uk%2Ftest_journal%2F&auid=TestAU" );
     InvocationContext ic = sClient.newInvocation(request);
@@ -161,7 +158,7 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
 
   public void testCachedUrl() throws Exception {
     initServletRunner();
-    pluginMgr.addAu(mau);
+    pluginMgr.addAu(makeAu());
     entitlementRegistryClient.expectEntitled("0740-2783", "03bd5fc6-97f0-11e4-b270-8932ea886a12", "20140101", "20141231");
     WebRequest request = new GetMethodWebRequest("http://null/SafeNetServeContent?url=http%3A%2F%2Fdev-safenet.edina.ac.uk%2Ftest_journal%2F&auid=TestAU" );
     InvocationContext ic = sClient.newInvocation(request);
@@ -174,7 +171,7 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
 
   public void testUnauthorisedUrl() throws Exception {
     initServletRunner();
-    pluginMgr.addAu(mau);
+    pluginMgr.addAu(makeAu());
     entitlementRegistryClient.expectUnentitled("0740-2783", "03bd5fc6-97f0-11e4-b270-8932ea886a12", "20140101", "20141231");
     sClient.setExceptionsThrownOnErrorStatus(false);
     WebRequest request = new GetMethodWebRequest("http://null/SafeNetServeContent?url=http%3A%2F%2Fdev-safenet.edina.ac.uk%2Ftest_journal%2F&auid=TestAU" );
