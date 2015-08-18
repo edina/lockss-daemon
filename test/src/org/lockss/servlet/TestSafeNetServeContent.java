@@ -32,12 +32,15 @@ in this Software without prior written authorization from Stanford University.
 
 package org.lockss.servlet;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Queue;
 import org.lockss.app.LockssDaemon;
 import org.lockss.config.ConfigManager;
 import org.lockss.config.Tdb;
@@ -65,6 +68,7 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
 
   private MockArchivalUnit mau = null;
   private MockPluginManager pluginMgr = null;
+  private MockEntitlementRegistryClient entitlementRegistryClient = null;
 
   public void setUp() throws Exception {
     super.setUp();
@@ -72,7 +76,8 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
     pluginMgr = new MockPluginManager(theDaemon);
     theDaemon.setPluginManager(pluginMgr);
     theDaemon.setIdentityManager(new org.lockss.protocol.MockIdentityManager());
-    theDaemon.setEntitlementRegistryClient(new MockEntitlementRegistryClient());
+    entitlementRegistryClient = new MockEntitlementRegistryClient();
+    theDaemon.setEntitlementRegistryClient(entitlementRegistryClient);
     theDaemon.getServletManager();
     theDaemon.setDaemonInited(true);
     theDaemon.setAusStarted(true);
@@ -99,6 +104,7 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
     tdbProps.setProperty("attributes.isbn", "976-1-58562-317-7");
     tdbProps.setProperty("issn", "0740-2783");
     tdbProps.setProperty("eissn", "0740-2783");
+    tdbProps.setProperty("attributes.year", "2014");
     tdbProps.setProperty("attributes.publisher", "Publisher[10.0135/12345678]");
     tdbProps.setProperty("attributes.provider", "Provider[10.0135/12345678]");
 
@@ -156,7 +162,7 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
   public void testCachedUrl() throws Exception {
     initServletRunner();
     pluginMgr.addAu(mau);
-    sClient.setExceptionsThrownOnErrorStatus(false);
+    entitlementRegistryClient.expectEntitled("0740-2783", "03bd5fc6-97f0-11e4-b270-8932ea886a12", "20140101", "20141231");
     WebRequest request = new GetMethodWebRequest("http://null/SafeNetServeContent?url=http%3A%2F%2Fdev-safenet.edina.ac.uk%2Ftest_journal%2F&auid=TestAU" );
     InvocationContext ic = sClient.newInvocation(request);
     SafeNetServeContent snsc = (SafeNetServeContent) ic.getServlet();
@@ -164,6 +170,20 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
     WebResponse resp1 = sClient.getResponse(request);
     assertResponseOk(resp1);
     assertEquals("<html><head><title>Blah</title></head><body>Blah blah blah</body></html>", resp1.getText());
+  }
+
+  public void testUnauthorisedUrl() throws Exception {
+    initServletRunner();
+    pluginMgr.addAu(mau);
+    entitlementRegistryClient.expectUnentitled("0740-2783", "03bd5fc6-97f0-11e4-b270-8932ea886a12", "20140101", "20141231");
+    sClient.setExceptionsThrownOnErrorStatus(false);
+    WebRequest request = new GetMethodWebRequest("http://null/SafeNetServeContent?url=http%3A%2F%2Fdev-safenet.edina.ac.uk%2Ftest_journal%2F&auid=TestAU" );
+    InvocationContext ic = sClient.newInvocation(request);
+    SafeNetServeContent snsc = (SafeNetServeContent) ic.getServlet();
+
+    WebResponse resp1 = sClient.getResponse(request);
+    assertEquals(403, resp1.getResponseCode());
+    assertTrue(resp1.getText().contains("<p>You are not authorised to access the requested URL on this LOCKSS box. Select link<sup><font size=-1><a href=#foottag1>1</a></font></sup> to view it at the publisher:</p><a href=\"http://dev-safenet.edina.ac.uk/test_journal/\">http://dev-safenet.edina.ac.uk/test_journal/</a>"));
   }
 
   private static class MockPluginManager extends PluginManager {
@@ -213,8 +233,58 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
   }
 
   private static class MockEntitlementRegistryClient extends BaseEntitlementRegistryClient {
-    public boolean isUserEntitled(String issn, String institution, String start, String end){
-      return true;
+    private static class Expectation {
+      private String issn;
+      private String institution;
+      private String start;
+      private String end;
+      private boolean entitled;
+      private IOException exception;
+    }
+
+    public void expectEntitled(String issn, String institution, String start, String end) {
+      Expectation e = new Expectation();
+      e.issn = issn;
+      e.institution = institution;
+      e.start = start;
+      e.end = end;
+      e.entitled = true;
+      expected.add(e);
+    }
+
+    public void expectUnentitled(String issn, String institution, String start, String end) {
+      Expectation e = new Expectation();
+      e.issn = issn;
+      e.institution = institution;
+      e.start = start;
+      e.end = end;
+      e.entitled = false;
+      expected.add(e);
+    }
+
+    public void expectError(String issn, String institution, String start, String end) {
+      Expectation e = new Expectation();
+      e.issn = issn;
+      e.institution = institution;
+      e.start = start;
+      e.end = end;
+      e.exception = new IOException("Could not contact entitlement registry");
+      expected.add(e);
+    }
+
+    private Queue<Expectation> expected = new LinkedList<Expectation>();
+
+    public boolean isUserEntitled(String issn, String institution, String start, String end) throws IOException {
+      Expectation e = expected.poll();
+      assertEquals(e.issn, issn);
+      assertEquals(e.institution, institution);
+      assertEquals(e.start, start);
+      assertEquals(e.end, end);
+      if(e.exception != null) {
+        throw e.exception;
+      }
+
+      return e.entitled;
     }
   }
 }
