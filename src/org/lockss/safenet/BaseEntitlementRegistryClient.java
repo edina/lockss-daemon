@@ -9,6 +9,7 @@ import org.apache.http.client.utils.URIBuilder;
 import org.lockss.app.BaseLockssManager;
 import org.lockss.app.ConfigurableManager;
 import org.lockss.config.Configuration;
+import org.lockss.util.IOUtil;
 import org.lockss.util.Logger;
 import org.lockss.util.UrlUtil;
 import org.lockss.util.urlconn.LockssUrlConnection;
@@ -34,6 +35,7 @@ public class BaseEntitlementRegistryClient extends BaseLockssManager implements 
   }
 
   public boolean isUserEntitled(String issn, String institution, String start, String end) throws IOException {
+    LockssUrlConnection connection = null;
     try {
       URIBuilder builder = new URIBuilder(erUri);
       builder.setPath(builder.getPath() + "/entitlements");
@@ -45,7 +47,7 @@ public class BaseEntitlementRegistryClient extends BaseLockssManager implements 
 
       String url = builder.toString();
       log.debug("Connecting to ER at " + url);
-      LockssUrlConnection connection = openConnection(url);
+      connection = openConnection(url);
       connection.execute();
       int responseCode = connection.getResponseCode();
       if (responseCode == 200) {
@@ -70,6 +72,11 @@ public class BaseEntitlementRegistryClient extends BaseLockssManager implements 
     }
     catch (URISyntaxException e) {
       throw new IOException("Couldn't contact entitlement registry", e);
+    }
+    finally {
+      if(connection != null) {
+        IOUtil.safeRelease(connection);
+      }
     }
   }
 

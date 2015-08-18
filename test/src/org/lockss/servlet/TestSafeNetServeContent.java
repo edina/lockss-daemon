@@ -186,6 +186,20 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
     assertTrue(resp1.getText().contains("<p>You are not authorised to access the requested URL on this LOCKSS box. Select link<sup><font size=-1><a href=#foottag1>1</a></font></sup> to view it at the publisher:</p><a href=\"http://dev-safenet.edina.ac.uk/test_journal/\">http://dev-safenet.edina.ac.uk/test_journal/</a>"));
   }
 
+  public void testEntitlementRegistryError() throws Exception {
+    initServletRunner();
+    pluginMgr.addAu(makeAu());
+    entitlementRegistryClient.expectError("0740-2783", "03bd5fc6-97f0-11e4-b270-8932ea886a12", "20140101", "20141231");
+    sClient.setExceptionsThrownOnErrorStatus(false);
+    WebRequest request = new GetMethodWebRequest("http://null/SafeNetServeContent?url=http%3A%2F%2Fdev-safenet.edina.ac.uk%2Ftest_journal%2F&auid=TestAU" );
+    InvocationContext ic = sClient.newInvocation(request);
+    SafeNetServeContent snsc = (SafeNetServeContent) ic.getServlet();
+
+    WebResponse resp1 = sClient.getResponse(request);
+    assertEquals(503, resp1.getResponseCode());
+    assertTrue(resp1.getText().contains("<p>An error occurred trying to access the requested URL on this LOCKSS box. This may be temporary and you may wish to report this, and try again later. Select link<sup><font size=-1><a href=#foottag1>1</a></font></sup> to view it at the publisher:</p><a href=\"http://dev-safenet.edina.ac.uk/test_journal/\">http://dev-safenet.edina.ac.uk/test_journal/</a>"));
+  }
+
   private static class MockPluginManager extends PluginManager {
     private Map<ArchivalUnit, List<String>> aus;
     private MockLockssDaemon theDaemon;

@@ -836,8 +836,15 @@ public class SafeNetServeContent extends LockssServlet {
     PublisherContacted pubContacted =
 	CounterReportsRequestRecorder.PublisherContacted.FALSE;
 
-    if (!isUserEntitled(au)) {
-      handleUnauthorisedUrlRequest(url);
+    try {
+      if (!isUserEntitled(au)) {
+        handleUnauthorisedUrlRequest(url);
+        return;
+      }
+    }
+    catch (IOException e) {
+      // We can't communicate with the ER, so we have to assume that we can't give the user access to the content at the moment
+      handleEntitlementRegistryErrorUrlRequest(url);
       return;
     }
 
@@ -1907,6 +1914,11 @@ public class SafeNetServeContent extends LockssServlet {
     return candidateAus;
   }
 
+  protected void handleEntitlementRegistryErrorUrlRequest(String missingUrl)
+      throws IOException {
+    handleUrlRequestError(missingUrl, PubState.KnownDown, "An error occurred trying to access the requested URL on this LOCKSS box. This may be temporary and you may wish to report this, and try again later. ", HttpResponse.__503_Service_Unavailable, "entitlement registry error");
+  }
+
   protected void handleUnauthorisedUrlRequest(String missingUrl)
       throws IOException {
     handleUrlRequestError(missingUrl, PubState.KnownDown, "You are not authorised to access the requested URL on this LOCKSS box. ", HttpResponse.__403_Forbidden, "unauthorised");
@@ -2110,7 +2122,6 @@ public class SafeNetServeContent extends LockssServlet {
       String start = tdbAu.getStartYear() + "0101";
       String end = tdbAu.getEndYear() + "1231";
       return entitlementRegistry.isUserEntitled(issn, institution, start, end);
-
   }
 
 }
