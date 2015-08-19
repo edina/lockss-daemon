@@ -91,6 +91,10 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
   }
 
   private MockArchivalUnit makeAu() throws Exception {
+    return makeAu(null);
+  }
+
+  private MockArchivalUnit makeAu(Properties override) throws Exception {
     Plugin plugin = new MockPlugin(theDaemon);
     Tdb tdb = new Tdb();
 
@@ -110,6 +114,10 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
     tdbProps.setProperty("param.2.key", "volume");
     tdbProps.setProperty("param.2.value", "vol1");
     tdbProps.setProperty("plugin", plugin.getClass().toString());
+
+    if(override != null) {
+      tdbProps.putAll(override);
+    }
 
     TdbAu tdbAu = tdb.addTdbAuFromProperties(tdbProps);
     TitleConfig titleConfig = new TitleConfig(tdbAu, plugin);
@@ -195,6 +203,22 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
     WebResponse resp1 = sClient.getResponse(request);
     assertEquals(503, resp1.getResponseCode());
     assertTrue(resp1.getText().contains("<p>An error occurred trying to access the requested URL on this LOCKSS box. This may be temporary and you may wish to report this, and try again later. Select link<sup><font size=-1><a href=#foottag1>1</a></font></sup> to view it at the publisher:</p><a href=\"http://dev-safenet.edina.ac.uk/test_journal/\">http://dev-safenet.edina.ac.uk/test_journal/</a>"));
+  }
+
+  public void testInvalidArchivalUnit() throws Exception {
+    initServletRunner();
+    Properties props = new Properties();
+    props.setProperty("issn", "");
+    props.setProperty("eissn", "");
+    sClient.setExceptionsThrownOnErrorStatus(false);
+    pluginMgr.addAu(makeAu(props));
+    WebRequest request = new GetMethodWebRequest("http://null/SafeNetServeContent?url=http%3A%2F%2Fdev-safenet.edina.ac.uk%2Ftest_journal%2F&auid=TestAU" );
+    InvocationContext ic = sClient.newInvocation(request);
+    SafeNetServeContent snsc = (SafeNetServeContent) ic.getServlet();
+
+    WebResponse resp1 = sClient.getResponse(request);
+    assertEquals(404, resp1.getResponseCode());
+    assertTrue(resp1.getText().contains("<p>The requested URL is not preserved on this LOCKSS box. Select link<sup><font size=-1><a href=#foottag1>1</a></font></sup> to view it at the publisher:</p><a href=\"http://dev-safenet.edina.ac.uk/test_journal/\">http://dev-safenet.edina.ac.uk/test_journal/</a>"));
   }
 
   private static class MockPluginManager extends PluginManager {

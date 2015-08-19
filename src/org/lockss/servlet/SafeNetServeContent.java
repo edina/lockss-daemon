@@ -844,7 +844,14 @@ public class SafeNetServeContent extends LockssServlet {
     }
     catch (IOException e) {
       // We can't communicate with the ER, so we have to assume that we can't give the user access to the content at the moment
+      log.error("Error communicating with entitlement registry: " + e);
       handleEntitlementRegistryErrorUrlRequest(url);
+      return;
+    }
+    catch (IllegalArgumentException e) {
+      // We don't have enough information about the AU to determine if the user is entitled, but there's nothing they can do about it
+      log.error("Error with AU configuration: " + e);
+      handleMissingUrlRequest(url, PubState.KnownDown);
       return;
     }
 
@@ -2115,9 +2122,12 @@ public class SafeNetServeContent extends LockssServlet {
     }
   }
 
-  boolean isUserEntitled(ArchivalUnit au) throws IOException {
+  boolean isUserEntitled(ArchivalUnit au) throws IOException, IllegalArgumentException {
       TdbAu tdbAu = au.getTdbAu();
       String issn = tdbAu.getIssn();
+      if(StringUtil.isNullString(issn)) {
+        throw new IllegalArgumentException("ArchivalUnit has no ISSN");
+      }
       String institution = "03bd5fc6-97f0-11e4-b270-8932ea886a12";
       String start = tdbAu.getStartYear() + "0101";
       String end = tdbAu.getEndYear() + "1231";
