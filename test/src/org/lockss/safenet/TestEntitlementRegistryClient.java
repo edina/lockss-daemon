@@ -58,6 +58,7 @@ public class TestEntitlementRegistryClient extends LockssTestCase {
     catch(IOException e) {
       assertEquals("Error communicating with entitlement registry. Response was 500 null", e.getMessage());
     }
+    client.checkDone();
   }
 
   public void testEntitlementRegistryInvalidResponse() throws Exception {
@@ -70,6 +71,7 @@ public class TestEntitlementRegistryClient extends LockssTestCase {
     catch(IOException e) {
       assertEquals("No matching entitlements returned from entitlement registry", e.getMessage());
     }
+    client.checkDone();
   }
 
   public void testEntitlementRegistryInvalidJson() throws Exception {
@@ -82,18 +84,21 @@ public class TestEntitlementRegistryClient extends LockssTestCase {
     catch(IOException e) {
       assertTrue(e.getMessage().startsWith("Unrecognized token 'isn': was expecting ('true', 'false' or 'null')"));
     }
+    client.checkDone();
   }
 
   public void testUserEntitled() throws Exception {
     client.expectValidSingleEntitlement(validParams);
 
     assertTrue(client.isUserEntitled("0123-456X", "11111111-1111-1111-1111-111111111111", "20120101", "20151231"));
+    client.checkDone();
   }
 
   public void testUserNotEntitled() throws Exception {
     client.expectValidNoResponse(validParams);
 
     assertFalse(client.isUserEntitled("0123-456X", "11111111-1111-1111-1111-111111111111", "20120101", "20151231"));
+    client.checkDone();
   }
 
   private static class MockEntitlementRegistryClient extends BaseEntitlementRegistryClient {
@@ -121,6 +126,10 @@ public class TestEntitlementRegistryClient extends LockssTestCase {
       e.responseCode = responseCode;
       e.response = response;
       expected.add(e);
+    }
+
+    public void checkDone() {
+      assertEmpty(expected);
     }
 
     protected LockssUrlConnection openConnection(String url) throws IOException {
