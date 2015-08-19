@@ -87,6 +87,19 @@ public class TestEntitlementRegistryClient extends LockssTestCase {
     client.checkDone();
   }
 
+  public void testEntitlementRegistryUnexpectedJson() throws Exception {
+    client.expectAndReturn(client.mapToPairs(validParams), 200, "{\"surprise\": \"object\"}");
+
+    try {
+      client.isUserEntitled("0123-456X", "11111111-1111-1111-1111-111111111111", "20120101", "20151231");
+      fail("Expected exception not thrown");
+    }
+    catch(IOException e) {
+      assertTrue(e.getMessage().startsWith("No matching entitlements returned from entitlement registry"));
+    }
+    client.checkDone();
+  }
+
   public void testUserEntitled() throws Exception {
     client.expectValidSingleEntitlement(validParams);
 

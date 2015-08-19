@@ -54,7 +54,8 @@ public class BaseEntitlementRegistryClient extends BaseLockssManager implements 
         ObjectMapper mapper = new ObjectMapper();
         JsonNode entitlements = mapper.readTree(connection.getResponseInputStream());
         for(JsonNode entitlement : entitlements) {
-          if (institution.equals(entitlement.get("institution").asText())) {
+          JsonNode entitlementInstitution = entitlement.get("institution");
+          if (entitlementInstitution != null && entitlementInstitution.asText().equals(institution)) {
             log.warning("TODO: Verify title and dates");
             return true;
           }
