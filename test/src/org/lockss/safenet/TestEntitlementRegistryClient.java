@@ -168,13 +168,6 @@ public class TestEntitlementRegistryClient extends LockssTestCase {
       return mapper.writeValueAsString(params);
     }
 
-    public List<NameValuePair> mapToPairs(Map<String, String> params) {
-      List<NameValuePair> pairs = new ArrayList<NameValuePair>();
-      for(String key : params.keySet()) {
-        pairs.add(new BasicNameValuePair(key, params.get(key)));
-      }
-      return pairs;
-    }
 
   }
 }

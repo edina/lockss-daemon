@@ -2,10 +2,17 @@ package org.lockss.safenet;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.JsonNode;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.message.BasicNameValuePair;
+
 import org.lockss.app.BaseLockssManager;
 import org.lockss.app.ConfigurableManager;
 import org.lockss.config.Configuration;
@@ -24,8 +31,13 @@ public class BaseEntitlementRegistryClient extends BaseLockssManager implements 
   public static final String PARAM_ER_APIKEY = PREFIX + "apiKey";
   static final String DEFAULT_ER_APIKEY = "";
 
-  private static String erUri;
-  private static String apiKey;
+  private ObjectMapper objectMapper;
+  private String erUri;
+  private String apiKey;
+
+  public BaseEntitlementRegistryClient() {
+    this.objectMapper = new ObjectMapper();
+  }
 
   public void setConfig(Configuration config, Configuration oldConfig, Configuration.Differences diffs) {
     if (diffs.contains(PREFIX)) {
@@ -35,15 +47,41 @@ public class BaseEntitlementRegistryClient extends BaseLockssManager implements 
   }
 
   public boolean isUserEntitled(String issn, String institution, String start, String end) throws IOException {
+    Map<String, String> parameters = new HashMap<String, String>();
+    parameters.put("api_key", apiKey);
+    parameters.put("identifier_value", issn);
+    parameters.put("institution", institution);
+    parameters.put("start", start);
+    parameters.put("end", end);
+
+    JsonNode entitlements = callEntitlementRegistry("/entitlements", parameters);
+    if (entitlements != null) {
+      for(JsonNode entitlement : entitlements) {
+        JsonNode entitlementInstitution = entitlement.get("institution");
+        if (entitlementInstitution != null && entitlementInstitution.asText().equals(institution)) {
+          log.warning("TODO: Verify title and dates");
+          return true;
+        }
+      }
+
+      // Valid request, but the entitlements don't match the information we passed, which should never happen
+      throw new IOException("No matching entitlements returned from entitlement registry");
+    }
+
+    //Valid request, no entitlements found
+    return false;
+  }
+
+  private JsonNode callEntitlementRegistry(String endpoint, Map<String, String> parameters) throws IOException {
+    return callEntitlementRegistry(endpoint, mapToPairs(parameters));
+  }
+
+  private JsonNode callEntitlementRegistry(String endpoint, List<NameValuePair> parameters) throws IOException {
     LockssUrlConnection connection = null;
     try {
       URIBuilder builder = new URIBuilder(erUri);
-      builder.setPath(builder.getPath() + "/entitlements");
-      builder.setParameter("api_key", apiKey);
-      builder.setParameter("identifier_value", issn);
-      builder.setParameter("institution", institution);
-      builder.setParameter("start", start);
-      builder.setParameter("end", end);
+      builder.setPath(builder.getPath() + endpoint);
+      builder.setParameters(parameters);
 
       String url = builder.toString();
       log.debug("Connecting to ER at " + url);
@@ -51,21 +89,11 @@ public class BaseEntitlementRegistryClient extends BaseLockssManager implements 
       connection.execute();
       int responseCode = connection.getResponseCode();
       if (responseCode == 200) {
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode entitlements = mapper.readTree(connection.getResponseInputStream());
-        for(JsonNode entitlement : entitlements) {
-          JsonNode entitlementInstitution = entitlement.get("institution");
-          if (entitlementInstitution != null && entitlementInstitution.asText().equals(institution)) {
-            log.warning("TODO: Verify title and dates");
-            return true;
-          }
-        }
-        // Valid request, but the entitlements don't match the information we passed, which should never happen
-        throw new IOException("No matching entitlements returned from entitlement registry");
+        return objectMapper.readTree(connection.getResponseInputStream());
       }
       else if (responseCode == 204) {
-        // Valid request, no entitlements found
-        return false;
+        // Valid request, but empty response
+        return null;
       }
       else {
         throw new IOException("Error communicating with entitlement registry. Response was " + responseCode + " " + connection.getResponseMessage());
@@ -85,4 +113,13 @@ public class BaseEntitlementRegistryClient extends BaseLockssManager implements 
   protected LockssUrlConnection openConnection(String url) throws IOException {
     return UrlUtil.openConnection(url);
   }
+
+  protected List<NameValuePair> mapToPairs(Map<String, String> params) {
+    List<NameValuePair> pairs = new ArrayList<NameValuePair>();
+    for(String key : params.keySet()) {
+      pairs.add(new BasicNameValuePair(key, params.get(key)));
+    }
+    return pairs;
+  }
+
 }
