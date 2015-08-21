@@ -101,14 +101,16 @@ public class TestEntitlementRegistryClient extends LockssTestCase {
   }
 
   public void testUserEntitled() throws Exception {
-    client.expectValidSingleEntitlement(validParams);
+    Map<String, String> responseParams = new HashMap<String,String>(validParams);
+    responseParams.remove("api_key");
+    client.expectAndReturn("/entitlements", client.mapToPairs(validParams), 200, "[" + client.mapToJson(responseParams) + "]");
 
     assertTrue(client.isUserEntitled("0123-456X", "11111111-1111-1111-1111-111111111111", "20120101", "20151231"));
     client.checkDone();
   }
 
   public void testUserNotEntitled() throws Exception {
-    client.expectValidNoResponse(validParams);
+    client.expectAndReturn("/entitlements", client.mapToPairs(validParams), 204, "");
 
     assertFalse(client.isUserEntitled("0123-456X", "11111111-1111-1111-1111-111111111111", "20120101", "20151231"));
     client.checkDone();
@@ -123,16 +125,6 @@ public class TestEntitlementRegistryClient extends LockssTestCase {
     }
 
     private Queue<Expectation> expected = new LinkedList<Expectation>();
-
-    public void expectValidSingleEntitlement(Map<String, String> params) throws IOException {
-      Map<String, String> responseParams = new HashMap<String,String>(params);
-      responseParams.remove("api_key");
-      expectAndReturn("/entitlements", mapToPairs(params), 200, "[" + mapToJson(responseParams) + "]");
-    }
-
-    public void expectValidNoResponse(Map<String, String> params) throws IOException {
-      expectAndReturn("/entitlements", mapToPairs(params), 204, "");
-    }
 
     public void expectAndReturn(String endpoint, List<NameValuePair> params, int responseCode, String response) {
       Expectation e = new Expectation();
