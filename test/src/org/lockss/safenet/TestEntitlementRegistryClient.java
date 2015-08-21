@@ -49,7 +49,7 @@ public class TestEntitlementRegistryClient extends LockssTestCase {
   }
 
   public void testEntitlementRegistryError() throws Exception {
-    client.expectAndReturn(client.mapToPairs(validParams), 500, "Internal server error");
+    client.expectAndReturn("/entitlements", client.mapToPairs(validParams), 500, "Internal server error");
 
     try {
       client.isUserEntitled("0123-456X", "11111111-1111-1111-1111-111111111111", "20120101", "20151231");
@@ -62,7 +62,7 @@ public class TestEntitlementRegistryClient extends LockssTestCase {
   }
 
   public void testEntitlementRegistryInvalidResponse() throws Exception {
-    client.expectAndReturn(client.mapToPairs(validParams), 200, "[]");
+    client.expectAndReturn("/entitlements", client.mapToPairs(validParams), 200, "[]");
 
     try {
       client.isUserEntitled("0123-456X", "11111111-1111-1111-1111-111111111111", "20120101", "20151231");
@@ -75,7 +75,7 @@ public class TestEntitlementRegistryClient extends LockssTestCase {
   }
 
   public void testEntitlementRegistryInvalidJson() throws Exception {
-    client.expectAndReturn(client.mapToPairs(validParams), 200, "[{\"this\": isn't, JSON}]");
+    client.expectAndReturn("/entitlements", client.mapToPairs(validParams), 200, "[{\"this\": isn't, JSON}]");
 
     try {
       client.isUserEntitled("0123-456X", "11111111-1111-1111-1111-111111111111", "20120101", "20151231");
@@ -88,7 +88,7 @@ public class TestEntitlementRegistryClient extends LockssTestCase {
   }
 
   public void testEntitlementRegistryUnexpectedJson() throws Exception {
-    client.expectAndReturn(client.mapToPairs(validParams), 200, "{\"surprise\": \"object\"}");
+    client.expectAndReturn("/entitlements", client.mapToPairs(validParams), 200, "{\"surprise\": \"object\"}");
 
     try {
       client.isUserEntitled("0123-456X", "11111111-1111-1111-1111-111111111111", "20120101", "20151231");
@@ -116,6 +116,7 @@ public class TestEntitlementRegistryClient extends LockssTestCase {
 
   private static class MockEntitlementRegistryClient extends BaseEntitlementRegistryClient {
     private static class Expectation {
+      private String endpoint;
       private List<NameValuePair> params;
       private int responseCode;
       private String response;
@@ -126,15 +127,16 @@ public class TestEntitlementRegistryClient extends LockssTestCase {
     public void expectValidSingleEntitlement(Map<String, String> params) throws IOException {
       Map<String, String> responseParams = new HashMap<String,String>(params);
       responseParams.remove("api_key");
-      expectAndReturn(mapToPairs(params), 200, "[" + mapToJson(responseParams) + "]");
+      expectAndReturn("/entitlements", mapToPairs(params), 200, "[" + mapToJson(responseParams) + "]");
     }
 
     public void expectValidNoResponse(Map<String, String> params) throws IOException {
-      expectAndReturn(mapToPairs(params), 204, "");
+      expectAndReturn("/entitlements", mapToPairs(params), 204, "");
     }
 
-    public void expectAndReturn(List<NameValuePair> params, int responseCode, String response) {
+    public void expectAndReturn(String endpoint, List<NameValuePair> params, int responseCode, String response) {
       Expectation e = new Expectation();
+      e.endpoint = endpoint;
       e.params = params;
       e.responseCode = responseCode;
       e.response = response;
@@ -150,8 +152,8 @@ public class TestEntitlementRegistryClient extends LockssTestCase {
         URIBuilder builder = new URIBuilder(url);
         assertEquals("http", builder.getScheme());
         assertEquals("dev-safenet.edina.ac.uk", builder.getHost());
-        assertEquals("/entitlements", builder.getPath());
         Expectation e = expected.poll();
+        assertEquals(e.endpoint, builder.getPath());
         assertSameElements(e.params, builder.getQueryParams());
         MockLockssUrlConnection connection = new MockLockssUrlConnection(url);
         connection.setResponseCode(e.responseCode);
