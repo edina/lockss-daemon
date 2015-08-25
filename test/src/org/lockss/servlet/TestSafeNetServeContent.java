@@ -160,6 +160,19 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
     initServletRunner();
     pluginMgr.addAu(makeAu(), null);
     sClient.setExceptionsThrownOnErrorStatus(false);
+    WebRequest request = new GetMethodWebRequest("http://null/SafeNetServeContent?url=http%3A%2F%2Fdev-safenet.edina.ac.uk%2Ftest_journal%2F" );
+    InvocationContext ic = sClient.newInvocation(request);
+    SafeNetServeContent snsc = (SafeNetServeContent) ic.getServlet();
+
+    WebResponse resp1 = sClient.getResponse(request);
+    assertResponseOk(resp1);
+    assertEquals("<html><head><title>Blah</title></head><body>Redirected content</body></html>", resp1.getText());
+  }
+
+  public void testMissingUrlExplicitAU() throws Exception {
+    initServletRunner();
+    pluginMgr.addAu(makeAu(), null);
+    sClient.setExceptionsThrownOnErrorStatus(false);
     WebRequest request = new GetMethodWebRequest("http://null/SafeNetServeContent?url=http%3A%2F%2Fdev-safenet.edina.ac.uk%2Ftest_journal%2F&auid=TestAU" );
     InvocationContext ic = sClient.newInvocation(request);
     SafeNetServeContent snsc = (SafeNetServeContent) ic.getServlet();
@@ -173,7 +186,7 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
     initServletRunner();
     pluginMgr.addAu(makeAu());
     entitlementRegistryClient.expectEntitled("0740-2783", "03bd5fc6-97f0-11e4-b270-8932ea886a12", "20140101", "20141231");
-    WebRequest request = new GetMethodWebRequest("http://null/SafeNetServeContent?url=http%3A%2F%2Fdev-safenet.edina.ac.uk%2Ftest_journal%2F&auid=TestAU" );
+    WebRequest request = new GetMethodWebRequest("http://null/SafeNetServeContent?url=http%3A%2F%2Fdev-safenet.edina.ac.uk%2Ftest_journal%2F" );
     InvocationContext ic = sClient.newInvocation(request);
     SafeNetServeContent snsc = (SafeNetServeContent) ic.getServlet();
 
@@ -187,7 +200,7 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
     pluginMgr.addAu(makeAu());
     entitlementRegistryClient.expectUnentitled("0740-2783", "03bd5fc6-97f0-11e4-b270-8932ea886a12", "20140101", "20141231");
     sClient.setExceptionsThrownOnErrorStatus(false);
-    WebRequest request = new GetMethodWebRequest("http://null/SafeNetServeContent?url=http%3A%2F%2Fdev-safenet.edina.ac.uk%2Ftest_journal%2F&auid=TestAU" );
+    WebRequest request = new GetMethodWebRequest("http://null/SafeNetServeContent?url=http%3A%2F%2Fdev-safenet.edina.ac.uk%2Ftest_journal%2F" );
     InvocationContext ic = sClient.newInvocation(request);
     SafeNetServeContent snsc = (SafeNetServeContent) ic.getServlet();
 
@@ -201,7 +214,7 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
     pluginMgr.addAu(makeAu());
     entitlementRegistryClient.expectError("0740-2783", "03bd5fc6-97f0-11e4-b270-8932ea886a12", "20140101", "20141231");
     sClient.setExceptionsThrownOnErrorStatus(false);
-    WebRequest request = new GetMethodWebRequest("http://null/SafeNetServeContent?url=http%3A%2F%2Fdev-safenet.edina.ac.uk%2Ftest_journal%2F&auid=TestAU" );
+    WebRequest request = new GetMethodWebRequest("http://null/SafeNetServeContent?url=http%3A%2F%2Fdev-safenet.edina.ac.uk%2Ftest_journal%2F" );
     InvocationContext ic = sClient.newInvocation(request);
     SafeNetServeContent snsc = (SafeNetServeContent) ic.getServlet();
 
@@ -217,7 +230,7 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
     props.setProperty("eissn", "");
     sClient.setExceptionsThrownOnErrorStatus(false);
     pluginMgr.addAu(makeAu(props));
-    WebRequest request = new GetMethodWebRequest("http://null/SafeNetServeContent?url=http%3A%2F%2Fdev-safenet.edina.ac.uk%2Ftest_journal%2F&auid=TestAU" );
+    WebRequest request = new GetMethodWebRequest("http://null/SafeNetServeContent?url=http%3A%2F%2Fdev-safenet.edina.ac.uk%2Ftest_journal%2F" );
     InvocationContext ic = sClient.newInvocation(request);
     SafeNetServeContent snsc = (SafeNetServeContent) ic.getServlet();
 
