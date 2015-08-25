@@ -72,6 +72,31 @@ public class BaseEntitlementRegistryClient extends BaseLockssManager implements 
     return false;
   }
 
+  public PublisherWorkflow getPublisherWorkflow(String publisherName) throws IOException {
+    Map<String, String> parameters = new HashMap<String, String>();
+    parameters.put("name", publisherName);
+    JsonNode publishers = callEntitlementRegistry("/publishers", parameters);
+    if (publishers != null) {
+      for(JsonNode publisher : publishers) {
+        JsonNode foundName = publisher.get("name");
+        if (foundName != null && foundName.asText().equals(publisherName)) {
+          JsonNode foundWorkflow = publisher.get("workflow");
+          if(foundWorkflow != null) {
+            try {
+              return Enum.valueOf(PublisherWorkflow.class, foundWorkflow.asText().toUpperCase());
+            }
+            catch (IllegalArgumentException e) {
+              // Valid request, but workflow didn't match ones we've implemented, which should never happen
+              throw new IOException("No valid workflow returned from entitlement registry");
+            }
+          }
+        }
+      }
+    }
+    // Valid request, but no valid workflow information was returned, which should never happen
+    throw new IOException("No valid workflow returned from entitlement registry");
+  }
+
   private JsonNode callEntitlementRegistry(String endpoint, Map<String, String> parameters) throws IOException {
     return callEntitlementRegistry(endpoint, mapToPairs(parameters));
   }

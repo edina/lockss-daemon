@@ -15,6 +15,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.message.BasicNameValuePair;
 
+import org.lockss.safenet.EntitlementRegistryClient.PublisherWorkflow;
 import org.lockss.test.ConfigurationUtil;
 import org.lockss.test.LockssTestCase;
 import org.lockss.test.MockLockssDaemon;
@@ -25,7 +26,8 @@ import org.lockss.util.urlconn.LockssUrlConnection;
 public class TestEntitlementRegistryClient extends LockssTestCase {
   private MockEntitlementRegistryClient client;
 
-  private Map<String,String> validParams;
+  private Map<String,String> validEntitlementParams;
+  private Map<String,String> validPublisherParams;
 
   public void setUp() throws Exception {
     super.setUp();
@@ -40,16 +42,19 @@ public class TestEntitlementRegistryClient extends LockssTestCase {
     client.initService(daemon);
     client.startService();
 
-    validParams = new HashMap<String, String>();
-    validParams.put("api_key", "00000000-0000-0000-0000-000000000000");
-    validParams.put("identifier_value", "0123-456X");
-    validParams.put("institution", "11111111-1111-1111-1111-111111111111");
-    validParams.put("start", "20120101");
-    validParams.put("end", "20151231");
+    validEntitlementParams = new HashMap<String, String>();
+    validEntitlementParams.put("api_key", "00000000-0000-0000-0000-000000000000");
+    validEntitlementParams.put("identifier_value", "0123-456X");
+    validEntitlementParams.put("institution", "11111111-1111-1111-1111-111111111111");
+    validEntitlementParams.put("start", "20120101");
+    validEntitlementParams.put("end", "20151231");
+
+    validPublisherParams = new HashMap<String, String>();
+    validPublisherParams.put("name", "Wiley");
   }
 
   public void testEntitlementRegistryError() throws Exception {
-    client.expectAndReturn("/entitlements", client.mapToPairs(validParams), 500, "Internal server error");
+    client.expectAndReturn("/entitlements", client.mapToPairs(validEntitlementParams), 500, "Internal server error");
 
     try {
       client.isUserEntitled("0123-456X", "11111111-1111-1111-1111-111111111111", "20120101", "20151231");
@@ -62,7 +67,7 @@ public class TestEntitlementRegistryClient extends LockssTestCase {
   }
 
   public void testEntitlementRegistryInvalidResponse() throws Exception {
-    client.expectAndReturn("/entitlements", client.mapToPairs(validParams), 200, "[]");
+    client.expectAndReturn("/entitlements", client.mapToPairs(validEntitlementParams), 200, "[]");
 
     try {
       client.isUserEntitled("0123-456X", "11111111-1111-1111-1111-111111111111", "20120101", "20151231");
@@ -75,7 +80,7 @@ public class TestEntitlementRegistryClient extends LockssTestCase {
   }
 
   public void testEntitlementRegistryInvalidJson() throws Exception {
-    client.expectAndReturn("/entitlements", client.mapToPairs(validParams), 200, "[{\"this\": isn't, JSON}]");
+    client.expectAndReturn("/entitlements", client.mapToPairs(validEntitlementParams), 200, "[{\"this\": isn't, JSON}]");
 
     try {
       client.isUserEntitled("0123-456X", "11111111-1111-1111-1111-111111111111", "20120101", "20151231");
@@ -88,7 +93,7 @@ public class TestEntitlementRegistryClient extends LockssTestCase {
   }
 
   public void testEntitlementRegistryUnexpectedJson() throws Exception {
-    client.expectAndReturn("/entitlements", client.mapToPairs(validParams), 200, "{\"surprise\": \"object\"}");
+    client.expectAndReturn("/entitlements", client.mapToPairs(validEntitlementParams), 200, "{\"surprise\": \"object\"}");
 
     try {
       client.isUserEntitled("0123-456X", "11111111-1111-1111-1111-111111111111", "20120101", "20151231");
@@ -101,18 +106,56 @@ public class TestEntitlementRegistryClient extends LockssTestCase {
   }
 
   public void testUserEntitled() throws Exception {
-    Map<String, String> responseParams = new HashMap<String,String>(validParams);
+    Map<String, String> responseParams = new HashMap<String,String>(validEntitlementParams);
     responseParams.remove("api_key");
-    client.expectAndReturn("/entitlements", client.mapToPairs(validParams), 200, "[" + client.mapToJson(responseParams) + "]");
+    client.expectAndReturn("/entitlements", client.mapToPairs(validEntitlementParams), 200, "[" + client.mapToJson(responseParams) + "]");
 
     assertTrue(client.isUserEntitled("0123-456X", "11111111-1111-1111-1111-111111111111", "20120101", "20151231"));
     client.checkDone();
   }
 
   public void testUserNotEntitled() throws Exception {
-    client.expectAndReturn("/entitlements", client.mapToPairs(validParams), 204, "");
+    client.expectAndReturn("/entitlements", client.mapToPairs(validEntitlementParams), 204, "");
 
     assertFalse(client.isUserEntitled("0123-456X", "11111111-1111-1111-1111-111111111111", "20120101", "20151231"));
+    client.checkDone();
+  }
+
+  public void testGetPublisherWorkflow() throws Exception {
+    Map<String, String> responseParams = new HashMap<String,String>(validPublisherParams);
+    responseParams.put("workflow", "primary_safenet");
+    client.expectAndReturn("/publishers", client.mapToPairs(validPublisherParams), 200, "[" + client.mapToJson(responseParams) + "]");
+
+    assertEquals(PublisherWorkflow.PRIMARY_SAFENET, client.getPublisherWorkflow("Wiley"));
+    client.checkDone();
+  }
+
+  public void testGetPublisherWorkflowMissingWorkflow() throws Exception {
+    Map<String, String> responseParams = new HashMap<String,String>(validPublisherParams);
+    client.expectAndReturn("/publishers", client.mapToPairs(validPublisherParams), 200, "[" + client.mapToJson(responseParams) + "]");
+
+    try {
+      assertEquals(PublisherWorkflow.PRIMARY_SAFENET, client.getPublisherWorkflow("Wiley"));
+      fail("Expected exception not thrown");
+    }
+    catch(IOException e) {
+      assertTrue(e.getMessage().startsWith("No valid workflow returned from entitlement registry"));
+    }
+    client.checkDone();
+  }
+
+  public void testGetPublisherWorkflowInvalidWorkflow() throws Exception {
+    Map<String, String> responseParams = new HashMap<String,String>(validPublisherParams);
+    responseParams.put("workflow", "gibberish");
+    client.expectAndReturn("/publishers", client.mapToPairs(validPublisherParams), 200, "[" + client.mapToJson(responseParams) + "]");
+
+    try {
+      assertEquals(PublisherWorkflow.PRIMARY_SAFENET, client.getPublisherWorkflow("Wiley"));
+      fail("Expected exception not thrown");
+    }
+    catch(IOException e) {
+      assertTrue(e.getMessage().startsWith("No valid workflow returned from entitlement registry"));
+    }
     client.checkDone();
   }
 
