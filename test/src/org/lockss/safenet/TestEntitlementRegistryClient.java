@@ -15,7 +15,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.message.BasicNameValuePair;
 
-import org.lockss.safenet.EntitlementRegistryClient.PublisherWorkflow;
+import org.lockss.safenet.PublisherWorkflow;
 import org.lockss.test.ConfigurationUtil;
 import org.lockss.test.LockssTestCase;
 import org.lockss.test.MockLockssDaemon;

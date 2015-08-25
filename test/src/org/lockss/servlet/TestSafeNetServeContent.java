@@ -58,7 +58,7 @@ import org.lockss.plugin.Plugin;
 import org.lockss.plugin.PluginManager;
 import org.lockss.safenet.BaseEntitlementRegistryClient;
 import org.lockss.safenet.EntitlementRegistryClient;
-import org.lockss.safenet.EntitlementRegistryClient.PublisherWorkflow;
+import org.lockss.safenet.PublisherWorkflow;
 import org.lockss.test.ConfigurationUtil;
 import org.lockss.test.MockArchivalUnit;
 import org.lockss.test.MockCachedUrl;
