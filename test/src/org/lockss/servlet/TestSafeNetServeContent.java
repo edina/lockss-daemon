@@ -41,6 +41,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Queue;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.ServletException;
 import org.lockss.app.LockssDaemon;
 import org.lockss.config.ConfigManager;
 import org.lockss.config.Tdb;
@@ -86,7 +90,7 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
     pluginMgr.startService();
 
     ConfigurationUtil.addFromArgs(ConfigManager.PARAM_PLATFORM_PROJECT, "safenet");
-    ConfigurationUtil.addFromArgs(SafeNetServeContent.PARAM_NEVER_PROXY, "true");
+    ConfigurationUtil.addFromArgs(SafeNetServeContent.PARAM_MISSING_FILE_ACTION, "Redirect");
     //ConfigurationUtil.addFromArgs("org.lockss.log.default.level", "debug3");
   }
 
@@ -131,6 +135,7 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
     super.initServletRunner();
     sRunner.setServletContextAttribute(ServletManager.CONTEXT_ATTR_SERVLET_MGR, new ContentServletManager());
     sRunner.registerServlet("/SafeNetServeContent", SafeNetServeContent.class.getName() );
+    sRunner.registerServlet("/test_journal/", RedirectServlet.class.getName());
   }
 
   public void testIndex() throws Exception {
@@ -160,8 +165,8 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
     SafeNetServeContent snsc = (SafeNetServeContent) ic.getServlet();
 
     WebResponse resp1 = sClient.getResponse(request);
-    assertEquals(404, resp1.getResponseCode());
-    assertTrue(resp1.getText().contains("<p>The requested URL is not preserved on this LOCKSS box. Select link<sup><font size=-1><a href=#foottag1>1</a></font></sup> to view it at the publisher:</p><a href=\"http://dev-safenet.edina.ac.uk/test_journal/\">http://dev-safenet.edina.ac.uk/test_journal/</a>"));
+    assertResponseOk(resp1);
+    assertEquals("<html><head><title>Blah</title></head><body>Redirected content</body></html>", resp1.getText());
   }
 
   public void testCachedUrl() throws Exception {
@@ -174,7 +179,7 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
 
     WebResponse resp1 = sClient.getResponse(request);
     assertResponseOk(resp1);
-    assertEquals("<html><head><title>Blah</title></head><body>Blah blah blah</body></html>", resp1.getText());
+    assertEquals("<html><head><title>Blah</title></head><body>Cached content</body></html>", resp1.getText());
   }
 
   public void testUnauthorisedUrl() throws Exception {
@@ -259,7 +264,7 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
         if(urls != null && urls.contains(url)) {
           MockCachedUrl cu = new MockCachedUrl(url, au);
           cu.addProperty(CachedUrl.PROPERTY_CONTENT_TYPE, "text/html");
-          cu.setContent("<html><head><title>Blah</title></head><body>Blah blah blah</body></html>");
+          cu.setContent("<html><head><title>Blah</title></head><body>Cached content</body></html>");
           return cu;
         }
       }
@@ -320,6 +325,12 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
       }
 
       return e.entitled;
+    }
+  }
+
+  public static class RedirectServlet extends HttpServlet {
+    public void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+      resp.getWriter().print("<html><head><title>Blah</title></head><body>Redirected content</body></html>");
     }
   }
 }
