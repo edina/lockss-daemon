@@ -62,7 +62,7 @@ import org.lockss.plugin.base.BaseUrlFetcher;
 import org.lockss.proxy.ProxyManager;
 import org.lockss.rewriter.LinkRewriterFactory;
 import org.lockss.safenet.EntitlementRegistryClient;
-import org.lockss.safenet.EntitlementRegistryClient.PublisherWorkflow;
+import org.lockss.safenet.PublisherWorkflow;
 import org.lockss.state.AuState;
 import org.lockss.util.*;
 import org.lockss.util.CloseCallbackInputStream.DeleteFileOnCloseInputStream;
