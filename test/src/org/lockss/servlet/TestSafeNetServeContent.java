@@ -33,6 +33,7 @@ in this Software without prior written authorization from Stanford University.
 package org.lockss.servlet;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,6 +46,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletException;
+
 import org.lockss.app.LockssDaemon;
 import org.lockss.config.ConfigManager;
 import org.lockss.config.Tdb;
@@ -56,12 +58,19 @@ import org.lockss.plugin.Plugin;
 import org.lockss.plugin.PluginManager;
 import org.lockss.safenet.BaseEntitlementRegistryClient;
 import org.lockss.safenet.EntitlementRegistryClient;
+import org.lockss.safenet.EntitlementRegistryClient.PublisherWorkflow;
 import org.lockss.test.ConfigurationUtil;
 import org.lockss.test.MockArchivalUnit;
 import org.lockss.test.MockCachedUrl;
 import org.lockss.test.MockLockssDaemon;
+import org.lockss.test.MockLockssUrlConnection;
 import org.lockss.test.MockNodeManager;
 import org.lockss.test.MockPlugin;
+import org.lockss.test.StringInputStream;
+import org.lockss.util.urlconn.LockssUrlConnection;
+import org.lockss.util.urlconn.LockssUrlConnectionPool;
+
+import org.apache.commons.collections.map.MultiKeyMap;
 import com.meterware.httpunit.WebRequest;
 import com.meterware.httpunit.WebResponse;
 import com.meterware.httpunit.WebTable;
@@ -110,7 +119,7 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
     tdbProps.setProperty("issn", "0740-2783");
     tdbProps.setProperty("eissn", "0740-2783");
     tdbProps.setProperty("attributes.year", "2014");
-    tdbProps.setProperty("attributes.publisher", "Publisher[10.0135/12345678]");
+    tdbProps.setProperty("attributes.publisher", "Wiley");
     tdbProps.setProperty("attributes.provider", "Provider[10.0135/12345678]");
 
     tdbProps.setProperty("param.1.key", "base_url");
@@ -134,7 +143,7 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
   protected void initServletRunner() {
     super.initServletRunner();
     sRunner.setServletContextAttribute(ServletManager.CONTEXT_ATTR_SERVLET_MGR, new ContentServletManager());
-    sRunner.registerServlet("/SafeNetServeContent", SafeNetServeContent.class.getName() );
+    sRunner.registerServlet("/SafeNetServeContent", MockSafeNetServeContent.class.getName() );
     sRunner.registerServlet("/test_journal/", RedirectServlet.class.getName());
   }
 
@@ -182,10 +191,41 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
     assertEquals("<html><head><title>Blah</title></head><body>Redirected content</body></html>", resp1.getText());
   }
 
-  public void testCachedUrl() throws Exception {
+  public void testCachedUrlPrimaryPublisherResponse() throws Exception {
     initServletRunner();
     pluginMgr.addAu(makeAu());
     entitlementRegistryClient.expectEntitled("0740-2783", "03bd5fc6-97f0-11e4-b270-8932ea886a12", "20140101", "20141231");
+    entitlementRegistryClient.expectWorkflow("Wiley", PublisherWorkflow.PRIMARY_PUBLISHER);
+    WebRequest request = new GetMethodWebRequest("http://null/SafeNetServeContent?url=http%3A%2F%2Fdev-safenet.edina.ac.uk%2Ftest_journal%2F" );
+    InvocationContext ic = sClient.newInvocation(request);
+    MockSafeNetServeContent snsc = (MockSafeNetServeContent) ic.getServlet();
+    snsc.expectValidRequest("http://dev-safenet.edina.ac.uk/test_journal/");
+
+    WebResponse resp1 = sClient.getResponse(request);
+    assertResponseOk(resp1);
+    assertEquals("<html><head><title>Blah</title></head><body>Fetched content</body></html>", resp1.getText());
+  }
+
+  public void testCachedUrlPrimaryPublisherError() throws Exception {
+    initServletRunner();
+    pluginMgr.addAu(makeAu());
+    entitlementRegistryClient.expectEntitled("0740-2783", "03bd5fc6-97f0-11e4-b270-8932ea886a12", "20140101", "20141231");
+    entitlementRegistryClient.expectWorkflow("Wiley", PublisherWorkflow.PRIMARY_PUBLISHER);
+    WebRequest request = new GetMethodWebRequest("http://null/SafeNetServeContent?url=http%3A%2F%2Fdev-safenet.edina.ac.uk%2Ftest_journal%2F" );
+    InvocationContext ic = sClient.newInvocation(request);
+    MockSafeNetServeContent snsc = (MockSafeNetServeContent) ic.getServlet();
+    snsc.expectErrorRequest("http://dev-safenet.edina.ac.uk/test_journal/");
+
+    WebResponse resp1 = sClient.getResponse(request);
+    assertResponseOk(resp1);
+    assertEquals("<html><head><title>Blah</title></head><body>Cached content</body></html>", resp1.getText());
+  }
+
+  public void testCachedUrlPrimarySafenet() throws Exception {
+    initServletRunner();
+    pluginMgr.addAu(makeAu());
+    entitlementRegistryClient.expectEntitled("0740-2783", "03bd5fc6-97f0-11e4-b270-8932ea886a12", "20140101", "20141231");
+    entitlementRegistryClient.expectWorkflow("Wiley", PublisherWorkflow.PRIMARY_SAFENET);
     WebRequest request = new GetMethodWebRequest("http://null/SafeNetServeContent?url=http%3A%2F%2Fdev-safenet.edina.ac.uk%2Ftest_journal%2F" );
     InvocationContext ic = sClient.newInvocation(request);
     SafeNetServeContent snsc = (SafeNetServeContent) ic.getServlet();
@@ -193,6 +233,21 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
     WebResponse resp1 = sClient.getResponse(request);
     assertResponseOk(resp1);
     assertEquals("<html><head><title>Blah</title></head><body>Cached content</body></html>", resp1.getText());
+  }
+
+  public void testCachedUrlLibraryNotification() throws Exception {
+    initServletRunner();
+    pluginMgr.addAu(makeAu());
+    entitlementRegistryClient.expectEntitled("0740-2783", "03bd5fc6-97f0-11e4-b270-8932ea886a12", "20140101", "20141231");
+    entitlementRegistryClient.expectWorkflow("Wiley", PublisherWorkflow.LIBRARY_NOTIFICATION);
+    sClient.setExceptionsThrownOnErrorStatus(false);
+    WebRequest request = new GetMethodWebRequest("http://null/SafeNetServeContent?url=http%3A%2F%2Fdev-safenet.edina.ac.uk%2Ftest_journal%2F" );
+    InvocationContext ic = sClient.newInvocation(request);
+    SafeNetServeContent snsc = (SafeNetServeContent) ic.getServlet();
+
+    WebResponse resp1 = sClient.getResponse(request);
+    assertEquals(403, resp1.getResponseCode());
+    assertTrue(resp1.getText().contains("<p>You are not authorised to access the requested URL on this LOCKSS box. Select link<sup><font size=-1><a href=#foottag1>1</a></font></sup> to view it at the publisher:</p><a href=\"http://dev-safenet.edina.ac.uk/test_journal/\">http://dev-safenet.edina.ac.uk/test_journal/</a>"));
   }
 
   public void testUnauthorisedUrl() throws Exception {
@@ -286,64 +341,105 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
   }
 
   private static class MockEntitlementRegistryClient extends BaseEntitlementRegistryClient {
-    private static class Expectation {
-      private String issn;
-      private String institution;
-      private String start;
-      private String end;
-      private boolean entitled;
-      private IOException exception;
-    }
-
     public void expectEntitled(String issn, String institution, String start, String end) {
-      Expectation e = new Expectation();
-      e.issn = issn;
-      e.institution = institution;
-      e.start = start;
-      e.end = end;
-      e.entitled = true;
-      expected.add(e);
+      entitlements.put(issn, institution, start, end, true);
     }
 
     public void expectUnentitled(String issn, String institution, String start, String end) {
-      Expectation e = new Expectation();
-      e.issn = issn;
-      e.institution = institution;
-      e.start = start;
-      e.end = end;
-      e.entitled = false;
-      expected.add(e);
+      entitlements.put(issn, institution, start, end, false);
     }
 
     public void expectError(String issn, String institution, String start, String end) {
-      Expectation e = new Expectation();
-      e.issn = issn;
-      e.institution = institution;
-      e.start = start;
-      e.end = end;
-      e.exception = new IOException("Could not contact entitlement registry");
-      expected.add(e);
+      entitlements.put(issn, institution, start, end, new IOException("Could not contact entitlement registry"));
     }
 
-    private Queue<Expectation> expected = new LinkedList<Expectation>();
+    public void expectWorkflow(String publisher, PublisherWorkflow workflow) {
+      workflows.put(publisher, workflow);
+    }
 
+    private MultiKeyMap entitlements = new MultiKeyMap();
+    private Map<String, Object> workflows = new HashMap<String, Object>();
+
+    @Override
     public boolean isUserEntitled(String issn, String institution, String start, String end) throws IOException {
-      Expectation e = expected.poll();
-      assertEquals(e.issn, issn);
-      assertEquals(e.institution, institution);
-      assertEquals(e.start, start);
-      assertEquals(e.end, end);
-      if(e.exception != null) {
-        throw e.exception;
+      Object result = entitlements.get(issn, institution, start, end);
+      if (result instanceof IOException) {
+        throw (IOException) result;
       }
+      return (Boolean) result;
+    }
 
-      return e.entitled;
+    @Override
+    public PublisherWorkflow getPublisherWorkflow(String publisher) throws IOException {
+      Object result = workflows.get(publisher);
+      if (result instanceof IOException) {
+        throw (IOException) result;
+      }
+      return (PublisherWorkflow) result;
     }
   }
 
   public static class RedirectServlet extends HttpServlet {
     public void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
       resp.getWriter().print("<html><head><title>Blah</title></head><body>Redirected content</body></html>");
+    }
+  }
+  public static class MyMockLockssUrlConnection extends MockLockssUrlConnection {
+    private String response;
+
+    public MyMockLockssUrlConnection(String url) throws IOException {
+      super(url);
+    }
+
+    public void addRequestProperty(String key, String value) {
+      setRequestProperty(key, value);
+    }
+
+    public void setCookiePolicy(String policy) {
+      return;
+    }
+
+    public void setResponse(String response) {
+      this.response = response;
+    }
+
+    public InputStream getResponseInputStream() {
+      return new StringInputStream(response);
+    }
+
+    public long getResponseContentLength() {
+      return response.length();
+    }
+
+    public String getResponseHeaderFieldKey(int n) {
+      return null;
+    }
+
+    public String getResponseHeaderFieldVal(int n) {
+      return null;
+    }
+  }
+
+  public static class MockSafeNetServeContent extends SafeNetServeContent {
+    private Map<String, MyMockLockssUrlConnection> responses = new HashMap<String, MyMockLockssUrlConnection>();
+
+    public void expectValidRequest(String url) throws IOException {
+      MyMockLockssUrlConnection connection = new MyMockLockssUrlConnection(url);
+      connection.setResponseCode(200);
+      connection.setResponse("<html><head><title>Blah</title></head><body>Fetched content</body></html>");
+      responses.put(url, connection);
+    }
+
+    public void expectErrorRequest(String url) throws IOException {
+      MyMockLockssUrlConnection connection = new MyMockLockssUrlConnection(url);
+      connection.setResponseCode(403);
+      connection.setResponse("<html><head><title>Blah</title></head><body>Content refused</body></html>");
+      responses.put(url, connection);
+    }
+
+    protected LockssUrlConnection openConnection(String url, LockssUrlConnectionPool pool) throws IOException {
+      System.out.println(url);
+      return responses.get(url);
     }
   }
 }
