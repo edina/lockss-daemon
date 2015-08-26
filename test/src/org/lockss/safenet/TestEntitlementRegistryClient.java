@@ -135,7 +135,7 @@ public class TestEntitlementRegistryClient extends LockssTestCase {
     client.expectAndReturn("/publishers", client.mapToPairs(validPublisherParams), 200, "[" + client.mapToJson(responseParams) + "]");
 
     try {
-      assertEquals(PublisherWorkflow.PRIMARY_SAFENET, client.getPublisherWorkflow("Wiley"));
+      client.getPublisherWorkflow("Wiley");
       fail("Expected exception not thrown");
     }
     catch(IOException e) {
@@ -150,7 +150,7 @@ public class TestEntitlementRegistryClient extends LockssTestCase {
     client.expectAndReturn("/publishers", client.mapToPairs(validPublisherParams), 200, "[" + client.mapToJson(responseParams) + "]");
 
     try {
-      assertEquals(PublisherWorkflow.PRIMARY_SAFENET, client.getPublisherWorkflow("Wiley"));
+      client.getPublisherWorkflow("Wiley");
       fail("Expected exception not thrown");
     }
     catch(IOException e) {
