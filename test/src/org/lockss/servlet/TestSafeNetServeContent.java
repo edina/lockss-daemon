@@ -391,30 +391,36 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
       super(url);
     }
 
-    public void addRequestProperty(String key, String value) {
-      setRequestProperty(key, value);
-    }
-
-    public void setCookiePolicy(String policy) {
-      return;
-    }
-
     public void setResponse(String response) {
       this.response = response;
     }
 
+    @Override
+    public void addRequestProperty(String key, String value) {
+      setRequestProperty(key, value);
+    }
+
+    @Override
+    public void setCookiePolicy(String policy) {
+      return;
+    }
+
+    @Override
     public InputStream getResponseInputStream() {
       return new StringInputStream(response);
     }
 
+    @Override
     public long getResponseContentLength() {
       return response.length();
     }
 
+    @Override
     public String getResponseHeaderFieldKey(int n) {
       return null;
     }
 
+    @Override
     public String getResponseHeaderFieldVal(int n) {
       return null;
     }
@@ -438,7 +444,6 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
     }
 
     protected LockssUrlConnection openConnection(String url, LockssUrlConnectionPool pool) throws IOException {
-      System.out.println(url);
       return responses.get(url);
     }
   }
