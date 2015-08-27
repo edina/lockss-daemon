@@ -612,12 +612,37 @@ public class SafeNetServeContent extends LockssServlet {
 
         }
       } else if (!isMementoRequest()) {
-        // Find a CU with content if possible.  If none, find an AU where
+        // Find a CU that the user is entitled to access, and with content if possible.  If none, find an AU where
         // it would fit so can rewrite content from publisher if necessary.
-        cu = pluginMgr.findCachedUrl(url, CuContentReq.PreferContent);
-        if (cu != null) {
-          au = cu.getArchivalUnit();
-          if (log.isDebug3()) log.debug3("cu: " + cu + " au: " + au);
+        List<CachedUrl> cachedUrls = pluginMgr.findCachedUrls(url, CuContentReq.PreferContent);
+        if(cachedUrls != null && !cachedUrls.isEmpty()) {
+          for(CachedUrl cachedUrl: cachedUrls) {
+            try {
+              if(isUserEntitled(cachedUrl.getArchivalUnit())) {
+                cu = cachedUrl;
+                au = cu.getArchivalUnit();
+                if (log.isDebug3()) log.debug3("cu: " + cu + " au: " + au);
+                break;
+              }
+            }
+            catch (IOException e) {
+              // We can't communicate with the ER, so we have to assume that we can't give the user access to the content at the moment
+              log.error("Error communicating with entitlement registry: " + e);
+              handleEntitlementRegistryErrorUrlRequest(url);
+              return;
+            }
+            catch (IllegalArgumentException e) {
+              // We don't have enough information about the AU to determine if the user is entitled, but there's nothing they can do about it
+              log.error("Error with AU configuration: " + e);
+              handleMissingUrlRequest(url, PubState.KnownDown);
+              return;
+            }
+          }
+          if(cu == null) {
+            // We found at least one CachedUrl, which means the content is preserved, but the user wasn't entitled to any of them
+            handleUnauthorisedUrlRequest(url);
+            return;
+          }
         }
       } else {
 	/*
