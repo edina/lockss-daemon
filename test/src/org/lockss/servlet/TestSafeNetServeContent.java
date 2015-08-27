@@ -294,6 +294,26 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
     assertTrue(resp1.getText().contains("<p>The requested URL is not preserved on this LOCKSS box. Select link<sup><font size=-1><a href=#foottag1>1</a></font></sup> to view it at the publisher:</p><a href=\"http://dev-safenet.edina.ac.uk/test_journal/\">http://dev-safenet.edina.ac.uk/test_journal/</a>"));
   }
 
+  public void testCachedUrlMultipleAUs() throws Exception {
+    initServletRunner();
+    pluginMgr.addAu(makeAu());
+    Properties props = new Properties();
+    props.setProperty("issn", "0000-0000");
+    props.setProperty("eissn", "0000-0000");
+    pluginMgr.addAu(makeAu(props));
+    entitlementRegistryClient.expectUnentitled("0740-2783", "03bd5fc6-97f0-11e4-b270-8932ea886a12", "20140101", "20141231");
+    entitlementRegistryClient.expectEntitled("0000-0000", "03bd5fc6-97f0-11e4-b270-8932ea886a12", "20140101", "20141231");
+    entitlementRegistryClient.expectWorkflow("Wiley", PublisherWorkflow.PRIMARY_PUBLISHER);
+    WebRequest request = new GetMethodWebRequest("http://null/SafeNetServeContent?url=http%3A%2F%2Fdev-safenet.edina.ac.uk%2Ftest_journal%2F" );
+    InvocationContext ic = sClient.newInvocation(request);
+    MockSafeNetServeContent snsc = (MockSafeNetServeContent) ic.getServlet();
+    snsc.expectValidRequest("http://dev-safenet.edina.ac.uk/test_journal/");
+
+    WebResponse resp1 = sClient.getResponse(request);
+    assertResponseOk(resp1);
+    assertEquals("<html><head><title>Blah</title></head><body>Fetched content</body></html>", resp1.getText());
+  }
+
   private static class MockPluginManager extends PluginManager {
     private Map<ArchivalUnit, List<String>> aus;
     private MockLockssDaemon theDaemon;
@@ -321,22 +341,23 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
     }
 
     @Override
-    public CachedUrl findCachedUrl(String url, CuContentReq req) {
-      return this.findCachedUrl(url);
+    public List<CachedUrl> findCachedUrls(String url, CuContentReq req) {
+      return this.findCachedUrls(url);
     }
 
     @Override
-    public CachedUrl findCachedUrl(String url) {
+    public List<CachedUrl> findCachedUrls(String url) {
+      List<CachedUrl> cached = new ArrayList<CachedUrl>();
       for(ArchivalUnit au : aus.keySet()) {
         List<String> urls = aus.get(au);
         if(urls != null && urls.contains(url)) {
           MockCachedUrl cu = new MockCachedUrl(url, au);
           cu.addProperty(CachedUrl.PROPERTY_CONTENT_TYPE, "text/html");
           cu.setContent("<html><head><title>Blah</title></head><body>Cached content</body></html>");
-          return cu;
+          cached.add(cu);
         }
       }
-      return null;
+      return cached;
     }
   }
 
@@ -364,7 +385,7 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
     public boolean isUserEntitled(String issn, String institution, String start, String end) throws IOException {
       Object result = entitlements.get(issn, institution, start, end);
       if (result instanceof IOException) {
-        throw (IOException) result;
+        throw new IOException(((IOException) result).getMessage());
       }
       return (Boolean) result;
     }
