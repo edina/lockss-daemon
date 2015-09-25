@@ -2,7 +2,11 @@ package org.lockss.safenet;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +34,7 @@ public class BaseEntitlementRegistryClient extends BaseLockssManager implements 
   static final String DEFAULT_ER_URI = "";
   public static final String PARAM_ER_APIKEY = PREFIX + "apiKey";
   static final String DEFAULT_ER_APIKEY = "";
+  private static final DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
 
   private ObjectMapper objectMapper;
   private String erUri;
@@ -70,6 +75,60 @@ public class BaseEntitlementRegistryClient extends BaseLockssManager implements 
 
     //Valid request, no entitlements found
     return false;
+  }
+
+  private Date extractDate(String value) throws IOException {
+      if ( value == null || value.equals("null")) {
+          return null;
+      }
+      try {
+          return dateFormat.parse(value);
+      }
+      catch ( ParseException e ) {
+          throw new IOException("Could not parse date " + value);
+      }
+  }
+  private Date extractDate(JsonNode node, String key) throws IOException {
+      JsonNode value = node.get(key);
+      if ( value == null ) {
+          return null;
+      }
+      return extractDate(value.asText());
+  }
+
+  public String getPublisher(String issn, String start, String end) throws IOException {
+    Map<String, String> parameters = new HashMap<String, String>();
+    parameters.put("identifier", issn);
+    Date startDate = extractDate(start);
+    Date endDate = extractDate(end);
+    JsonNode titles = callEntitlementRegistry("/titles", parameters);
+    if (titles != null) {
+      List<String> foundPublishers = new ArrayList<String>();
+      for(JsonNode title : titles) {
+        JsonNode publishers = title.get("publishers");
+        for(JsonNode publisher : publishers) {
+          Date foundStartDate = extractDate(publisher, "start");
+          Date foundEndDate = extractDate(publisher, "end");
+
+          if ( foundStartDate != null && ( startDate == null || foundStartDate.after(startDate) ) ) {
+              continue;
+          }
+          if ( foundEndDate != null && ( endDate == null || foundEndDate.before(endDate) ) ) {
+              continue;
+          }
+          foundPublishers.add(publisher.get("id").asText());
+        }
+      }
+      if (foundPublishers.size() > 1) {
+        // Valid request, but there are multiple publishers for the date range, which should never happen
+        throw new IOException("Multiple matching publishers returned from entitlement registry");
+      }
+      if (foundPublishers.size() == 1) {
+          return foundPublishers.get(0);
+      }
+    }
+    // Valid request, no publisher found
+    return null;
   }
 
   public PublisherWorkflow getPublisherWorkflow(String publisherName) throws IOException {

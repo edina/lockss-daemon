@@ -2160,12 +2160,13 @@ public class SafeNetServeContent extends LockssServlet {
   }
 
   boolean isUserEntitled(ArchivalUnit au) throws IOException, IllegalArgumentException {
+      String institution = "03bd5fc6-97f0-11e4-b270-8932ea886a12";
+
       TdbAu tdbAu = au.getTdbAu();
       String issn = tdbAu.getIssn();
       if(StringUtil.isNullString(issn)) {
         throw new IllegalArgumentException("ArchivalUnit has no ISSN");
       }
-      String institution = "03bd5fc6-97f0-11e4-b270-8932ea886a12";
       String start = tdbAu.getStartYear() + "0101";
       String end = tdbAu.getEndYear() + "1231";
 
@@ -2174,9 +2175,16 @@ public class SafeNetServeContent extends LockssServlet {
 
   PublisherWorkflow getPublisherWorkflow(ArchivalUnit au) throws IOException, IllegalArgumentException {
       TdbAu tdbAu = au.getTdbAu();
-      String publisher = tdbAu.getPublisherName();
+      String issn = tdbAu.getIssn();
+      if(StringUtil.isNullString(issn)) {
+        throw new IllegalArgumentException("ArchivalUnit has no ISSN");
+      }
+      String start = tdbAu.getStartYear() + "0101";
+      String end = tdbAu.getEndYear() + "1231";
+
+      String publisher = entitlementRegistry.getPublisher(issn, start, end);
       if(StringUtil.isNullString(publisher)) {
-        throw new IllegalArgumentException("ArchivalUnit has no publisher");
+        throw new IllegalArgumentException("No publisher found");
       }
 
       return entitlementRegistry.getPublisherWorkflow(publisher);

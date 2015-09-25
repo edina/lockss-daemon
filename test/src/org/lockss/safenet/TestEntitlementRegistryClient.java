@@ -121,6 +121,103 @@ public class TestEntitlementRegistryClient extends LockssTestCase {
     client.checkDone();
   }
 
+  public void testGetPublisher() throws Exception {
+    Map<String, String> queryParams = new HashMap<String, String>();
+    queryParams.put("identifier", "0123-456X");
+    Map<String, String> publisher = new HashMap<String, String>();
+    publisher.put("id", "33333333-0000-0000-0000-000000000000");
+    publisher.put("start", null);
+    publisher.put("end", null);
+    List<Map<String, String>> publishers = new ArrayList<Map<String, String>>();
+    publishers.add(publisher);
+    Map<String, Object> responseParams = new HashMap<String, Object>();
+    responseParams.put("publishers", publishers);
+
+    client.expectAndReturn("/titles", client.mapToPairs(queryParams), 200, "[" + client.mapToJson(responseParams) + "]");
+    assertEquals("33333333-0000-0000-0000-000000000000", client.getPublisher("0123-456X", "20120101", "20151231"));
+
+    client.expectAndReturn("/titles", client.mapToPairs(queryParams), 200, "[" + client.mapToJson(responseParams) + "]");
+    assertEquals("33333333-0000-0000-0000-000000000000", client.getPublisher("0123-456X", null, "20151231"));
+
+    client.expectAndReturn("/titles", client.mapToPairs(queryParams), 200, "[" + client.mapToJson(responseParams) + "]");
+    assertEquals("33333333-0000-0000-0000-000000000000", client.getPublisher("0123-456X", "20120101", null));
+
+    client.expectAndReturn("/titles", client.mapToPairs(queryParams), 200, "[" + client.mapToJson(responseParams) + "]");
+    assertEquals("33333333-0000-0000-0000-000000000000", client.getPublisher("0123-456X", null, null));
+
+    publisher.put("start", "20120101");
+    publisher.put("end", "20151231");
+
+    client.expectAndReturn("/titles", client.mapToPairs(queryParams), 200, "[" + client.mapToJson(responseParams) + "]");
+    assertEquals("33333333-0000-0000-0000-000000000000", client.getPublisher("0123-456X", "20120101", "20151231"));
+
+    client.expectAndReturn("/titles", client.mapToPairs(queryParams), 200, "[" + client.mapToJson(responseParams) + "]");
+    assertEquals(null, client.getPublisher("0123-456X", "20111231", "20151231"));
+
+    client.expectAndReturn("/titles", client.mapToPairs(queryParams), 200, "[" + client.mapToJson(responseParams) + "]");
+    assertEquals(null, client.getPublisher("0123-456X", "20120101", "20160101"));
+
+    client.expectAndReturn("/titles", client.mapToPairs(queryParams), 200, "[" + client.mapToJson(responseParams) + "]");
+    assertEquals("33333333-0000-0000-0000-000000000000", client.getPublisher("0123-456X", "20120102", "20151230"));
+
+    client.expectAndReturn("/titles", client.mapToPairs(queryParams), 200, "[" + client.mapToJson(responseParams) + "]");
+    assertEquals(null, client.getPublisher("0123-456X", null, "20151231"));
+
+    client.expectAndReturn("/titles", client.mapToPairs(queryParams), 200, "[" + client.mapToJson(responseParams) + "]");
+    assertEquals(null, client.getPublisher("0123-456X", "20120101", null));
+
+    client.expectAndReturn("/titles", client.mapToPairs(queryParams), 200, "[" + client.mapToJson(responseParams) + "]");
+    assertEquals(null, client.getPublisher("0123-456X", null, null));
+
+    client.checkDone();
+  }
+
+  public void testGetPublisherNoResponse() throws Exception {
+    Map<String, String> queryParams = new HashMap<String, String>();
+    queryParams.put("identifier", "0123-456X");
+    client.expectAndReturn("/titles", client.mapToPairs(queryParams), 200, "[]");
+    assertEquals(null, client.getPublisher("0123-456X", "20120101", "20151231"));
+  }
+
+  public void testGetPublisherMultipleResponses() throws Exception {
+    Map<String, String> queryParams = new HashMap<String, String>();
+    queryParams.put("identifier", "0123-456X");
+    Map<String, String> publisher = new HashMap<String, String>();
+    publisher.put("id", "33333333-0000-0000-0000-000000000000");
+    publisher.put("start", "20120101");
+    publisher.put("end", "20151231");
+    Map<String, String> publisher2 = new HashMap<String, String>();
+    publisher2.put("id", "33333333-1111-1111-1111-111111111111");
+    publisher2.put("start", "20160101");
+    publisher2.put("end", null);
+    List<Map<String, String>> publishers = new ArrayList<Map<String, String>>();
+    publishers.add(publisher);
+    publishers.add(publisher2);
+    Map<String, Object> responseParams = new HashMap<String, Object>();
+    responseParams.put("publishers", publishers);
+
+    client.expectAndReturn("/titles", client.mapToPairs(queryParams), 200, "[" + client.mapToJson(responseParams) + "]");
+    assertEquals("33333333-0000-0000-0000-000000000000", client.getPublisher("0123-456X", "20150101", "20151231"));
+
+    client.expectAndReturn("/titles", client.mapToPairs(queryParams), 200, "[" + client.mapToJson(responseParams) + "]");
+    assertEquals("33333333-1111-1111-1111-111111111111", client.getPublisher("0123-456X", "20160101", "20161231"));
+
+    client.expectAndReturn("/titles", client.mapToPairs(queryParams), 200, "[" + client.mapToJson(responseParams) + "]");
+    assertEquals(null, client.getPublisher("0123-456X", "20150101", "20161231"));
+
+    publisher2.put("start", null);
+    client.expectAndReturn("/titles", client.mapToPairs(queryParams), 200, "[" + client.mapToJson(responseParams) + "]");
+    try {
+      client.getPublisher("0123-456X", "20150101", "20151231");
+      fail("Expected exception not thrown");
+    }
+    catch (IOException e) {
+      assertEquals("Multiple matching publishers returned from entitlement registry", e.getMessage());
+    }
+
+    client.checkDone();
+  }
+
   public void testGetPublisherWorkflow() throws Exception {
     Map<String, String> responseParams = new HashMap<String,String>(validPublisherParams);
     responseParams.put("workflow", "primary_safenet");
@@ -200,7 +297,7 @@ public class TestEntitlementRegistryClient extends LockssTestCase {
       }
     }
 
-    public String mapToJson(Map<String, String> params) throws IOException {
+    public String mapToJson(Map<String, ? extends Object> params) throws IOException {
       ObjectMapper mapper = new ObjectMapper();
       return mapper.writeValueAsString(params);
     }

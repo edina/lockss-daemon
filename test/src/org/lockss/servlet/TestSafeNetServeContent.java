@@ -195,7 +195,8 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
     initServletRunner();
     pluginMgr.addAu(makeAu());
     entitlementRegistryClient.expectEntitled("0740-2783", "03bd5fc6-97f0-11e4-b270-8932ea886a12", "20140101", "20141231");
-    entitlementRegistryClient.expectWorkflow("Wiley", PublisherWorkflow.PRIMARY_PUBLISHER);
+    entitlementRegistryClient.expectPublisher("0740-2783", "20140101", "20141231", "33333333-0000-0000-0000-000000000000");
+    entitlementRegistryClient.expectWorkflow("33333333-0000-0000-0000-000000000000", PublisherWorkflow.PRIMARY_PUBLISHER);
     WebRequest request = new GetMethodWebRequest("http://null/SafeNetServeContent?url=http%3A%2F%2Fdev-safenet.edina.ac.uk%2Ftest_journal%2F" );
     InvocationContext ic = sClient.newInvocation(request);
     MockSafeNetServeContent snsc = (MockSafeNetServeContent) ic.getServlet();
@@ -210,7 +211,8 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
     initServletRunner();
     pluginMgr.addAu(makeAu());
     entitlementRegistryClient.expectEntitled("0740-2783", "03bd5fc6-97f0-11e4-b270-8932ea886a12", "20140101", "20141231");
-    entitlementRegistryClient.expectWorkflow("Wiley", PublisherWorkflow.PRIMARY_PUBLISHER);
+    entitlementRegistryClient.expectPublisher("0740-2783", "20140101", "20141231", "33333333-0000-0000-0000-000000000000");
+    entitlementRegistryClient.expectWorkflow("33333333-0000-0000-0000-000000000000", PublisherWorkflow.PRIMARY_PUBLISHER);
     WebRequest request = new GetMethodWebRequest("http://null/SafeNetServeContent?url=http%3A%2F%2Fdev-safenet.edina.ac.uk%2Ftest_journal%2F" );
     InvocationContext ic = sClient.newInvocation(request);
     MockSafeNetServeContent snsc = (MockSafeNetServeContent) ic.getServlet();
@@ -225,7 +227,8 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
     initServletRunner();
     pluginMgr.addAu(makeAu());
     entitlementRegistryClient.expectEntitled("0740-2783", "03bd5fc6-97f0-11e4-b270-8932ea886a12", "20140101", "20141231");
-    entitlementRegistryClient.expectWorkflow("Wiley", PublisherWorkflow.PRIMARY_SAFENET);
+    entitlementRegistryClient.expectPublisher("0740-2783", "20140101", "20141231", "33333333-0000-0000-0000-000000000000");
+    entitlementRegistryClient.expectWorkflow("33333333-0000-0000-0000-000000000000", PublisherWorkflow.PRIMARY_SAFENET);
     WebRequest request = new GetMethodWebRequest("http://null/SafeNetServeContent?url=http%3A%2F%2Fdev-safenet.edina.ac.uk%2Ftest_journal%2F" );
     InvocationContext ic = sClient.newInvocation(request);
     SafeNetServeContent snsc = (SafeNetServeContent) ic.getServlet();
@@ -239,7 +242,8 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
     initServletRunner();
     pluginMgr.addAu(makeAu());
     entitlementRegistryClient.expectEntitled("0740-2783", "03bd5fc6-97f0-11e4-b270-8932ea886a12", "20140101", "20141231");
-    entitlementRegistryClient.expectWorkflow("Wiley", PublisherWorkflow.LIBRARY_NOTIFICATION);
+    entitlementRegistryClient.expectPublisher("0740-2783", "20140101", "20141231", "33333333-0000-0000-0000-000000000000");
+    entitlementRegistryClient.expectWorkflow("33333333-0000-0000-0000-000000000000", PublisherWorkflow.LIBRARY_NOTIFICATION);
     sClient.setExceptionsThrownOnErrorStatus(false);
     WebRequest request = new GetMethodWebRequest("http://null/SafeNetServeContent?url=http%3A%2F%2Fdev-safenet.edina.ac.uk%2Ftest_journal%2F" );
     InvocationContext ic = sClient.newInvocation(request);
@@ -303,7 +307,8 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
     pluginMgr.addAu(makeAu(props));
     entitlementRegistryClient.expectUnentitled("0740-2783", "03bd5fc6-97f0-11e4-b270-8932ea886a12", "20140101", "20141231");
     entitlementRegistryClient.expectEntitled("0000-0000", "03bd5fc6-97f0-11e4-b270-8932ea886a12", "20140101", "20141231");
-    entitlementRegistryClient.expectWorkflow("Wiley", PublisherWorkflow.PRIMARY_PUBLISHER);
+    entitlementRegistryClient.expectPublisher("0000-0000", "20140101", "20141231", "33333333-0000-0000-0000-000000000000");
+    entitlementRegistryClient.expectWorkflow("33333333-0000-0000-0000-00000000000000", PublisherWorkflow.PRIMARY_PUBLISHER);
     WebRequest request = new GetMethodWebRequest("http://null/SafeNetServeContent?url=http%3A%2F%2Fdev-safenet.edina.ac.uk%2Ftest_journal%2F" );
     InvocationContext ic = sClient.newInvocation(request);
     MockSafeNetServeContent snsc = (MockSafeNetServeContent) ic.getServlet();
@@ -378,7 +383,12 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
       workflows.put(publisher, workflow);
     }
 
+    public void expectPublisher(String issn, String start, String end, String publisher) {
+      publishers.put(issn, start, end, publisher);
+    }
+
     private MultiKeyMap entitlements = new MultiKeyMap();
+    private MultiKeyMap publishers = new MultiKeyMap();
     private Map<String, Object> workflows = new HashMap<String, Object>();
 
     @Override
@@ -397,6 +407,15 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
         throw (IOException) result;
       }
       return (PublisherWorkflow) result;
+    }
+
+    @Override
+    public String getPublisher(String issn, String start, String end) throws IOException {
+      Object result = publishers.get(issn, start, end);
+      if (result instanceof IOException) {
+        throw new IOException(((IOException) result).getMessage());
+      }
+      return (String) result;
     }
   }
 
