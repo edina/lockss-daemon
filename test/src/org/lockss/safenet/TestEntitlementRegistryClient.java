@@ -14,6 +14,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.message.BasicNameValuePair;
+import org.mockito.Mockito;
 
 import org.lockss.safenet.PublisherWorkflow;
 import org.lockss.test.ConfigurationUtil;
@@ -24,14 +25,14 @@ import org.lockss.test.StringInputStream;
 import org.lockss.util.urlconn.LockssUrlConnection;
 
 public class TestEntitlementRegistryClient extends LockssTestCase {
-  private MyMockEntitlementRegistryClient client;
+  private BaseEntitlementRegistryClient client;
 
   private Map<String,String> validEntitlementParams;
   private Map<String,String> validPublisherParams;
 
   public void setUp() throws Exception {
     super.setUp();
-    client = new MyMockEntitlementRegistryClient();
+    client = Mockito.spy(new BaseEntitlementRegistryClient());
     MockLockssDaemon daemon = getMockLockssDaemon();
     daemon.setEntitlementRegistryClient(client);
     daemon.setDaemonInited(true);
@@ -54,7 +55,8 @@ public class TestEntitlementRegistryClient extends LockssTestCase {
   }
 
   public void testEntitlementRegistryError() throws Exception {
-    client.expectAndReturn("/entitlements", client.mapToPairs(validEntitlementParams), 500, "Internal server error");
+    String url = url("/entitlements", BaseEntitlementRegistryClient.mapToPairs(validEntitlementParams));
+    Mockito.doReturn(connection(url, 500, "Internal server error")).when(client).openConnection(url);
 
     try {
       client.isUserEntitled("0123-456X", "11111111-1111-1111-1111-111111111111", "20120101", "20151231");
@@ -63,11 +65,12 @@ public class TestEntitlementRegistryClient extends LockssTestCase {
     catch(IOException e) {
       assertEquals("Error communicating with entitlement registry. Response was 500 null", e.getMessage());
     }
-    client.checkDone();
+    Mockito.verify(client).openConnection(url);
   }
 
   public void testEntitlementRegistryInvalidResponse() throws Exception {
-    client.expectAndReturn("/entitlements", client.mapToPairs(validEntitlementParams), 200, "[]");
+    String url = url("/entitlements", BaseEntitlementRegistryClient.mapToPairs(validEntitlementParams));
+    Mockito.doReturn(connection(url, 200, "[]")).when(client).openConnection(url);
 
     try {
       client.isUserEntitled("0123-456X", "11111111-1111-1111-1111-111111111111", "20120101", "20151231");
@@ -76,11 +79,12 @@ public class TestEntitlementRegistryClient extends LockssTestCase {
     catch(IOException e) {
       assertEquals("No matching entitlements returned from entitlement registry", e.getMessage());
     }
-    client.checkDone();
+    Mockito.verify(client).openConnection(url);
   }
 
   public void testEntitlementRegistryInvalidJson() throws Exception {
-    client.expectAndReturn("/entitlements", client.mapToPairs(validEntitlementParams), 200, "[{\"this\": isn't, JSON}]");
+    String url = url("/entitlements", BaseEntitlementRegistryClient.mapToPairs(validEntitlementParams));
+    Mockito.doReturn(connection(url, 200, "[{\"this\": isn't, JSON}]")).when(client).openConnection(url);
 
     try {
       client.isUserEntitled("0123-456X", "11111111-1111-1111-1111-111111111111", "20120101", "20151231");
@@ -89,11 +93,12 @@ public class TestEntitlementRegistryClient extends LockssTestCase {
     catch(IOException e) {
       assertTrue(e.getMessage().startsWith("Unrecognized token 'isn': was expecting ('true', 'false' or 'null')"));
     }
-    client.checkDone();
+    Mockito.verify(client).openConnection(url);
   }
 
   public void testEntitlementRegistryUnexpectedJson() throws Exception {
-    client.expectAndReturn("/entitlements", client.mapToPairs(validEntitlementParams), 200, "{\"surprise\": \"object\"}");
+    String url = url("/entitlements", BaseEntitlementRegistryClient.mapToPairs(validEntitlementParams));
+    Mockito.doReturn(connection(url, 200, "{\"surprise\": \"object\"}")).when(client).openConnection(url);
 
     try {
       client.isUserEntitled("0123-456X", "11111111-1111-1111-1111-111111111111", "20120101", "20151231");
@@ -102,23 +107,25 @@ public class TestEntitlementRegistryClient extends LockssTestCase {
     catch(IOException e) {
       assertTrue(e.getMessage().startsWith("No matching entitlements returned from entitlement registry"));
     }
-    client.checkDone();
+    Mockito.verify(client).openConnection(url);
   }
 
   public void testUserEntitled() throws Exception {
     Map<String, String> responseParams = new HashMap<String,String>(validEntitlementParams);
     responseParams.remove("api_key");
-    client.expectAndReturn("/entitlements", client.mapToPairs(validEntitlementParams), 200, "[" + client.mapToJson(responseParams) + "]");
+    String url = url("/entitlements", BaseEntitlementRegistryClient.mapToPairs(validEntitlementParams));
+    Mockito.doReturn(connection(url, 200, "[" + mapToJson(responseParams) + "]")).when(client).openConnection(url);
 
     assertTrue(client.isUserEntitled("0123-456X", "11111111-1111-1111-1111-111111111111", "20120101", "20151231"));
-    client.checkDone();
+    Mockito.verify(client).openConnection(url);
   }
 
   public void testUserNotEntitled() throws Exception {
-    client.expectAndReturn("/entitlements", client.mapToPairs(validEntitlementParams), 204, "");
+    String url = url("/entitlements", BaseEntitlementRegistryClient.mapToPairs(validEntitlementParams));
+    Mockito.doReturn(connection(url, 204, "")).when(client).openConnection(url);
 
     assertFalse(client.isUserEntitled("0123-456X", "11111111-1111-1111-1111-111111111111", "20120101", "20151231"));
-    client.checkDone();
+    Mockito.verify(client).openConnection(url);
   }
 
   public void testGetPublisher() throws Exception {
@@ -133,55 +140,69 @@ public class TestEntitlementRegistryClient extends LockssTestCase {
     Map<String, Object> responseParams = new HashMap<String, Object>();
     responseParams.put("publishers", publishers);
 
-    client.expectAndReturn("/titles", client.mapToPairs(queryParams), 200, "[" + client.mapToJson(responseParams) + "]");
+    String url = url("/titles", BaseEntitlementRegistryClient.mapToPairs(queryParams));
+    Mockito.doReturn(connection(url, 200, "[" + mapToJson(responseParams) + "]")).when(client).openConnection(url);
     assertEquals("33333333-0000-0000-0000-000000000000", client.getPublisher("0123-456X", "20120101", "20151231"));
 
-    client.expectAndReturn("/titles", client.mapToPairs(queryParams), 200, "[" + client.mapToJson(responseParams) + "]");
+    Mockito.doReturn(connection(url, 200, "[" + mapToJson(responseParams) + "]")).when(client).openConnection(url);
     assertEquals("33333333-0000-0000-0000-000000000000", client.getPublisher("0123-456X", null, "20151231"));
 
-    client.expectAndReturn("/titles", client.mapToPairs(queryParams), 200, "[" + client.mapToJson(responseParams) + "]");
+    Mockito.doReturn(connection(url, 200, "[" + mapToJson(responseParams) + "]")).when(client).openConnection(url);
     assertEquals("33333333-0000-0000-0000-000000000000", client.getPublisher("0123-456X", "20120101", null));
 
-    client.expectAndReturn("/titles", client.mapToPairs(queryParams), 200, "[" + client.mapToJson(responseParams) + "]");
+    Mockito.doReturn(connection(url, 200, "[" + mapToJson(responseParams) + "]")).when(client).openConnection(url);
     assertEquals("33333333-0000-0000-0000-000000000000", client.getPublisher("0123-456X", null, null));
 
+    Mockito.verify(client, Mockito.times(4)).openConnection(url);
+  }
+
+  public void testGetPublisherDateLimited() throws Exception {
+    Map<String, String> queryParams = new HashMap<String, String>();
+    queryParams.put("identifier", "0123-456X");
+    Map<String, String> publisher = new HashMap<String, String>();
+    publisher.put("id", "33333333-0000-0000-0000-000000000000");
     publisher.put("start", "20120101");
     publisher.put("end", "20151231");
 
-    client.expectAndReturn("/titles", client.mapToPairs(queryParams), 200, "[" + client.mapToJson(responseParams) + "]");
+    List<Map<String, String>> publishers = new ArrayList<Map<String, String>>();
+    publishers.add(publisher);
+    Map<String, Object> responseParams = new HashMap<String, Object>();
+    responseParams.put("publishers", publishers);
+
+    String url = url("/titles", BaseEntitlementRegistryClient.mapToPairs(queryParams));
+    Mockito.doReturn(connection(url, 200, "[" + mapToJson(responseParams) + "]")).when(client).openConnection(url);
     assertEquals("33333333-0000-0000-0000-000000000000", client.getPublisher("0123-456X", "20120101", "20151231"));
 
-    client.expectAndReturn("/titles", client.mapToPairs(queryParams), 200, "[" + client.mapToJson(responseParams) + "]");
+    Mockito.doReturn(connection(url, 200, "[" + mapToJson(responseParams) + "]")).when(client).openConnection(url);
     assertEquals(null, client.getPublisher("0123-456X", "20111231", "20151231"));
 
-    client.expectAndReturn("/titles", client.mapToPairs(queryParams), 200, "[" + client.mapToJson(responseParams) + "]");
+    Mockito.doReturn(connection(url, 200, "[" + mapToJson(responseParams) + "]")).when(client).openConnection(url);
     assertEquals(null, client.getPublisher("0123-456X", "20120101", "20160101"));
 
-    client.expectAndReturn("/titles", client.mapToPairs(queryParams), 200, "[" + client.mapToJson(responseParams) + "]");
+    Mockito.doReturn(connection(url, 200, "[" + mapToJson(responseParams) + "]")).when(client).openConnection(url);
     assertEquals("33333333-0000-0000-0000-000000000000", client.getPublisher("0123-456X", "20120102", "20151230"));
 
-    client.expectAndReturn("/titles", client.mapToPairs(queryParams), 200, "[" + client.mapToJson(responseParams) + "]");
+    Mockito.doReturn(connection(url, 200, "[" + mapToJson(responseParams) + "]")).when(client).openConnection(url);
     assertEquals(null, client.getPublisher("0123-456X", null, "20151231"));
 
-    client.expectAndReturn("/titles", client.mapToPairs(queryParams), 200, "[" + client.mapToJson(responseParams) + "]");
+    Mockito.doReturn(connection(url, 200, "[" + mapToJson(responseParams) + "]")).when(client).openConnection(url);
     assertEquals(null, client.getPublisher("0123-456X", "20120101", null));
 
-    client.expectAndReturn("/titles", client.mapToPairs(queryParams), 200, "[" + client.mapToJson(responseParams) + "]");
+    Mockito.doReturn(connection(url, 200, "[" + mapToJson(responseParams) + "]")).when(client).openConnection(url);
     assertEquals(null, client.getPublisher("0123-456X", null, null));
 
-    client.checkDone();
+    Mockito.verify(client, Mockito.times(7)).openConnection(url);
   }
 
   public void testGetPublisherNoResponse() throws Exception {
     Map<String, String> queryParams = new HashMap<String, String>();
     queryParams.put("identifier", "0123-456X");
-    client.expectAndReturn("/titles", client.mapToPairs(queryParams), 200, "[]");
+    String url = url("/titles", BaseEntitlementRegistryClient.mapToPairs(queryParams));
+    Mockito.doReturn(connection(url, 200, "[]")).when(client).openConnection(url);
     assertEquals(null, client.getPublisher("0123-456X", "20120101", "20151231"));
   }
 
-  public void testGetPublisherMultipleResponses() throws Exception {
-    Map<String, String> queryParams = new HashMap<String, String>();
-    queryParams.put("identifier", "0123-456X");
+  private List<Map<String, String>> getMultiplePublishers() {
     Map<String, String> publisher = new HashMap<String, String>();
     publisher.put("id", "33333333-0000-0000-0000-000000000000");
     publisher.put("start", "20120101");
@@ -193,20 +214,61 @@ public class TestEntitlementRegistryClient extends LockssTestCase {
     List<Map<String, String>> publishers = new ArrayList<Map<String, String>>();
     publishers.add(publisher);
     publishers.add(publisher2);
+    return publishers;
+  }
+
+  public void testGetPublisherMultipleResponses() throws Exception {
+    Map<String, String> queryParams = new HashMap<String, String>();
+    queryParams.put("identifier", "0123-456X");
     Map<String, Object> responseParams = new HashMap<String, Object>();
+    List<Map<String, String>> publishers = getMultiplePublishers();
     responseParams.put("publishers", publishers);
 
-    client.expectAndReturn("/titles", client.mapToPairs(queryParams), 200, "[" + client.mapToJson(responseParams) + "]");
+    String url = url("/titles", BaseEntitlementRegistryClient.mapToPairs(queryParams));
+    Mockito.doReturn(connection(url, 200, "[" + mapToJson(responseParams) + "]")).when(client).openConnection(url);
     assertEquals("33333333-0000-0000-0000-000000000000", client.getPublisher("0123-456X", "20150101", "20151231"));
 
-    client.expectAndReturn("/titles", client.mapToPairs(queryParams), 200, "[" + client.mapToJson(responseParams) + "]");
+    Mockito.verify(client).openConnection(url);
+  }
+
+  public void testGetPublisherMultipleResponses2() throws Exception {
+    Map<String, String> queryParams = new HashMap<String, String>();
+    queryParams.put("identifier", "0123-456X");
+    Map<String, Object> responseParams = new HashMap<String, Object>();
+    List<Map<String, String>> publishers = getMultiplePublishers();
+    responseParams.put("publishers", publishers);
+
+    String url = url("/titles", BaseEntitlementRegistryClient.mapToPairs(queryParams));
+    Mockito.doReturn(connection(url, 200, "[" + mapToJson(responseParams) + "]")).when(client).openConnection(url);
     assertEquals("33333333-1111-1111-1111-111111111111", client.getPublisher("0123-456X", "20160101", "20161231"));
 
-    client.expectAndReturn("/titles", client.mapToPairs(queryParams), 200, "[" + client.mapToJson(responseParams) + "]");
+    Mockito.verify(client).openConnection(url);
+  }
+
+  public void testGetPublisherMultipleResponsesOutsideRange() throws Exception {
+    Map<String, String> queryParams = new HashMap<String, String>();
+    queryParams.put("identifier", "0123-456X");
+    Map<String, Object> responseParams = new HashMap<String, Object>();
+    List<Map<String, String>> publishers = getMultiplePublishers();
+    responseParams.put("publishers", publishers);
+
+    String url = url("/titles", BaseEntitlementRegistryClient.mapToPairs(queryParams));
+    Mockito.doReturn(connection(url, 200, "[" + mapToJson(responseParams) + "]")).when(client).openConnection(url);
     assertEquals(null, client.getPublisher("0123-456X", "20150101", "20161231"));
 
-    publisher2.put("start", null);
-    client.expectAndReturn("/titles", client.mapToPairs(queryParams), 200, "[" + client.mapToJson(responseParams) + "]");
+    Mockito.verify(client).openConnection(url);
+  }
+
+  public void testGetPublisherMultipleResponsesMultipleMatching() throws Exception {
+    Map<String, String> queryParams = new HashMap<String, String>();
+    queryParams.put("identifier", "0123-456X");
+    Map<String, Object> responseParams = new HashMap<String, Object>();
+    List<Map<String, String>> publishers = getMultiplePublishers();
+    responseParams.put("publishers", publishers);
+
+    publishers.get(1).put("start", null);
+    String url = url("/titles", BaseEntitlementRegistryClient.mapToPairs(queryParams));
+    Mockito.doReturn(connection(url, 200, "[" + mapToJson(responseParams) + "]")).when(client).openConnection(url);
     try {
       client.getPublisher("0123-456X", "20150101", "20151231");
       fail("Expected exception not thrown");
@@ -215,21 +277,23 @@ public class TestEntitlementRegistryClient extends LockssTestCase {
       assertEquals("Multiple matching publishers returned from entitlement registry", e.getMessage());
     }
 
-    client.checkDone();
+    Mockito.verify(client).openConnection(url);
   }
 
   public void testGetPublisherWorkflow() throws Exception {
     Map<String, String> responseParams = new HashMap<String,String>(validPublisherParams);
     responseParams.put("workflow", "primary_safenet");
-    client.expectAndReturn("/publishers", client.mapToPairs(validPublisherParams), 200, "[" + client.mapToJson(responseParams) + "]");
+    String url = url("/publishers", BaseEntitlementRegistryClient.mapToPairs(validPublisherParams));
+    Mockito.doReturn(connection(url, 200, "[" + mapToJson(responseParams) + "]")).when(client).openConnection(url);
 
     assertEquals(PublisherWorkflow.PRIMARY_SAFENET, client.getPublisherWorkflow("Wiley"));
-    client.checkDone();
+    Mockito.verify(client).openConnection(url);
   }
 
   public void testGetPublisherWorkflowMissingWorkflow() throws Exception {
     Map<String, String> responseParams = new HashMap<String,String>(validPublisherParams);
-    client.expectAndReturn("/publishers", client.mapToPairs(validPublisherParams), 200, "[" + client.mapToJson(responseParams) + "]");
+    String url = url("/publishers", BaseEntitlementRegistryClient.mapToPairs(validPublisherParams));
+    Mockito.doReturn(connection(url, 200, "[" + mapToJson(responseParams) + "]")).when(client).openConnection(url);
 
     try {
       client.getPublisherWorkflow("Wiley");
@@ -238,13 +302,14 @@ public class TestEntitlementRegistryClient extends LockssTestCase {
     catch(IOException e) {
       assertTrue(e.getMessage().startsWith("No valid workflow returned from entitlement registry"));
     }
-    client.checkDone();
+    Mockito.verify(client).openConnection(url);
   }
 
   public void testGetPublisherWorkflowInvalidWorkflow() throws Exception {
     Map<String, String> responseParams = new HashMap<String,String>(validPublisherParams);
     responseParams.put("workflow", "gibberish");
-    client.expectAndReturn("/publishers", client.mapToPairs(validPublisherParams), 200, "[" + client.mapToJson(responseParams) + "]");
+    String url = url("/publishers", BaseEntitlementRegistryClient.mapToPairs(validPublisherParams));
+    Mockito.doReturn(connection(url, 200, "[" + mapToJson(responseParams) + "]")).when(client).openConnection(url);
 
     try {
       client.getPublisherWorkflow("Wiley");
@@ -253,57 +318,31 @@ public class TestEntitlementRegistryClient extends LockssTestCase {
     catch(IOException e) {
       assertTrue(e.getMessage().startsWith("No valid workflow returned from entitlement registry"));
     }
-    client.checkDone();
+    Mockito.verify(client).openConnection(url);
   }
 
-  private static class MyMockEntitlementRegistryClient extends BaseEntitlementRegistryClient {
-    private static class Expectation {
-      private String endpoint;
-      private List<NameValuePair> params;
-      private int responseCode;
-      private String response;
-    }
-
-    private Queue<Expectation> expected = new LinkedList<Expectation>();
-
-    public void expectAndReturn(String endpoint, List<NameValuePair> params, int responseCode, String response) {
-      Expectation e = new Expectation();
-      e.endpoint = endpoint;
-      e.params = params;
-      e.responseCode = responseCode;
-      e.response = response;
-      expected.add(e);
-    }
-
-    public void checkDone() {
-      assertEmpty(expected);
-    }
-
-    protected LockssUrlConnection openConnection(String url) throws IOException {
-      try {
-        URIBuilder builder = new URIBuilder(url);
-        assertEquals("http", builder.getScheme());
-        assertEquals("dev-safenet.edina.ac.uk", builder.getHost());
-        Expectation e = expected.poll();
-        assertEquals(e.endpoint, builder.getPath());
-        assertSameElements(e.params, builder.getQueryParams());
-        MockLockssUrlConnection connection = new MockLockssUrlConnection(url);
-        connection.setResponseCode(e.responseCode);
-        connection.setResponseInputStream(new StringInputStream(e.response));
-        return connection;
-      }
-      catch (URISyntaxException e) {
-        throw new RuntimeException(e);
-      }
-    }
-
-    public String mapToJson(Map<String, ? extends Object> params) throws IOException {
-      ObjectMapper mapper = new ObjectMapper();
-      return mapper.writeValueAsString(params);
-    }
-
-
+  public String url(String endpoint, List<NameValuePair> params) {
+    URIBuilder builder = new URIBuilder();
+    builder.setScheme("http");
+    builder.setHost("dev-safenet.edina.ac.uk");
+    builder.setPath(endpoint);
+    builder.setParameters(params);
+    return builder.toString();
   }
+
+  public MockLockssUrlConnection connection(String url, int responseCode, String response) throws IOException {
+    MockLockssUrlConnection connection = new MockLockssUrlConnection(url);
+    connection.setResponseCode(responseCode);
+    connection.setResponseInputStream(new StringInputStream(response));
+    return connection;
+  }
+
+  public String mapToJson(Map<String, ? extends Object> params) throws IOException {
+    ObjectMapper mapper = new ObjectMapper();
+    return mapper.writeValueAsString(params);
+  }
+
+
 }
 
 

@@ -198,7 +198,7 @@ public class BaseEntitlementRegistryClient extends BaseLockssManager implements 
     return UrlUtil.openConnection(url);
   }
 
-  protected List<NameValuePair> mapToPairs(Map<String, String> params) {
+  protected static List<NameValuePair> mapToPairs(Map<String, String> params) {
     List<NameValuePair> pairs = new ArrayList<NameValuePair>();
     for(String key : params.keySet()) {
       pairs.add(new BasicNameValuePair(key, params.get(key)));

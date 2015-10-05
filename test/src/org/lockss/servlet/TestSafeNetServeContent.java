@@ -57,7 +57,6 @@ import org.lockss.plugin.CachedUrl;
 import org.lockss.plugin.Plugin;
 import org.lockss.plugin.PluginManager;
 import org.lockss.safenet.BaseEntitlementRegistryClient;
-import org.lockss.safenet.MockEntitlementRegistryClient;
 import org.lockss.safenet.EntitlementRegistryClient;
 import org.lockss.safenet.PublisherWorkflow;
 import org.lockss.test.ConfigurationUtil;
@@ -71,17 +70,18 @@ import org.lockss.test.StringInputStream;
 import org.lockss.util.urlconn.LockssUrlConnection;
 import org.lockss.util.urlconn.LockssUrlConnectionPool;
 
-import org.apache.commons.collections.map.MultiKeyMap;
 import com.meterware.httpunit.WebRequest;
 import com.meterware.httpunit.WebResponse;
 import com.meterware.httpunit.WebTable;
 import com.meterware.httpunit.GetMethodWebRequest;
 import com.meterware.servletunit.InvocationContext;
+import org.mockito.Mockito;
+import org.apache.commons.collections.map.MultiKeyMap;
 
 public class TestSafeNetServeContent extends LockssServletTestCase {
 
   private MockPluginManager pluginMgr = null;
-  private MockEntitlementRegistryClient entitlementRegistryClient = null;
+  private EntitlementRegistryClient entitlementRegistryClient = null;
 
   public void setUp() throws Exception {
     super.setUp();
@@ -89,7 +89,7 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
     pluginMgr = new MockPluginManager(theDaemon);
     theDaemon.setPluginManager(pluginMgr);
     theDaemon.setIdentityManager(new org.lockss.protocol.MockIdentityManager());
-    entitlementRegistryClient = new MockEntitlementRegistryClient();
+    entitlementRegistryClient = Mockito.mock(EntitlementRegistryClient.class);
     theDaemon.setEntitlementRegistryClient(entitlementRegistryClient);
     theDaemon.getServletManager();
     theDaemon.setDaemonInited(true);
@@ -195,9 +195,9 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
   public void testCachedUrlPrimaryPublisherResponse() throws Exception {
     initServletRunner();
     pluginMgr.addAu(makeAu());
-    entitlementRegistryClient.expectEntitled("0740-2783", "03bd5fc6-97f0-11e4-b270-8932ea886a12", "20140101", "20141231");
-    entitlementRegistryClient.expectPublisher("0740-2783", "20140101", "20141231", "33333333-0000-0000-0000-000000000000");
-    entitlementRegistryClient.expectWorkflow("33333333-0000-0000-0000-000000000000", PublisherWorkflow.PRIMARY_PUBLISHER);
+    Mockito.when(entitlementRegistryClient.isUserEntitled("0740-2783", "03bd5fc6-97f0-11e4-b270-8932ea886a12", "20140101", "20141231")).thenReturn(true);
+    Mockito.when(entitlementRegistryClient.getPublisher("0740-2783", "20140101", "20141231")).thenReturn("33333333-0000-0000-0000-000000000000");
+    Mockito.when(entitlementRegistryClient.getPublisherWorkflow("33333333-0000-0000-0000-000000000000")).thenReturn(PublisherWorkflow.PRIMARY_PUBLISHER);
     WebRequest request = new GetMethodWebRequest("http://null/SafeNetServeContent?url=http%3A%2F%2Fdev-safenet.edina.ac.uk%2Ftest_journal%2F" );
     InvocationContext ic = sClient.newInvocation(request);
     MockSafeNetServeContent snsc = (MockSafeNetServeContent) ic.getServlet();
@@ -211,9 +211,9 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
   public void testCachedUrlPrimaryPublisherError() throws Exception {
     initServletRunner();
     pluginMgr.addAu(makeAu());
-    entitlementRegistryClient.expectEntitled("0740-2783", "03bd5fc6-97f0-11e4-b270-8932ea886a12", "20140101", "20141231");
-    entitlementRegistryClient.expectPublisher("0740-2783", "20140101", "20141231", "33333333-0000-0000-0000-000000000000");
-    entitlementRegistryClient.expectWorkflow("33333333-0000-0000-0000-000000000000", PublisherWorkflow.PRIMARY_PUBLISHER);
+    Mockito.when(entitlementRegistryClient.isUserEntitled("0740-2783", "03bd5fc6-97f0-11e4-b270-8932ea886a12", "20140101", "20141231")).thenReturn(true);
+    Mockito.when(entitlementRegistryClient.getPublisher("0740-2783", "20140101", "20141231")).thenReturn("33333333-0000-0000-0000-000000000000");
+    Mockito.when(entitlementRegistryClient.getPublisherWorkflow("33333333-0000-0000-0000-000000000000")).thenReturn(PublisherWorkflow.PRIMARY_PUBLISHER);
     WebRequest request = new GetMethodWebRequest("http://null/SafeNetServeContent?url=http%3A%2F%2Fdev-safenet.edina.ac.uk%2Ftest_journal%2F" );
     InvocationContext ic = sClient.newInvocation(request);
     MockSafeNetServeContent snsc = (MockSafeNetServeContent) ic.getServlet();
@@ -227,9 +227,9 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
   public void testCachedUrlPrimarySafenet() throws Exception {
     initServletRunner();
     pluginMgr.addAu(makeAu());
-    entitlementRegistryClient.expectEntitled("0740-2783", "03bd5fc6-97f0-11e4-b270-8932ea886a12", "20140101", "20141231");
-    entitlementRegistryClient.expectPublisher("0740-2783", "20140101", "20141231", "33333333-0000-0000-0000-000000000000");
-    entitlementRegistryClient.expectWorkflow("33333333-0000-0000-0000-000000000000", PublisherWorkflow.PRIMARY_SAFENET);
+    Mockito.when(entitlementRegistryClient.isUserEntitled("0740-2783", "03bd5fc6-97f0-11e4-b270-8932ea886a12", "20140101", "20141231")).thenReturn(true);
+    Mockito.when(entitlementRegistryClient.getPublisher("0740-2783", "20140101", "20141231")).thenReturn("33333333-0000-0000-0000-000000000000");
+    Mockito.when(entitlementRegistryClient.getPublisherWorkflow("33333333-0000-0000-0000-000000000000")).thenReturn(PublisherWorkflow.PRIMARY_SAFENET);
     WebRequest request = new GetMethodWebRequest("http://null/SafeNetServeContent?url=http%3A%2F%2Fdev-safenet.edina.ac.uk%2Ftest_journal%2F" );
     InvocationContext ic = sClient.newInvocation(request);
     SafeNetServeContent snsc = (SafeNetServeContent) ic.getServlet();
@@ -242,9 +242,9 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
   public void testCachedUrlLibraryNotification() throws Exception {
     initServletRunner();
     pluginMgr.addAu(makeAu());
-    entitlementRegistryClient.expectEntitled("0740-2783", "03bd5fc6-97f0-11e4-b270-8932ea886a12", "20140101", "20141231");
-    entitlementRegistryClient.expectPublisher("0740-2783", "20140101", "20141231", "33333333-0000-0000-0000-000000000000");
-    entitlementRegistryClient.expectWorkflow("33333333-0000-0000-0000-000000000000", PublisherWorkflow.LIBRARY_NOTIFICATION);
+    Mockito.when(entitlementRegistryClient.isUserEntitled("0740-2783", "03bd5fc6-97f0-11e4-b270-8932ea886a12", "20140101", "20141231")).thenReturn(true);
+    Mockito.when(entitlementRegistryClient.getPublisher("0740-2783", "20140101", "20141231")).thenReturn("33333333-0000-0000-0000-000000000000");
+    Mockito.when(entitlementRegistryClient.getPublisherWorkflow("33333333-0000-0000-0000-000000000000")).thenReturn(PublisherWorkflow.LIBRARY_NOTIFICATION);
     sClient.setExceptionsThrownOnErrorStatus(false);
     WebRequest request = new GetMethodWebRequest("http://null/SafeNetServeContent?url=http%3A%2F%2Fdev-safenet.edina.ac.uk%2Ftest_journal%2F" );
     InvocationContext ic = sClient.newInvocation(request);
@@ -258,7 +258,7 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
   public void testUnauthorisedUrl() throws Exception {
     initServletRunner();
     pluginMgr.addAu(makeAu());
-    entitlementRegistryClient.expectUnentitled("0740-2783", "03bd5fc6-97f0-11e4-b270-8932ea886a12", "20140101", "20141231");
+    Mockito.when(entitlementRegistryClient.isUserEntitled("0740-2783", "03bd5fc6-97f0-11e4-b270-8932ea886a12", "20140101", "20141231")).thenReturn(false);
     sClient.setExceptionsThrownOnErrorStatus(false);
     WebRequest request = new GetMethodWebRequest("http://null/SafeNetServeContent?url=http%3A%2F%2Fdev-safenet.edina.ac.uk%2Ftest_journal%2F" );
     InvocationContext ic = sClient.newInvocation(request);
@@ -272,7 +272,7 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
   public void testEntitlementRegistryError() throws Exception {
     initServletRunner();
     pluginMgr.addAu(makeAu());
-    entitlementRegistryClient.expectError("0740-2783", "03bd5fc6-97f0-11e4-b270-8932ea886a12", "20140101", "20141231");
+    Mockito.when(entitlementRegistryClient.isUserEntitled("0740-2783", "03bd5fc6-97f0-11e4-b270-8932ea886a12", "20140101", "20141231")).thenThrow(new IOException("Could not contact entitlement registry"));
     sClient.setExceptionsThrownOnErrorStatus(false);
     WebRequest request = new GetMethodWebRequest("http://null/SafeNetServeContent?url=http%3A%2F%2Fdev-safenet.edina.ac.uk%2Ftest_journal%2F" );
     InvocationContext ic = sClient.newInvocation(request);
@@ -306,10 +306,10 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
     props.setProperty("issn", "0000-0000");
     props.setProperty("eissn", "0000-0000");
     pluginMgr.addAu(makeAu(props));
-    entitlementRegistryClient.expectUnentitled("0740-2783", "03bd5fc6-97f0-11e4-b270-8932ea886a12", "20140101", "20141231");
-    entitlementRegistryClient.expectEntitled("0000-0000", "03bd5fc6-97f0-11e4-b270-8932ea886a12", "20140101", "20141231");
-    entitlementRegistryClient.expectPublisher("0000-0000", "20140101", "20141231", "33333333-0000-0000-0000-000000000000");
-    entitlementRegistryClient.expectWorkflow("33333333-0000-0000-0000-00000000000000", PublisherWorkflow.PRIMARY_PUBLISHER);
+    Mockito.when(entitlementRegistryClient.isUserEntitled("0740-2783", "03bd5fc6-97f0-11e4-b270-8932ea886a12", "20140101", "20141231")).thenReturn(false);
+    Mockito.when(entitlementRegistryClient.isUserEntitled("0000-0000", "03bd5fc6-97f0-11e4-b270-8932ea886a12", "20140101", "20141231")).thenReturn(true);
+    Mockito.when(entitlementRegistryClient.getPublisher("0000-0000", "20140101", "20141231")).thenReturn("33333333-0000-0000-0000-000000000000");
+    Mockito.when(entitlementRegistryClient.getPublisherWorkflow("33333333-0000-0000-0000-00000000000000")).thenReturn(PublisherWorkflow.PRIMARY_PUBLISHER);
     WebRequest request = new GetMethodWebRequest("http://null/SafeNetServeContent?url=http%3A%2F%2Fdev-safenet.edina.ac.uk%2Ftest_journal%2F" );
     InvocationContext ic = sClient.newInvocation(request);
     MockSafeNetServeContent snsc = (MockSafeNetServeContent) ic.getServlet();
