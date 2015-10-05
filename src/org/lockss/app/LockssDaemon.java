@@ -237,7 +237,7 @@ private final static String LOCKSS_USER_AGENT = "LOCKSS cache";
       public boolean shouldStart() {
         return isClockss();
       }},
-    new ManagerDesc(SAFENET_MANAGER, "org.lockss.safenet.BaseEntitlementRegistryClient") {
+    new ManagerDesc(SAFENET_MANAGER, "org.lockss.safenet.CachingEntitlementRegistryClient") {
       public boolean shouldStart() {
         return isSafenet();
       }},
