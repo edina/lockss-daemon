@@ -24,14 +24,14 @@ import org.lockss.test.StringInputStream;
 import org.lockss.util.urlconn.LockssUrlConnection;
 
 public class TestEntitlementRegistryClient extends LockssTestCase {
-  private MockEntitlementRegistryClient client;
+  private MyMockEntitlementRegistryClient client;
 
   private Map<String,String> validEntitlementParams;
   private Map<String,String> validPublisherParams;
 
   public void setUp() throws Exception {
     super.setUp();
-    client = new MockEntitlementRegistryClient();
+    client = new MyMockEntitlementRegistryClient();
     MockLockssDaemon daemon = getMockLockssDaemon();
     daemon.setEntitlementRegistryClient(client);
     daemon.setDaemonInited(true);
@@ -256,7 +256,7 @@ public class TestEntitlementRegistryClient extends LockssTestCase {
     client.checkDone();
   }
 
-  private static class MockEntitlementRegistryClient extends BaseEntitlementRegistryClient {
+  private static class MyMockEntitlementRegistryClient extends BaseEntitlementRegistryClient {
     private static class Expectation {
       private String endpoint;
       private List<NameValuePair> params;
