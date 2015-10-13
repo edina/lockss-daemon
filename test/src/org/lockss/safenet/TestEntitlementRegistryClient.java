@@ -51,6 +51,7 @@ public class TestEntitlementRegistryClient extends LockssTestCase {
     validEntitlementParams.put("end", "20151231");
 
     validPublisherParams = new HashMap<String, String>();
+    validPublisherParams.put("id", "33333333-0000-0000-0000-000000000000");
     validPublisherParams.put("name", "Wiley");
   }
 
@@ -283,20 +284,20 @@ public class TestEntitlementRegistryClient extends LockssTestCase {
   public void testGetPublisherWorkflow() throws Exception {
     Map<String, String> responseParams = new HashMap<String,String>(validPublisherParams);
     responseParams.put("workflow", "primary_safenet");
-    String url = url("/publishers", BaseEntitlementRegistryClient.mapToPairs(validPublisherParams));
-    Mockito.doReturn(connection(url, 200, "[" + mapToJson(responseParams) + "]")).when(client).openConnection(url);
+    String url = url("/publishers/33333333-0000-0000-0000-000000000000");
+    Mockito.doReturn(connection(url, 200, mapToJson(responseParams))).when(client).openConnection(url);
 
-    assertEquals(PublisherWorkflow.PRIMARY_SAFENET, client.getPublisherWorkflow("Wiley"));
+    assertEquals(PublisherWorkflow.PRIMARY_SAFENET, client.getPublisherWorkflow("33333333-0000-0000-0000-000000000000"));
     Mockito.verify(client).openConnection(url);
   }
 
   public void testGetPublisherWorkflowMissingWorkflow() throws Exception {
     Map<String, String> responseParams = new HashMap<String,String>(validPublisherParams);
-    String url = url("/publishers", BaseEntitlementRegistryClient.mapToPairs(validPublisherParams));
-    Mockito.doReturn(connection(url, 200, "[" + mapToJson(responseParams) + "]")).when(client).openConnection(url);
+    String url = url("/publishers/33333333-0000-0000-0000-000000000000");
+    Mockito.doReturn(connection(url, 200, mapToJson(responseParams))).when(client).openConnection(url);
 
     try {
-      client.getPublisherWorkflow("Wiley");
+      client.getPublisherWorkflow("33333333-0000-0000-0000-000000000000");
       fail("Expected exception not thrown");
     }
     catch(IOException e) {
@@ -308,11 +309,11 @@ public class TestEntitlementRegistryClient extends LockssTestCase {
   public void testGetPublisherWorkflowInvalidWorkflow() throws Exception {
     Map<String, String> responseParams = new HashMap<String,String>(validPublisherParams);
     responseParams.put("workflow", "gibberish");
-    String url = url("/publishers", BaseEntitlementRegistryClient.mapToPairs(validPublisherParams));
-    Mockito.doReturn(connection(url, 200, "[" + mapToJson(responseParams) + "]")).when(client).openConnection(url);
+    String url = url("/publishers/33333333-0000-0000-0000-000000000000");
+    Mockito.doReturn(connection(url, 200, mapToJson(responseParams))).when(client).openConnection(url);
 
     try {
-      client.getPublisherWorkflow("Wiley");
+      client.getPublisherWorkflow("33333333-0000-0000-0000-000000000000");
       fail("Expected exception not thrown");
     }
     catch(IOException e) {
@@ -321,28 +322,31 @@ public class TestEntitlementRegistryClient extends LockssTestCase {
     Mockito.verify(client).openConnection(url);
   }
 
-  public String url(String endpoint, List<NameValuePair> params) {
+  private String url(String endpoint) {
+    return url(endpoint, null);
+  }
+
+  private String url(String endpoint, List<NameValuePair> params) {
     URIBuilder builder = new URIBuilder();
     builder.setScheme("http");
     builder.setHost("dev-safenet.edina.ac.uk");
     builder.setPath(endpoint);
-    builder.setParameters(params);
+    if(params != null) {
+      builder.setParameters(params);
+    }
     return builder.toString();
   }
 
-  public MockLockssUrlConnection connection(String url, int responseCode, String response) throws IOException {
+  private MockLockssUrlConnection connection(String url, int responseCode, String response) throws IOException {
     MockLockssUrlConnection connection = new MockLockssUrlConnection(url);
     connection.setResponseCode(responseCode);
     connection.setResponseInputStream(new StringInputStream(response));
     return connection;
   }
 
-  public String mapToJson(Map<String, ? extends Object> params) throws IOException {
+  private String mapToJson(Map<String, ? extends Object> params) throws IOException {
     ObjectMapper mapper = new ObjectMapper();
     return mapper.writeValueAsString(params);
   }
-
-
 }
-
 
