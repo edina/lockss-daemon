@@ -201,7 +201,8 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
     WebRequest request = new GetMethodWebRequest("http://null/SafeNetServeContent?url=http%3A%2F%2Fdev-safenet.edina.ac.uk%2Ftest_journal%2F" );
     InvocationContext ic = sClient.newInvocation(request);
     MockSafeNetServeContent snsc = (MockSafeNetServeContent) ic.getServlet();
-    snsc.expectValidRequest("http://dev-safenet.edina.ac.uk/test_journal/");
+    LockssUrlConnection connection = mockConnection(200, "<html><head><title>Blah</title></head><body>Fetched content</body></html>");
+    snsc.expectRequest("http://dev-safenet.edina.ac.uk/test_journal/", connection);
 
     WebResponse resp1 = sClient.getResponse(request);
     assertResponseOk(resp1);
@@ -217,7 +218,8 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
     WebRequest request = new GetMethodWebRequest("http://null/SafeNetServeContent?url=http%3A%2F%2Fdev-safenet.edina.ac.uk%2Ftest_journal%2F" );
     InvocationContext ic = sClient.newInvocation(request);
     MockSafeNetServeContent snsc = (MockSafeNetServeContent) ic.getServlet();
-    snsc.expectErrorRequest("http://dev-safenet.edina.ac.uk/test_journal/");
+    LockssUrlConnection connection = mockConnection(403, "<html><head><title>Blah</title></head><body>Content refused</body></html>");
+    snsc.expectRequest("http://dev-safenet.edina.ac.uk/test_journal/", connection);
 
     WebResponse resp1 = sClient.getResponse(request);
     assertResponseOk(resp1);
@@ -313,7 +315,8 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
     WebRequest request = new GetMethodWebRequest("http://null/SafeNetServeContent?url=http%3A%2F%2Fdev-safenet.edina.ac.uk%2Ftest_journal%2F" );
     InvocationContext ic = sClient.newInvocation(request);
     MockSafeNetServeContent snsc = (MockSafeNetServeContent) ic.getServlet();
-    snsc.expectValidRequest("http://dev-safenet.edina.ac.uk/test_journal/");
+    LockssUrlConnection connection = mockConnection(200, "<html><head><title>Blah</title></head><body>Fetched content</body></html>");
+    snsc.expectRequest("http://dev-safenet.edina.ac.uk/test_journal/", connection);
 
     WebResponse resp1 = sClient.getResponse(request);
     assertResponseOk(resp1);
@@ -373,25 +376,17 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
     }
   }
 
-  public static class MockSafeNetServeContent extends SafeNetServeContent {
-    private SafeNetServeContent delegate = Mockito.mock(SafeNetServeContent.class);
-
-    public void expectValidRequest(String url) throws IOException {
-      int responseCode = 200;
-      String response = "<html><head><title>Blah</title></head><body>Fetched content</body></html>";
-      expectRequest(url, responseCode, response);
-    }
-
-    public void expectErrorRequest(String url) throws IOException {
-      int responseCode = 403;
-      String response = "<html><head><title>Blah</title></head><body>Content refused</body></html>";
-      expectRequest(url, responseCode, response);
-    }
-
-    private void expectRequest(String url, int responseCode, String response) throws IOException {
+  private LockssUrlConnection mockConnection(int responseCode, String response) throws IOException {
       LockssUrlConnection connection = Mockito.mock(LockssUrlConnection.class);
       Mockito.when(connection.getResponseCode()).thenReturn(responseCode);
       Mockito.when(connection.getResponseInputStream()).thenReturn(new StringInputStream(response));
+      return connection;
+  }
+
+  public static class MockSafeNetServeContent extends SafeNetServeContent {
+    private SafeNetServeContent delegate = Mockito.mock(SafeNetServeContent.class);
+
+    public void expectRequest(String url, LockssUrlConnection connection) throws IOException {
       Mockito.when(delegate.openConnection(Mockito.eq(url), Mockito.any(LockssUrlConnectionPool.class))).thenReturn(connection);
     }
 
