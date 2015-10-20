@@ -372,67 +372,31 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
       resp.getWriter().print("<html><head><title>Blah</title></head><body>Redirected content</body></html>");
     }
   }
-  public static class MyMockLockssUrlConnection extends MockLockssUrlConnection {
-    private String response;
-
-    public MyMockLockssUrlConnection(String url) throws IOException {
-      super(url);
-    }
-
-    public void setResponse(String response) {
-      this.response = response;
-    }
-
-    @Override
-    public void addRequestProperty(String key, String value) {
-      setRequestProperty(key, value);
-    }
-
-    @Override
-    public void setCookiePolicy(String policy) {
-      return;
-    }
-
-    @Override
-    public InputStream getResponseInputStream() {
-      return new StringInputStream(response);
-    }
-
-    @Override
-    public long getResponseContentLength() {
-      return response.length();
-    }
-
-    @Override
-    public String getResponseHeaderFieldKey(int n) {
-      return null;
-    }
-
-    @Override
-    public String getResponseHeaderFieldVal(int n) {
-      return null;
-    }
-  }
 
   public static class MockSafeNetServeContent extends SafeNetServeContent {
-    private Map<String, MyMockLockssUrlConnection> responses = new HashMap<String, MyMockLockssUrlConnection>();
+    private SafeNetServeContent delegate = Mockito.mock(SafeNetServeContent.class);
 
     public void expectValidRequest(String url) throws IOException {
-      MyMockLockssUrlConnection connection = new MyMockLockssUrlConnection(url);
-      connection.setResponseCode(200);
-      connection.setResponse("<html><head><title>Blah</title></head><body>Fetched content</body></html>");
-      responses.put(url, connection);
+      int responseCode = 200;
+      String response = "<html><head><title>Blah</title></head><body>Fetched content</body></html>";
+      expectRequest(url, responseCode, response);
     }
 
     public void expectErrorRequest(String url) throws IOException {
-      MyMockLockssUrlConnection connection = new MyMockLockssUrlConnection(url);
-      connection.setResponseCode(403);
-      connection.setResponse("<html><head><title>Blah</title></head><body>Content refused</body></html>");
-      responses.put(url, connection);
+      int responseCode = 403;
+      String response = "<html><head><title>Blah</title></head><body>Content refused</body></html>";
+      expectRequest(url, responseCode, response);
+    }
+
+    private void expectRequest(String url, int responseCode, String response) throws IOException {
+      LockssUrlConnection connection = Mockito.mock(LockssUrlConnection.class);
+      Mockito.when(connection.getResponseCode()).thenReturn(responseCode);
+      Mockito.when(connection.getResponseInputStream()).thenReturn(new StringInputStream(response));
+      Mockito.when(delegate.openConnection(Mockito.eq(url), Mockito.any(LockssUrlConnectionPool.class))).thenReturn(connection);
     }
 
     protected LockssUrlConnection openConnection(String url, LockssUrlConnectionPool pool) throws IOException {
-      return responses.get(url);
+      return delegate.openConnection(url, pool);
     }
   }
 }
