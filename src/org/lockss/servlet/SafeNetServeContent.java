@@ -208,6 +208,8 @@ public class SafeNetServeContent extends LockssServlet {
     "Possibly related content may be found "
     + "in the following Archival Units" ;
 
+  private static final String INSTITUTION_HEADER = "X-SafeNet-Institution";
+
   private static MissingFileAction missingFileAction =
       DEFAULT_MISSING_FILE_ACTION;
   private static boolean absoluteLinks = DEFAULT_ABSOLUTE_LINKS;
@@ -234,6 +236,8 @@ public class SafeNetServeContent extends LockssServlet {
   private String accessLogInfo;
   private AccessLogType requestType = AccessLogType.None;
   private PublisherWorkflow workflow;
+  private String institution;
+  private String institutionName;
 
   private PluginManager pluginMgr;
   private ProxyManager proxyMgr;
@@ -398,6 +402,8 @@ public class SafeNetServeContent extends LockssServlet {
 
     enabledPluginsOnly =
         !"no".equalsIgnoreCase(getParameter("filterPlugins"));
+
+    updateInstitution();
 
     url = getParameter("url");
     String auid = getParameter("auid");
@@ -1379,6 +1385,7 @@ public class SafeNetServeContent extends LockssServlet {
     // send address of original requester
     conn.addRequestProperty(HttpFields.__XForwardedFor,
         req.getRemoteAddr());
+    conn.addRequestProperty(INSTITUTION_HEADER, institutionName);
     conn.addRequestProperty(HttpFields.__Via,
         proxyMgr.makeVia(getMachineName(),
             reqURL.getPort()));
@@ -2159,9 +2166,13 @@ public class SafeNetServeContent extends LockssServlet {
     }
   }
 
-  boolean isUserEntitled(ArchivalUnit au) throws IOException, IllegalArgumentException {
-      String institution = "03bd5fc6-97f0-11e4-b270-8932ea886a12";
+  void updateInstitution() {
+      //This is currently called in lockssHandleRequest, it needs to be called from wherever we do the SAML authentication
+      institution = "03bd5fc6-97f0-11e4-b270-8932ea886a12";
+      institutionName = "University of Edinburgh";
+  }
 
+  boolean isUserEntitled(ArchivalUnit au) throws IOException, IllegalArgumentException {
       TdbAu tdbAu = au.getTdbAu();
       String issn = tdbAu.getIssn();
       if(StringUtil.isNullString(issn)) {

@@ -208,6 +208,7 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
     assertResponseOk(resp1);
     assertEquals("<html><head><title>Blah</title></head><body>Fetched content</body></html>", resp1.getText());
     Mockito.verify(connection).addRequestProperty("X-Forwarded-For", "127.0.0.1");
+    Mockito.verify(connection).addRequestProperty("X-SafeNet-Institution", "University of Edinburgh");
   }
 
   public void testCachedUrlPrimaryPublisherError() throws Exception {
@@ -226,6 +227,7 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
     assertResponseOk(resp1);
     assertEquals("<html><head><title>Blah</title></head><body>Cached content</body></html>", resp1.getText());
     Mockito.verify(connection).addRequestProperty("X-Forwarded-For", "127.0.0.1");
+    Mockito.verify(connection).addRequestProperty("X-SafeNet-Institution", "University of Edinburgh");
   }
 
   public void testCachedUrlPrimarySafenet() throws Exception {
@@ -324,6 +326,7 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
     assertResponseOk(resp1);
     assertEquals("<html><head><title>Blah</title></head><body>Fetched content</body></html>", resp1.getText());
     Mockito.verify(connection).addRequestProperty("X-Forwarded-For", "127.0.0.1");
+    Mockito.verify(connection).addRequestProperty("X-SafeNet-Institution", "University of Edinburgh");
   }
 
   private static class MockPluginManager extends PluginManager {
