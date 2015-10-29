@@ -44,6 +44,7 @@ import javax.servlet.*;
 import static org.lockss.db.SqlConstants.*;
 
 import org.apache.commons.collections.*;
+import org.lockss.account.UserAccount;
 import org.lockss.app.LockssDaemon;
 import org.lockss.config.*;
 import org.lockss.daemon.*;
@@ -66,6 +67,9 @@ public class SafeNetServeContent extends ServeContent {
 
   private static final Logger log = Logger.getLogger(SafeNetServeContent.class);
 
+  /** Ediauth configuration **/
+  public static final String PARAM_EDIAUTH_URL = PREFIX + "ediauthUrl";
+
   // If true, scope can be 'mocked' from the URL parameters. This is for testing purposes, and should never be true in production
   public static final String PARAM_EDIAUTH_MOCK_SCOPE = PREFIX + "mockScope";
 
@@ -73,6 +77,7 @@ public class SafeNetServeContent extends ServeContent {
 
   public static final String INSTITUTION_SCOPE_SESSION_KEY = "scope";
 
+  private static String ediauthUrl;
   private static boolean mockScope = false;
 
   private PublisherWorkflow workflow;
@@ -104,6 +109,7 @@ public class SafeNetServeContent extends ServeContent {
                         Configuration.Differences diffs) {
       ServeContent.setConfig(config, oldConfig, diffs);
     if (diffs.contains(PREFIX)) {
+      ediauthUrl = config.get(PARAM_EDIAUTH_URL);
       mockScope = config.getBoolean(PARAM_EDIAUTH_MOCK_SCOPE, false);
     }
   }
@@ -126,6 +132,44 @@ public class SafeNetServeContent extends ServeContent {
       }
     }
 
+    // Redirect user to ediauth login page if doesn't have a institution allocated
+    if( this.getSession().getAttribute(INSTITUTION_SCOPE_SESSION_KEY) == null ){
+      String token = req.getParameter("ediauthToken");
+      if(token != null){
+        // Reassign userAccount
+        String userInstScope = this.getAccountManager().getFromMapToken(token);
+
+        // UserAccount user = getUserAccount();
+        log.debug("Assigning inst. scope to user:"+userInstScope);
+        this.getSession().setAttribute(INSTITUTION_SCOPE_SESSION_KEY, userInstScope);
+      } else {
+        log.debug("Redirecting user to ediauth: "+ediauthUrl);
+        // Build current Url removing ediauthToken if exists
+        StringBuffer requestURL = req.getRequestURL();
+        if (req.getQueryString() != null) {
+          requestURL.append("?");
+          Enumeration<String> paramNames = req.getParameterNames();
+          while (paramNames.hasMoreElements()) {
+            String paramName = paramNames.nextElement();
+            if(!paramName.equals("ediauthToken")){
+              String paramValue = req.getParameter(paramName);
+              requestURL.append(paramName).append("=").append(paramValue);
+              if(paramNames.hasMoreElements()){
+                requestURL.append("&");
+              }
+            }
+          }
+        }
+        String completeURL = requestURL.toString();
+        log.debug("Current url: "+completeURL);
+        String redirectUrl = ediauthUrl+"?context="+URLEncoder.encode(completeURL, "UTF-8");
+        log.debug("Redirect url: "+redirectUrl);
+        resp.sendRedirect(redirectUrl);
+        return;
+      }
+    } else {
+      log.debug("User already have inst. allocated!");
+    }
     updateInstitution();
 
     super.lockssHandleRequest();
@@ -233,8 +277,8 @@ public class SafeNetServeContent extends ServeContent {
 
   void updateInstitution() throws IOException {
       //This is currently called in lockssHandleRequest, it needs to be called from wherever we do the SAML authentication
-      institutionScope = "ed.ac.uk";
-      institution = entitlementRegistry.getInstitution(institutionScope);
+      String scope = (String)this.getSession().getAttribute(INSTITUTION_SCOPE_SESSION_KEY);
+      institution = entitlementRegistry.getInstitution(scope);
   }
 
   boolean isUserEntitled(ArchivalUnit au) throws IOException, IllegalArgumentException {
