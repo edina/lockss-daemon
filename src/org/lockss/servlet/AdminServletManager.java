@@ -613,7 +613,15 @@ public class AdminServletManager extends BaseServletManager {
           return CurrentConfig.getBooleanParam(PARAM_OIOSAML_ENABLED,
               DEFAULT_OIOSAML_ENABLED);
 	}};
-
+	
+  protected static final ServletDescr SERVLET_EDIAUTH_LOGIN =
+		  new ServletDescr("EdiauthLogin",
+				  EdiauthLogin.class,
+				  "Ediauth Login Servlet",
+				  "ediauth",
+				  ServletDescr.NO_NAV_TABLE | ServletDescr.LARGE_LOGO,
+				  "Ediauth");
+  
   static void setHelpUrl(String url) {
     LINK_HELP.path = url;
   }
@@ -666,7 +674,8 @@ public class AdminServletManager extends BaseServletManager {
     LOGIN_FORM,
     SERVLET_CXF_WEB_SERVICES,
     SERVLET_MD_MONITOR,
-    SERVLET_OIOSAML
+    SERVLET_OIOSAML,
+    SERVLET_EDIAUTH_LOGIN
   };
 
   // XXXUI List of servlets to show in new UI: parallel main list but with new versions
@@ -712,7 +721,8 @@ public class AdminServletManager extends BaseServletManager {
     LOGIN_FORM,
     SERVLET_CXF_WEB_SERVICES,
     SERVLET_MD_MONITOR,
-    SERVLET_OIOSAML
+    SERVLET_OIOSAML,
+    SERVLET_EDIAUTH_LOGIN
   };
   // XXXUI List of servlets to show in transitional UI: combine main list with new versions
   static final ServletDescr servletDescrsTransitional[] = {
@@ -757,7 +767,8 @@ public class AdminServletManager extends BaseServletManager {
     LOGIN_FORM,
     SERVLET_CXF_WEB_SERVICES,
     SERVLET_MD_MONITOR,
-    SERVLET_OIOSAML
+    SERVLET_OIOSAML,
+    SERVLET_EDIAUTH_LOGIN
   };
 
   // XXXUI Show the transitional or new UI if param is enabled
