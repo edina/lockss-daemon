@@ -134,7 +134,6 @@ public class BaseEntitlementRegistryClient extends BaseLockssManager implements 
   public PublisherWorkflow getPublisherWorkflow(String publisherGuid) throws IOException {
     Map<String, String> parameters = new HashMap<String, String>();
     JsonNode publisher = callEntitlementRegistry("/publishers/"+publisherGuid, parameters);
-    System.out.println(publisher);
     if (publisher != null) {
       JsonNode foundGuid = publisher.get("id");
       if (foundGuid != null && foundGuid.asText().equals(publisherGuid)) {
@@ -152,6 +151,27 @@ public class BaseEntitlementRegistryClient extends BaseLockssManager implements 
     }
     // Valid request, but no valid workflow information was returned, which should never happen
     throw new IOException("No valid workflow returned from entitlement registry");
+  }
+
+  public String getInstitution(String scope) throws IOException {
+    Map<String, String> parameters = new HashMap<String, String>();
+    parameters.put("scope", scope);
+
+    JsonNode institutions = callEntitlementRegistry("/institutions", parameters);
+    if (institutions != null) {
+      if (institutions.size() == 0) {
+        throw new IOException("No matching institutions returned from entitlement registry");
+      }
+      if (institutions.size() > 1) {
+        throw new IOException("Multiple matching institutions returned from entitlement registry");
+      }
+      JsonNode institution = institutions.get(0);
+      if (!scope.equals(institution.get("scope").asText())) {
+        throw new IOException("No matching institutions returned from entitlement registry");
+      }
+      return institution.get("id").asText();
+    }
+    throw new IOException("No matching institutions returned from entitlement registry");
   }
 
   private JsonNode callEntitlementRegistry(String endpoint, Map<String, String> parameters) throws IOException {

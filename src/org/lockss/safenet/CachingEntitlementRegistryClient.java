@@ -58,5 +58,15 @@ public class CachingEntitlementRegistryClient extends BaseLockssManager implemen
     }
     return (PublisherWorkflow) result;
   }
+
+  public String getInstitution(String scope) throws IOException {
+    Object result = this.cache.get("getInstitution", scope);
+    if(result == null) {
+        result = this.client.getInstitution(scope);
+        this.cache.put("getInstitution", scope);
+    }
+    return (String) result;
+  }
+
 }
 
