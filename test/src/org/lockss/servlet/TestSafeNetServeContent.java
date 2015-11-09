@@ -195,6 +195,7 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
   public void testCachedUrlPrimaryPublisherResponse() throws Exception {
     initServletRunner();
     pluginMgr.addAu(makeAu());
+    Mockito.when(entitlementRegistryClient.getInstitution("ed.ac.uk")).thenReturn("03bd5fc6-97f0-11e4-b270-8932ea886a12");
     Mockito.when(entitlementRegistryClient.isUserEntitled("0740-2783", "03bd5fc6-97f0-11e4-b270-8932ea886a12", "20140101", "20141231")).thenReturn(true);
     Mockito.when(entitlementRegistryClient.getPublisher("0740-2783", "20140101", "20141231")).thenReturn("33333333-0000-0000-0000-000000000000");
     Mockito.when(entitlementRegistryClient.getPublisherWorkflow("33333333-0000-0000-0000-000000000000")).thenReturn(PublisherWorkflow.PRIMARY_PUBLISHER);
@@ -208,12 +209,13 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
     assertResponseOk(resp1);
     assertEquals("<html><head><title>Blah</title></head><body>Fetched content</body></html>", resp1.getText());
     Mockito.verify(connection).addRequestProperty("X-Forwarded-For", "127.0.0.1");
-    Mockito.verify(connection).addRequestProperty("X-SafeNet-Institution", "University of Edinburgh");
+    Mockito.verify(connection).addRequestProperty("X-SafeNet-Institution", "ed.ac.uk");
   }
 
   public void testCachedUrlPrimaryPublisherError() throws Exception {
     initServletRunner();
     pluginMgr.addAu(makeAu());
+    Mockito.when(entitlementRegistryClient.getInstitution("ed.ac.uk")).thenReturn("03bd5fc6-97f0-11e4-b270-8932ea886a12");
     Mockito.when(entitlementRegistryClient.isUserEntitled("0740-2783", "03bd5fc6-97f0-11e4-b270-8932ea886a12", "20140101", "20141231")).thenReturn(true);
     Mockito.when(entitlementRegistryClient.getPublisher("0740-2783", "20140101", "20141231")).thenReturn("33333333-0000-0000-0000-000000000000");
     Mockito.when(entitlementRegistryClient.getPublisherWorkflow("33333333-0000-0000-0000-000000000000")).thenReturn(PublisherWorkflow.PRIMARY_PUBLISHER);
@@ -227,12 +229,13 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
     assertResponseOk(resp1);
     assertEquals("<html><head><title>Blah</title></head><body>Cached content</body></html>", resp1.getText());
     Mockito.verify(connection).addRequestProperty("X-Forwarded-For", "127.0.0.1");
-    Mockito.verify(connection).addRequestProperty("X-SafeNet-Institution", "University of Edinburgh");
+    Mockito.verify(connection).addRequestProperty("X-SafeNet-Institution", "ed.ac.uk");
   }
 
   public void testCachedUrlPrimarySafenet() throws Exception {
     initServletRunner();
     pluginMgr.addAu(makeAu());
+    Mockito.when(entitlementRegistryClient.getInstitution("ed.ac.uk")).thenReturn("03bd5fc6-97f0-11e4-b270-8932ea886a12");
     Mockito.when(entitlementRegistryClient.isUserEntitled("0740-2783", "03bd5fc6-97f0-11e4-b270-8932ea886a12", "20140101", "20141231")).thenReturn(true);
     Mockito.when(entitlementRegistryClient.getPublisher("0740-2783", "20140101", "20141231")).thenReturn("33333333-0000-0000-0000-000000000000");
     Mockito.when(entitlementRegistryClient.getPublisherWorkflow("33333333-0000-0000-0000-000000000000")).thenReturn(PublisherWorkflow.PRIMARY_SAFENET);
@@ -248,6 +251,7 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
   public void testCachedUrlLibraryNotification() throws Exception {
     initServletRunner();
     pluginMgr.addAu(makeAu());
+    Mockito.when(entitlementRegistryClient.getInstitution("ed.ac.uk")).thenReturn("03bd5fc6-97f0-11e4-b270-8932ea886a12");
     Mockito.when(entitlementRegistryClient.isUserEntitled("0740-2783", "03bd5fc6-97f0-11e4-b270-8932ea886a12", "20140101", "20141231")).thenReturn(true);
     Mockito.when(entitlementRegistryClient.getPublisher("0740-2783", "20140101", "20141231")).thenReturn("33333333-0000-0000-0000-000000000000");
     Mockito.when(entitlementRegistryClient.getPublisherWorkflow("33333333-0000-0000-0000-000000000000")).thenReturn(PublisherWorkflow.LIBRARY_NOTIFICATION);
@@ -264,6 +268,7 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
   public void testUnauthorisedUrl() throws Exception {
     initServletRunner();
     pluginMgr.addAu(makeAu());
+    Mockito.when(entitlementRegistryClient.getInstitution("ed.ac.uk")).thenReturn("03bd5fc6-97f0-11e4-b270-8932ea886a12");
     Mockito.when(entitlementRegistryClient.isUserEntitled("0740-2783", "03bd5fc6-97f0-11e4-b270-8932ea886a12", "20140101", "20141231")).thenReturn(false);
     sClient.setExceptionsThrownOnErrorStatus(false);
     WebRequest request = new GetMethodWebRequest("http://null/SafeNetServeContent?url=http%3A%2F%2Fdev-safenet.edina.ac.uk%2Ftest_journal%2F" );
@@ -278,6 +283,7 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
   public void testEntitlementRegistryError() throws Exception {
     initServletRunner();
     pluginMgr.addAu(makeAu());
+    Mockito.when(entitlementRegistryClient.getInstitution("ed.ac.uk")).thenReturn("03bd5fc6-97f0-11e4-b270-8932ea886a12");
     Mockito.when(entitlementRegistryClient.isUserEntitled("0740-2783", "03bd5fc6-97f0-11e4-b270-8932ea886a12", "20140101", "20141231")).thenThrow(new IOException("Could not contact entitlement registry"));
     sClient.setExceptionsThrownOnErrorStatus(false);
     WebRequest request = new GetMethodWebRequest("http://null/SafeNetServeContent?url=http%3A%2F%2Fdev-safenet.edina.ac.uk%2Ftest_journal%2F" );
@@ -312,6 +318,7 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
     props.setProperty("issn", "0000-0000");
     props.setProperty("eissn", "0000-0000");
     pluginMgr.addAu(makeAu(props));
+    Mockito.when(entitlementRegistryClient.getInstitution("ed.ac.uk")).thenReturn("03bd5fc6-97f0-11e4-b270-8932ea886a12");
     Mockito.when(entitlementRegistryClient.isUserEntitled("0740-2783", "03bd5fc6-97f0-11e4-b270-8932ea886a12", "20140101", "20141231")).thenReturn(false);
     Mockito.when(entitlementRegistryClient.isUserEntitled("0000-0000", "03bd5fc6-97f0-11e4-b270-8932ea886a12", "20140101", "20141231")).thenReturn(true);
     Mockito.when(entitlementRegistryClient.getPublisher("0000-0000", "20140101", "20141231")).thenReturn("33333333-0000-0000-0000-000000000000");
@@ -326,7 +333,7 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
     assertResponseOk(resp1);
     assertEquals("<html><head><title>Blah</title></head><body>Fetched content</body></html>", resp1.getText());
     Mockito.verify(connection).addRequestProperty("X-Forwarded-For", "127.0.0.1");
-    Mockito.verify(connection).addRequestProperty("X-SafeNet-Institution", "University of Edinburgh");
+    Mockito.verify(connection).addRequestProperty("X-SafeNet-Institution", "ed.ac.uk");
   }
 
   private static class MockPluginManager extends PluginManager {
