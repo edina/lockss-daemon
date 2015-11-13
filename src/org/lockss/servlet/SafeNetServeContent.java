@@ -46,6 +46,7 @@ import org.apache.commons.httpclient.util.DateParseException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.lockss.account.UserAccount;
 import org.lockss.alert.Alert;
 import org.lockss.app.LockssDaemon;
 import org.lockss.config.*;
@@ -202,6 +203,9 @@ public class SafeNetServeContent extends LockssServlet {
   public static final boolean DEFAULT_NEVER_PROXY = false;
   static final String PARAM_PROCESS_FORMS = PREFIX + "handleFormPost";
   static final boolean DEFAULT_PROCESS_FORMS = false;
+  
+  /** Ediauth configuration **/
+  public static final String PARAM_EDIAUTH_URL = PREFIX + "ediauthUrl";
 
   // future param
   public static final String DEFAULT_404_CANDIDATES_MSG =
@@ -226,6 +230,7 @@ public class SafeNetServeContent extends LockssServlet {
     DEFAULT_ACCESS_ALERTS_ENABLED;
   private static boolean processForms = DEFAULT_PROCESS_FORMS;
   private static String candidates404Msg = DEFAULT_404_CANDIDATES_MSG;
+  private static String ediauthUrl;
 
   private ArchivalUnit au;
   private ArchivalUnit explicitAu;
@@ -312,6 +317,8 @@ public class SafeNetServeContent extends LockssServlet {
               DEFAULT_REWRITE_MEMENTO_RESPONSES);
       processForms = config.getBoolean(PARAM_PROCESS_FORMS,
           DEFAULT_PROCESS_FORMS);
+      
+      ediauthUrl = config.get(PARAM_EDIAUTH_URL);
     }
   }
 
@@ -394,6 +401,27 @@ public class SafeNetServeContent extends LockssServlet {
    * @throws IOException
    */
   public void lockssHandleRequest() throws IOException {
+    
+    // Redirect user to ediauth login page if doesn't have a institution allocated
+    UserAccount user = getUserAccount();
+    if( user.getInstitutionScope() == null ){
+      String token = req.getParameter("ediauthToken");
+      if(token != null){
+        // Reassign userAccount
+        String userInstScope = this.getAccountManager().getFromMapToken(token);
+        
+        // UserAccount user = getUserAccount();
+        log.debug("Assigning inst. scope to user:"+userInstScope);
+        user.setInstitutionScope(userInstScope);
+      } else {
+        log.debug("Redirecting user to ediauth...");
+        resp.sendRedirect(ediauthUrl);
+        return;
+      }
+    } else {
+      log.debug("User already have inst. allocated!");
+    }
+      
     if (!pluginMgr.areAusStarted()) {
       displayNotStarted();
       return;
@@ -402,7 +430,7 @@ public class SafeNetServeContent extends LockssServlet {
 
     enabledPluginsOnly =
         !"no".equalsIgnoreCase(getParameter("filterPlugins"));
-
+        
     updateInstitution();
 
     url = getParameter("url");
@@ -2072,6 +2100,14 @@ public class SafeNetServeContent extends LockssServlet {
       pred = allAusPred;
     }
     Page page = newPage();
+    
+    UserAccount user = getUserAccount();
+    String scope = user.getInstitutionScope();
+    if(scope != null) {
+      page.add("User inst: " + scope);
+    } else {
+      page.add("User inst: unknown");
+    }
 
     if (headerElement != null) {
       page.add(headerElement);
@@ -2168,8 +2204,9 @@ public class SafeNetServeContent extends LockssServlet {
 
   void updateInstitution() throws IOException {
       //This is currently called in lockssHandleRequest, it needs to be called from wherever we do the SAML authentication
-      institutionScope = "ed.ac.uk";
-      institution = entitlementRegistry.getInstitution(institutionScope);
+//      institutionScope = "ed.ac.uk";
+      String scope = getUserAccount().getInstitutionScope();
+      institution = entitlementRegistry.getInstitution(scope);
   }
 
   boolean isUserEntitled(ArchivalUnit au) throws IOException, IllegalArgumentException {
@@ -2180,7 +2217,7 @@ public class SafeNetServeContent extends LockssServlet {
       }
       String start = tdbAu.getStartYear() + "0101";
       String end = tdbAu.getEndYear() + "1231";
-
+      
       return entitlementRegistry.isUserEntitled(issn, institution, start, end);
   }
 
@@ -2193,6 +2230,7 @@ public class SafeNetServeContent extends LockssServlet {
       String start = tdbAu.getStartYear() + "0101";
       String end = tdbAu.getEndYear() + "1231";
 
+//      return PublisherWorkflow.PRIMARY_SAFENET;
       String publisher = entitlementRegistry.getPublisher(issn, start, end);
       if(StringUtil.isNullString(publisher)) {
         throw new IllegalArgumentException("No publisher found");
