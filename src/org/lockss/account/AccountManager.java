@@ -200,6 +200,9 @@ public class AccountManager
 
   // Maps account name to UserAccount
   Map<String,UserAccount> accountMap = new HashMap<String,UserAccount>();
+  
+  // Map ediauthTockens with user instScope
+  Map<String,String> ediauthTokenMap = new HashMap<String,String>();
 
   public void startService() {
     super.startService();
@@ -671,6 +674,14 @@ public class AccountManager
     } catch (Exception e) {
       // ignored, expected during testing
     }
+  }
+  
+  public void addToMapToken(String token, String scope) {
+    ediauthTokenMap.put(token, scope);
+  }
+  
+  public String getFromMapToken(String token) {
+    return ediauthTokenMap.remove(token);
   }
 
   private ObjectSerializer makeObjectSerializer() {

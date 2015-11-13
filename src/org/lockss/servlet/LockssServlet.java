@@ -498,6 +498,13 @@ public abstract class LockssServlet extends HttpServlet
     }
     return AccountManager.NOBODY_ACCOUNT;
   }
+  
+  protected AccountManager getAccountManager() {
+      if (acctMgr != null) {
+        return acctMgr;
+      }
+      return null;
+  }
 
   protected boolean isDebugUser() {
     return doesUserHaveRole(ROLE_DEBUG);
