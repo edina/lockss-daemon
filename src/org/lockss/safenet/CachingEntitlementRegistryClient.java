@@ -63,7 +63,7 @@ public class CachingEntitlementRegistryClient extends BaseLockssManager implemen
     Object result = this.cache.get("getInstitution", scope);
     if(result == null) {
         result = this.client.getInstitution(scope);
-        this.cache.put("getInstitution", scope);
+        this.cache.put("getInstitution", scope, result);
     }
     return (String) result;
   }
