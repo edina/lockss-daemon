@@ -13,6 +13,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.lockss.account.*;
+import org.lockss.config.Configuration;
+import org.lockss.servlet.SafeNetServeContent.MissingFileAction;
 
 /**
  * Handle Ediauth authentication
@@ -26,8 +28,25 @@ public class EdiauthLogin extends LockssServlet {
 
   private static final Logger log = Logger.getLogger(DisplayContentStatus.class);
 
+  /** Prefix for this server's config tree */
+  public static final String PREFIX = Configuration.PREFIX + "ediauth.";
+
+  /** Ediauth configuration **/
+  public static final String PARAM_EDIAUTH_IP = PREFIX + "ediauthUrl";
+  
+  private static String ediauthIP;
+
   public void init(ServletConfig config) throws ServletException {
     super.init(config);
+  }
+  
+  /** Called by ServletUtil.setConfig() */
+  static void setConfig(Configuration config,
+                        Configuration oldConfig,
+                        Configuration.Differences diffs) {
+    if (diffs.contains(PREFIX)) {
+      ediauthIP = config.get(PARAM_EDIAUTH_IP);
+    }
   }
 
   /**
@@ -37,7 +56,7 @@ public class EdiauthLogin extends LockssServlet {
    */
   public void lockssHandleRequest() throws IOException {
     log.debug("start EdiauthLogin...");
-
+    
     Page page = ServletUtil.doNewPage("Ediauth", false);
 
     page.add("Container: <b>" + getMachineName() + "</b>");
@@ -102,6 +121,7 @@ public class EdiauthLogin extends LockssServlet {
           if (requireAccountable && !accountable)
             log.debug("IdP doesn't assert accountability\n");
           page.add("IdP doesn't assert accountability");
+          endPage(page);
         } else {
           log.debug("Session: " + getSession());
           
@@ -123,37 +143,18 @@ public class EdiauthLogin extends LockssServlet {
 
           log.debug("Returning the URL we want the user to be redirected to: " + response_str);
 
-          page.add(response_str);
-
-          // /*
-          // * Build Session User We might want to make sure that the
-          // * same user doesn't already have a SessionObject.
-          // */
-          // StringBuffer message = new StringBuffer();
-          // if (user != null) {
-          // String name = user.getName();
-          // String roles = user.getRoles();
-          // message.append("user name: " + name);
-          // message.append("<br/>");
-          // message.append("roles: " + roles);
-          // message.append("<br/>");
-          // message.append("institution scope: " + user.getInstitutionScope());
-          // message.append("<br/>");
-          // } else {
-          // message.append("No User Account.");
-          // message.append("<br/>");
-          // }
-          //
-          // page.add(getPageContent(message.toString()));
+          PrintWriter out = this.resp.getWriter();
+          out.println(response_str);
         }
       } else {
         log.debug("extra parameter is missing.");
         buildEnvInfoPage(page, req);
+        endPage(page);
       }
     } else {
       buildEnvInfoPage(page, req);
+      endPage(page);
     }
-    endPage(page);
   }
 
   /* TODO: Only for development, should be removed once it's working */
@@ -203,6 +204,6 @@ public class EdiauthLogin extends LockssServlet {
     log.debug("remote:"+remoteAddr);
     log.debug("local:"+localAddress);
     
-    return remoteAddr.equals(localAddress);
+    return remoteAddr.equals(localAddress) || remoteAddr.equals(ediauthIP);
   }
 }
