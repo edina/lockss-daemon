@@ -14,7 +14,7 @@
   </entry>
   <entry>
     <string>plugin_version</string>
-    <string>16</string>
+    <string>22</string>
   </entry>
   <entry>
     <string>plugin_parent</string>
@@ -22,7 +22,7 @@
   </entry>
   <entry>
     <string>plugin_parent_version</string>
-    <string>21</string>
+    <string>28</string>
   </entry>
   <entry>
     <string>plugin_feature_version_map</string>
@@ -33,11 +33,11 @@
       </entry>
       <entry>
         <string>Poll</string>
-        <string>14</string>
+        <string>18</string>
       </entry>
       <entry>
         <string>Metadata</string>
-        <string>4</string>
+        <string>5</string>
       </entry>
     </map>
   </entry>
@@ -47,7 +47,10 @@
   </entry>
   <entry>
     <string>au_start_url</string>
-    <string>"%slockss-manifest/elife_%s.html", base_url, volume_name</string>
+    <list>
+      <string>"%slockss-manifest/%s.html", base_url, volume_name</string>
+      <string>"%slockss-manifest/elife_%s.html", base_url, volume_name</string>
+    </list>
   </entry>
   <entry>
     <string>au_substance_url_pattern</string>
@@ -57,6 +60,10 @@
   </entry>
   <entry>
     <string>plugin_article_iterator_factory</string>
+    <string>org.lockss.plugin.highwire.elife.ELifeDrupalArticleIteratorFactory</string>
+  </entry>
+  <entry>
+    <string>plugin_article_metadata_extractor_factory</string>
     <string>org.lockss.plugin.highwire.elife.ELifeDrupalArticleIteratorFactory</string>
   </entry>
   <entry>
@@ -87,6 +94,5 @@
   <entry>
     <string>au_permission_checker_factory</string>
     <org.lockss.util.Default />
-    <!-- string>org.lockss.plugin.highwire.elife.ELifeDrupalPermissionCheckerFactory</string -->
   </entry>
 </map>

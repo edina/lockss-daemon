@@ -145,7 +145,7 @@ public class CrawlerStatus {
   
   static Map<Integer,String> DEFAULT_MESSAGES = new HashMap();
   public static StringPool CRAWL_STATUS_POOL = new StringPool("Crawl Status");
-  
+
   static {
     DEFAULT_MESSAGES.put(Crawler.STATUS_UNKNOWN, "Unknown");
     DEFAULT_MESSAGES.put(Crawler.STATUS_QUEUED, "Pending");
@@ -796,7 +796,7 @@ public class CrawlerStatus {
     }
     n.increment();
   }
-  
+
   public synchronized void signalErrorForUrl(String url, UrlErrorInfo ei) {
     errors.addToMap(url, ei);
     incrSeverity(ei.getSeverity());

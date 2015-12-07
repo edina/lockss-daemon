@@ -1,4 +1,8 @@
 /*
+ * $Id$
+ */
+
+/*
 
 Copyright (c) 2000-2011 Board of Trustees of Leland Stanford Jr. University,
 all rights reserved.
@@ -179,7 +183,7 @@ public class TestIgiGlobalPlugin extends LockssPluginTestCase {
 	  
 	  public void testGetName() throws Exception {
 	    ArchivalUnit au = createAu();
-	    assertEquals("IGI Global Plugin, Base URL " + BASE_URL + ", Journal ISSN " + JOURNAL_ISSN + ", Volume " + VOLUME, au.getName());
+	    assertEquals("IGI Global Journals Plugin, Base URL " + BASE_URL + ", Journal ISSN " + JOURNAL_ISSN + ", Volume " + VOLUME, au.getName());
 	  }
 
 }

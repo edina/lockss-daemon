@@ -40,7 +40,6 @@ import org.lockss.daemon.*;
 import org.lockss.plugin.ArchivalUnit;
 import org.lockss.plugin.ArchivalUnit.ConfigurationException;
 import org.lockss.plugin.definable.*;
-import org.lockss.plugin.highwire.HighWireDrupalHttpResponseHandler.NoFailRetryableNetworkException_3_60S;
 import org.lockss.test.*;
 import org.lockss.util.ListUtil;
 import org.lockss.util.urlconn.CacheException;
@@ -97,12 +96,15 @@ public class TestELifeDrupalPlugin extends LockssTestCase {
     props.setProperty(VOL_KEY, "2013");
     props.setProperty(BASE_URL_KEY, "http://www.example.com/");
     
-    String starturl =
-        "http://www.example.com/lockss-manifest/elife_2013.html";
+    String[] starturl = new String[]{
+        "http://www.example.com/lockss-manifest/2013.html",
+        "http://www.example.com/lockss-manifest/elife_2013.html",
+    };
+    
     DefinableArchivalUnit au = makeAuFromProps(props);
     assertEquals("eLife Sciences Plugin, Base URL http://www.example.com/, Volume 2013",
         au.getName());
-    assertEquals(ListUtil.list(starturl), au.getStartUrls());
+    assertEquals(ListUtil.fromArray(starturl), au.getStartUrls());
   }
   
   public void testGetPluginId() {
@@ -129,7 +131,7 @@ public class TestELifeDrupalPlugin extends LockssTestCase {
     CacheException exc =
         ((HttpResultMap)plugin.getCacheResultMap()).mapException(au, conn,
             500, "foo");
-    assertClass(NoFailRetryableNetworkException_3_60S.class, exc);
+    assertClass(CacheException.RetryDeadLinkException.class, exc);
     
     conn.setURL(starturl);
     exc = ((HttpResultMap)plugin.getCacheResultMap()).mapException(au, conn,
@@ -176,7 +178,7 @@ public class TestELifeDrupalPlugin extends LockssTestCase {
     
     // Test for pages that should get crawled or not
     // permission page/start url
-    shouldCacheTest(ROOT_URL + "lockss-manifest/elife_2013.html", true, au);
+    shouldCacheTest(ROOT_URL + "lockss-manifest/2013.html", true, au);
     shouldCacheTest(ROOT_URL + "clockss-manifest/elife_2013.html", false, au);
     shouldCacheTest(ROOT_URL + "manifest/year=2013", false, au);
     // toc page for an issue, there is no issue

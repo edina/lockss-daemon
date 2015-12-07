@@ -1,5 +1,5 @@
 /*
- * $Id: TestOUPDrupalPlugin.java 39864 2015-02-18 09:10:24Z thib_gc $
+ * $Id$
  */
 
 /*
@@ -40,11 +40,9 @@ import org.lockss.daemon.*;
 import org.lockss.plugin.ArchivalUnit;
 import org.lockss.plugin.ArchivalUnit.ConfigurationException;
 import org.lockss.plugin.definable.*;
-import org.lockss.plugin.highwire.HighWireDrupalHttpResponseHandler;
 import org.lockss.test.*;
 import org.lockss.util.ListUtil;
 import org.lockss.util.urlconn.CacheException;
-import org.lockss.util.urlconn.CacheException.RetrySameUrlException;
 import org.lockss.util.urlconn.HttpResultMap;
 
 public class TestOUPDrupalPlugin extends LockssTestCase {
@@ -128,12 +126,12 @@ public class TestOUPDrupalPlugin extends LockssTestCase {
     CacheException exc =
         ((HttpResultMap)plugin.getCacheResultMap()).mapException(au, conn,
             500, "foo");
-    assertClass(HighWireDrupalHttpResponseHandler.NoFailRetryableNetworkException_3_60S.class, exc);
-    
+    assertClass(CacheException.RetryDeadLinkException.class, exc);
+    //
     conn.setURL(starturl);
     exc = ((HttpResultMap)plugin.getCacheResultMap()).mapException(au, conn,
         500, "foo");
-    assertClass(RetrySameUrlException.class, exc);
+    assertClass(CacheException.RetrySameUrlException.class, exc);
     
   }
   /*
@@ -173,7 +171,6 @@ http://jinsectscience.oxfordjournals.org/highwire/article_citation_preview/61258
     shouldCacheTest(ROOT_URL + "content/303/2/X3.full.pdf", true, au);
     shouldCacheTest(ROOT_URL + "content/303/2/X3.full.pdf+html", true, au);
     shouldCacheTest(ROOT_URL + "content/303/2/X3.long", true, au);
-    shouldCacheTest(ROOT_URL + "content/303/2/X3.article-info", true, au);
     shouldCacheTest(ROOT_URL + "content/303/2/X3/article-info", false, au);
     shouldCacheTest(ROOT_URL + "content/303/2/X3.figures-only", true, au);
     shouldCacheTest(ROOT_URL + "content/303/2/X3.", true, au);
@@ -191,6 +188,7 @@ http://jinsectscience.oxfordjournals.org/highwire/article_citation_preview/61258
     shouldCacheTest(ROOT_URL + "content/early/2012/11/09/ex.00163.2012", false, au);
     shouldCacheTest(ROOT_URL + "lookup/external-ref?link_type=GEN", false, au);
     shouldCacheTest(ROOT_URL + "panels_ajax_tab/jnl_ex_tab_art/node:433/1", false, au);
+    shouldCacheTest(ROOT_URL + "content/303/2/X3.article-info", false, au);
     
     shouldCacheTest("http://cdn.mathjax.org/mathjax/latest/MathJax.js", true, au);
     shouldCacheTest("https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js", true, au);

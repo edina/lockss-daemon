@@ -89,8 +89,15 @@ then
     maxnumAUs1=$numdiffAUs
     maxnumAUs2=$numdiffAUs
     echo "No title differences"
-    scripts/tdb/tdbout -c auid,name,year tdb/prod/$file | grep -vf scripts/tdb/gvc_gln.txt | sed -e 's/^[^&]*&//' | sed -e 's/ \[superseded\]//' | sort | uniq > $tpath/glnt.txt
-    scripts/tdb/tdbout -c auid,name,year tdb/clockssingest/$file | grep -vf scripts/tdb/gvc_clockss.txt | sed -e 's/^[^&]*&//' | sed -e 's/ \[superseded\]//' | sort | uniq > $tpath/clocksst.txt
+    if [[ $file == "hindawi_publishing_corporation.tdb" ]]
+    then
+      #all statuses except superseded, down, and zapped -EXMWTNYRCLZIF and not -DSB
+      scripts/tdb/tdbout -EXMWTNYRCLZIF -c auid,name,year tdb/prod/$file | grep -vf scripts/tdb/gvc_gln.txt | sed -e 's/^[^&]*&//' | sed -e 's/ \[superseded\]//' | sort | uniq > $tpath/glnt.txt
+      scripts/tdb/tdbout -EXMWTNYRCLZIF -c auid,name,year tdb/clockssingest/$file | grep -vf scripts/tdb/gvc_clockss.txt | sed -e 's/^[^&]*&//' | sed -e 's/ \[superseded\]//' | sort | uniq > $tpath/clocksst.txt
+    else
+      scripts/tdb/tdbout -c auid,name,year tdb/prod/$file | grep -vf scripts/tdb/gvc_gln.txt | sed -e 's/^[^&]*&//' | sed -e 's/ \[superseded\]//' | sort | uniq > $tpath/glnt.txt
+      scripts/tdb/tdbout -c auid,name,year tdb/clockssingest/$file | grep -vf scripts/tdb/gvc_clockss.txt | sed -e 's/^[^&]*&//' | sed -e 's/ \[superseded\]//' | sort | uniq > $tpath/clocksst.txt
+    fi
     if ! diff -i $tpath/glnt.txt $tpath/clocksst.txt > $tpath/diff.txt
     then
       echo "AU differences: GLN v CLOCKSSingest"
@@ -123,15 +130,19 @@ then
       scripts/tdb/tdbout -c auid,name -Q 'status is "doNotProcess"' tdb/prod/$file | grep -vf scripts/tdb/gvc_gln.txt > $tpath/done_gln_dnp.txt
       # Merge all AUs to eliminate from list and sort
       cat $tpath/done_gln_exyrs.txt $tpath/done_gln_d.txt $tpath/done_gln_dnp.txt | sort > $tpath/done_gln.txt
-      # Find AUs in clockss marked released, filter for odd cases, filter plugin name, and sort.
+      # Find AUs in clockss marked finished, filter for odd cases, filter plugin name, and sort.
       scripts/tdb/tdbout -F -c auid,name tdb/clockssingest/$file | grep -vf scripts/tdb/gvc_clockss.txt | sed -e 's/Clockss//' | sed -e 's/BerkeleyElectronicPressPlugin/BePressPlugin/' | sort > $tpath/done_cks.txt
       if ! diff $tpath/done_cks.txt $tpath/done_gln.txt > $tpath/done_diff.txt
       then
         echo "***AU status diffs: mark ready in GLN***"
-        #cat $tpath/done_diff.txt
-        cat $tpath/done_diff.txt | grep "^< " | sed s/..// | head -n20
+        if [[ $opt_tdb_file == "" ]]
+        then
+          cat $tpath/done_diff.txt | grep "^< " | sed s/..// | head -n20
+        else
+          cat $tpath/done_diff.txt | grep "^< " | sed s/..//
+        fi
         linenumA=`cat $tpath/done_diff.txt | grep "^< " | wc -l`
-        if [ $linenumA -lt $maxnumAUsA ]
+        if [[ $linenumA -lt "$maxnumAUsA" || $opt_tdb_file != "" ]]
         then
            maxnumAUsA=$linenumA
         fi
@@ -144,3 +155,4 @@ then
 fi
 done
 exit 0
+

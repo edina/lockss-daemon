@@ -45,7 +45,6 @@ public class ProjectMuseUrlNormalizer implements UrlNormalizer {
 
   @Override
   public String normalizeUrl(String url, ArchivalUnit au) throws PluginException {
-    url = ProjectMuseUtil.baseUrlHostCheck(au, url);
     url = StringUtils.substringBeforeLast(url, VERSION_SUFFIX);
     return url;
   }

@@ -4,7 +4,7 @@
 
 /*
 
-Copyright (c) 2000-2014 Board of Trustees of Leland Stanford Jr. University,
+Copyright (c) 2000-2015 Board of Trustees of Leland Stanford Jr. University,
 all rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -111,16 +111,12 @@ public class TestBioMedCentralPluginArchivalUnit extends LockssTestCase {
       "http://www.biomed.com/content/3",
       "http://www.biomed.com/content/3/1/1",
       "http://www.biomed.com/content/3/1/1/abstract",
-      "http://www.biomed.com/content/3/1/1/citation",
       "http://www.biomed.com/content/3/1/10/figure/F1",
       "http://www.biomed.com/content/3/1/10/figure/F1?highres=y",
-      "http://www.biomed.com/content/3/1/11/mathml/M1",
       "http://www.biomed.com/content/3/1/11/suppl/S1",
-      "http://www.biomed.com/content/3/1/18/mathml/M1",
       "http://www.biomed.com/content/3/1/20/table/T1",
       "http://www.biomed.com/content/3/1/35/abstract",
       "http://www.biomed.com/content/3/1/35/additional",
-      "http://www.biomed.com/content/3/1/35/citation",
       "http://www.biomed.com/content/3/April/2008",
       "http://www.biomed.com/content/download/figures/1745-6150-3-10-1.jpeg",
       "http://www.biomed.com/content/download/supplementary/1745-6150-3-11-s1.mpg",
@@ -136,8 +132,12 @@ public class TestBioMedCentralPluginArchivalUnit extends LockssTestCase {
   private static final List<String> shouldNotList =  ListUtil.list(
       "http://www.biomed.com/content/4",
       "http://www.biomed.com/content/4/12",
+      "http://www.biomed.com/content/3/1/18/mathml/M1",
       "http://lockss.stanford.edu/",
-      "http://www.biomed.com/content/3/1/1email?from=standard"
+      "http://www.biomed.com/content/3/1/11/mathml/M1",
+      "http://www.biomed.com/content/3/1/1email?from=standard",
+      "http://www.biomed.com/content/3/1/1/citation",
+      "http://www.biomed.com/content/3/1/35/citation" //causing 503 errors now as site changes
       );
   public void testShouldCacheStandardPages() throws Exception {
     URL base = new URL(ROOT_URL);
@@ -164,16 +164,17 @@ public class TestBioMedCentralPluginArchivalUnit extends LockssTestCase {
   private static final List<String> GBshouldList =  ListUtil.list(
       "http://genbiomed.com/2009/10/1/101",
       "http://genbiomed.com/2009/10/1/101/abstract",
-      "http://genbiomed.com/2009/10/1/101/citation",
       "http://genbiomed.com/2009/10/1/201/figure/F1",
       "http://genbiomed.com/2009/10/1/201/figure/F1?highres=y",
-      "http://genbiomed.com/2009/10/1/R10/mathml/M1",
       "http://genbiomed.com/2009/10/1/R10/suppl/S2",
       "http://genbiomed.com/2009/10/1/R10/table/T2",
       "http://genbiomed.com/content/download/figures/gb-2009-10-1-201-1.eps"
       );
   private static final List<String> GBshouldNotList = ListUtil.list(
-      "http://genbiomed.com/2009/10/12/115/email?from=standard"
+      "http://genbiomed.com/2009/10/12/115/email?from=standard",
+      "http://genbiomed.com/2009/10/1/R10/mathml/M1",
+      "http://genbiomed.com/2009/10/1/101/citation",
+      "http://genbiomed.com/2009/10/1/R10/mathml/M102"
       );
   public void testShouldCacheGBPages() throws Exception {
     URL base = new URL(ODD_ROOT_URL);
@@ -233,14 +234,13 @@ public class TestBioMedCentralPluginArchivalUnit extends LockssTestCase {
     }
     assertEquals(false,found);
 
-    //NOT substance - wrong issn
-    testUrl = ROOT_URL + "content/pdf/1745-6150-3-11-1.pdf";
+    testUrl = ROOT_URL + "content/pdf/pretty-much-anything-now.pdf";
     found = false;
     for (Pattern nextPat : patList) {
           found = matcher.matches(testUrl, nextPat);
           if (found) break;
     }
-    assertEquals(false,found);
+    assertEquals(true,found);
   }
   
 }

@@ -130,13 +130,31 @@
       au < doNotProcess ; 2011 ; British Journal of Radiology Volume 84 ; 84 >
       au < doNotProcess ; 2012 ; British Journal of Radiology Volume 85 ; 85 >
       au < released ; 2013 ; British Journal of Radiology Volume 86 ; 86 >
-      au < manifest ; 2014 ; British Journal of Radiology Volume 87 ; 87 >
+      au < ready ; 2014 ; British Journal of Radiology Volume 87 ; 87 >
       au < manifest ; 2015 ; British Journal of Radiology Volume 88 ; 88 >
 
     }
     
   }
   
+  {
+
+    title <
+      name = BJR|case reports ;
+      eissn = 2055-7159 ;
+      issnl = 2055-7159
+    >
+    
+      plugin = org.lockss.plugin.atypon.bir.BIRAtyponPlugin
+      comment[platform] = Atypon
+      implicit < status ; year ; name ; param[volume_name] >
+      param[base_url] = http://www.birpublications.org/
+      param[journal_id] = bjrcr
+
+      au < manifest ; 2015 ; BJR|case reports Volume 1 ; 1 >
+
+  }
+
   {
 
     title <
@@ -263,6 +281,7 @@
       au < doNotProcess ; 2009 ; Imaging Volume 21 ; 21 >
       au < exists ; 2013 ; Imaging Volume 22 ; 22 >
       au < exists ; 2014 ; Imaging Volume 23 ; 23 >
+      au < expected ; 2015 ; Imaging Volume 24 ; 24 >
       
     }
     

@@ -55,6 +55,7 @@ public class TestBaseAtyponArchivalUnit extends LockssTestCase {
   static final String JID_KEY = ConfigParamDescr.JOURNAL_ID.getKey();
   static final String VOL_KEY = ConfigParamDescr.VOLUME_NAME.getKey();
   static final String ROOT_URL = "http://www.BaseAtypon.com/"; //this is not a real url
+  static final String ROOT_HOST = "www.BaseAtypon.com"; //this is not a real url
 
   private static final Logger log = Logger.getLogger(TestBaseAtyponArchivalUnit.class);
 
@@ -114,6 +115,11 @@ public class TestBaseAtyponArchivalUnit extends LockssTestCase {
     // images (etc.) but not as query arguments
     shouldCacheTest(ROOT_URL+"foo/bar/baz/qux.js", true, ABAu, cus);
     shouldCacheTest(ROOT_URL+"foo/bar/baz?url=qux.js", false, ABAu, cus);
+    // Taylor & Francis' use of fastly.net revealed missing slash in boilerplate rule
+    shouldCacheTest("http://" + ROOT_HOST + "/foo/bar/baz/qux.js", true, ABAu, cus);
+    shouldCacheTest("https://" + ROOT_HOST + "/foo/bar/baz/qux.js", true, ABAu, cus);
+    shouldCacheTest("http://" + ROOT_HOST + ".global.prod.fastly.net/foo/bar/baz/qux.js", false, ABAu, cus);
+    shouldCacheTest("https://" + ROOT_HOST + ".global.prod.fastly.net/foo/bar/baz/qux.js", false, ABAu, cus);
     // toc page for an issue
     shouldCacheTest(ROOT_URL+"toc/xxxx/123/5", true, ABAu, cus);
     // special issue
@@ -337,12 +343,12 @@ public class TestBaseAtyponArchivalUnit extends LockssTestCase {
         "org.lockss.plugin.atypon.futurescience.ClockssFutureSciencePlugin");
     //inderscience
     testSpecificUserMsg("http://www.inderscienceonline.com/", null, 
-        "org.lockss.plugin.atypon.inderscience.InderscienceAtyponPlugin",
-        "org.lockss.plugin.atypon.inderscience.ClockssInderscienceAtyponPlugin");    
+        "org.lockss.plugin.atypon.inderscience.IndersciencePlugin",
+        "org.lockss.plugin.atypon.inderscience.ClockssIndersciencePlugin");    
     //liverpool
     testSpecificUserMsg("http://online.liverpooluniversitypress.co.uk/", null, 
-        "org.lockss.plugin.atypon.liverpool.LiverpoolAtyponPlugin",
-        "org.lockss.plugin.atypon.liverpool.ClockssLiverpoolAtyponPlugin");
+        "org.lockss.plugin.atypon.liverpool.LiverpoolJournalsPlugin",
+        "org.lockss.plugin.atypon.liverpool.ClockssLiverpoolJournalsPlugin");
     //maney
     testSpecificUserMsg("http://www.maneyonline.com/", null, 
         "org.lockss.plugin.atypon.maney.ManeyAtyponPlugin",
@@ -353,8 +359,8 @@ public class TestBaseAtyponArchivalUnit extends LockssTestCase {
         "org.lockss.plugin.atypon.markallen.ClockssMarkAllenPlugin");
     //multiscience
     testSpecificUserMsg("http://multi-science.atypon.com/", null, 
-        "org.lockss.plugin.atypon.multiscience.MultiScienceAtyponPlugin",
-        "org.lockss.plugin.atypon.multiscience.ClockssMultiScienceAtyponPlugin");    
+        "org.lockss.plugin.atypon.multiscience.MultiSciencePlugin",
+        "org.lockss.plugin.atypon.multiscience.ClockssMultiSciencePlugin");    
     //nrcresearch
     testSpecificUserMsg("http://www.nrcresearchpress.com/", null, 
         null,
@@ -362,7 +368,7 @@ public class TestBaseAtyponArchivalUnit extends LockssTestCase {
     //practicalaction
     testSpecificUserMsg("http://www.developmentbookshelf.com/", null, 
         null,
-        "org.lockss.plugin.atypon.practicalaction.ClockssPracticalActionAtyponPlugin");    
+        "org.lockss.plugin.atypon.practicalaction.ClockssPracticalActionJournalsPlugin");    
     //seg
     testSpecificUserMsg("http://library.seg.org/", null, 
         null,
@@ -388,7 +394,7 @@ public class TestBaseAtyponArchivalUnit extends LockssTestCase {
     //wageningen
     testSpecificUserMsg("http://www.wageningenacademic.com/", null, 
         null,
-        "org.lockss.plugin.atypon.wageningen.ClockssWageningenAtyponPlugin");    
+        "org.lockss.plugin.atypon.wageningen.ClockssWageningenJournalsPlugin");    
   }
 
   // Associate the base_url with the publisher name for convenience

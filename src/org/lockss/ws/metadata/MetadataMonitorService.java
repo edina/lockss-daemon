@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: MetadataMonitorService.java 44384 2015-10-02 21:50:01Z fergaloy-sf $
  */
 
 /*
@@ -37,6 +37,8 @@ import javax.jws.WebService;
 import org.lockss.ws.entities.KeyIdNamePairListPair;
 import org.lockss.ws.entities.KeyValueListPair;
 import org.lockss.ws.entities.LockssWebServicesFault;
+import org.lockss.ws.entities.MismatchedMetadataChildWsResult;
+import org.lockss.ws.entities.UnnamedItemWsResult;
 
 /**
  * The MetadataMonitor web service interface.
@@ -167,4 +169,75 @@ public interface MetadataMonitorService {
    */
   @WebMethod
   List<String> getUnknownProviderAuIds() throws LockssWebServicesFault;
+
+  /**
+   * Provides the journal articles in the database whose parent is not a
+   * journal.
+   * 
+   * @return a List<MismatchedChildWsResult> with the mismatched journal
+   *  articles sorted by Archival Unit, parent name and child name.
+   * @throws LockssWebServicesFault
+   */
+  @WebMethod
+  List<MismatchedMetadataChildWsResult> getMismatchedParentJournalArticles()
+      throws LockssWebServicesFault;
+
+  /**
+   * Provides the book chapters in the database whose parent is not a book or a
+   * book series.
+   * 
+   * @return a List<MismatchedChildWsResult> with the mismatched book chapters
+   *         sorted by Archival Unit, parent name and child name.
+   * @throws LockssWebServicesFault
+   */
+  @WebMethod
+  List<MismatchedMetadataChildWsResult> getMismatchedParentBookChapters()
+      throws LockssWebServicesFault;
+
+  /**
+   * Provides the book volumes in the database whose parent is not a book or a
+   * book series.
+   * 
+   * @return a List<MismatchedChildWsResult> with the mismatched book volumes
+   *         sorted by Archival Unit, parent name and child name.
+   * @throws LockssWebServicesFault
+   */
+  @WebMethod
+  List<MismatchedMetadataChildWsResult> getMismatchedParentBookVolumes()
+      throws LockssWebServicesFault;
+
+  /**
+   * Provides the publishers for the Archival Units in the database with
+   * multiple publishers.
+   * 
+   * @return a List<KeyValueListPair> with the publishers keyed by the Archival
+   *         Unit name.
+   * @throws LockssWebServicesFault
+   */
+  @WebMethod
+  List<KeyValueListPair> getAuNamesWithMultiplePublishers()
+      throws LockssWebServicesFault;
+
+  /**
+   * Provides the metadata items in the database that do not have a name.
+   * 
+   * @return a List<UnnamedItemWsResult> with the unnamed metadata items sorted
+   *         sorted by publisher, Archival Unit, parent type, parent name and
+   *         item type.
+   * @throws LockssWebServicesFault
+   */
+  @WebMethod
+  List<UnnamedItemWsResult> getUnnamedItems() throws LockssWebServicesFault;
+
+  /**
+   * Provides the proprietary identifiers for the publications in the database
+   * with multiple proprietary identifiers.
+   * 
+   * @return a List<KeyValueListPair> with the proprietary identifiers keyed by
+   *         the publication name.
+   * @throws LockssWebServicesFault
+   */
+  @WebMethod
+  List<KeyValueListPair> getPublicationsWithMultiplePids()
+      throws LockssWebServicesFault;
 }

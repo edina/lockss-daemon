@@ -2,7 +2,7 @@
 
   publisher <
     name = Royal Society of Chemistry;
-    info[tester] = 4
+    info[tester] = 8
   >
 
   pluginPrefix = org.lockss.plugin.royalsocietyofchemistry.
@@ -50,9 +50,9 @@
       au < manifest ; 2010 ; The Analyst Volume 135 ; 135 ; 2010 >
       au < manifest ; 2011 ; The Analyst Volume 136 ; 136 ; 2011 >
       au < manifest ; 2012 ; The Analyst Volume 137 ; 137 ; 2012 >
-      au < ready ; 2013 ; The Analyst Volume 138 ; 138 ; 2013 >
+      au < released ; 2013 ; The Analyst Volume 138 ; 138 ; 2013 >
       au < manifest ; 2014 ; The Analyst Volume 139 ; 139 ; 2014 >
-      au < expected ; 2015 ; The Analyst Volume 140 ; 140 ; 2015 >
+      au < manifest ; 2015 ; The Analyst Volume 140 ; 140 ; 2015 >
     }
   }
 
@@ -142,8 +142,8 @@
       au < manifest ; 2010 ; Annual Reports on the Progress of Chemistry, Section A: Inorganic Chemistry Volume 106 ; 106 ; 2010 >
       au < released ; 2011 ; Annual Reports on the Progress of Chemistry, Section A: Inorganic Chemistry Volume 107 ; 107 ; 2011 >
       au < released ; 2012 ; Annual Reports on the Progress of Chemistry, Section A: Inorganic Chemistry Volume 108 ; 108 ; 2012 >
-      au < testing ; 2013 ; Annual Reports on the Progress of Chemistry, Section A: Inorganic Chemistry Volume 109 ; 109 ; 2013 >
-      au < expected ; 2014 ; Annual Reports on the Progress of Chemistry, Section A: Inorganic Chemistry Volume 110 ; 110 ; 2014 >
+      au < released ; 2013 ; Annual Reports on the Progress of Chemistry, Section A: Inorganic Chemistry Volume 109 ; 109 ; 2013 >
+
     }
   }
 
@@ -164,7 +164,7 @@
       
     au < down ; 2008 ; Annual Reports on the Progress of Chemistry, Section B: Organic Chemistry Volume 104 ; 104 ; 2008 >
     au < down ; 2009 ; Annual Reports on the Progress of Chemistry, Section B: Organic Chemistry Volume 105 ; 105 ; 2009 >
-    au < superseded ; 2010 ; Annual Reports on the Progress of Chemistry, Section B: Organic Chemistry Volume 106 ; 106 ; 2010 >
+    au < superseded ; 2010 ; Annual Reports on the Progress of Chemistry, Section B: Organic Chemistry Volume 106 [superseded] ; 106 ; 2010 >
     }
     
     {
@@ -174,7 +174,7 @@
       param[graphics_url] = http://sod-a.rsc-cdn.org/
       param[base_url2] = http://www.rsc.org/
       
-      au < manifest ; 2010 ; Annual Reports on the Progress of Chemistry, Section B: Organic Chemistry Volume 106 ; 106 ; 2010 >
+      au < released ; 2010 ; Annual Reports on the Progress of Chemistry, Section B: Organic Chemistry Volume 106 ; 106 ; 2010 >
       au < released ; 2011 ; Annual Reports on the Progress of Chemistry, Section B: Organic Chemistry Volume 107 ; 107 ; 2011 >
       au < released ; 2012 ; Annual Reports on the Progress of Chemistry, Section B: Organic Chemistry Volume 108 ; 108 ; 2012 >
       au < released ; 2013 ; Annual Reports on the Progress of Chemistry, Section B: Organic Chemistry Volume 109 ; 109 ; 2013 >
@@ -239,9 +239,9 @@
       param[graphics_url] = http://sod-a.rsc-cdn.org/
       param[base_url2] = http://www.rsc.org/
       
-      au < ready ; 2013 ; CBiomaterials Science Volume 1 ; 1 ; 2013 >
+      au < released ; 2013 ; CBiomaterials Science Volume 1 ; 1 ; 2013 >
       au < manifest ; 2014 ; CBiomaterials Science Volume 2 ; 2 ; 2014 >
-      au < expected ; 2015 ; CBiomaterials Science Volume 3 ; 3 ; 2015 >
+      au < manifest ; 2015 ; CBiomaterials Science Volume 3 ; 3 ; 2015 >
     }
   }
 
@@ -258,11 +258,6 @@
       param[base_url] = http://www.rsc.org/
       param[resolver_url] = http://xlink.rsc.org/
       
-    au < doNotProcess ; 1997 ; Chemical Communications 1997 ; 0 ; 1997 >
-    au < doNotProcess ; 1998 ; Chemical Communications 1998 ; 0 ; 1998 >
-    au < doNotProcess ; 1999 ; Chemical Communications 1999 ; 0 ; 1999 >
-    au < doNotProcess ; 2000 ; Chemical Communications 2000 ; 0 ; 2000 >
-    au < doNotProcess ; 2001 ; Chemical Communications 2001 ; 0 ; 2001 >
     au < down ; 2002 ; Chemical Communications 2002 ; 0 ; 2002 >
     au < doNotProcess ; 2003 ; Chemical Communications 2003 ; 0 ; 2003 >
     au < doNotProcess ; 2004 ; Chemical Communications 2004 ; 0 ; 2004 >
@@ -284,30 +279,9 @@
       au < manifest ; 2010 ; Chemical Communications Volume 46 ; 46 ; 2010 >
       au < manifest ; 2011 ; Chemical Communications Volume 47 ; 47 ; 2011 >
       au < manifest ; 2012 ; Chemical Communications Volume 48 ; 48 ; 2012 >
-      au < ready ; 2013 ; Chemical Communications Volume 49 ; 49 ; 2013 >
+      au < released ; 2013 ; Chemical Communications Volume 49 ; 49 ; 2013 >
       au < manifest ; 2014 ; Chemical Communications Volume 50 ; 50 ; 2014 >
-      au < expected ; 2015 ; Chemical Communications Volume 51 ; 51 ; 2015 >
-    }
-  }
-
-  {
-
-    title <
-      name = Chemical Communications (London) ;
-      issn = 1359-7345 ;
-      eissn = 1364-548X
-    >
-
-    param[journal_code] = c1
-    {
-      pluginSuffix = RoyalSocietyOfChemistryPlugin
-      param[base_url] = http://www.rsc.org/
-      param[resolver_url] = http://xlink.rsc.org/
-      
-    au < doNotProcess ; 1965 ; Chemical Communications 1965 ; 0 ; 1965 >
-    au < doNotProcess ; 1966 ; Chemical Communications 1966 ; 0 ; 1966 >
-    au < doNotProcess ; 1967 ; Chemical Communications 1967 ; 0 ; 1967 >
-    au < doNotProcess ; 1968 ; Chemical Communications 1968 ; 0 ; 1968 >
+      au < manifest ; 2015 ; Chemical Communications Volume 51 ; 51 ; 2015 >
     }
   }
 
@@ -354,7 +328,7 @@
       au < manifest ; 2012 ; Chemical Society Reviews Volume 41 ; 41 ; 2012 >
       au < testing ; 2013 ; Chemical Society Reviews Volume 42 ; 42 ; 2013 >
       au < manifest ; 2014 ; Chemical Society Reviews Volume 43 ; 43 ; 2014 >
-      au < expected ; 2015 ; Chemical Society Reviews Volume 44 ; 44 ; 2015 >
+      au < manifest ; 2015 ; Chemical Society Reviews Volume 44 ; 44 ; 2015 >
     }
   }
 
@@ -388,7 +362,9 @@
       au < released ; 2011 ; Chemistry Education Research and Practice Volume 12 ; 12 ; 2011 >
       au < released ; 2012 ; Chemistry Education Research and Practice Volume 13 ; 13 ; 2012 >
       au < released ; 2013 ; Chemistry Education Research and Practice Volume 14 ; 14 ; 2013 >
-      au < manifest ; 2014 ; Chemistry Education Research and Practice Volume 15 ; 15 ; 2014 >
+      au < released ; 2014 ; Chemistry Education Research and Practice Volume 15 ; 15 ; 2014 >
+      au < manifest ; 2015 ; Chemistry Education Research and Practice Volume 16 ; 16 ; 2015 >
+
     }
   }
 
@@ -451,9 +427,9 @@
       au < manifest ; 2010 ; CrystEngComm Volume 12 ; 12 ; 2010 >
       au < manifest ; 2011 ; CrystEngComm Volume 13 ; 13 ; 2011 >
       au < manifest ; 2012 ; CrystEngComm Volume 14 ; 14 ; 2012 >
-      au < ready ; 2013 ; CrystEngComm Volume 15 ; 15 ; 2013 >
+      au < released ; 2013 ; CrystEngComm Volume 15 ; 15 ; 2013 >
       au < manifest ; 2014 ; CrystEngComm Volume 16 ; 16 ; 2014 >
-      au < expected ; 2015 ; CrystEngComm Volume 17 ; 17 ; 2015 >
+      au < manifest ; 2015 ; CrystEngComm Volume 17 ; 17 ; 2015 >
     }
   }
 
@@ -498,9 +474,9 @@
       au < manifest ; 2010 ; Dalton Transactions Volume 39 ; 39 ; 2010 >
       au < released ; 2011 ; Dalton Transactions Volume 40 ; 40 ; 2011 >
       au < manifest ; 2012 ; Dalton Transactions Volume 41 ; 41 ; 2012 >
-      au < ready ; 2013 ; Dalton Transactions Volume 42 ; 42 ; 2013 >
+      au < released ; 2013 ; Dalton Transactions Volume 42 ; 42 ; 2013 >
       au < manifest ; 2014 ; Dalton Transactions Volume 43 ; 43 ; 2014 >
-      au < expected ; 2015 ; Dalton Transactions Volume 44 ; 44 ; 2015 >
+      au < manifest ; 2015 ; Dalton Transactions Volume 44 ; 44 ; 2015 >
     }
   }
 
@@ -532,12 +508,12 @@
       param[base_url2] = http://www.rsc.org/
       comment[notReady] = All manifest pages link to same content
       
-      au < notReady ; 2010 ; Energy & Environmental Science Volume 3 ; 3 ; 2010 >
-      au < notReady ; 2011 ; Energy & Environmental Science Volume 4 ; 4 ; 2011 >
-      au < notReady ; 2012 ; Energy & Environmental Science Volume 5 ; 5 ; 2012 >
-      au < notReady ; 2013 ; Energy & Environmental Science Volume 6 ; 6 ; 2013 >
+      au < released ; 2010 ; Energy & Environmental Science Volume 3 ; 3 ; 2010 >
+      au < released ; 2011 ; Energy & Environmental Science Volume 4 ; 4 ; 2011 >
+      au < manifest ; 2012 ; Energy & Environmental Science Volume 5 ; 5 ; 2012 >
+      au < manifest ; 2013 ; Energy & Environmental Science Volume 6 ; 6 ; 2013 >
       au < manifest ; 2014 ; Energy & Environmental Science Volume 7 ; 7 ; 2014 >
-      au < expected ; 2015 ; Energy & Environmental Science Volume 8 ; 8 ; 2015 >
+      au < manifest ; 2015 ; Energy & Environmental Science Volume 8 ; 8 ; 2015 >
     }
   }
 
@@ -574,33 +550,51 @@
       param[graphics_url] = http://sod-a.rsc-cdn.org/
       param[base_url2] = http://www.rsc.org/
       
-      au < manifest ; 2010 ; Faraday Discussions Volume 144 ; 144 ; 2010 >
-      au < manifest ; 2010 ; Faraday Discussions Volume 145 ; 145 ; 2010 >
-      au < manifest ; 2010 ; Faraday Discussions Volume 146 ; 146 ; 2010 >
-      au < manifest ; 2010 ; Faraday Discussions Volume 147 ; 147 ; 2010 >
+      au < released ; 2010 ; Faraday Discussions Volume 144 ; 144 ; 2010 >
+      au < released ; 2010 ; Faraday Discussions Volume 145 ; 145 ; 2010 >
+      au < released ; 2010 ; Faraday Discussions Volume 146 ; 146 ; 2010 >
+      au < released ; 2010 ; Faraday Discussions Volume 147 ; 147 ; 2010 >
       
-      au < manifest ; 2011 ; Faraday Discussions Volume 148 ; 148 ; 2011 >
-      au < manifest ; 2011 ; Faraday Discussions Volume 149 ; 149 ; 2011 >
-      au < manifest ; 2011 ; Faraday Discussions Volume 150 ; 150 ; 2011 >
+      au < released ; 2011 ; Faraday Discussions Volume 148 ; 148 ; 2011 >
+      au < released ; 2011 ; Faraday Discussions Volume 149 ; 149 ; 2011 >
+      au < released ; 2011 ; Faraday Discussions Volume 150 ; 150 ; 2011 >
       au < manifest ; 2011 ; Faraday Discussions Volume 151 ; 151 ; 2011 >
-      au < manifest ; 2011 ; Faraday Discussions Volume 152 ; 152 ; 2011 >
-      au < manifest ; 2011 ; Faraday Discussions Volume 153 ; 153 ; 2011 >
+      au < released ; 2011 ; Faraday Discussions Volume 152 ; 152 ; 2011 >
+      au < released ; 2011 ; Faraday Discussions Volume 153 ; 153 ; 2011 >
       
       au < manifest ; 2012 ; Faraday Discussions Volume 154 ; 154 ; 2012 >
-      au < manifest ; 2012 ; Faraday Discussions Volume 155 ; 155 ; 2012 >
-      au < manifest ; 2012 ; Faraday Discussions Volume 156 ; 156 ; 2012 >
+      au < released ; 2012 ; Faraday Discussions Volume 155 ; 155 ; 2012 >
+      au < released ; 2012 ; Faraday Discussions Volume 156 ; 156 ; 2012 >
       au < manifest ; 2012 ; Faraday Discussions Volume 157 ; 157 ; 2012 >
-      au < manifest ; 2012 ; Faraday Discussions Volume 158 ; 158 ; 2012 >
-      au < manifest ; 2012 ; Faraday Discussions Volume 159 ; 159 ; 2012 >
+      au < released ; 2012 ; Faraday Discussions Volume 158 ; 158 ; 2012 >
+      au < released ; 2012 ; Faraday Discussions Volume 159 ; 159 ; 2012 >
       
-      au < ready ; 2013 ; Faraday Discussions Volume 160 ; 160 ; 2013 >
-      au < ready ; 2013 ; Faraday Discussions Volume 161 ; 161 ; 2013 >
-      au < ready ; 2013 ; Faraday Discussions Volume 162 ; 162 ; 2013 >
-      au < ready ; 2013 ; Faraday Discussions Volume 163 ; 163 ; 2013 >
-      au < ready ; 2013 ; Faraday Discussions Volume 164 ; 164 ; 2013 >
-      au < ready ; 2013 ; Faraday Discussions Volume 165 ; 165 ; 2013 >
-      au < ready ; 2013 ; Faraday Discussions Volume 166 ; 166 ; 2013 >
-      au < ready ; 2013 ; Faraday Discussions Volume 167 ; 167 ; 2013 >
+      au < released ; 2013 ; Faraday Discussions Volume 160 ; 160 ; 2013 >
+      au < released ; 2013 ; Faraday Discussions Volume 161 ; 161 ; 2013 >
+      au < released ; 2013 ; Faraday Discussions Volume 162 ; 162 ; 2013 >
+      au < released ; 2013 ; Faraday Discussions Volume 163 ; 163 ; 2013 >
+      au < released ; 2013 ; Faraday Discussions Volume 164 ; 164 ; 2013 >
+      au < released ; 2013 ; Faraday Discussions Volume 165 ; 165 ; 2013 >
+      au < released ; 2013 ; Faraday Discussions Volume 166 ; 166 ; 2013 >
+      au < released ; 2013 ; Faraday Discussions Volume 167 ; 167 ; 2013 >
+
+      au < released ; 2014 ; Faraday Discussions Volume 168 ; 168 ; 2014 >
+      au < manifest ; 2014 ; Faraday Discussions Volume 169 ; 169 ; 2014 >
+      au < released ; 2014 ; Faraday Discussions Volume 170 ; 170 ; 2014 >
+      au < released ; 2014 ; Faraday Discussions Volume 171 ; 171 ; 2014 >
+      au < released ; 2014 ; Faraday Discussions Volume 172 ; 172 ; 2014 >
+      au < manifest ; 2014 ; Faraday Discussions Volume 173 ; 173 ; 2014 >
+      au < released ; 2014 ; Faraday Discussions Volume 174 ; 174 ; 2014 >
+      au < manifest ; 2014 ; Faraday Discussions Volume 175 ; 175 ; 2014 >
+      au < manifest ; 2014 ; Faraday Discussions Volume 176 ; 176 ; 2014 >
+
+      au < manifest ; 2015 ; Faraday Discussions Volume 177 ; 177 ; 2015 >
+      au < manifest ; 2015 ; Faraday Discussions Volume 178 ; 178 ; 2015 >
+      au < manifest ; 2015 ; Faraday Discussions Volume 179 ; 179 ; 2015 >
+      au < manifest ; 2015 ; Faraday Discussions Volume 180 ; 180 ; 2015 >
+      au < manifest ; 2015 ; Faraday Discussions Volume 181 ; 181 ; 2015 >
+      au < manifest ; 2015 ; Faraday Discussions Volume 182 ; 182 ; 2015 >
+      au < expected ; 2015 ; Faraday Discussions Volume 183 ; 183 ; 2015 >
     }
   }
 
@@ -663,11 +657,11 @@
       param[base_url2] = http://www.rsc.org/
       
       au < manifest ; 2010 ; Green Chemistry Volume 12 ; 12 ; 2010 >
-      au < manifest ; 2011 ; Green Chemistry Volume 13 ; 13 ; 2011 >
+      au < released ; 2011 ; Green Chemistry Volume 13 ; 13 ; 2011 >
       au < manifest ; 2012 ; Green Chemistry Volume 14 ; 14 ; 2012 >
-      au < ready ; 2013 ; Green Chemistry Volume 15 ; 15 ; 2013 >
+      au < released ; 2013 ; Green Chemistry Volume 15 ; 15 ; 2013 >
       au < manifest ; 2014 ; Green Chemistry Volume 16 ; 16 ; 2014 >
-      au < expected ; 2015 ; Green Chemistry Volume 17 ; 17 ; 2015 >
+      au < manifest ; 2015 ; Green Chemistry Volume 17 ; 17 ; 2015 >
     }
   }
 
@@ -697,12 +691,12 @@
       param[graphics_url] = http://sod-a.rsc-cdn.org/
       param[base_url2] = http://www.rsc.org/
       
-      au < manifest ; 2010 ; Integrative Biology Volume 2 ; 2 ; 2010 >
+      au < released ; 2010 ; Integrative Biology Volume 2 ; 2 ; 2010 >
       au < manifest ; 2011 ; Integrative Biology Volume 3 ; 3 ; 2011 >
       au < manifest ; 2012 ; Integrative Biology Volume 4 ; 4 ; 2012 >
-      au < ready ; 2013 ; Integrative Biology Volume 5 ; 5 ; 2013 >
+      au < released ; 2013 ; Integrative Biology Volume 5 ; 5 ; 2013 >
       au < manifest ; 2014 ; Integrative Biology Volume 6 ; 6 ; 2014 >
-      au < expected ; 2015 ; Integrative Biology Volume 7 ; 7 ; 2015 >
+      au < manifest ; 2015 ; Integrative Biology Volume 7 ; 7 ; 2015 >
     }
   }
 
@@ -744,12 +738,12 @@
       param[graphics_url] = http://sod-a.rsc-cdn.org/
       param[base_url2] = http://www.rsc.org/
       
-      au < manifest ; 2010 ; Journal of Analytical Atomic Spectrometry Volume 25 ; 25 ; 2010 >
-      au < manifest ; 2011 ; Journal of Analytical Atomic Spectrometry Volume 26 ; 26 ; 2011 >
-      au < manifest ; 2012 ; Journal of Analytical Atomic Spectrometry Volume 27 ; 27 ; 2012 >
-      au < ready ; 2013 ; Journal of Analytical Atomic Spectrometry Volume 28 ; 28 ; 2013 >
+      au < released ; 2010 ; Journal of Analytical Atomic Spectrometry Volume 25 ; 25 ; 2010 >
+      au < released ; 2011 ; Journal of Analytical Atomic Spectrometry Volume 26 ; 26 ; 2011 >
+      au < released ; 2012 ; Journal of Analytical Atomic Spectrometry Volume 27 ; 27 ; 2012 >
+      au < released ; 2013 ; Journal of Analytical Atomic Spectrometry Volume 28 ; 28 ; 2013 >
       au < manifest ; 2014 ; Journal of Analytical Atomic Spectrometry Volume 29 ; 29 ; 2014 >
-      au < expected ; 2015 ; Journal of Analytical Atomic Spectrometry Volume 30 ; 30 ; 2015 >
+      au < manifest ; 2015 ; Journal of Analytical Atomic Spectrometry Volume 30 ; 30 ; 2015 >
     }
   }
 
@@ -896,9 +890,9 @@
       au < manifest ; 2010 ; Journal of Environmental Monitoring Volume 12 ; 12 ; 2010 >
       au < manifest ; 2011 ; Journal of Environmental Monitoring Volume 13 ; 13 ; 2011 >
       au < manifest ; 2012 ; Journal of Environmental Monitoring Volume 14 ; 14 ; 2012 >
-      au < ready ; 2013 ; Journal of Environmental Monitoring Volume 15 ; 15 ; 2013 >
+      au < released ; 2013 ; Journal of Environmental Monitoring Volume 15 ; 15 ; 2013 >
       au < manifest ; 2014 ; Journal of Environmental Monitoring Volume 16 ; 16 ; 2014 >
-      au < expected ; 2015 ; Journal of Environmental Monitoring Volume 17 ; 17 ; 2015 >
+      au < manifest ; 2015 ; Journal of Environmental Monitoring Volume 17 ; 17 ; 2015 >
     }
   }
 
@@ -942,8 +936,6 @@
       au < manifest ; 2010 ; Journal of Materials Chemistry Volume 20 ; 20 ; 2010 >
       au < manifest ; 2011 ; Journal of Materials Chemistry Volume 21 ; 21 ; 2011 >
       au < manifest ; 2012 ; Journal of Materials Chemistry Volume 22 ; 22 ; 2012 >
-      au < expected ; 2013 ; Journal of Materials Chemistry Volume 23 ; 23 ; 2013 >
-      au < expected ; 2014 ; Journal of Materials Chemistry Volume 24 ; 24 ; 2014 >
     }
   }
 
@@ -984,9 +976,9 @@
       au < manifest ; 2010 ; Lab on a Chip Volume 10 ; 10 ; 2010 >
       au < manifest ; 2011 ; Lab on a Chip Volume 11 ; 11 ; 2011 >
       au < manifest ; 2012 ; Lab on a Chip Volume 12 ; 12 ; 2012 >
-      au < ready ; 2013 ; Lab on a Chip Volume 13 ; 13 ; 2013 >
+      au < released ; 2013 ; Lab on a Chip Volume 13 ; 13 ; 2013 >
       au < manifest ; 2014 ; Lab on a Chip Volume 14 ; 14 ; 2014 >
-      au < expected ; 2015 ; Lab on a Chip Volume 15 ; 15 ; 2015 >
+      au < manifest ; 2015 ; Lab on a Chip Volume 15 ; 15 ; 2015 >
     }
   }
 
@@ -1019,9 +1011,9 @@
       au < manifest ; 2010 ; Metallomics Volume 2 ; 2 ; 2010 >
       au < manifest ; 2011 ; Metallomics Volume 3 ; 3 ; 2011 >
       au < manifest ; 2012 ; Metallomics Volume 4 ; 4 ; 2012 >
-      au < ready ; 2013 ; Metallomics Volume 5 ; 5 ; 2013 >
-      au < manifest ; 2014 ; Metallomics Volume 6 ; 6 ; 2014 >
-      au < expected ; 2015 ; Metallomics Volume 7 ; 7 ; 2015 >
+      au < released ; 2013 ; Metallomics Volume 5 ; 5 ; 2013 >
+      au < released ; 2014 ; Metallomics Volume 6 ; 6 ; 2014 >
+      au < manifest ; 2015 ; Metallomics Volume 7 ; 7 ; 2015 >
     }
   }
 
@@ -1055,12 +1047,12 @@
       param[graphics_url] = http://sod-a.rsc-cdn.org/
       param[base_url2] = http://www.rsc.org/
       
-      au < manifest ; 2010 ; Molecular BioSystems Volume 6 ; 6 ; 2010 >
+      au < released ; 2010 ; Molecular BioSystems Volume 6 ; 6 ; 2010 >
       au < manifest ; 2011 ; Molecular BioSystems Volume 7 ; 7 ; 2011 >
       au < manifest ; 2012 ; Molecular BioSystems Volume 8 ; 8 ; 2012 >
-      au < ready ; 2013 ; Molecular BioSystems Volume 9 ; 9 ; 2013 >
+      au < released ; 2013 ; Molecular BioSystems Volume 9 ; 9 ; 2013 >
       au < manifest ; 2014 ; Molecular BioSystems Volume 10 ; 10 ; 2014 >
-      au < expected ; 2015 ; Molecular BioSystems Volume 11 ; 11 ; 2015 >
+      au < manifest ; 2015 ; Molecular BioSystems Volume 11 ; 11 ; 2015 >
     }
   }
 
@@ -1093,8 +1085,10 @@
       au < manifest ; 2010 ; Nanoscale Volume 2 ; 2 ; 2010 >
       au < manifest ; 2011 ; Nanoscale Volume 3 ; 3 ; 2011 >
       au < manifest ; 2012 ; Nanoscale Volume 4 ; 4 ; 2012 >
-      au < ready ; 2013 ; Nanoscale Volume 5 ; 5 ; 2013 >
+      au < released ; 2013 ; Nanoscale Volume 5 ; 5 ; 2013 >
       au < manifest ; 2014 ; Nanoscale Volume 6 ; 6 ; 2014 >
+      au < manifest ; 2015 ; Nanoscale Volume 7 ; 7 ; 2015 >
+
     }
   }
 
@@ -1139,8 +1133,10 @@
       au < manifest ; 2010 ; Natural Product Reports Volume 27 ; 27 ; 2010 >
       au < manifest ; 2011 ; Natural Product Reports Volume 28 ; 28 ; 2011 >
       au < manifest ; 2012 ; Natural Product Reports Volume 29 ; 29 ; 2012 >
-      au < ready ; 2013 ; Natural Product Reports Volume 30 ; 30 ; 2013 >
-      au < manifest ; 2014 ; Natural Product Reports Volume 31 ; 31 ; 2014 >
+      au < released ; 2013 ; Natural Product Reports Volume 30 ; 30 ; 2013 >
+      au < released ; 2014 ; Natural Product Reports Volume 31 ; 31 ; 2014 >
+      au < manifest ; 2015 ; Natural Product Reports Volume 32 ; 32 ; 2015 >
+
     }
   }
 
@@ -1185,9 +1181,9 @@
       au < manifest ; 2010 ; New Journal of Chemistry Volume 34 ; 34 ; 2010 >
       au < manifest ; 2011 ; New Journal of Chemistry Volume 35 ; 35 ; 2011 >
       au < manifest ; 2012 ; New Journal of Chemistry Volume 36 ; 36 ; 2012 >
-      au < ready ; 2013 ; New Journal of Chemistry Volume 37 ; 37 ; 2013 >
-      au < manifest ; 2014 ; New Journal of Chemistry Volume 38 ; 38 ; 2014 >
-      au < expected ; 2015 ; New Journal of Chemistry Volume 39 ; 39 ; 2015 >
+      au < released ; 2013 ; New Journal of Chemistry Volume 37 ; 37 ; 2013 >
+      au < released ; 2014 ; New Journal of Chemistry Volume 38 ; 38 ; 2014 >
+      au < manifest ; 2015 ; New Journal of Chemistry Volume 39 ; 39 ; 2015 >
     }
   }
 
@@ -1227,8 +1223,10 @@
       au < manifest ; 2010 ; Organic & Biomolecular Chemistry Volume 8 ; 8 ; 2010 >
       au < manifest ; 2011 ; Organic & Biomolecular Chemistry Volume 9 ; 9 ; 2011 >
       au < manifest ; 2012 ; Organic & Biomolecular Chemistry Volume 10 ; 10 ; 2012 >
-      au < ready ; 2013 ; Organic & Biomolecular Chemistry Volume 11 ; 11 ; 2013 >
+      au < released ; 2013 ; Organic & Biomolecular Chemistry Volume 11 ; 11 ; 2013 >
       au < manifest ; 2014 ; Organic & Biomolecular Chemistry Volume 12 ; 12 ; 2014 >
+      au < manifest ; 2015 ; Organic & Biomolecular Chemistry Volume 13 ; 13 ; 2015 >
+
     }
   }
 
@@ -1291,8 +1289,10 @@
       au < manifest ; 2010 ; Photochemical & Photobiological Sciences Volume 9 ; 9 ; 2010 >
       au < manifest ; 2011 ; Photochemical & Photobiological Sciences Volume 10 ; 10 ; 2011 >
       au < manifest ; 2012 ; Photochemical & Photobiological Sciences Volume 11 ; 11 ; 2012 >
-      au < ready ; 2013 ; Photochemical & Photobiological Sciences Volume 12 ; 12 ; 2013 >
+      au < released ; 2013 ; Photochemical & Photobiological Sciences Volume 12 ; 12 ; 2013 >
       au < manifest ; 2014 ; Photochemical & Photobiological Sciences Volume 13 ; 13 ; 2014 >
+      au < manifest ; 2015 ; Photochemical & Photobiological Sciences Volume 14 ; 14 ; 2015 >
+
     }
   }
 
@@ -1354,12 +1354,12 @@
       param[graphics_url] = http://sod-a.rsc-cdn.org/
       param[base_url2] = http://www.rsc.org/
       
-      au < manifest ; 2010 ; Physical Chemistry Chemical Physics Volume 12 ; 12 ; 2010 >
-      au < manifest ; 2011 ; Physical Chemistry Chemical Physics Volume 13 ; 13 ; 2011 >
+      au < released ; 2010 ; Physical Chemistry Chemical Physics Volume 12 ; 12 ; 2010 >
+      au < released ; 2011 ; Physical Chemistry Chemical Physics Volume 13 ; 13 ; 2011 >
       au < manifest ; 2012 ; Physical Chemistry Chemical Physics Volume 14 ; 14 ; 2012 >
-      au < ready ; 2013 ; Physical Chemistry Chemical Physics Volume 15 ; 15 ; 2013 >
+      au < released ; 2013 ; Physical Chemistry Chemical Physics Volume 15 ; 15 ; 2013 >
       au < manifest ; 2014 ; Physical Chemistry Chemical Physics Volume 16 ; 16 ; 2014 >
-      au < expected ; 2015 ; Physical Chemistry Chemical Physics Volume 17 ; 17 ; 2015 >
+      au < manifest ; 2015 ; Physical Chemistry Chemical Physics Volume 17 ; 17 ; 2015 >
     }
   }
 
@@ -1418,11 +1418,13 @@
       param[graphics_url] = http://sod-a.rsc-cdn.org/
       param[base_url2] = http://www.rsc.org/
       
-      au < manifest ; 2010 ; Soft Matter Volume 6 ; 7 ; 2010 >
+      au < manifest ; 2010 ; Soft Matter Volume 6 ; 6 ; 2010 >
       au < manifest ; 2011 ; Soft Matter Volume 7 ; 7 ; 2011 >
       au < manifest ; 2012 ; Soft Matter Volume 8 ; 8 ; 2012 >
-      au < ready ; 2013 ; Soft Matter Volume 9 ; 9 ; 2013 >
+      au < released ; 2013 ; Soft Matter Volume 9 ; 9 ; 2013 >
       au < manifest ; 2014 ; Soft Matter Volume 10 ; 10 ; 2014 >
+      au < manifest ; 2015 ; Soft Matter Volume 11 ; 11 ; 2015 >
+
     }
   }
 

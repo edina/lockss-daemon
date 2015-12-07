@@ -231,8 +231,8 @@ public class TestLiaXmlMetadataExtractor extends LockssTestCase {
   }
 
   private void compareMetadata(ArticleMetadata AM) {
-    String issn = AM.get(MetadataField.FIELD_ISSN);
-    ArrayList expected = (ArrayList) expectedMD.get(issn);
+    String eissn = AM.get(MetadataField.FIELD_EISSN);
+    ArrayList expected = (ArrayList) expectedMD.get(eissn);
 
     assertNotNull(expected);
     assertEquals(expected.get(DOI_INDEX), AM.get(MetadataField.FIELD_DOI));

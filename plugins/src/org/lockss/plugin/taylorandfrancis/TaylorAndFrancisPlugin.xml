@@ -17,7 +17,7 @@
   </entry>   
   <entry>
     <string>plugin_version</string>
-    <string>67</string>
+    <string>74</string>
   </entry>
 <!-- Now a child of BaseAtypon which lives in a different directory "atypon" -->  
   <entry>
@@ -26,7 +26,7 @@
   </entry>
   <entry>
     <string>plugin_parent_version</string>
-    <string>26</string>
+    <string>44</string>
   </entry>   
   <entry>
     <string>plugin_feature_version_map</string>
@@ -37,7 +37,7 @@
       </entry>
       <entry>
         <string>Poll</string>
-        <string>35</string>
+        <string>38</string>
       </entry>
       <entry>
         <string>Substance</string>
@@ -105,26 +105,25 @@
     <string>au_rate_limiter_info</string>
     <org.lockss.plugin.RateLimiterInfo>
       <!-- This very next rate is there only for the plugin to be well-formed, it does not actually have any effect -->
-      <rate>1/6s</rate>
+      <rate>1/3500</rate>
       <cond>
-        <entry>
-          <org.lockss.daemon.CrawlWindows-Daily>
-            <from>12:00</from>
-            <to>24:00</to>
-            <timeZoneId>America/Los_Angeles</timeZoneId>
-          </org.lockss.daemon.CrawlWindows-Daily>
-          <org.lockss.plugin.RateLimiterInfo>
-            <rate>1/2s</rate>
-          </org.lockss.plugin.RateLimiterInfo>
-        </entry>
+        <!-- Weekdays during requested times, 1/5s -->
         <entry>
           <org.lockss.daemon.CrawlWindows-Daily>
             <from>24:00</from>
             <to>12:00</to>
             <timeZoneId>America/Los_Angeles</timeZoneId>
+            <daysOfWeek>2;3;4;5;6</daysOfWeek>
           </org.lockss.daemon.CrawlWindows-Daily>
           <org.lockss.plugin.RateLimiterInfo>
-            <rate>1/6s</rate>
+            <rate>1/3500</rate>
+          </org.lockss.plugin.RateLimiterInfo>
+        </entry>
+        <!-- the rest of the time, 1/2s -->
+        <entry>
+          <org.lockss.daemon.CrawlWindows-Always />
+          <org.lockss.plugin.RateLimiterInfo>
+            <rate>1/2s</rate>
           </org.lockss.plugin.RateLimiterInfo>
         </entry>
       </cond>
@@ -141,6 +140,10 @@
   <!-- Candidate to be hoisted into BaseAtyponPlugin -->
   <entry>
     <string>au_repair_from_peer_if_missing_url_pattern</string>
-    <string>://[^/]+/((css|img|js)Jawr/|templates/jsp/|[^/]+/home/literatum/|action/downloadCitation\?doi=[^&amp;]+&amp;format=|sda/)</string>
+    <string>://[^/]+/((css|img|js)Jawr/|templates/jsp/|[^/]+/home/literatum/|action/downloadCitation\?doi=[^&amp;]+&amp;format=|sda/|.+[.]fp[.]png_v[0-9]+$)</string>
+  </entry>
+  <entry>
+    <string>au_exclude_urls_from_polls_pattern</string>
+    <string>"^%s(sda/|templates/jsp/|.*\.(css|js)$)", base_url</string>
   </entry>
 </map>

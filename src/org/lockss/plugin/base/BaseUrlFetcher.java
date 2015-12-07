@@ -83,7 +83,6 @@ public class BaseUrlFetcher implements UrlFetcher {
     Configuration.PREFIX + "baseuc.stopWatchdogDuringPause";
   public static final boolean DEFAULT_STOP_WATCHDOG_DURING_PAUSE = false;
 
-  
 
   protected final String origUrl;	// URL with which I was created
   protected String fetchUrl;		// possibly affected by redirects
@@ -106,7 +105,7 @@ public class BaseUrlFetcher implements UrlFetcher {
   protected Crawler.CrawlerFacade crawlFacade;
   protected LockssWatchdog wdog;
   protected CrawlUrl curl;
-  
+
   public BaseUrlFetcher(Crawler.CrawlerFacade crawlFacade, String url) {
     this.origUrl = url;
     this.fetchUrl = url;
@@ -162,7 +161,12 @@ public class BaseUrlFetcher implements UrlFetcher {
     } catch (CacheException.RepositoryException ex) {
       // Failed.  Don't try this one again during this crawl.
       crawlFacade.addToFailedUrls(origUrl);
-      log.error("Repository error with "+this, ex);
+      if (origUrl.equals(fetchUrl)) {
+	log.error("Repository error with " + fetchUrl, ex);
+      } else {
+	log.error("Repository error with " + origUrl +
+		  " redirected to " + fetchUrl, ex);
+      }
       crawlStatus.signalErrorForUrl(origUrl, ex);
       if(!crawlStatus.isCrawlError()) {
         crawlStatus.setCrawlStatus(Crawler.STATUS_REPO_ERR);
@@ -175,7 +179,12 @@ public class BaseUrlFetcher implements UrlFetcher {
       crawlFacade.addToFailedUrls(origUrl);
       crawlStatus.signalErrorForUrl(origUrl, ex);
       if (ex.isAttributeSet(CacheException.ATTRIBUTE_FAIL)) {
-        log.siteError("Problem caching "+this+". Continuing", ex);
+	if (origUrl.equals(fetchUrl)) {
+	  log.siteError("Problem caching " + origUrl + ". Continuing", ex);
+	} else {
+	  log.siteError("Problem caching " + origUrl +
+			" redirected to " + fetchUrl + ". Continuing", ex);
+	}
         if(!crawlStatus.isCrawlError()) {
           crawlStatus.setCrawlStatus(Crawler.STATUS_FETCH_ERROR, ex.getMessage());
         }
@@ -522,9 +531,14 @@ public class BaseUrlFetcher implements UrlFetcher {
       }
       input.mark(CurrentConfig.getIntParam(PARAM_LOGIN_CHECKER_MARK_LIMIT,
 					   DEFAULT_LOGIN_CHECKER_MARK_LIMIT));
-      Reader reader =
-	new InputStreamReader(input,
-			      AuUtil.getCharsetOrDefault(uncachedProperties));
+      Reader reader;
+      String charset = AuUtil.getCharsetOrDefault(uncachedProperties);
+      if(CharsetUtil.inferCharset()) {
+        reader = CharsetUtil.getReader(input, charset);
+      }
+      else {
+        reader = new InputStreamReader(input, charset);
+      }
       try {
         if (checker.isLoginPage(headers, reader)) {
           throw new CacheException.PermissionException("Found a login page");

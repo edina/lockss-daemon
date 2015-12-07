@@ -4,8 +4,6 @@
     name = Alliance of Crop, Soil, and Environmental Science Societies
   >
 
-    plugin = needs.plugin # See PD-48
-
   # There are a few other titles:
   # - Applied Turfgrass Science (ASA and CSSA): https://dl.sciencesocieties.org/publications/ats
   # - Crop Management (ASA and CSSA): https://dl.sciencesocieties.org/publications/cm
@@ -17,6 +15,10 @@
   # on behalf of the American Society of Animal Science (ASAS), not ASA/CSSA/SSSA;
   # this might mean that ACSESS might need to be rephrased as a Provider in TDB files.
   
+  plugin = org.lockss.plugin.acsess.ACSESSJournalsPlugin
+  param[base_url] = https://dl.sciencesocieties.org/
+  implicit < status ; year ; name ; param[volume_name] >
+
   {
 
     title <
@@ -28,6 +30,16 @@
 
     # On behalf of American Society of Agronomy
     # See https://dl.sciencesocieties.org/publications/aj
+    
+    param[journal_id] = aj
+
+    au < manifest ; 2010 ; Agronomy Journal Volume 102 ; 102 >
+    au < manifest ; 2011 ; Agronomy Journal Volume 103 ; 103 >
+    au < manifest ; 2012 ; Agronomy Journal Volume 104 ; 104 >
+    au < manifest ; 2013 ; Agronomy Journal Volume 105 ; 105 >
+    au < manifest ; 2014 ; Agronomy Journal Volume 106 ; 106 >
+    au < manifest ; 2015 ; Agronomy Journal Volume 107 ; 107 >
+    au < manifest ; 2016 ; Agronomy Journal Volume 108 ; 108 >
 
   }
 
@@ -41,6 +53,13 @@
 
     # On behalf of American Society of Agronomy
     # See https://dl.sciencesocieties.org/publications/crops-and-soils
+    
+    param[journal_id] = cns
+
+    au < manifest ; 2013 ; Crops & Soils Magazine Volume 46 ; 46 >
+    au < manifest ; 2014 ; Crops & Soils Magazine Volume 47 ; 47 >
+    au < manifest ; 2015 ; Crops & Soils Magazine Volume 48 ; 48 >
+
 
   }
 
@@ -55,6 +74,15 @@
     # On behalf of Crop Science Society of America
     # See https://dl.sciencesocieties.org/publications/cs
 
+    param[journal_id] = cs
+
+    au < manifest ; 2010 ; Crop Science Volume 50 ; 50 >
+    au < manifest ; 2011 ; Crop Science Volume 51 ; 51 >
+    au < manifest ; 2012 ; Crop Science Volume 52 ; 52 >
+    au < manifest ; 2013 ; Crop Science Volume 53 ; 53 >
+    au < manifest ; 2014 ; Crop Science Volume 54 ; 54 >
+    au < manifest ; 2015 ; Crop Science Volume 55 ; 55 >
+
   }
 
   {
@@ -68,6 +96,12 @@
     # On joint behalf of American Society of Agronomy, Crop Science Society of America and Soil Science Society of America
     # See https://dl.sciencesocieties.org/publications/csa-news
     
+    param[journal_id] = csa
+
+    au < manifest ; 2013 ; CSA News Volume 58 ; 58 >
+    au < released ; 2014 ; CSA News Volume 59 ; 59 >
+    au < manifest ; 2015 ; CSA News Volume 60 ; 60 >
+
   }
 
   {
@@ -81,6 +115,16 @@
 
     # On joint behalf of American Society of Agronomy, Crop Science Society of America and Soil Science Society of America
     # See https://dl.sciencesocieties.org/publications/jeq
+    
+    param[journal_id] = jeq
+
+    au < manifest ; 2010 ; Journal of Environmental Quality Volume 39 ; 39 >
+    au < manifest ; 2011 ; Journal of Environmental Quality Volume 40 ; 40 >
+    au < manifest ; 2012 ; Journal of Environmental Quality Volume 41 ; 41 >
+    au < manifest ; 2013 ; Journal of Environmental Quality Volume 42 ; 42 >
+    au < manifest ; 2014 ; Journal of Environmental Quality Volume 43 ; 43 >
+    au < manifest ; 2015 ; Journal of Environmental Quality Volume 44 ; 44 >
+
 
   }
   
@@ -93,6 +137,15 @@
 
     # On behalf of Crop Science Society of America
     # See https://dl.sciencesocieties.org/publications/jpr
+    
+    param[journal_id] = jpr
+
+    au < manifest ; 2010 ; Journal of Plant Registrations Volume 4 ; 4 >
+    au < manifest ; 2011 ; Journal of Plant Registrations Volume 5 ; 5 >
+    au < manifest ; 2012 ; Journal of Plant Registrations Volume 6 ; 6 >
+    au < released ; 2013 ; Journal of Plant Registrations Volume 7 ; 7 >
+    au < manifest ; 2014 ; Journal of Plant Registrations Volume 8 ; 8 >
+    au < manifest ; 2015 ; Journal of Plant Registrations Volume 9 ; 9 >
 
   }
 
@@ -105,6 +158,11 @@
 
     # On behalf of Soil Science Society of America
     # See https://dl.sciencesocieties.org/publications/jpa
+    comment[0] = stopped publication after 1999
+
+    param[journal_id] = jpa
+
+    au < manifest ; 1999 ; Journal of Production Agriculture Volume 12 ; 12 >
 
   }
 
@@ -117,6 +175,15 @@
 
     # On joint behalf of American Society of Agronomy, Crop Science Society of America and Soil Science Society of America
     # See https://dl.sciencesocieties.org/publications/nse
+    
+    param[journal_id] = nse
+
+    au < manifest ; 2010 ; Natural Sciences Education Volume 39 ; 39 >
+    au < manifest ; 2011 ; Natural Sciences Education Volume 40 ; 40 >
+    au < manifest ; 2012 ; Natural Sciences Education Volume 41 ; 41 >
+    au < manifest ; 2013 ; Natural Sciences Education Volume 42 ; 42 >
+    au < released ; 2014 ; Natural Sciences Education Volume 43 ; 43 >
+    au < manifest ; 2015 ; Natural Sciences Education Volume 44 ; 44 >
 
   }
 
@@ -129,6 +196,15 @@
 
     # On behalf of Crop Science Society of America
     # See https://dl.sciencesocieties.org/publications/tpg
+    
+    param[journal_id] = tpg
+
+    au < manifest ; 2010 ; The Plant Genome Volume 3 ; 3 >
+    au < manifest ; 2011 ; The Plant Genome Volume 4 ; 4 >
+    au < manifest ; 2012 ; The Plant Genome Volume 5 ; 5 >
+    au < released ; 2013 ; The Plant Genome Volume 6 ; 6 >
+    au < manifest ; 2014 ; The Plant Genome Volume 7 ; 7 >
+    au < manifest ; 2015 ; The Plant Genome Volume 8 ; 8 >
 
   }
 
@@ -141,6 +217,13 @@
 
     # On behalf of Soil Science Society of America
     # See https://dl.sciencesocieties.org/publications/sh
+    
+    param[journal_id] = sh
+
+    au < manifest ; 2012 ; Soil Horizons Volume 53 ; 53 >
+    au < manifest ; 2013 ; Soil Horizons Volume 54 ; 54 >
+    au < manifest ; 2014 ; Soil Horizons Volume 55 ; 55 >
+    au < manifest ; 2015 ; Soil Horizons Volume 56 ; 56 >
 
   }
 
@@ -156,6 +239,15 @@
     # On behalf of Soil Science Society of America
     # See https://dl.sciencesocieties.org/publications/sssaj
     
+    param[journal_id] = sssaj
+
+    au < manifest ; 2010 ; Soil Science Society of America Journal Volume 74 ; 74 >
+    au < manifest ; 2011 ; Soil Science Society of America Journal Volume 75 ; 75 >
+    au < manifest ; 2012 ; Soil Science Society of America Journal Volume 76 ; 76 >
+    au < manifest ; 2013 ; Soil Science Society of America Journal Volume 77 ; 77 >
+    au < manifest ; 2014 ; Soil Science Society of America Journal Volume 78 ; 78 >
+    au < manifest ; 2015 ; Soil Science Society of America Journal Volume 79 ; 79 >
+
   }
 
   {
@@ -167,8 +259,17 @@
     >
 
     # On behalf of Soil Science Society of America
-    # See https://dl.sciencesocieties.org/publications/sssaj
-       
+    # See https://dl.sciencesocieties.org/publications/vzj
+    
+    param[journal_id] = vzj
+
+    au < manifest ; 2010 ; Vadose Zone Journal Volume 9 ; 9 >
+    au < manifest ; 2011 ; Vadose Zone Journal Volume 10 ; 10 >
+    au < manifest ; 2012 ; Vadose Zone Journal Volume 11 ; 11 >
+    au < manifest ; 2013 ; Vadose Zone Journal Volume 12 ; 12 >
+    au < manifest ; 2014 ; Vadose Zone Journal Volume 13 ; 13 >
+    au < manifest ; 2015 ; Vadose Zone Journal Volume 14 ; 14 >
+
   }
 
 }

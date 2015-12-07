@@ -13,32 +13,36 @@
   </entry>
   <entry>
     <string>au_def_pause_time</string>
-    <long>6000</long>
+    <long>5000</long> <!-- Increasing progressively -->
   </entry>
   <entry>
     <string>plugin_version</string>
-    <string>36</string>
+    <string>51</string>
   </entry>
   <entry>
     <string>plugin_feature_version_map</string>
     <map>
        <entry>
         <string>Metadata</string>
-        <string>2</string>
+        <string>3</string>
       </entry>
       <entry>
-      <string>Substance</string>
-        <string>4</string>
+        <string>Substance</string>
+        <string>5</string>
       </entry>
       <entry>
         <string>Poll</string>
-        <string>15</string>
+        <string>28</string>
       </entry>
     </map>
   </entry>
   <entry>
     <string>au_name</string>
     <string>"BioMed Central Plugin (BMC Journals, Chemistry Central), Base URL %s, ISSN %s, Volume %s", base_url, journal_issn, volume_name</string>
+  </entry>
+  <entry>
+    <string>required_daemon_version</string>
+    <string>1.68.4</string> <!-- Daemon version at time of update -->
   </entry>
   <entry>
     <string>au_def_new_content_crawl</string>
@@ -50,29 +54,24 @@
   </entry>
    <entry>
     <string>plugin_article_iterator_factory</string>
-    <string>org.lockss.plugin.bmc.BioMedCentralPluginArticleIteratorFactory</string>
+    <string>org.lockss.plugin.bmc.BioMedCentralTOCArticleIteratorFactory</string>
   </entry>
   <entry>
     <string>plugin_article_metadata_extractor_factory</string>
-    <string>org.lockss.plugin.bmc.BioMedCentralPluginArticleIteratorFactory</string>
+    <string>org.lockss.plugin.bmc.BioMedCentralTOCArticleIteratorFactory</string>
   </entry>
-  <!-- not ready for prime time...
-  <entry>
-    <string>text/html_link_extractor_factory</string>
-    <string>org.lockss.plugin.bmc.BioMedCentralPluginHtmlLinkExtractorFactory</string>
-  </entry>
-  -->
   <entry>
     <string>text/html_filter_factory</string>
     <string>org.lockss.plugin.bmc.BioMedCentralHtmlFilterFactory</string>
   </entry>
   <entry>
-    <!-- this is to catch the 500 errors produced when trying to crawl their unresolved
-         "mathml" links - temporary until the publisher fixes these unfetchable files
-     -->
     <string>plugin_cache_result_list</string>
     <list>
+      <!-- this is to catch the 500 errors produced when trying to crawl their unresolved
+         "mathml" links - temporary until the publisher fixes these unfetchable files
+     -->
       <string>500=org.lockss.plugin.bmc.BioMedCentralPluginHttpResponseHandler</string>
+      <string>503=org.lockss.plugin.bmc.BioMedCentralPluginHttpResponseHandler</string>
     </list>
   </entry>
   
@@ -90,13 +89,17 @@
      <!-- Genome Biology [1465-6906] is unique and -->
      <!--   uses <base>/2009/<vol> but still <base>/content/pdf for pdf version -->
      <!--  hence the \d{4} option in some rules -->
+     <!--  no longer picking up .../mathml/... -->
+     <!--  disallowing "citation$" in crawl rule - 503 error as the site changes -->
   <entry>
     <string>au_crawlrules</string>
     <list>
       <string>1,"^https?://%s/.*\.(bmp|css|gif|ico|jpe?g|js|png|tif?f)(\?\d+)?$", base_url_host</string>
       <string>4,"^%s.{0,150}", base_url</string>
+      <!-- Remove concat URLs like http://www.ijponline.net/content/40/1/www.hgmd.cf.ac.uk/ac/index.php,"Unknown result code: 429: unknown"  -->
+      <string>2,"^%s.+/[a-z]+[^./]*[.][^/]{2,}[.][^/]{2,}/.*[.]php", base_url</string>
       <string>2,"^%sregistration", base_url</string>
-      <string>2,"^%s(content|\d{4})/%s/.*/(about|citations-pubmedcentral|prepub|comments|email|postcomment)$", base_url, volume_name</string> <!-- excluding a login-type page -->
+      <string>2,"^%s(content|\d{4})/%s/.*/(about|citations-pubmedcentral|prepub|comments|email|citation|postcomment|mathml/.*)$", base_url, volume_name</string> <!-- excluding a login-type page -->
       <string>2,"^%s(content|\d{4})/%s/.*\?fmt_view=(classic|mobile)$", base_url, volume_name</string>
       <string>2,"^%s%s/%s/[^/]+/(about|comments|email|postcomment)", base_url, journal_issn, volume_name</string>
       <string>2,"^%s(content|\d{4})/%s/.*email\?from=standard$", base_url, volume_name</string>      
@@ -105,7 +108,7 @@
       <!-- http://www.biomedcentral.com/content/epub/1471-2253-13-50.epub -->
       <string>1,"^%scontent/(pdf|epub)/", base_url</string>
       <string>1,"^%slockss/", base_url</string>
-      <string>1,"^%scontent/%s/[^/]+/[^/]+(/(abstract/?|additional/?|citation|comments|ref|figure/.*|suppl/.*|table/.*|/))?$", base_url, volume_name</string>
+      <string>1,"^%scontent/%s/[^/]+/[^/]+(/(abstract/?|additional/?|comments|ref|figure/.*|suppl/.*|table/.*|/))?$", base_url, volume_name</string>
       <string>1,"^%scontent/(download/(figures|supplementary|xml)|files/pdf|pdf|xml|supplementary|html)/", base_url</string>
       <string>1,"^%ssupplements/(%s|notes)/", base_url, volume_name</string>
       <string>1,"^%srender/render.asp\?", base_url</string>
@@ -114,32 +117,23 @@
  </list>
   </entry>
   <entry>
+    <!--  supplements now start from different page: base_url/supplements/all; crawl rules limit to volume-->
     <string>au_start_url</string>
+    <list>
     <string>"%scontent/%s", base_url, volume_name</string>
+    <string>"%ssupplements/all", base_url, volume_name</string>
+    </list>
    </entry>
   <entry>
     <string>au_substance_url_pattern</string>
     <!-- examples:
-    http://www.infectagentscancer.com/content/pdf/1750-9378-5-9.pdf
-      where the xxxx-yyyy = ISSN, and X-Y = Issue#-Article#
-    http://breast-cancer-research.com/content/pdf/bcr3224.pdf
-      the (journal abbrev) letters don't have a strict pattern (2-5 chars), 
-      nor do the trailing numbers
-    http://genomebiology.com/content/pdf/gb-2012-13-12-r126.pdf
-    http://genomebiology.com/content/pdf/gb-2001-2-7-research0026.pdf
-      we have the two-char name, '-' the year (but we don't have a year param)
-      '-' volume# '-' issue# '-' paperIdentifier.pdf
     genome biology also has some substance that is non-pdf:
     http://genomebiology.com/2002/3/2/reports/2010
     http://genomebiology.com/2002/3/2/spotlight-20020206-01
-    If possible, try to keep the different types of substance independent (e.g.
-    each substance pattern cannot catch another pattern)
      -->
       <list>
-         <string>"^%scontent/pdf/%s-%s-[^/]+.pdf$", base_url, journal_issn, volume_name</string>
-         <string>"^%scontent/pdf/[\w]+[\d]+.pdf$", base_url</string>
-         <string>"^%scontent/pdf/[\w]+-\d{4}-%s-[^/]+.pdf$", base_url, volume_name</string>
-         <string>"^%s\d{4}/%s/\d{1,2}/[\w-/]+", base_url, volume_name</string>
+         <string>"^%scontent/pdf/[^/]+\.pdf$", base_url</string>
+         <string>"^%s\d{4}/%s/\d+/", base_url, volume_name</string>
       </list>
   </entry>
   <entry>
@@ -193,5 +187,14 @@
   <entry>
     <string>plugin_fetch_rate_limiter_source</string>
     <string>key:BioMed Central</string>
+  </entry>
+  <entry>
+    <string>au_repair_from_peer_if_missing_url_pattern</string>
+    <string>(\.(css|js)|/images/.+\.(png|gif))$</string>
+  </entry>
+  <entry>
+    <!-- replace with au_exclude_urls_from_poll_results_pattern with 1.69 -->
+    <string>au_exclude_urls_from_polls_pattern</string>
+    <string>(\.(css|js)|/images/.+\.(png|gif))$</string>
   </entry>
 </map>

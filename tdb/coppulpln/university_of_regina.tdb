@@ -1,0 +1,30 @@
+{
+
+  publisher <
+    name = University of Regina
+  >
+ 
+  plugin = org.lockss.plugin.ojs2.OJS2Plugin
+  implicit < status ; year ; volume ; name ; param[year] >
+
+  {
+  
+    title <
+      name = in education ;
+      issn = 1927-6117
+    >
+  
+    param[base_url] = http://ineducation.ca/
+    param[journal_id] = ineducation
+
+    au < released ; 2009 ; 15 ; in education Volume 15 ; 2009 >
+    au < released ; 2010 ; 16 ; in education Volume 16 ; 2010 >
+    au < released ; 2011 ; 17 ; in education Volume 17 ; 2011 >
+    au < released ; 2012 ; 18 ; in education Volume 18 ; 2012 >
+    au < released ; 2013 ; 19 ; in education Volume 19 ; 2013 >
+    au < released ; 2014 ; 20 ; in education Volume 20 ; 2014 >
+    au < testing ; 2015 ; 21 ; in education Volume 21 ; 2015 >
+
+  }
+  
+}

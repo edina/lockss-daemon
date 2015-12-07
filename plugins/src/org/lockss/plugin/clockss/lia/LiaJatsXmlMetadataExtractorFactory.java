@@ -112,7 +112,11 @@ public class LiaJatsXmlMetadataExtractorFactory extends SourceXmlMetadataExtract
       log.debug3("in Lia postCookProcess");
       //If we didn't get a valid date value, use the copyright year if it's there
       if (thisAM.get(MetadataField.FIELD_DATE) == null) {
-        thisAM.put(MetadataField.FIELD_DATE, thisAM.getRaw(JatsPublishingSchemaHelper.JATS_date));
+        if (thisAM.getRaw(JatsPublishingSchemaHelper.JATS_date) != null) {
+          thisAM.put(MetadataField.FIELD_DATE, thisAM.getRaw(JatsPublishingSchemaHelper.JATS_date));
+        } else {// last chance
+          thisAM.put(MetadataField.FIELD_DATE, thisAM.getRaw(JatsPublishingSchemaHelper.JATS_edate));
+        }
       }
     }
 

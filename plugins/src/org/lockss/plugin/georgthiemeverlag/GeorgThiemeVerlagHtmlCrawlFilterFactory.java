@@ -4,7 +4,7 @@
 
 /*
 
-Copyright (c) 2000-2014 Board of Trustees of Leland Stanford Jr. University,
+Copyright (c) 2000-2015 Board of Trustees of Leland Stanford Jr. University,
 all rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -64,13 +64,12 @@ public class GeorgThiemeVerlagHtmlCrawlFilterFactory implements FilterFactory {
         HtmlNodeFilters.tagWithAttributeRegex("div", "id", "adSidebar"),
         // No need to crawl reference list 
         HtmlNodeFilters.tagWithAttribute("ul", "class", "literaturliste"),
-        // Appears that correction anchors have class="anchorc" XXX
+        // Appears that correction anchors have class="anchorc" 
+        // eg. https://www.thieme-connect.de/products/ejournals/abstract/10.1055/s-0030-1249709
         HtmlNodeFilters.tagWithAttribute("a", "class", "anchorc"),
     };
     InputStream filtered = new HtmlFilterInputStream(in, encoding,
-        HtmlNodeFilterTransform.exclude(new OrFilter(filters)))
-    .registerTag(new HtmlTags.Header())
-    .registerTag(new HtmlTags.Footer()); // XXX registerTag can be removed after 1.65
+        HtmlNodeFilterTransform.exclude(new OrFilter(filters)));
     return filtered;
   }
   

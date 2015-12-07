@@ -49,6 +49,57 @@ public class TdbXml {
 
   /**
    * <p>
+   * A version string for the TdbXml tool ({@value}).
+   * </p>
+   * 
+   * @since 1.68
+   */
+  public static final String VERSION = "[TdbXml:0.2.4]";
+  
+  /**
+   * <p>
+   * Key for the force-proxy option ({@value}).
+   * </p>
+   * 
+   * @since 1.69
+   */
+  protected static final String KEY_FORCE_PROXY = "force-proxy";
+
+  /**
+   * <p>
+   * Single letter for the force-proxy option ({@value}).
+   * </p>
+   * 
+   * @since 1.69
+   */
+  protected static final char LETTER_FORCE_PROXY = 'p';
+
+  /**
+   * <p>
+   * The argument name for the force-proxy option.
+   * </p>
+   * 
+   * @since 1.67
+   */
+  protected static final String ARG_FORCE_PROXY = "PROXY";
+  
+  /**
+   * <p>
+   * The force-proxy option.
+   * </p>
+   * 
+   * @since 1.69
+   */
+  protected static final Option OPTION_FORCE_PROXY =
+      Option.builder(Character.toString(LETTER_FORCE_PROXY))
+            .longOpt(KEY_FORCE_PROXY)
+            .hasArg()
+            .argName(ARG_FORCE_PROXY)
+            .desc("forcibly include a proxy setting")
+            .build();
+  
+  /**
+   * <p>
    * Key for the no-pub-down option ({@value}).
    * </p>
    * 
@@ -73,9 +124,10 @@ public class TdbXml {
    * @since 1.67
    */
   protected static final Option OPTION_NO_PUB_DOWN =
-      OptionBuilder.withLongOpt(KEY_NO_PUB_DOWN)
-                   .withDescription("do not include pub_down markers")
-                   .create(LETTER_NO_PUB_DOWN);
+      Option.builder(Character.toString(LETTER_NO_PUB_DOWN))
+            .longOpt(KEY_NO_PUB_DOWN)
+            .desc("do not include pub_down markers")
+            .build();
   
   /**
    * <p>
@@ -103,9 +155,10 @@ public class TdbXml {
    * @since 1.67
    */
   protected static final Option OPTION_NO_TIMESTAMP =
-      OptionBuilder.withLongOpt(KEY_NO_TIMESTAMP)
-                   .withDescription("do not include a timestamp")
-                   .create(LETTER_NO_TIMESTAMP);
+      Option.builder(Character.toString(LETTER_NO_TIMESTAMP))
+            .longOpt(KEY_NO_TIMESTAMP)
+            .desc("do not include a timestamp")
+            .build();
   
   /**
     * <p>
@@ -187,9 +240,16 @@ public class TdbXml {
     * </p>
     *
     * @since 1.67
+    * @see Au#STATUS_FROZEN
+    * @see Au#STATUS_DEEP_CRAWL
+    * @see Au#STATUS_FINISHED
+    * @see Au#STATUS_DOWN
+    * @see Au#STATUS_SUPERSEDED
+    * @see Au#STATUS_ZAPPED
     */  
   protected static final Set<String> PUB_DOWN_STATUSES =
       Collections.unmodifiableSet(new HashSet<String>(Arrays.asList(Au.STATUS_FROZEN,
+                                                                    Au.STATUS_DEEP_CRAWL,
                                                                     Au.STATUS_FINISHED,
                                                                     Au.STATUS_DOWN,
                                                                     Au.STATUS_SUPERSEDED,
@@ -253,6 +313,7 @@ public class TdbXml {
   public void addOptions(Options options) {
     // Options from other modules
     HelpOption.addOptions(options);
+    VersionOption.addOptions(options);
     VerboseOption.addOptions(options);
     KeepGoingOption.addOptions(options);
     InputOption.addOptions(options);
@@ -260,6 +321,7 @@ public class TdbXml {
     OutputDirectoryOption.addOptions(options);
     tdbQueryBuilder.addOptions(options);
     // Own options
+    options.addOption(OPTION_FORCE_PROXY);
     options.addOption(OPTION_NO_PUB_DOWN);
     options.addOption(OPTION_NO_TIMESTAMP);
   }
@@ -290,6 +352,7 @@ public class TdbXml {
       AppUtil.error("Cannot request both single and directory output");
     }
     // Own options
+    options.put(KEY_FORCE_PROXY, cmd.hasOption(KEY_FORCE_PROXY) ? cmd.getOptionValue(KEY_FORCE_PROXY) : null);
     options.put(KEY_NO_PUB_DOWN, Boolean.valueOf(cmd.hasOption(KEY_NO_PUB_DOWN)));
     options.put(KEY_NO_TIMESTAMP, Boolean.valueOf(cmd.hasOption(KEY_NO_TIMESTAMP)));
     return options;
@@ -428,7 +491,10 @@ public class TdbXml {
       }
 
       // au_proxy and pub_down
-      String proxy = au.getProxy();
+      String proxy = (String)options.get(KEY_FORCE_PROXY);
+      if (proxy == null) {
+        proxy = au.getProxy();
+      }
       if (proxy != null) {
         appendOneParam(sb, 98, "crawl_proxy", proxy);
       }
@@ -758,12 +824,17 @@ public class TdbXml {
    * @since 1.67
    */
   public void run(String[] mainArgs) throws Exception {
-    AppUtil.fixMainArgsForCommonsCli(mainArgs);
     Options options = new Options();
     addOptions(options);
-    CommandLine clicmd = new PosixParser().parse(options, mainArgs);
+    CommandLine clicmd = new DefaultParser().parse(options, mainArgs);
     CommandLineAccessor cmd = new CommandLineAdapter(clicmd);
+    // Short-circuit options
     HelpOption.processCommandLine(cmd, options, getClass());
+    VersionOption.processCommandLine(cmd,
+                                     VERSION,
+                                     TdbBuilder.VERSION,
+                                     TdbQueryBuilder.VERSION);
+    // Normal options
     run(cmd);
   }
   

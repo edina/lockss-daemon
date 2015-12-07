@@ -30,116 +30,529 @@
 package org.lockss.plugin.medknow;
 
 import java.io.*;
+import java.util.Properties;
 
 import org.lockss.util.*;
+import org.lockss.config.Configuration;
+import org.lockss.daemon.ConfigParamDescr;
+import org.lockss.plugin.ArchivalUnit;
+import org.lockss.plugin.definable.DefinableArchivalUnit;
+import org.lockss.plugin.definable.DefinablePlugin;
+import org.lockss.test.ConfigurationUtil;
 import org.lockss.test.LockssTestCase;
-import org.lockss.test.MockArchivalUnit;
 import org.lockss.test.StringInputStream;
 
 
 public class TestMedknowHtmlHashFilterFactory extends LockssTestCase {
   private MedknowHtmlHashFilterFactory fact;
-  private MockArchivalUnit mau;
+  // medknow requires an AU config for its hash filtering
+  private ArchivalUnit mau;
+
 
   public void setUp() throws Exception {
     super.setUp();
     fact = new MedknowHtmlHashFilterFactory();
-  }
-  
-  private static final String menuBarUsersOnlineHtml =
-      "<div class=\"block\" id=\"menuBarUser\">" +
-          "<td align=\"right\">Users Online: 17</td>" +
-          "</div>";
-  
-  private static final String menuBarUsersOnlineHtmlHashFiltered =
-      "<div class=\"block\" id=\"menuBarUser\"></div>";
+    //the hash filter (for backIssues.asp) requires au information
+    Properties props = new Properties();
+    props.setProperty(ConfigParamDescr.VOLUME_NAME.getKey(), "8");
+    props.setProperty(ConfigParamDescr.JOURNAL_ISSN.getKey(), "1111-0000");
+    props.setProperty(ConfigParamDescr.YEAR.getKey(), "2015");
+    props.setProperty(ConfigParamDescr.BASE_URL.getKey(), "http://www.foo.com/");
+    Configuration config = ConfigurationUtil.fromProps(props);
 
+    DefinablePlugin ap = new DefinablePlugin();
+    ap.initPlugin(getMockLockssDaemon(),
+        "org.lockss.plugin.medknow.MedknowPlugin");
+    mau = (DefinableArchivalUnit)ap.createAu(config);
+  }
+
+
+  private static final String citationCounts =
+          "<table class=\"articlepage\" >" +
+          "<font class=\"CorrsAdd\">" +
+          "<img src=\"http://api.elsevier.com/content/abstract/citation-count?pubmed_id=2352505\">" +
+          "<div style=\"float: left; border:1px solid #ddd;padding:4px;\">" +
+          "<a href=\"crossrefCitation.asp?doi=10.4103/0022-3859.109492\" target=\"_blank\">" +
+          "<table width=\"100%\">" +
+          "<tbody>" +
+          "<tr>" +
+          "<td>" +
+          "<img src=\"http://www.medknow.com\" alt=\"Crossref citations\">" +
+          "</td>" +
+          "<td style=\"font-size:11px;background-color:#ddd;padding:4px\" width=\"5px;\">" +
+          "<b>7" +
+          "</b>" +
+          "</td>" +
+          "</tr>" +
+          "</tbody>" +
+          "</table>" +
+          "</a>" +
+          "</div>" +
+          "<div style=\"float: left; border:1px solid #ddd;padding:4px; \">" +
+          "<table width=\"33%\">" +
+          "<tbody>" +
+          "<tr>" +
+          "<td>" +
+          "<img src=\"http://www.medknow.com\" alt=\"PMC citations\">" +
+          "</td>" +
+          "<td style=\"font-size:11px;background-color:#ddd;padding:4px\" width=\"5px\">" +
+          "<a target=\"_blank\" href=\"http://www.ncbi.nlm.nih.gov\">" +
+          "<b>3" +
+          "</b>" +
+          "</a>" +
+          "</td>" +
+          "</tr>" +
+          "</tbody>" +
+          "</table>" +
+          "</div>" +
+          "</font>" +
+          "</table>";
+
+  private static final String  tocHtml = 
+      "<table>" +
+          "<tr>" +
+          "    <td width=\"90%\" colspan=\"2\" class=\"tochead\">EDITORIAL</td>" +
+          "    <td width=\"10%\"  class=\"tochead\">&nbsp;</td>" +
+          "  </tr>" +
+          " <tr>" +
+          "   <td width=\"100%\" colspan=\"3\" height=\"15px\"></td>" +
+          " </tr>" +
+          "  <tr>" +
+          "    <td class=\"other\" vAlign=\"top\" align=\"center\" width=\"20%\" rowSpan=\"3\">" +
+          "    <input type='checkbox' name='sai' value='jpgm_2015_X_Y_Z'><br></td>" +
+          "    <td width=\"75%\" class=\"articleTitle\" style='margin:left:5px;'>Article Title for Editorial</td>" +
+          "    <td width=\"5%\" rowspan=\"3\" class=\"other\" valign=\"top\" align=\"right\">p. 73</td>" +
+          "  </tr>" +
+          "  <tr>" +
+          "    <td class=\"sAuthor\">P Ran, NJ Goo<br><b>DOI</b>:1X.1111/0022-3859.153101&nbsp;&nbsp;<b>PMID</b>:55555555</td>" +
+          "  </tr>" +
+          "  <tr>" +
+          "    <td class=\"other\" style='text-align:left;'>" +
+          "<a class=\"toc\" href=\"article.asp?foo\" title=\"Click to View Full Text of the article.\">[HTML Full text]</a>" +
+          "&nbsp;&nbsp;" +
+          "<a class=\"toc\" href=\"article.asp?foo;type=2\" title=\"Click to download PDF version of the article.\">[PDF]</a>" +
+          "&nbsp;&nbsp;" +
+          "<a class=\"toc\" href=\"article.asp?foo;type=3\" title=\"Click to View Full Text in Mobile format.\">[Mobile Full text]</a>" +
+          "&nbsp;&nbsp;" +
+          "<a class=\"toc\" href=\"article.asp?foo;type=4\" title=\"Click to download as ePub file.\">[EPub]</a>" +
+          "&nbsp;&nbsp;" +
+          "<a class=\"toc\" target='_blank' href='http://www.ncbi.nlm.nih.gov/pubmed/25766335'>[PubMed]</a>" +
+          "&nbsp;&nbsp;" +
+          "<a class=\"toc\" href=\"article.asp?foo;type=5\" title=\"Click to download Sword Plugin for Repository file.\">" +
+          "[Sword Plugin for Repository]</a><sup>Beta</sup></td>" +
+          "  </tr>" +
+          "<tr>" +
+          "    <td width=\"90%\" colspan=\"2\"  class=\"tochead\">ORIGINAL ARTICLES</td>" +
+          "  </tr>" +
+          "  <tr>" +
+          "    <td width=\"75%\" class=\"articleTitle\" style='margin:left:5px;'>Another TItle for an Original Article</td>" +
+          "  </tr>" +
+          "  <tr>" +
+          "    <td class=\"sAuthor\" style='line-height:18px;'>P Author, P Writer<br>" +
+          "     <b>DOI</b>:1X.1111/0022-3859.150442&nbsp;&nbsp;<b>PMID</b>:66666666" +
+          "    <div id='a' style='display:none;background-color:#eaeaea;border:1px solid #ddd;padding:5px;'>" +
+          "       abstract goes here </div></td>" +
+          "  </tr>" +
+          " </table>";
+
+  private static final String tocHtmlKept = 
+      "<td width=\"90%\" colspan=\"2\" class=\"tochead\">EDITORIAL</td>" +
+          "<td width=\"10%\"  class=\"tochead\">&nbsp;</td>" +
+          "<td width=\"75%\" class=\"articleTitle\" style='margin:left:5px;'>Article Title for Editorial</td>" +
+          "<td class=\"sAuthor\">P Ran, NJ Goo<br><b>DOI</b>:1X.1111/0022-3859.153101&nbsp;&nbsp;<b>PMID</b>:55555555</td>" +
+          "<td width=\"90%\" colspan=\"2\"  class=\"tochead\">ORIGINAL ARTICLES</td>" +
+          "<td width=\"75%\" class=\"articleTitle\" style='margin:left:5px;'>Another TItle for an Original Article</td>" +
+          "<td class=\"sAuthor\" style='line-height:18px;'>P Author, P Writer<br>" +
+          "     <b>DOI</b>:1X.1111/0022-3859.150442&nbsp;&nbsp;<b>PMID</b>:66666666" +
+          "    <div id='a' style='display:none;background-color:#eaeaea;border:1px solid #ddd;padding:5px;'>" +
+          "       abstract goes here </div></td>";
+
+
+  private static final String articleHtml = 
+      "<div><table><tr><td><table class=\"articlepage\" >" +
+          "<div>"+
+          "<font class=\"AuthorAff\">Foo, Blah, Blah</font>" +
+          "</div>" +
+          "</table></td></tr></table></div>";
+
+  private static final String articleHtmlKept = 
+      "<table class=\"articlepage\" >" +
+          "<div></div>" +
+          "</table>";
+
+  private static final String onlyKept = "<table class=\"articlepage\" ></table>";
+
+  private static final String bigTOC = "<body>" +
+      "<table border=\"0\" width=\"1000\" align=\"center\"  cellspacing=\"0\" cellpadding=\"0\" >" +
+      "<tr>" +
+      "<td width=\"78%\" valign=\"top\" height=\"5px\">" +
+      "</td>" +
+      "<td width=\"2%\" valign=\"top\" height=\"5px\">" +
+      "</td>" +
+      "<td width=\"20%\" valign=\"top\" height=\"5px\">" +
+      "</td>" +
+      "</tr>" +
+      "<tr>" +
+      "<td valign=\"top\" class=\"empty\">   " +
+      "<form name=\'saf\' action=\'srchaction.asp\' method=\'post\'>" +
+      "<div id=\"exp1\" class=\"expdiv\">" +
+      "<div style=\'padding:5px;border:1px solid #ddd;background-color:#eaeaea\'>" +
+      "<b>Export selected to</b>" +
+      "</br>" +
+      "<div>" +
+      "<input type=\'radio\' value=\'1\' name=\'t\'>Endnote</div>" +
+      "<div>" +
+      "<input type=\'radio\' value=\'2\' name=\'t\'>Reference Manager</div>" +
+      "<div>" +
+      "<input type=\'radio\' value=\'3\' name=\'t\'>Procite</div>" +
+      "<div>" +
+      "<input type=\'radio\' value=\'4\' name=\'t\'>Medlars Format</div>" +
+      "<div>" +
+      "<input type=\'radio\' value=\'5\' name=\'t\'>RefWorks Format</div>" +
+      "<div>" +
+      "<input type=\'radio\' value=\'6\' name=\'t\'>BibTex Format</div>" +
+      "<div align=\'right\'>" +
+      "<input type=\'submit\' name=\'Apply\' value=\'Apply\'>" +
+      "</div>" +
+      "</div>" +
+      "</div>" +
+      "&nbsp;<font class=\"pageHead\"> <img src=\"images/aboutbul.gif\" alt=\"\">&nbsp;Table of Contents </font>" +
+      "<br>" +
+      "<table border=\"0\" width=\"100%\" cellspacing=\"0\" cellpadding=\"0\" class=\"articlepage\">" +
+      "<tr>" +
+      "<td width=\'20%\' valign=\'top\' align=\'left\'>" +
+      "<img alt=\'Coverpage\' border=\'0\'>" +
+      "</td>" +
+      "<td valign=\'top\' width=\'80%\'>" +
+      "<table width=\'100%\' cellpadding=\'0\' cellspacing=\'0\' border=\'0\' class=\'body\'>" +
+      "<tr>" +
+      "<td valign=\'top\' width=\'50%\'>" +
+      "<b>April-June&nbsp;2014</b>" +
+      "<br>Volume 11&nbsp;|&nbsp;Issue 2" +
+      "<br>Page Nos. 97-200<br>" +
+      "<br>Online since Tuesday, May 20, 2014<br>" +
+      "<br>" +
+      "Accessed 33,012 times." +
+      "<br>" +
+      "<br>" +
+      "<b>PDF access policy</b>" +
+      "<br>Full text access is free in HTML pages; however the journal allows PDF access only to subscribers." +
+      "<br>" +
+      "<br>" +
+      "<b>EPub access policy</b>" +
+      "<br>reserved only for the paid subscribers." +
+      "</td>" +
+      "<td width=\'50%\' valign=\'top\'>" +
+      "</td>" +
+      "</tr>" +
+      "</table>" +
+      "</tr>" +
+      "<tr>" +
+      "<td colspan=\'3\'height=\'10px\'>" +
+      "</td>" +
+      "</tr>" +
+      "</table>" +
+      "<input type=\'hidden\' name=\'__adm\' value=\'\'>" +
+      "</form>" +
+      "</td> " +
+      "<td width=\"2%\" valign=\"top\" class=\"empty\" >" +
+      "</td>" +
+      "<td width=\"20%\" valign=\"top\" class=\"empty\" >" +
+      "<br>" +
+      "</td>" +
+      "</table>" +
+  "</body>";
   
-  private static final String androidMobileAdHtml =
-      "<div class=\"block\" id=\"topBarUser\">" +
-          "<span id=\"tx\" class=\"other\">&nbsp;&nbsp;&nbsp;" +
-          "<a href=\"https://market.android.com/details?id=comm.app.medknow\">" +
-          "<strong>Click here</strong></a><strong> " +
-          "to download free Android Application for this and other journals</strong>" +
-          "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"/mobile/\">" +
-          "<strong>Click here to view optimized website for mobile devices</strong>" +
-          "</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Journal is indexed " +
-          "with <strong>MEDLINE/Index Medicus</strong></span>" +
-          "</div>";
+  private static String bigTOCFiltered = "";
   
-  private static final String androidMobileAdHtmlHashFiltered =
-      "<div class=\"block\" id=\"topBarUser\"></div>";
+  private static String bigAbs = "<body>" +
+      "<table border=\"0\" width=\"1000\" align=\"center\"  cellspacing=\"0\" cellpadding=\"0\">" +
+      "<tr>" +
+      "<td width=\"78%\" valign=\"top\" height=\"3\" class=\"empty\">" +
+      "<table border=\"0\" width=\"100%\" class=\"articlepage\">" +
+      "<tr>" +
+      "<td width=\"100%\" colspan=\"2\" height=\"15\">" +
+      "<font class=\"tocAT\">" +
+      "<b>ORIGINAL ARTICLE</b>" +
+      "</font>" +
+      "</td>" +
+      "</tr>" +
+      "<tr>" +
+      "<td width=\"100%\" height=\"5\" colspan=\"2\">" +
+      "</td>" +
+      "</tr>" +
+      "<tr>" +
+      "<td width=\"100%\" colspan=\"2\">" +
+      "<b>Year </b>: 2024&nbsp; |&nbsp; <b>Volume</b>" +
+      ": 11&nbsp;" +
+      "|&nbsp; <b>Issue</b> : 24&nbsp; |&nbsp; <b>Page</b> : 101-104</td>" +
+      "</tr>" +
+      "<tr>" +
+      "<td width=\"100%\" colspan=\"2\">" +
+      "</td>" +
+      "</tr>" +
+      "<tr>" +
+      "<td width=\"100%\" colspan=\"2\">" +
+      "<P>" +
+      "<font class=\"sTitle\">Renal cell carcinoma in children and adolescence: Our experience</font>" +
+      "<br>" +
+      "<br>" +
+      "<font class=\"articleAuthor\">" +
+      "<a target=\'_blank\' href=\'/searchresult.asp?search=\'>FOO</a>" +
+      "<sup>1</sup>, <a target=\'_blank\' href=\'/searchresult.asp?search=\'>FOO</a>" +
+      "<sup>2</sup>, <a target=\'_blank\' href=\'/searchresult.asp?search=\'>FOO</a>" +
+      "<sup>2</sup>, <a target=\'_blank\' href=\'/searchresult.asp?search=\'>FOO</a>" +
+      "<sup>2</sup>, <a target=\'_blank\' href=\'/searchresult.asp?search=\'>FOO</a>" +
+      "<sup>2</sup>, <a target=\'_blank\' href=\'/searchresult.asp?search=\'>FOO</a>" +
+      "<sup>2</sup>" +
+      "</font>" +
+      "<br>" +
+      "<font class=\"AuthorAff\">" +
+      "<sup>1</sup>&nbsp;Department of Urology, BAR, <br/>" +
+      "<sup>2</sup>&nbsp;Department of Urology, PGIMER &amp; SSKM Hospital, Kolkata, West Bengal, India<br/>" +
+      "</font>" +
+      "</p>" +
+      "<p>" +
+      "<font class=\"CorrsAdd\">" +
+      "<b>Correspondence Address</b>:<br>" +
+      "FOO, <br>India<br>" +
+      "<a href=\'login.asp?rd=article.asp?issn=0189-6725;year=2024;volume=11;issue=24;spage=101;epage=104;aulast=FOO;type=0\'>" +
+      "<img border=\'0\' src=\"http://www.medknow.com/images/email.gif\" alt=\"Login to access the Email id\">" +
+      "</a>" +
+      "<p>" +
+      "<b>Source of Support:</b> None, <b>Conflict of Interest:</b> None</p>" +
+      "<div  style=\'overflow: hidden;float:left;width:100%;padding:10px;border:0px solid #ddd;\'>" +
+      "</div>" +
+      "<br>" +
+      "<p>" +
+      "<b>DOI:</b>&nbsp;10.4103/12345<br/>" +
+      "</p>" +
+      "<p>" +
+      "<a target=\'_blank\' href=\'http://www.copyright.com/ccc/openurl.do?sid=Medknow&issn=0189-6725&servicename=all&WT.mc_id=Medknow\'>" +
+      "<img border=\'0\' src=\'http://www.medknow.com/journals/images/gp.gif\' alt=\'Get Permissions\'>" +
+      "</a>" +
+      "</p>" +
+      "</font>" +
+      "</p>" +
+      "</td>" +
+      "</tr>" +
+      "<tr>" +
+      "<td width=\"100%\" colspan=\"2\" height=\"10\">" +
+      "</td>" +
+      "</tr>" +
+      "<tr>" +
+      "<td width=\"100%\" colspan=\"2\">" +
+      "<b>Background:</b> Literature on foo </td>" +
+      "</tr>" +
+      "<tr>" +
+      "<td width=\"100%\" colspan=\"2\" height=\"10\">" +
+      "</td>" +
+      "</tr>" +
+      "<tr>" +
+      "<td width=\"100%\" colspan=\"2\">" +
+      "<br>" +
+      "<br>" +
+      "</td>" +
+      "</tr>" +
+      "<tr>" +
+      "<td width=\"100%\" colspan=\"2\" height=\"20\">" +
+      "</td>" +
+      "</tr>" +
+      "<tr>" +
+      "<td width=\"100%\" colspan=\"2\">[<a href=\"article.asp?issn=0189-6725;year=2024;volume=11;issue=24;spage=101;epage=104;aulast=FOO\">FULL TEXT</a>] " +
+      "[<a href=\"article.asp?issn=0189-6725;year=2024;volume=11;issue=24;spage=101;epage=104;aulast=FOO;type=2\">PDF</a>]*</td>" +
+      "</tr>" +
+      "<tr>" +
+      "<td width=\"100%\" colspan=\"2\" height=\"15\">" +
+      "</td>" +
+      "</tr>" +
+      "<tr>" +
+      "<td width=\"50%\">" +
+      "<a href=\"printarticle.asp?issn=0189-6725;year=2024;volume=11;issue=24;spage=101;epage=104;aulast=FOO;type=0\" target=\"_blank\">" +
+      "<img border=\"0\" src=\"templates/icon_print.gif\" alt=\"Print this article\">" +
+      "</a>&nbsp;&nbsp;&nbsp;&nbsp;" +
+      "<a href=\"emailArticle.asp?issn=0189-6725;year=2024;volume=11;issue=24;spage=101;epage=104;aulast=FOO;type=0\">" +
+      "<img border=\"0\" src=\"templates/icon_mail.gif\" alt=\"Email this article\">" +
+      "</a>" +
+      "</td>" +
+      "<td width=\"50%\">" +
+      "</td>" +
+      "</tr>" +
+      "</table>" +
+      "</td>" +
+      "</tr>" +
+      "</table>" +
+      "</body>";
   
- 
-  private static final String leftNavCellStatsHtml =
-      "<div class=\"block\" id=\"articleAccessStatistics\">" +
-          "<table width=\"100%\" cellspacing=\"0\" cellpadding=\"0\"" +
-          "class=\"leftnavcell\"><tbody><tr><td colspan=\"2\" height=\"25\">" +
-          "<b>&nbsp;Article Access Statistics</b></td></tr>" +
-          "<tr><td colspan=\"2\" height=\"1\" class=\"leftnavcell\"></td></tr>" +
-          "<tr><td height=\"20\">&nbsp;&nbsp;&nbsp;&nbsp;Viewed</td>" +
-          "<td align=\"right\">2102&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>" +
-          "<tr><td colspan=\"2\" height=\"1\" class=\"leftnavcell\"></td></tr>" +
-          "<tr><td height=\"20\">&nbsp;&nbsp;&nbsp;&nbsp;Printed</td>" +
-          "<td align=\"right\">135&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>" +
-          "<tr><td colspan=\"2\" height=\"1\" class=\"leftnavcell\"></td></tr>" +
-          "<tr><td height=\"20\">&nbsp;&nbsp;&nbsp;&nbsp;Emailed</td>" +
-          "<td align=\"right\">0&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>" +
-          "<tr><td colspan=\"2\" height=\"1\" class=\"leftnavcell\"></td></tr>" +
-          "<tr><td height=\"20\">&nbsp;&nbsp;&nbsp;&nbsp;PDF Downloaded</td>" +
-          "<td align=\"right\">196&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>" +
-          "<tr><td colspan=\"2\" height=\"1\" class=\"leftnavcell\"></td></tr>" +
-          "<tr><td height=\"20\">&nbsp;&nbsp;&nbsp;&nbsp;Comments&nbsp;</td>" +
-          "<td align=\"right\"><a href=\"addremark.asp?issn=0189-6725;" +
-          "year=2008;volume=5;issue=1;spage=3;epage=7;aulast=Ameh;" +
-          "aid=AfrJPaediatrSurg_2008_5_1_3_41627\">[Add]</a>" +
-          "&nbsp;&nbsp;&nbsp;&nbsp;</td></tr><tr><td colspan=\"2\"" +
-          "height=\"1\" class=\"leftnavcell\"></td></tr>" +
-          "<tr><td colspan=\"2\" height=\"1\">" +
-          "<script>function insertIt() { " +
-          "var _y = document.getElementById('framediv');" +
-          "var _x = window.frames[0].document.body.innerHTML;" +
-          "_y.innerHTML = _x " +
-          "}</script>" +
-          "<p></p><div id=\"framediv\"><iframe frameborder=\"no\"" +
-          "scrolling=\"no\" width=\"100%\" name=\"aa\" " +
-          "src=\"_aagraph.asp?a=AfrJPaediatrSurg_2008_5_1_3_41627\">" +
-          "</iframe></div><p></p></td></tr></tbody></table>" +
-          "</div>";
-          
-  private static final String leftNavCellStatsHtmlHashFiltered =
-      "<div class=\"block\" id=\"articleAccessStatistics\"></div>";
-   
+  private static String bigAbsFiltered = 
+      "<table border=\"0\" width=\"100%\" class=\"articlepage\">" +
+      "<tr>" +
+      "<td width=\"100%\" colspan=\"2\" height=\"15\">" +
+      "<font class=\"tocAT\">" +
+      "<b>ORIGINAL ARTICLE</b>" +
+      "</font>" +
+      "</td>" +
+      "</tr>" +
+      "<tr>" +
+      "<td width=\"100%\" height=\"5\" colspan=\"2\">" +
+      "</td>" +
+      "</tr>" +
+      "<tr>" +
+      "<td width=\"100%\" colspan=\"2\">" +
+      "<b>Year </b>: 2024&nbsp; |&nbsp; <b>Volume</b>" +
+      ": 11&nbsp;" +
+      "|&nbsp; <b>Issue</b> : 24&nbsp; |&nbsp; <b>Page</b> : 101-104</td>" +
+      "</tr>" +
+      "<tr>" +
+      "<td width=\"100%\" colspan=\"2\">" +
+      "</td>" +
+      "</tr>" +
+      "<tr>" +
+      "<td width=\"100%\" colspan=\"2\">" +
+      "<P>" +
+      "<font class=\"sTitle\">Renal cell carcinoma in children and adolescence: Our experience</font>" +
+      "<br>" +
+      "<br>" +
+      "<font class=\"articleAuthor\">" +
+      "<a target=\'_blank\' href=\'/searchresult.asp?search=\'>FOO</a>" +
+      "<sup>1</sup>, <a target=\'_blank\' href=\'/searchresult.asp?search=\'>FOO</a>" +
+      "<sup>2</sup>, <a target=\'_blank\' href=\'/searchresult.asp?search=\'>FOO</a>" +
+      "<sup>2</sup>, <a target=\'_blank\' href=\'/searchresult.asp?search=\'>FOO</a>" +
+      "<sup>2</sup>, <a target=\'_blank\' href=\'/searchresult.asp?search=\'>FOO</a>" +
+      "<sup>2</sup>, <a target=\'_blank\' href=\'/searchresult.asp?search=\'>FOO</a>" +
+      "<sup>2</sup>" +
+      "</font>" +
+      "<br>" +
+      "</p>" +
+      "<p>" +
+      "</p>" +
+      "</td>" +
+      "</tr>" +
+      "<tr>" +
+      "<td width=\"100%\" colspan=\"2\" height=\"10\">" +
+      "</td>" +
+      "</tr>" +
+      "<tr>" +
+      "<td width=\"100%\" colspan=\"2\">" +
+      "<b>Background:</b> Literature on foo </td>" +
+      "</tr>" +
+      "<tr>" +
+      "<td width=\"100%\" colspan=\"2\" height=\"10\">" +
+      "</td>" +
+      "</tr>" +
+      "<tr>" +
+      "<td width=\"100%\" colspan=\"2\">" +
+      "<br>" +
+      "<br>" +
+      "</td>" +
+      "</tr>" +
+      "<tr>" +
+      "<td width=\"100%\" colspan=\"2\" height=\"20\">" +
+      "</td>" +
+      "</tr>" +
+      "<tr>" +
+      "<td width=\"100%\" colspan=\"2\">[<a href=\"article.asp?issn=0189-6725;year=2024;volume=11;issue=24;spage=101;epage=104;aulast=FOO\">FULL TEXT</a>] " +
+      "[<a href=\"article.asp?issn=0189-6725;year=2024;volume=11;issue=24;spage=101;epage=104;aulast=FOO;type=2\">PDF</a>]*</td>" +
+      "</tr>" +
+      "<tr>" +
+      "<td width=\"100%\" colspan=\"2\" height=\"15\">" +
+      "</td>" +
+      "</tr>" +
+      "<tr>" +
+      "<td width=\"50%\">" +
+      "<a href=\"printarticle.asp?issn=0189-6725;year=2024;volume=11;issue=24;spage=101;epage=104;aulast=FOO;type=0\" target=\"_blank\">" +
+      "<img border=\"0\" src=\"templates/icon_print.gif\" alt=\"Print this article\">" +
+      "</a>&nbsp;&nbsp;&nbsp;&nbsp;" +
+      "<a href=\"emailArticle.asp?issn=0189-6725;year=2024;volume=11;issue=24;spage=101;epage=104;aulast=FOO;type=0\">" +
+      "<img border=\"0\" src=\"templates/icon_mail.gif\" alt=\"Email this article\">" +
+      "</a>" +
+      "</td>" +
+      "<td width=\"50%\">" +
+      "</td>" +
+      "</tr>" +
+      "</table>";
+  
+  private static final String backIssueHtml =
+      "<td>" +
+      "<a title=\"Table of Contents\" href=\"showBackIssue.asp?issn=1111-0000;year=2015;volume=8;issue=6;month=yin-yang\">" +
+      "Issue 6&nbsp;(Nov-Dec)</a>" +
+      "</td>" +
+      "<td>" +
+      "<a title=\"Table of Contents\" href=\"showBackIssue.asp?issn=1111-0000;year=2015;volume=8;issue=5;month=foo-blah\">" +
+      "Issue 6&nbsp;(Nov-Dec)</a>" +
+      "</td>" +
+      "<td>" +
+      "<a title=\"Table of Contents\" href=\"showBackIssue.asp?issn=1111-0000;year=2015;volume=4;issue=6;month=bread-butter\">" +
+      "Issue 6&nbsp;(Nov-Dec)</a>" +
+      "</td>" +
+      "<td>" +
+      "<a title=\"Table of Contents\" href=\"showBackIssue.asp?issn=1111-0000;year=2015;volume=8;issue=4;month=oil-water\">" +
+      "Issue 6&nbsp;(Nov-Dec)</a>" +
+      "</td>";
+
+  // only keep the link tags that are specific to the issues for this journals/volume
+  private static final String backIssueFiltered =
+      "<a title=\"Table of Contents\" href=\"showBackIssue.asp?issn=1111-0000;year=2015;volume=8;issue=6;month=yin-yang\">" +
+      "Issue 6&nbsp;(Nov-Dec)</a>" +
+      "<a title=\"Table of Contents\" href=\"showBackIssue.asp?issn=1111-0000;year=2015;volume=8;issue=5;month=foo-blah\">" +
+      "Issue 6&nbsp;(Nov-Dec)</a>" +
+      "<a title=\"Table of Contents\" href=\"showBackIssue.asp?issn=1111-0000;year=2015;volume=8;issue=4;month=oil-water\">" +
+      "Issue 6&nbsp;(Nov-Dec)</a>";
+      
   /*
    *  Compare Html and HtmlHashFiltered
    */
   
-  public void testMenuBarUsersOnlineHtmlFiltering() throws Exception {
+  public void testBigTOC() throws Exception {
+
     InputStream actIn = fact.createFilteredInputStream(mau,
-        new StringInputStream(menuBarUsersOnlineHtml),
+        new StringInputStream(bigTOC),
         Constants.DEFAULT_ENCODING);
 
-    assertEquals(menuBarUsersOnlineHtmlHashFiltered,
-                 StringUtil.fromInputStream(actIn));
+    assertEquals(bigTOCFiltered, StringUtil.fromInputStream(actIn));
+
+  }
+  public void testBigABS() throws Exception {
+
+    InputStream actIn = fact.createFilteredInputStream(mau,
+        new StringInputStream(bigAbs),
+        Constants.DEFAULT_ENCODING);
+
+    assertEquals(bigAbsFiltered, StringUtil.fromInputStream(actIn));
+
+  }
+  public void testAbstract() throws Exception {
+
+    InputStream actIn = fact.createFilteredInputStream(mau,
+        new StringInputStream(articleHtml),
+        Constants.DEFAULT_ENCODING);
+
+    assertEquals(articleHtmlKept, StringUtil.fromInputStream(actIn));
 
   }
 
-  public void testAndroidMobileAdHtmlFiltering() throws Exception {
+
+  public void testCitationCounts() throws Exception {
     InputStream actIn = fact.createFilteredInputStream(mau,
-        new StringInputStream(androidMobileAdHtml),
+        new StringInputStream(citationCounts),
         Constants.DEFAULT_ENCODING);
-
-    assertEquals(androidMobileAdHtmlHashFiltered, StringUtil.fromInputStream(actIn));
-
+    assertEquals(onlyKept, StringUtil.fromInputStream(actIn));
   }
 
-  public void testLeftNavCellStatsHtmlHtmlFiltering() throws Exception {
+  public void testTOC() throws Exception {
     InputStream actIn = fact.createFilteredInputStream(mau,
-        new StringInputStream(leftNavCellStatsHtml),
+        new StringInputStream(tocHtml),
         Constants.DEFAULT_ENCODING);
-
-    assertEquals(leftNavCellStatsHtmlHashFiltered, StringUtil.fromInputStream(actIn));
-
+    assertEquals(tocHtmlKept, StringUtil.fromInputStream(actIn));
   }
+  
+  //This test requires AU information
+  public void testBackIssueManifest() throws Exception {
+    InputStream actIn = fact.createFilteredInputStream(mau,
+        new StringInputStream(backIssueHtml),
+        Constants.DEFAULT_ENCODING);
+    assertEquals(backIssueFiltered, StringUtil.fromInputStream(actIn));
+  }
+
 
 }

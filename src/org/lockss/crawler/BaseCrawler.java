@@ -408,7 +408,7 @@ public abstract class BaseCrawler implements Crawler {
           " threw " + e.getMessage());
       setThrownStatus(e);
       throw e;
-    } catch (OutOfMemoryError e) {
+    } catch (Error e) {
       logger.error("doCrawl0()", e);
       setThrownStatus(e);
       throw e;
@@ -799,12 +799,16 @@ public abstract class BaseCrawler implements Crawler {
   
     @Override
     public boolean isGloballyPermittedHost(String host) {
-      return crawler.crawlMgr.isGloballyPermittedHost(host);
+      // crawlMgr not always set up in tests
+      return crawler.crawlMgr != null &&
+	crawler.crawlMgr.isGloballyPermittedHost(host);
     }
 
     @Override
     public boolean isAllowedPluginPermittedHost(String host) {
-      return crawler.crawlMgr.isAllowedPluginPermittedHost(host);
+      // crawlMgr not always set up in tests
+      return crawler.crawlMgr != null &&
+	crawler.crawlMgr.isAllowedPluginPermittedHost(host);
     }
 
     @Override

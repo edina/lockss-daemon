@@ -4,14 +4,8 @@
   >
   plugin = org.lockss.plugin.projmuse.ProjectMusePlugin
   implicit < status ; year ; name ; param[volume] >
-  param[base_url] = http://muse.jhu.edu/
 
   {
-
-  param[journal_dir] = world_policy_journal
-  attr[journal_id] = wpj
-
-    {
 
     title <
       name = World Policy Journal ;
@@ -22,8 +16,15 @@
     
     comment[stopped] = no longer contributing to Project Muse
 
-    au < released ; 2010 ; World Policy Journal Volume 27 [Project MUSE] ; 27 >
-    au < released ; 2011 ; World Policy Journal Volume 28 [Project MUSE] ; 28 >
+    param[journal_dir] = world_policy_journal
+    attr[journal_id] = wpj
+
+    {
+
+      param[base_url] = http://muse.jhu.edu/
+
+      au < released ; 2010 ; World Policy Journal Volume 27 [Project MUSE] ; 27 >
+      au < released ; 2011 ; World Policy Journal Volume 28 [Project MUSE] ; 28 >
 
     }
 

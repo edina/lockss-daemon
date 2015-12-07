@@ -2,35 +2,35 @@
    -->
 <map>
   <entry>
-   <string>plugin_status</string>
-   <string>ready</string>
+    <string>plugin_status</string>
+    <string>ready</string>
   </entry>
   <entry>
     <string>plugin_identifier</string>
     <string>org.lockss.plugin.bmc.BMCPlugin</string>
   </entry>
   <entry>
-   <string>plugin_notes</string>
-   <string>no longer using non-definitional parameter journal_code</string>
+    <string>plugin_notes</string>
+    <string>no longer using non-definitional parameter journal_code</string>
   </entry>
   <entry>
     <string>plugin_version</string>
-    <string>40</string>
+    <string>52</string>
   </entry>
   <entry>
     <string>plugin_feature_version_map</string>
     <map>
        <entry>
         <string>Metadata</string>
-        <string>2</string>
+        <string>4</string>
       </entry>
       <entry>
         <string>Substance</string>
-        <string>5</string>
+        <string>6</string>
       </entry>
       <entry>
         <string>Poll</string>
-        <string>15</string>
+        <string>25</string>
       </entry>
     </map>
   </entry>
@@ -38,14 +38,21 @@
     <string>au_name</string>
     <string>"BioMed Central Plugin (BMC Series, PhysMath Central), Base URL %s, ISSN %s, Volume %s", base_url, journal_issn, volume_name</string>
   </entry>
-
   <entry>
     <string>plugin_name</string>
     <string>BioMed Central Plugin (BMC Series, PhysMath Central)</string>
   </entry>
   <entry>
+    <string>required_daemon_version</string>
+    <string>1.68.4</string> <!-- Daemon version at time of update -->
+  </entry>
+  <entry>
+<!--  supplements now start from their own page; crawl rules limit to just the correct volume -->  
     <string>au_start_url</string>
+    <list>
     <string>"%s%s/%s", base_url, journal_issn, volume_name</string>
+    <string>"%s%s/supplements/all", base_url, journal_issn</string>
+    </list>
   </entry>
   <entry>
     <string>au_permission_url</string>
@@ -74,6 +81,7 @@
     <list>
       <string>1,"^https?://%s/.*\.(bmp|css|gif|ico|jpe?g|js|png|tif?f)$", base_url_host</string>
       <string>4,"^%s.{0,150}", base_url</string>
+      <string>2,"^%s.+/[a-z]+[^./]*[.][^/]{2,}[.][^/]{2,}/.*[.]php", base_url</string>
       <string>2,"^%s.*/(about|email|citation|prepub|comments|postcomment)$", base_url</string>
       <string>2,"^%s%s/%s/.*\?fmt_view=(classic|mobile)$", base_url, journal_issn, volume_name</string>
       <!-- exclude (because is causing a 503 error):
@@ -97,13 +105,20 @@
       -->
       <string>1, "^%scontent/(epub|pdf)/%s-%s[\w-]*(\.pdf)?", base_url, journal_issn, volume_name</string>      
       <string>1, "^%s%s/%s/[\d]+", base_url, journal_issn, volume_name</string>      
-      <string>1, "^%s%s/%s/[\d]+/[\d]+/abstract", base_url, journal_issn, volume_name</string>    
+      <string>1, "^%s%s/%s/[\d]+/[\d]+/abstract", base_url, journal_issn, volume_name</string>  
+      <!-- supplement issues start from a page containing ALL supplement issues
+           http://www.biomedcentral.com/bmcgenomics/supplements/all 
+           http://www.biomedcentral.com/bmcgenomics/supplements/14/S8 
+           http://www.biomedcentral.com/1471-20164/14/S8/S2(/abstract)?  
+           but we don't know the specific journal_id so we have to wildcard 
+           risk of going to other journal supplement if they have same volume -->
+      <string>1, "^%s[^/]+/supplements/%s/", base_url, volume_name</string>        
     </list>
   </entry>
   <entry>
     <string>au_substance_url_pattern</string>
     <list>
-      <string>"^%scontent/pdf/%s-%s-[-\d]+\.pdf$", base_url, journal_issn, volume_name </string>
+      <string>"^%scontent/pdf/[^/]+\.pdf$", base_url</string>
     </list>
   </entry>    
   <entry>
@@ -153,13 +168,12 @@
   </entry>
   <entry>
     <string>au_def_pause_time</string>
-    <long>6000</long>
+    <long>5000</long> <!-- Increasing progressively -->
   </entry>
   <entry>
     <string>au_def_new_content_crawl</string>
     <long>1209600000</long>
   </entry>
-
   <entry>
     <string>plugin_article_iterator_factory</string>
     <string>org.lockss.plugin.bmc.BMCPluginArticleIteratorFactory</string>
@@ -181,10 +195,13 @@
       </entry>
     </map>
   </entry>
-  <!--
   <entry>
-    <string>au_url_normalizer</string>
-    <string>org.lockss.plugin.bmc.BMCPluginUrlNormalizer</string>
-  </entry
-  -->
+    <string>au_repair_from_peer_if_missing_url_pattern</string>
+    <string>(\.(css|js)|-toc.gif|/images/.+\.(png|gif))$</string>
+  </entry>
+  <entry>
+    <!-- replace with au_exclude_urls_from_poll_results_pattern with 1.69 -->
+    <string>au_exclude_urls_from_polls_pattern</string>
+    <string>(\.(css|js)|-toc.gif|/images/.+\.(png|gif))$</string>
+  </entry>
 </map>

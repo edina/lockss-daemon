@@ -4,7 +4,7 @@
 
 /*
 
-Copyright (c) 2000-2014 Board of Trustees of Leland Stanford Jr. University,
+Copyright (c) 2000-2015 Board of Trustees of Leland Stanford Jr. University,
 all rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -45,18 +45,18 @@ import org.lockss.util.Logger;
 public class GeorgThiemeVerlagArticleIteratorFactory
     implements ArticleIteratorFactory,
                ArticleMetadataExtractorFactory {
-
+  
   protected static Logger log = Logger.getLogger(GeorgThiemeVerlagArticleIteratorFactory.class);
   
   protected static final String ROOT_TEMPLATE =
       "\"%s\", base_url";
   
   protected static final String PATTERN_TEMPLATE =
-      "\"^%sejournals/(?:html|pdf)/10[.][0-9a-z]{4,6}/[^/?&.]+(?:[.]pdf|[?]issue=[^&]+)?$\"," +
+      "\"^%s(?:[^/]+/)?ejournals/(?:html|pdf)/10[.][0-9a-z]{4,6}/[^/?&.]+(?:[.]pdf|[?]issue=[^&]+)?$\"," +
       " base_url";
   
   // various aspects of an article
-  // https://www.thieme-connect.de/ejournals/html/10.1055/s-0029-1214947
+  // https://www.thieme-connect.de/products/ejournals/html/10.1055/s-0029-1214947
   // https://www.thieme-connect.de/ejournals/pdf/10.1055/s-0029-1214947.pdf
   // https://www.thieme-connect.de/ejournals/abstract/10.1055/s-0029-1214947
   

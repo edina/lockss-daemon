@@ -26,7 +26,6 @@
     au < manifest ; 2011 ; Aging Health Volume 7 ; 7 >
     au < released ; 2012 ; Aging Health Volume 8 ; 8 >
     au < manifest ; 2013 ; Aging Health Volume 9 ; 9 >
-    au < expected ; 2014 ; Aging Health Volume 10 ; 10 >
 
   }
 
@@ -44,7 +43,7 @@
     au < manifest ; 2009 ; Biomarkers in Medicine Volume 3 ; 3 >
     au < manifest ; 2010 ; Biomarkers in Medicine Volume 4 ; 4 >
     au < manifest ; 2011 ; Biomarkers in Medicine Volume 5 ; 5 >
-    au < manifest ; 2012 ; Biomarkers in Medicine Volume 6 ; 6 >
+    au < released ; 2012 ; Biomarkers in Medicine Volume 6 ; 6 >
     au < manifest ; 2013 ; Biomarkers in Medicine Volume 7 ; 7 >
     au < manifest ; 2014 ; Biomarkers in Medicine Volume 8 ; 8 >
     au < manifest ; 2015 ; Biomarkers in Medicine Volume 9 ; 9 >
@@ -60,7 +59,7 @@
     
     param[journal_id] = bmt
 
-    au < manifest ; 2012 ; Breast Cancer Management Volume 1 ; 1 >
+    au < released ; 2012 ; Breast Cancer Management Volume 1 ; 1 >
     au < manifest ; 2013 ; Breast Cancer Management Volume 2 ; 2 >
     au < manifest ; 2014 ; Breast Cancer Management Volume 3 ; 3 >
     au < manifest ; 2015 ; Breast Cancer Management Volume 4 ; 4 >
@@ -97,7 +96,7 @@
     au < manifest ; 2011 ; Clinical Lipidology Volume 6 ; 6 >
     au < released ; 2012 ; Clinical Lipidology Volume 7 ; 7 >
     au < manifest ; 2013 ; Clinical Lipidology Volume 8 ; 8 >
-    au < manifest ; 2014 ; Clinical Lipidology Volume 9 ; 9 >
+    au < released ; 2014 ; Clinical Lipidology Volume 9 ; 9 >
     au < manifest ; 2015 ; Clinical Lipidology Volume 10 ; 10 >
 
   }
@@ -132,7 +131,7 @@
     comment[continues] = Therapy, 1475-0708
     param[journal_id] = cpr
 
-    au < manifest ; 2012 ; Clinical Practice Volume 9 ; 9 >
+    au < released ; 2012 ; Clinical Practice Volume 9 ; 9 >
     au < manifest ; 2013 ; Clinical Practice Volume 10 ; 10 >
     au < manifest ; 2014 ; Clinical Practice Volume 11 ; 11 >
     au < expected ; 2015 ; Clinical Practice Volume 12 ; 12 >
@@ -150,7 +149,7 @@
 
     au < manifest ; 2012 ; CNS Oncology Volume 1 ; 1 >
     au < manifest ; 2013 ; CNS Oncology Volume 2 ; 2 >
-    au < manifest ; 2014 ; CNS Oncology Volume 3 ; 3 >
+    au < released ; 2014 ; CNS Oncology Volume 3 ; 3 >
     au < manifest ; 2015 ; CNS Oncology Volume 4 ; 4 >
 
   }
@@ -164,9 +163,9 @@
     
     param[journal_id] = crc
 
-    au < manifest ; 2012 ; Colorectal Cancer Volume 1 ; 1 >
+    au < released ; 2012 ; Colorectal Cancer Volume 1 ; 1 >
     au < manifest ; 2013 ; Colorectal Cancer Volume 2 ; 2 >
-    au < manifest ; 2014 ; Colorectal Cancer Volume 3 ; 3 >
+    au < released ; 2014 ; Colorectal Cancer Volume 3 ; 3 >
     au < manifest ; 2015 ; Colorectal Cancer Volume 4 ; 4 >
 
   }
@@ -184,7 +183,7 @@
     au < manifest ; 2011 ; Diabetes Management Volume 1 ; 1 >
     au < released ; 2012 ; Diabetes Management Volume 2 ; 2 >
     au < manifest ; 2013 ; Diabetes Management Volume 3 ; 3 >
-    au < manifest ; 2014 ; Diabetes Management Volume 4 ; 4 >
+    au < released ; 2014 ; Diabetes Management Volume 4 ; 4 >
     au < manifest ; 2015 ; Diabetes Management Volume 5 ; 5 >
 
   }
@@ -270,7 +269,7 @@
     au < manifest ; 2009 ; Future Neurology Volume 4 ; 4 >
     au < manifest ; 2010 ; Future Neurology Volume 5 ; 5 >
     au < manifest ; 2011 ; Future Neurology Volume 6 ; 6 >
-    au < manifest ; 2012 ; Future Neurology Volume 7 ; 7 >
+    au < released ; 2012 ; Future Neurology Volume 7 ; 7 >
     au < manifest ; 2013 ; Future Neurology Volume 8 ; 8 >
     au < manifest ; 2014 ; Future Neurology Volume 9 ; 9 >
     au < manifest ; 2015 ; Future Neurology Volume 10 ; 10 >
@@ -317,9 +316,9 @@
     au < manifest ; 2009 ; Future Virology Volume 4 ; 4 >
     au < manifest ; 2010 ; Future Virology Volume 5 ; 5 >
     au < manifest ; 2011 ; Future Virology Volume 6 ; 6 >
-    au < manifest ; 2012 ; Future Virology Volume 7 ; 7 >
+    au < ready ; 2012 ; Future Virology Volume 7 ; 7 >
     au < manifest ; 2013 ; Future Virology Volume 8 ; 8 >
-    au < manifest ; 2014 ; Future Virology Volume 9 ; 9 >
+    au < released ; 2014 ; Future Virology Volume 9 ; 9 >
     au < manifest ; 2015 ; Future Virology Volume 10 ; 10 >
 
   }
@@ -336,6 +335,21 @@
 
     au < manifest ; 2007 ; Future HIV Therapy Volume 1 ; 1 >
     au < manifest ; 2008 ; Future HIV Therapy Volume 2 ; 2 >
+    
+  }
+
+  {
+  
+    title < 
+      name = Hepatic Oncology ;
+      issn = 2045-0923 ;
+      eissn = 2045-0931
+    >
+    
+    param[journal_id] = hep
+
+    au < manifest ; 2014 ; Hepatic Oncology Volume 1 ; 1 >
+    au < manifest ; 2015 ; Hepatic Oncology Volume 2 ; 2 >
     
   }
 
@@ -424,8 +438,23 @@
     au < manifest ; 2011 ; International Journal of Clinical Rheumatology Volume 6 ; 6 >
     au < manifest ; 2012 ; International Journal of Clinical Rheumatology Volume 7 ; 7 >
     au < manifest ; 2013 ; International Journal of Clinical Rheumatology Volume 8 ; 8 >
-    au < manifest ; 2014 ; International Journal of Clinical Rheumatology Volume 9 ; 9 >
+    au < released ; 2014 ; International Journal of Clinical Rheumatology Volume 9 ; 9 >
     au < manifest ; 2015 ; International Journal of Clinical Rheumatology Volume 10 ; 10 >
+
+  }
+
+  {
+  
+    title < 
+      name = International Journal of Endocrine Oncology ;
+      issn = 2045-0869 ;
+      eissn = 2045-0877
+    >
+    
+    param[journal_id] = ije
+
+    au < manifest ; 2014 ; International Journal of Endocrine Oncology Volume 1 ; 1 >
+    au < manifest ; 2015 ; International Journal of Endocrine Oncology Volume 2 ; 2 >
 
   }
 
@@ -458,7 +487,7 @@
     au < manifest ; 2009 ; Interventional Cardiology Volume 1 ; 1 >
     au < manifest ; 2010 ; Interventional Cardiology Volume 2 ; 2 >
     au < manifest ; 2011 ; Interventional Cardiology Volume 3 ; 3 >
-    au < manifest ; 2012 ; Interventional Cardiology Volume 4 ; 4 >
+    au < released ; 2012 ; Interventional Cardiology Volume 4 ; 4 >
     au < manifest ; 2013 ; Interventional Cardiology Volume 5 ; 5 >
     au < manifest ; 2014 ; Interventional Cardiology Volume 6 ; 6 >
     au < manifest ; 2015 ; Interventional Cardiology Volume 7 ; 7 >
@@ -490,10 +519,25 @@
     
     param[journal_id] = lmt
 
-    au < manifest ; 2012 ; Lung Cancer Management Volume 1 ; 1 >
+    au < released ; 2012 ; Lung Cancer Management Volume 1 ; 1 >
     au < manifest ; 2013 ; Lung Cancer Management Volume 2 ; 2 >
     au < manifest ; 2014 ; Lung Cancer Management Volume 3 ; 3 >
     au < manifest ; 2015 ; Lung Cancer Management Volume 4 ; 4 >
+
+  }
+
+  {
+  
+    title < 
+      name = Melanoma Management ;
+      issn = 2045-0885 ;
+      eissn = 2045-0893
+    >
+    
+    param[journal_id] = mmt
+
+    au < manifest ; 2014 ; Melanoma Management Volume 1 ; 1 >
+    au < manifest ; 2015 ; Melanoma Management Volume 2 ; 2 >
 
   }
 
@@ -513,9 +557,9 @@
     au < manifest ; 2009 ; Nanomedicine Volume 4 ; 4 >
     au < manifest ; 2010 ; Nanomedicine Volume 5 ; 5 >
     au < manifest ; 2011 ; Nanomedicine Volume 6 ; 6 >
-    au < manifest ; 2012 ; Nanomedicine Volume 7 ; 7 >
+    au < released ; 2012 ; Nanomedicine Volume 7 ; 7 >
     au < manifest ; 2013 ; Nanomedicine Volume 8 ; 8 >
-    au < manifest ; 2014 ; Nanomedicine Volume 9 ; 9 >
+    au < released ; 2014 ; Nanomedicine Volume 9 ; 9 >
     au < manifest ; 2015 ; Nanomedicine Volume 10 ; 10 >
 
   }
@@ -609,7 +653,7 @@
     au < manifest ; 2011 ; Personalized Medicine Volume 8 ; 8 >
     au < manifest ; 2012 ; Personalized Medicine Volume 9 ; 9 >
     au < manifest ; 2013 ; Personalized Medicine Volume 10 ; 10 >
-    au < manifest ; 2014 ; Personalized Medicine Volume 11 ; 11 >
+    au < released ; 2014 ; Personalized Medicine Volume 11 ; 11 >
     au < manifest ; 2015 ; Personalized Medicine Volume 12 ; 12 >
 
   }
@@ -636,7 +680,7 @@
     au < manifest ; 2009 ; Pharmacogenomics Volume 10 ; 10 >
     au < manifest ; 2010 ; Pharmacogenomics Volume 11 ; 11 >
     au < manifest ; 2011 ; Pharmacogenomics Volume 12 ; 12 >
-    au < manifest ; 2012 ; Pharmacogenomics Volume 13 ; 13 >
+    au < released ; 2012 ; Pharmacogenomics Volume 13 ; 13 >
     au < manifest ; 2013 ; Pharmacogenomics Volume 14 ; 14 >
     au < manifest ; 2014 ; Pharmacogenomics Volume 15 ; 15 >
     au < manifest ; 2015 ; Pharmacogenomics Volume 16 ; 16 >
@@ -661,7 +705,7 @@
     au < manifest ; 2011 ; Regenerative Medicine Volume 6 ; 6 >
     au < manifest ; 2012 ; Regenerative Medicine Volume 7 ; 7 >
     au < manifest ; 2013 ; Regenerative Medicine Volume 8 ; 8 >
-    au < manifest ; 2014 ; Regenerative Medicine Volume 9 ; 9 >
+    au < ready ; 2014 ; Regenerative Medicine Volume 9 ; 9 >
     au < manifest ; 2015 ; Regenerative Medicine Volume 10 ; 10 >
 
   }
@@ -684,7 +728,7 @@
     au < manifest ; 2011 ; Women's Health Volume 7 ; 7 >
     au < manifest ; 2012 ; Women's Health Volume 8 ; 8 >
     au < manifest ; 2013 ; Women's Health Volume 9 ; 9 >
-    au < manifest ; 2014 ; Women's Health Volume 10 ; 10 >
+    au < released ; 2014 ; Women's Health Volume 10 ; 10 >
     au < manifest ; 2015 ; Women's Health Volume 11 ; 11 >
 
   }

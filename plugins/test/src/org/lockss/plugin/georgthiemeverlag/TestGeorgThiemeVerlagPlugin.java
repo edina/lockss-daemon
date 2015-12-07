@@ -4,7 +4,7 @@
 
 /*
 
-Copyright (c) 2000-2013 Board of Trustees of Leland Stanford Jr. University,
+Copyright (c) 2000-2015 Board of Trustees of Leland Stanford Jr. University,
 all rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -37,6 +37,9 @@ import java.util.*;
 
 import org.lockss.test.*;
 import org.lockss.util.ListUtil;
+import org.lockss.util.urlconn.CacheException;
+import org.lockss.util.urlconn.HttpResultMap;
+import org.lockss.util.urlconn.CacheException.RetrySameUrlException;
 import org.lockss.plugin.*;
 import org.lockss.config.Configuration;
 import org.lockss.daemon.*;
@@ -173,6 +176,29 @@ public class TestGeorgThiemeVerlagPlugin extends LockssTestCase {
         instanceof org.lockss.plugin.georgthiemeverlag.GeorgThiemeVerlagArticleIteratorFactory);
   }
   
+  public void testHandles500Result() throws Exception {
+    Properties props = new Properties();
+    props.setProperty(BASE_URL_KEY, "http://www.example.com/");
+    props.setProperty(JOURNAL_ID_KEY, "10.1055/s-00000001");
+    props.setProperty(VOLUME_NAME_KEY, "2013");
+    
+    String starturl = // products/ejournals/issues/%s/%s", base_url, journal_id, volume_name
+        "http://www.example.com/products/ejournals/issues/10.1055/s-00000001/2013";
+    DefinableArchivalUnit au = makeAuFromProps(props);
+    MockLockssUrlConnection conn = new MockLockssUrlConnection();
+    conn.setURL("http://www.example.com/products/ejournals/abstract/10.1055/s-0032-1309579");
+    CacheException exc =
+        ((HttpResultMap)plugin.getCacheResultMap()).mapException(au, conn,
+            500, "foo");
+    assertClass(CacheException.NoRetryDeadLinkException.class, exc);
+    
+    conn.setURL(starturl);
+    exc = ((HttpResultMap)plugin.getCacheResultMap()).mapException(au, conn,
+        500, "foo");
+    assertClass(RetrySameUrlException.class, exc);
+    
+  }
+  
   // Test the crawl rules for GeorgThiemeVerlagPlugin
   public void testShouldCacheProperPages() throws Exception {
     String ROOT_URL = "http://www.example.com/";
@@ -192,30 +218,30 @@ public class TestGeorgThiemeVerlagPlugin extends LockssTestCase {
     catch (ConfigurationException ex) {
     }
     theDaemon.getLockssRepository(au);
-    BaseCachedUrlSet cus = new BaseCachedUrlSet(au, 
+    new BaseCachedUrlSet(au, 
         new RangeCachedUrlSetSpec(baseUrl.toString()));
     // Test for pages that should get crawled
     // permission page/start url
-    shouldCacheTest(ROOT_URL + "ejournals/issues/" + JOURNAL_ID + "/2013", true, au);  
+    shouldCacheTest(ROOT_URL + "products/ejournals/issues/" + JOURNAL_ID + "/2013", true, au);  
     // toc page for an issue
-    shouldCacheTest(ROOT_URL + "ejournals/issue/" + "10.1055/s-003-26177", true, au);  
+    shouldCacheTest(ROOT_URL + "products/ejournals/issue/" + "10.1055/s-003-26177", true, au);  
     // article files
-    // https://www.thieme-connect.de/ejournals/issues/10.1055/s-00000001/2013
-    // https://www.thieme-connect.de/ejournals/issue/10.1055/s-003-26177
-    // https://www.thieme-connect.de/ejournals/abstract/10.1055/s-0029-1214947
-    // https://www.thieme-connect.de/ejournals/html/10.1055/s-0029-1214947
-    // https://www.thieme-connect.de/ejournals/html/10.1055/s-0029-1214947?issue=10.1055/s-003-25342
-    // https://www.thieme-connect.de/ejournals/pdf/10.1055/s-0029-1214947.pdf
-    // https://www.thieme-connect.de/ejournals/pdf/10.1055/s-0029-1214947.pdf?issue=10.1055/s-003-25342
-    // https://www.thieme-connect.de/ejournals/ris/10.1055/s-0031-1296349/BIB
-    shouldCacheTest(ROOT_URL + "ejournals/abstract/10.1055/s-0029-1214947", true, au);
-    shouldCacheTest(ROOT_URL + "ejournals/html/10.1055/s-0029-1214947", true, au);
+    // https://www.thieme-connect.de/products/ejournals/issues/10.1055/s-00000001/2013
+    // https://www.thieme-connect.de/products/ejournals/issue/10.1055/s-003-26177
+    // https://www.thieme-connect.de/products/ejournals/abstract/10.1055/s-0029-1214947
+    // https://www.thieme-connect.de/products/ejournals/html/10.1055/s-0029-1214947
+    // https://www.thieme-connect.de/products/ejournals/html/10.1055/s-0029-1214947?issue=10.1055/s-003-25342
+    // https://www.thieme-connect.de/products/ejournals/pdf/10.1055/s-0029-1214947.pdf
+    // https://www.thieme-connect.de/products/ejournals/pdf/10.1055/s-0029-1214947.pdf?issue=10.1055/s-003-25342
+    // https://www.thieme-connect.de/products/ejournals/ris/10.1055/s-0031-1296349/BIB
+    shouldCacheTest(ROOT_URL + "products/ejournals/abstract/10.1055/s-0029-1214947", true, au);
+    shouldCacheTest(ROOT_URL + "products/ejournals/html/10.1055/s-0029-1214947", true, au);
     shouldCacheTest(ROOT_URL +
-        "ejournals/html/10.1055/s-0029-1214947?issue=10.1055/s-003-25342", true, au);
-    shouldCacheTest(ROOT_URL + "ejournals/pdf/10.1055/s-0029-1214947.pdf", true, au);
+        "products/ejournals/html/10.1055/s-0029-1214947?issue=10.1055/s-003-25342", true, au);
+    shouldCacheTest(ROOT_URL + "products/ejournals/pdf/10.1055/s-0029-1214947.pdf", true, au);
     shouldCacheTest(ROOT_URL +
-        "ejournals/pdf/10.1055/s-0029-1214947.pdf?issue=10.1055/s-003-25342", true, au);
-    shouldCacheTest(ROOT_URL + "ejournals/ris/10.1055/s-0031-1296349/BIB", true, au);
+        "products/ejournals/pdf/10.1055/s-0029-1214947.pdf?issue=10.1055/s-003-25342", true, au);
+    shouldCacheTest(ROOT_URL + "products/ejournals/ris/10.1055/s-0031-1296349/BIB", true, au);
     // css files
     shouldCacheTest(ROOT_URL + "css/img/themes/bg-pageHeader.jpg", true, au);
     shouldCacheTest(ROOT_URL + "css/style.css", true, au);
@@ -223,9 +249,11 @@ public class TestGeorgThiemeVerlagPlugin extends LockssTestCase {
     shouldCacheTest(ROOT_URL +
         "media/ains/20131112/supmat/ains_11_2013_18_sup_10-1055-s-0033-1361983.pdf",
         true, au);
+    // images of page content are not preserved
+    shouldCacheTest(ROOT_URL + "media/ains/201410/lookinside/thumbnails/10.1055-s-0034-1395169-1.jpg", false, au);  
     
     // should not get crawled - missing doi prefix
-    shouldCacheTest(ROOT_URL + "ejournals/html/s-0029-1214947", false, au);  
+    shouldCacheTest(ROOT_URL + "products/ejournals/html/s-0029-1214947", false, au);  
     // should not get crawled - LOCKSS
     shouldCacheTest("http://lockss.stanford.edu", false, au);
   }

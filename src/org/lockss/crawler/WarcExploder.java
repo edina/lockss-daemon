@@ -4,7 +4,7 @@
 
 /*
 
-Copyright (c) 2007-2011 Board of Trustees of Leland Stanford Jr. University,
+Copyright (c) 2007-2015 Board of Trustees of Leland Stanford Jr. University,
 all rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -62,15 +62,12 @@ public class WarcExploder extends Exploder {
   private static Logger logger = Logger.getLogger("WarcExploder");
   protected InputStream arcStream;
   protected CIProperties arcProps;
-  
+
   /**
    * Constructor
-   * @param uc UrlCacher for the archive
-   * @param maxRetries
-   * @param crawlSpec the CrawlSpec for the crawl that foudn the archive
-   * @param crawler the crawler that found the archive
-   * @param explode true to explode the archives
-   * @param store true to store the archive as well
+   * @param toExplode  url data of for the archive to explode
+   * @param crawlFacade  facade for crawler performing crawl
+   * @param helper helper for exploding archive
    */
   public WarcExploder(FetchedUrlData toExplode, CrawlerFacade crawlFacade,
       ExploderHelper helper) {
@@ -174,7 +171,8 @@ public class WarcExploder extends Exploder {
             }
           } else {
             badEntries++;
-            logger.debug2("Can't map " + elementUrl + " from " + archiveUrl);
+            logger.debug2("Can't map " + elementUrl + " from "
+        	+ getArchiveUrl());
           }
         }
       }
@@ -197,12 +195,12 @@ public class WarcExploder extends Exploder {
         // URLs were added.
         for (Iterator it = touchedAus.iterator(); it.hasNext(); ) {
           ArchivalUnit au = (ArchivalUnit)it.next();
-          logger.debug3(archiveUrl + " touching " + au.toString());
+          logger.debug3(getArchiveUrl() + " touching " + au.toString());
           AuUtil.getDaemon(au).getNodeManager(au).newContentCrawlFinished();
         }
     } else {
       ArchivalUnit au = crawlFacade.getAu();
-      String msg = archiveUrl + ": " + badEntries + "/" +
+      String msg = getArchiveUrl() + ": " + badEntries + "/" +
         goodEntries + " bad entries";
       throw new CacheException.UnretryableException(msg);
     }

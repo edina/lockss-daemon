@@ -83,7 +83,8 @@ implements LinkExtractorFactory {
   @Override
   public LinkExtractor createLinkExtractor(String mimeType) {
     // set up the base link extractor to use specific includes and excludes
-    JsoupHtmlLinkExtractor extractor = new JsoupHtmlLinkExtractor();
+    // TURN on form extraction version of Jsoup for when the default is off
+    JsoupHtmlLinkExtractor extractor = new JsoupHtmlLinkExtractor(false, true, null, null);
     setFormRestrictors(extractor, null); // no additional child restrictors
     registerExtractors(extractor);
     return extractor;
@@ -96,7 +97,7 @@ implements LinkExtractorFactory {
    */
   public LinkExtractor createLinkExtractor(String mimeType, Map<String, HtmlFormExtractor.FormFieldRestrictions> child_restrictor) {
     // set up the base link extractor to use specific includes and excludes
-    JsoupHtmlLinkExtractor extractor = new JsoupHtmlLinkExtractor();
+    JsoupHtmlLinkExtractor extractor = new JsoupHtmlLinkExtractor(false, true, null, null);
     setFormRestrictors(extractor, child_restrictor);
     registerExtractors(extractor);
     return extractor;
@@ -171,8 +172,13 @@ implements LinkExtractorFactory {
 
 
   /*
-   * BaseAtypon form restrictors. Exclude "refworks" and "refworks-cn" from possible
-   * downloadable citation types  
+   * BaseAtypon form extraction 
+   *  INCLUDE only form name='fromCitmgr'
+   *  which live on the "action/showCitFormats?..." page
+   *    <form action="/action/downloadCitation" name="frmCitmgr" method="post" target="_self">
+   * Exclude 
+   *    "refworks" and "refworks-cn" from possible downloadable citation types  
+   * some child plugins will add additional restrictions
    */
   private Map<String, HtmlFormExtractor.FormFieldRestrictions> setUpBaseRestrictor() {
     Set<String> include = new HashSet<String>();
@@ -214,6 +220,7 @@ implements LinkExtractorFactory {
    * handles:
    *     LINK_TAG ("<a href=>")
    *         javascript:popRef
+   *         javascript:popRef2
    *         javascript:popRefFull
    *     LINK_TAG ("<a class="... openFigLayer" or class="...openTablesLayer"...>
    *  fails over to the SimpleTagLinkExtractor super class           
@@ -229,7 +236,7 @@ implements LinkExtractorFactory {
      *  double quotes - but that's extremely unlikely for an id value
      */
     protected static final Pattern POPREF_PATTERN = Pattern.compile(
-        "javascript:popRef(Full)?\\([\"']([^\"']+)[\"']\\)", Pattern.CASE_INSENSITIVE);
+        "javascript:popRef2?(Full)?\\([\"']([^\"']+)[\"']\\)", Pattern.CASE_INSENSITIVE);
     protected static final Pattern OPEN_CLASS_PATTERN = Pattern.compile(
         "(openFigLayer|openTablesLayer)$", Pattern.CASE_INSENSITIVE);
 

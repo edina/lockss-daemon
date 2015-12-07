@@ -32,14 +32,21 @@ in this Software without prior written authorization from Stanford University.
 
 package org.lockss.plugin.highwire.bmj;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.util.regex.Matcher;
 
+import org.htmlparser.Attribute;
 import org.htmlparser.NodeFilter;
-import org.htmlparser.filters.TagNameFilter;
+import org.htmlparser.Tag;
 import org.htmlparser.tags.CompositeTag;
+import org.htmlparser.util.NodeList;
+import org.htmlparser.util.ParserException;
+import org.htmlparser.visitors.NodeVisitor;
 import org.lockss.daemon.PluginException;
 import org.lockss.filter.html.HtmlFilterInputStream;
 import org.lockss.filter.html.HtmlNodeFilters;
+import org.lockss.filter.html.HtmlTransform;
 import org.lockss.plugin.ArchivalUnit;
 import org.lockss.plugin.highwire.HighWireDrupalHtmlFilterFactory;
 import org.lockss.util.Logger;
@@ -48,24 +55,7 @@ public class BMJDrupalHtmlHashFilterFactory extends HighWireDrupalHtmlFilterFact
   
   private static final Logger log = Logger.getLogger(BMJDrupalHtmlHashFilterFactory.class);
   
-  /**
-   * body tag.  Registered with PrototypicalNodeFactory to cause body
-   * to be a CompositeTag.  See code samples in org.htmlparser.tags.
-   * @see HtmlFilterInputStream#makeParser()
-   */
-  public static class bodyTag extends CompositeTag {
-    
-    /**
-     * The set of names handled by this tag.
-     */
-    private static final String[] mIds = new String[] {"body"};
-    
-    @Override
-    public String[] getIds() {
-      return mIds;
-    }
-    
-  }
+  // XXX remove artTag when 1.69 is released
   /**
    * article tag.  Registered with PrototypicalNodeFactory to cause article
    * to be a CompositeTag.  See code samples in org.htmlparser.tags.
@@ -89,11 +79,53 @@ public class BMJDrupalHtmlHashFilterFactory extends HighWireDrupalHtmlFilterFact
     
   }
   
+  // Transform to modify select attribute from select tag ( a )
+  // href attributes change over time, use UrlNormalizer <a href
+  protected static HtmlTransform xformHref = new HtmlTransform() {
+    @Override
+    public NodeList transform(NodeList nodeList) throws IOException {
+      try {
+        nodeList.visitAllNodesWith(new NodeVisitor() {
+          @Override
+          public void visitTag(Tag tag) {
+            String tagName = tag.getTagName().toLowerCase();
+            try {
+              if ("a".equals(tagName)) {
+                Attribute ha = tag.getAttributeEx("href");
+                if (ha != null) {
+                  String url = ha.getValue();
+                  if (url.contains(BMJDrupalUrlNormalizer.BMJ_UN_STATIC) && 
+                      url.contains(BMJDrupalUrlNormalizer.BMJ_UN_PARTIAL)) {
+                    Matcher mat = BMJDrupalUrlNormalizer.BMJ_UN_PREFIX_PAT.matcher(url);
+                    if (mat.find()) {
+                      url = mat.replaceFirst(BMJDrupalUrlNormalizer.BMJ_UN_REPLACE);
+                      ha.setValue(url);
+                    }
+                  }
+                }
+              }
+            }
+            catch (Exception exc) {
+              log.debug2("Internal error (visitor)", exc); // Ignore this tag and move on
+            }
+            // Always
+            super.visitTag(tag);
+          }
+        });
+      }
+      catch (ParserException pe) {
+        log.debug2("Internal error (parser)", pe); // Bail
+      }
+      return nodeList;
+    }
+  };
+  
   protected static NodeFilter[] filters = new NodeFilter[] {
-    new TagNameFilter("head"),
-    // only article tag contents are hashed
-    HtmlNodeFilters.allExceptSubtree(new TagNameFilter("body"),
-        new TagNameFilter("article")),
+    HtmlNodeFilters.tag("head"),
+    // only highwire-markup contents are hashed
+    HtmlNodeFilters.allExceptSubtree(HtmlNodeFilters.tag("body"),
+        HtmlNodeFilters.tagWithAttribute("div", "class", "highwire-markup")),
+    //    HtmlNodeFilters.tag("article")),
     // remove cit-extra, etc. that change based on institution access or over time
     HtmlNodeFilters.tagWithAttribute("div", "class", "cit-extra"),
     HtmlNodeFilters.tagWithAttributeRegex("div", "class", "subscribe"),
@@ -109,10 +141,10 @@ public class BMJDrupalHtmlHashFilterFactory extends HighWireDrupalHtmlFilterFact
       throws PluginException {
     
     InputStream filtered = super.createFilteredInputStream(au, in, encoding, filters);
-    ((HtmlFilterInputStream) filtered)
-        .registerTag(new artTag())
-        .registerTag(new bodyTag());
-    return filtered;
+    // XXX remove registerTag when 1.69 is released
+    ((HtmlFilterInputStream) filtered).registerTag(new artTag());
+    
+    return new HtmlFilterInputStream(filtered, encoding, xformHref);
   }
   
   @Override

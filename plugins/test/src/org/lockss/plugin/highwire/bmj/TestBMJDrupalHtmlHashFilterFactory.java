@@ -1,10 +1,10 @@
 /*
- * $Id: TestBMJDrupalHtmlHashFilterFactory.java 39864 2015-02-18 09:10:24Z thib_gc $
+ * $Id$
  */
 
 /*
 
- Copyright (c) 2000-2014 Board of Trustees of Leland Stanford Jr. University,
+ Copyright (c) 2000-2015 Board of Trustees of Leland Stanford Jr. University,
  all rights reserved.
 
  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -73,7 +73,13 @@ public class TestBMJDrupalHtmlHashFilterFactory extends LockssTestCase {
       "    <div class=\"row\">\n" + 
       "        <article>\n" + 
       "          <div class=\"panel-pane pane-highwire-markup\">\n" +
-      "          </div>\n" + 
+      "            <div class=\"highwire-markup\">\n" +
+      "<a href=\"http://static.www.bmj.com/content/350/bmj.g7811\" target=\"_blank\">" + 
+      " Some content" +
+      "</a>" +
+      "            </div>\n" + 
+      "          </div>\n" +
+      "          <div>removed\n</div>\n" + 
       "        </article>\n" + 
       "      <div class=\"right-nav col-xs-12 col-sm-4 col-md-4 col-lg-4\">\n" + 
       "        <aside>\n" + 
@@ -112,10 +118,15 @@ public class TestBMJDrupalHtmlHashFilterFactory extends LockssTestCase {
       "<section class=\"block block-system clearfix\" id=\"block-system-main\">" + 
       "<div id=\"issue-toc-page\" class=\"panel-display\">" + 
       "<div class=\"row\">" + 
-      "<article>\n" + 
-      "          <div class=\"panel-pane pane-highwire-markup\">\n" +
-      "          </div>\n" + 
-      "        </article>" +
+      "<article>" + 
+      "<div class=\"panel-pane pane-highwire-markup\">" +
+      "<div class=\"highwire-markup\">\n" +
+      "<a href=\"http://www.bmj.com/content/350/bmj.g7811\" target=\"_blank\">" + 
+      " Some content" +
+      "</a>" +
+      "            </div>" + 
+      "</div>" + 
+      "</article>" +
       "</div></div></section></div></div></div></div>" +
       "</body>\n" +
       "</html>\n";

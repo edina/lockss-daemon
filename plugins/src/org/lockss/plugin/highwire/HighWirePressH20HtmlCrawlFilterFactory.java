@@ -1,5 +1,5 @@
 /*
- * $Id: HighWireDrupalHtmlCrawlFilterFactory.java 39864 2015-02-18 09:10:24Z thib_gc $
+ * $Id$
  */
 
 /*
@@ -43,19 +43,21 @@ import org.lockss.plugin.*;
 public class HighWirePressH20HtmlCrawlFilterFactory implements FilterFactory {
   
   protected static NodeFilter[] baseHWFilters = new NodeFilter[] {
-    // Do not crawl next/prev links
-    HtmlNodeFilters.tagWithAttribute("link", "rel", "prev"),
-    HtmlNodeFilters.tagWithAttribute("link", "rel", "next"),
     // Do not crawl header or footer for links
-    new TagNameFilter("header"),
-    new TagNameFilter("footer"),
+    HtmlNodeFilters.tag("header"),
+    HtmlNodeFilters.tag("footer"),
     // Do not crawl for links from leaderboard-ads
     HtmlNodeFilters.tagWithAttributeRegex("div", "class", "leaderboard-ads"),
-    // Do not crawl reference section, sidebar-nav for links
+    // Do not crawl reference section, sidebar-qs for links
     HtmlNodeFilters.tagWithAttribute("div", "class", "section ref-list"),
-    HtmlNodeFilters.tagWithAttributeRegex("div", "class", "sidebar-(nav|qs)"),
+    HtmlNodeFilters.tagWithAttributeRegex("div", "class", "sidebar-qs"),
+    // messages can appear arbitrarily
+    HtmlNodeFilters.tagWithAttributeRegex("div", "class", "messages"),
+    HtmlNodeFilters.tagWithAttributeRegex("div", "id", "messages"),
     // Do not crawl for links in col3
     HtmlNodeFilters.tagWithAttribute("div", "id", "col-3"),
+    // <div id="rel-related-article" class="relmgr-relation related">
+    HtmlNodeFilters.tagWithAttributeRegex("div", "id", "(related|cited-by)"),
   };
   
   @Override

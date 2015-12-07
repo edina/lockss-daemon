@@ -64,6 +64,7 @@ import org.lockss.plugin.Plugin.Feature;
 import org.lockss.plugin.PluginManager;
 import org.lockss.scheduler.Schedule;
 import org.lockss.util.Constants;
+import org.lockss.util.KeyPair;
 import org.lockss.util.Logger;
 import org.lockss.util.StringUtil;
 import org.lockss.util.PatternIntMap;
@@ -1251,66 +1252,6 @@ public class MetadataManager extends BaseLockssDaemonManager implements
       throws DbException {
     mdManagerSql.updateAuLastExtractionTime(au, conn, auMdSeq);
     pendingAusCount = mdManagerSql.getEnabledPendingAusCount(conn);
-  }
-
-  /**
-   * Provides the identifier of a publisher if existing or after creating it
-   * otherwise.
-   * 
-   * @param conn
-   *          A Connection with the database connection to be used.
-   * @param publisher
-   *          A String with the publisher name.
-   * @return a Long with the identifier of the publisher.
-   * @throws DbException
-   *           if any problem occurred accessing the database.
-   */
-  public Long findOrCreatePublisher(Connection conn, String publisher)
-      throws DbException {
-    final String DEBUG_HEADER = "findOrCreatePublisher(): ";
-    Long publisherSeq = mdManagerSql.findPublisher(conn, publisher);
-    log.debug3(DEBUG_HEADER + "publisherSeq = " + publisherSeq);
-
-    // Check whether it is a new publisher.
-    if (publisherSeq == null) {
-      // Yes: Add to the database the new publisher.
-      publisherSeq = mdManagerSql.addPublisher(conn, publisher);
-      log.debug3(DEBUG_HEADER + "new publisherSeq = " + publisherSeq);
-    }
-
-    return publisherSeq;
-  }
-
-  /**
-   * Provides the identifier of a publisher.
-   * 
-   * @param conn
-   *          A Connection with the database connection to be used.
-   * @param publisher
-   *          A String with the publisher name.
-   * @return a Long with the identifier of the publisher.
-   * @throws DbException
-   *           if any problem occurred accessing the database.
-   */
-  public Long findPublisher(Connection conn, String publisher)
-      throws DbException {
-    return mdManagerSql.findPublisher(conn, publisher);
-  }
-
-  /**
-   * Adds a publisher to the database.
-   * 
-   * @param conn
-   *          A Connection with the database connection to be used.
-   * @param publisher
-   *          A String with the publisher name.
-   * @return a Long with the identifier of the publisher just added.
-   * @throws DbException
-   *           if any problem occurred accessing the database.
-   */
-  public Long addPublisher(Connection conn, String publisher)
-      throws DbException {
-    return mdManagerSql.addPublisher(conn, publisher);
   }
 
   /**
@@ -2563,23 +2504,23 @@ public class MetadataManager extends BaseLockssDaemonManager implements
    * 
    * @param au
    *          An ArchivalUnit with the AU for which indexing is to be disabled.
-   * @return <code>true</code> if au was added for reindexing,
-   *         <code>false</code> otherwise.
+   * @throws DbException
+   *           if any problem occurred accessing the database.
    */
-  public boolean disableAuIndexing(ArchivalUnit au) {
+  public void disableAuIndexing(ArchivalUnit au) throws DbException {
     final String DEBUG_HEADER = "disableAuIndexing(): ";
 
     synchronized (activeReindexingTasks) {
       Connection conn = null;
 
       try {
-        log.debug2(DEBUG_HEADER + "Disabing indexing for AU " + au.getName());
+        log.debug2(DEBUG_HEADER + "Disabling indexing for AU " + au.getName());
         conn = dbManager.getConnection();
 
         if (conn == null) {
-          log.error("Cannot connect to database"
-              + " -- cannot disable indexing for AU");
-          return false;
+          log.error("Cannot disable indexing for AU '" + au.getName()
+              + "' - Cannot connect to database");
+          throw new DbException("Cannot connect to database");
         }
 
         String auId = au.getAuId();
@@ -2597,11 +2538,11 @@ public class MetadataManager extends BaseLockssDaemonManager implements
         // Add it marked as disabled.
         mdManagerSql.addDisabledAuToPendingAus(conn, auId);
         DbManager.commitOrRollback(conn, log);
-
-        return true;
       } catch (DbException dbe) {
-        log.error("Cannot disable AU: " + au.getName(), dbe);
-        return false;
+        String errorMessage = "Cannot disable indexing for AU '"
+            + au.getName() +"'";
+        log.error(errorMessage, dbe);
+        throw dbe;
       } finally {
         DbManager.safeRollbackAndClose(conn);
       }
@@ -3044,6 +2985,20 @@ public class MetadataManager extends BaseLockssDaemonManager implements
   public PreparedStatement getInsertPendingAuBatchStatement(Connection conn)
       throws DbException {
     return mdManagerSql.getInsertPendingAuBatchStatement(conn);
+  }
+
+  /**
+   * Provides the prepared statement used to insert pending AUs with the
+   * highest priority.
+   * 
+   * @param conn
+   *          A Connection with the database connection to be used.
+   * @return a PreparedStatement with the prepared statement used to insert
+   *         pending AUs with the highest priority.
+   */
+  public PreparedStatement getPrioritizedInsertPendingAuBatchStatement(
+      Connection conn) throws DbException {
+    return mdManagerSql.getPrioritizedInsertPendingAuBatchStatement(conn);
   }
 
   /**
@@ -4015,5 +3970,246 @@ public class MetadataManager extends BaseLockssDaemonManager implements
 
     if (log.isDebug2()) log.debug2(DEBUG_HEADER + "auSeq = " + auSeq);
     return auSeq;
+  }
+
+  /**
+   * Enables the indexing of an AU.
+   * 
+   * @param au
+   *          An ArchivalUnit with the AU for which indexing is to be enabled.
+   * @throws DbException
+   *           if any problem occurred accessing the database.
+   */
+  public void enableAuIndexing(ArchivalUnit au) throws DbException {
+    final String DEBUG_HEADER = "disableAuIndexing(): ";
+
+    Connection conn = null;
+
+    try {
+      log.debug2(DEBUG_HEADER + "Enabling indexing for AU " + au.getName());
+      conn = dbManager.getConnection();
+
+      if (conn == null) {
+	log.error("Cannot enable indexing for AU '" + au.getName()
+	    + "' - Cannot connect to database");
+	throw new DbException("Cannot connect to database");
+      }
+
+      String auId = au.getAuId();
+      log.debug2(DEBUG_HEADER + "auId " + auId);
+
+      // Remove it from the list if it was marked as disabled.
+      removeDisabledFromPendingAus(conn, auId);
+      DbManager.commitOrRollback(conn, log);
+    } catch (DbException dbe) {
+      String errorMessage = "Cannot enable indexing for AU '" + au.getName()
+	  + "'";
+      log.error(errorMessage, dbe);
+      throw dbe;
+    } finally {
+      DbManager.safeRollbackAndClose(conn);
+    }
+  }
+
+  /**
+   * Provides the journal articles in the database whose parent is not a
+   * journal.
+   * 
+   * @return a Collection<Map<String, String>> with the mismatched journal
+   *         articles sorted by Archival Unit, parent name and child name.
+   * @throws DbException
+   *           if any problem occurred accessing the database.
+   */
+  public Collection<Map<String, String>> getMismatchedParentJournalArticles()
+      throws DbException {
+    return getMetadataManagerSql().getMismatchedParentJournalArticles();
+  }
+
+  /**
+   * Provides the book chapters in the database whose parent is not a book or a
+   * book series.
+   * 
+   * @return a Collection<Map<String, String>> with the mismatched book chapters
+   *         sorted by Archival Unit, parent name and child name.
+   * @throws DbException
+   *           if any problem occurred accessing the database.
+   */
+  public Collection<Map<String, String>> getMismatchedParentBookChapters()
+      throws DbException {
+    return getMetadataManagerSql().getMismatchedParentBookChapters();
+  }
+
+  /**
+   * Provides the book volumes in the database whose parent is not a book or a
+   * book series.
+   * 
+   * @return a Collection<Map<String, String>> with the mismatched book volumes
+   *         sorted by Archival Unit, parent name and child name.
+   * @throws DbException
+   *           if any problem occurred accessing the database.
+   */
+  public Collection<Map<String, String>> getMismatchedParentBookVolumes()
+      throws DbException {
+    return getMetadataManagerSql().getMismatchedParentBookVolumes();
+  }
+
+  /**
+   * Provides the publishers linked to the Archival Unit name for the Archival
+   * Units in the database with multiple publishers.
+   * 
+   * @return a Map<String, Collection<String>> with the publishers keyed by
+   *         the Archival Unit name.
+   * @throws DbException
+   *           if any problem occurred accessing the database.
+   */
+  public Map<String, Collection<String>> getAuNamesWithMultiplePublishers()
+      throws DbException {
+    final String DEBUG_HEADER = "getAuNamesWithMultiplePublishers(): ";
+
+    // The Archival Units that have multiple publishers, sorted by name.
+    Map<String, Collection<String>> auNamesWithPublishers =
+	new TreeMap<String, Collection<String>>();
+
+    // Get the publishers linked to the Archival Units.
+    Map<String, Collection<String>> ausPublishers =
+	getAuIdsWithMultiplePublishers();
+    if (log.isDebug3()) log.debug3(DEBUG_HEADER + "ausPublishers.size() = "
+	+ ausPublishers.size());
+
+    // Loop through the Archival Units.
+    for (String auId : ausPublishers.keySet()) {
+      if (log.isDebug3()) log.debug3(DEBUG_HEADER + "auId = " + auId);
+
+      ArchivalUnit au = pluginMgr.getAuFromId(auId);
+      if (log.isDebug3()) log.debug3(DEBUG_HEADER + "au = " + au);
+
+      if (au != null) {
+	auNamesWithPublishers.put(au.getName(), ausPublishers.get(auId));
+      } else {
+	auNamesWithPublishers.put(auId, ausPublishers.get(auId));
+      }
+    }
+
+    return auNamesWithPublishers;
+  }
+
+  /**
+   * Provides the publishers linked to the Archival Unit identifier for the
+   * Archival Units in the database with multiple publishers.
+   * 
+   * @return a Map<String, Collection<String>> with the publishers keyed by
+   *         the Archival Unit identifier.
+   * @throws DbException
+   *           if any problem occurred accessing the database.
+   */
+  private Map<String, Collection<String>> getAuIdsWithMultiplePublishers()
+      throws DbException {
+    return getMetadataManagerSql().getAuIdsWithMultiplePublishers();
+  }
+
+  /**
+   * Provides the metadata items in the database that have no name.
+   * 
+   * @return a Collection<Map<String, String>> with the unnamed metadata items
+   *         articles sorted by publisher, parent type, parent title and item
+   *         type.
+   * @throws DbException
+   *           if any problem occurred accessing the database.
+   */
+  public Collection<Map<String, String>> getUnnamedItems() throws DbException {
+    return getMetadataManagerSql().getUnnamedItems();
+  }
+
+  /**
+   * Provides the earliest and latest publication dates of all the metadata
+   * items included in an Archival Unit.
+   * 
+   * @param auId
+   *          A String with the AU identifier.
+   * @return a KeyPair with the earliest and latest publication dates.
+   * @throws DbException
+   *           if any problem occurred accessing the database.
+   */
+  public KeyPair findPublicationDateInterval(String auId) throws DbException {
+    final String DEBUG_HEADER = "findPublicationDateInterval(): ";
+    if (log.isDebug2()) log.debug2(DEBUG_HEADER + "auId = " + auId);
+
+    KeyPair publicationInterval = null;
+    Connection conn = null;
+
+    try {
+      conn = dbManager.getConnection();
+
+      if (conn == null) {
+	String message = "Cannot determine publication date interval for AU '"
+	    + auId + "' - Cannot connect to database";
+	log.error(message);
+	throw new DbException(message);
+      }
+
+      publicationInterval = findPublicationDateInterval(conn, auId);
+      if (log.isDebug3()) log.debug3(DEBUG_HEADER + "publicationInterval = '"
+	  + publicationInterval.car + "' - '" + publicationInterval.cdr + "'");
+
+      DbManager.commitOrRollback(conn, log);
+    } catch (DbException dbe) {
+      String message = "Cannot determine publication date interval for AU '"
+	  + auId + "'";
+      log.error(message, dbe);
+      throw dbe;
+    } finally {
+      DbManager.safeRollbackAndClose(conn);
+    }
+
+    if (log.isDebug2()) log.debug2(DEBUG_HEADER + "publicationInterval = '"
+	+ publicationInterval.car + "' - '" + publicationInterval.cdr + "'");
+
+    return publicationInterval;
+  }
+
+  /**
+   * Provides the earliest and latest publication dates of all the metadata
+   * items included in an Archival Unit.
+   * 
+   * @param conn
+   *          A Connection with the database connection to be used.
+   * @param auId
+   *          A String with the AU identifier.
+   * @return a KeyPair with the earliest and latest publication dates.
+   * @throws DbException
+   *           if any problem occurred accessing the database.
+   */
+  public KeyPair findPublicationDateInterval(Connection conn, String auId)
+      throws DbException {
+    final String DEBUG_HEADER = "findPublicationDateInterval(): ";
+    if (log.isDebug2()) log.debug2(DEBUG_HEADER + "auId = " + auId);
+
+    String pluginId = PluginManager.pluginIdFromAuId(auId);
+    if (log.isDebug3()) log.debug3(DEBUG_HEADER + "pluginId = " + pluginId);
+
+    String auKey = PluginManager.auKeyFromAuId(auId);
+    if (log.isDebug3()) log.debug3(DEBUG_HEADER + "auKey = " + auKey);
+
+    KeyPair publicationInterval = getMetadataManagerSql()
+	.findPublicationDateInterval(conn, pluginId, auKey);
+
+    if (log.isDebug2()) log.debug2(DEBUG_HEADER + "publicationInterval = '"
+	+ publicationInterval.car + "' - '" + publicationInterval.cdr + "'");
+
+    return publicationInterval;
+  }
+
+  /**
+   * Provides the proprietary identifiers for the publications in the database
+   * with multiple proprietary identifiers.
+   * 
+   * @return a Map<String, Collection<String>> with the proprietary identifiers
+   *         keyed by the publication name.
+   * @throws DbException
+   *           if any problem occurred accessing the database.
+   */
+  public Map<String, Collection<String>> getPublicationsWithMultiplePids()
+      throws DbException {
+    return getMetadataManagerSql().getPublicationsWithMultiplePids();
   }
 }

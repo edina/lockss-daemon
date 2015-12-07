@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: MetadataMonitorServiceImpl.java 44384 2015-10-02 21:50:01Z fergaloy-sf $
  */
 
 /*
@@ -40,11 +40,15 @@ import org.lockss.app.LockssDaemon;
 import org.lockss.metadata.Isbn;
 import org.lockss.metadata.Issn;
 import org.lockss.metadata.MetadataManager;
+import org.lockss.plugin.ArchivalUnit;
+import org.lockss.plugin.PluginManager;
 import org.lockss.util.Logger;
 import org.lockss.ws.entities.KeyIdNamePairListPair;
 import org.lockss.ws.entities.KeyValueListPair;
 import org.lockss.ws.entities.IdNamePair;
 import org.lockss.ws.entities.LockssWebServicesFault;
+import org.lockss.ws.entities.MismatchedMetadataChildWsResult;
+import org.lockss.ws.entities.UnnamedItemWsResult;
 
 /**
  * The MetadataMonitor web service implementation.
@@ -146,9 +150,7 @@ public class MetadataMonitorServiceImpl implements MetadataMonitorService {
 
       // Get the publishers linked to the DOI prefixes.
       Map<String, Collection<String>> doiPrefixesPublishers =
-	  ((MetadataManager) LockssDaemon
-	      .getManager(LockssDaemon.METADATA_MANAGER))
-	      .getDoiPrefixesWithMultiplePublishers();
+	  getMetadataManager().getDoiPrefixesWithMultiplePublishers();
 
       if (log.isDebug3()) log.debug3(DEBUG_HEADER
   	+ "doiPrefixesPublishers.size() = " + doiPrefixesPublishers.size());
@@ -197,9 +199,7 @@ public class MetadataMonitorServiceImpl implements MetadataMonitorService {
 
       // Get the DOI prefixes linked to the Archival Units.
       Map<String, Collection<String>> ausDoiPrefixes =
-	  ((MetadataManager) LockssDaemon
-	      .getManager(LockssDaemon.METADATA_MANAGER))
-	      .getAuNamesWithMultipleDoiPrefixes();
+	  getMetadataManager().getAuNamesWithMultipleDoiPrefixes();
 
       if (log.isDebug3()) log.debug3(DEBUG_HEADER
   	+ "ausDoiPrefixes.size() = " + ausDoiPrefixes.size());
@@ -246,9 +246,8 @@ public class MetadataMonitorServiceImpl implements MetadataMonitorService {
       List<KeyIdNamePairListPair> results =
 	  new ArrayList<KeyIdNamePairListPair>();
 
-      Map<String, Collection<Isbn>> publicationsIsbns = ((MetadataManager)
-	  LockssDaemon.getManager(LockssDaemon.METADATA_MANAGER))
-	  .getPublicationsWithMoreThan2Isbns();
+      Map<String, Collection<Isbn>> publicationsIsbns =
+	  getMetadataManager().getPublicationsWithMoreThan2Isbns();
 
       for (String publication : publicationsIsbns.keySet()) {
 	if (log.isDebug3())
@@ -289,9 +288,8 @@ public class MetadataMonitorServiceImpl implements MetadataMonitorService {
       List<KeyIdNamePairListPair> results =
 	  new ArrayList<KeyIdNamePairListPair>();
 
-      Map<String, Collection<Issn>> publicationsIssns = ((MetadataManager)
-	  LockssDaemon.getManager(LockssDaemon.METADATA_MANAGER))
-	  .getPublicationsWithMoreThan2Issns();
+      Map<String, Collection<Issn>> publicationsIssns =
+	  getMetadataManager().getPublicationsWithMoreThan2Issns();
 
       for (String publication : publicationsIssns.keySet()) {
 	if (log.isDebug3())
@@ -331,9 +329,8 @@ public class MetadataMonitorServiceImpl implements MetadataMonitorService {
       List<KeyValueListPair> results = new ArrayList<KeyValueListPair>();
 
       // Get the publications linked to the ISBNs.
-      Map<String, Collection<String>> isbnsPublications = ((MetadataManager)
-	  LockssDaemon.getManager(LockssDaemon.METADATA_MANAGER))
-	  .getIsbnsWithMultiplePublications();
+      Map<String, Collection<String>> isbnsPublications =
+	  getMetadataManager().getIsbnsWithMultiplePublications();
       if (log.isDebug3()) log.debug3(DEBUG_HEADER
   	+ "isbnsPublications.size() = " + isbnsPublications.size());
 
@@ -378,9 +375,8 @@ public class MetadataMonitorServiceImpl implements MetadataMonitorService {
       List<KeyValueListPair> results = new ArrayList<KeyValueListPair>();
 
       // Get the publications linked to the ISSNs.
-      Map<String, Collection<String>> issnsPublications = ((MetadataManager)
-	  LockssDaemon.getManager(LockssDaemon.METADATA_MANAGER))
-	  .getIssnsWithMultiplePublications();
+      Map<String, Collection<String>> issnsPublications =
+	  getMetadataManager().getIssnsWithMultiplePublications();
       if (log.isDebug3()) log.debug3(DEBUG_HEADER
   	+ "issnsPublications.size() = " + issnsPublications.size());
 
@@ -424,9 +420,8 @@ public class MetadataMonitorServiceImpl implements MetadataMonitorService {
       List<KeyValueListPair> results = new ArrayList<KeyValueListPair>();
 
       // Get the ISSNs linked to the books.
-      Map<String, Collection<String>> booksWithIssns = ((MetadataManager)
-	  LockssDaemon.getManager(LockssDaemon.METADATA_MANAGER))
-	  .getBooksWithIssns();
+      Map<String, Collection<String>> booksWithIssns =
+	  getMetadataManager().getBooksWithIssns();
       if (log.isDebug3()) log.debug3(DEBUG_HEADER
   	+ "booksWithIssns.size() = " + booksWithIssns.size());
 
@@ -471,9 +466,8 @@ public class MetadataMonitorServiceImpl implements MetadataMonitorService {
       List<KeyValueListPair> results = new ArrayList<KeyValueListPair>();
 
       // Get the ISBNs linked to the periodicals.
-      Map<String, Collection<String>> periodicalsWithIsbns = ((MetadataManager)
-	  LockssDaemon.getManager(LockssDaemon.METADATA_MANAGER))
-	  .getPeriodicalsWithIsbns();
+      Map<String, Collection<String>> periodicalsWithIsbns =
+	  getMetadataManager().getPeriodicalsWithIsbns();
       if (log.isDebug3()) log.debug3(DEBUG_HEADER
   	+ "periodicalsWithIsbns.size() = " + periodicalsWithIsbns.size());
 
@@ -513,9 +507,299 @@ public class MetadataMonitorServiceImpl implements MetadataMonitorService {
 
     try {
       if (log.isDebug2()) log.debug2(DEBUG_HEADER + "Invoked.");
-      return ((List<String>)((MetadataManager) LockssDaemon
-	  .getManager(LockssDaemon.METADATA_MANAGER))
-	  .getUnknownProviderAuIds());
+      return ((List<String>)(getMetadataManager().getUnknownProviderAuIds()));
+    } catch (Exception e) {
+      throw new LockssWebServicesFault(e);
+    }
+  }
+
+  /**
+   * Provides the journal articles in the database whose parent is not a
+   * journal.
+   * 
+   * @return a List<MismatchedChildWsResult> with the mismatched journal
+   *  articles sorted by Archival Unit, parent name and child name.
+   * @throws LockssWebServicesFault
+   */
+  @Override
+  public List<MismatchedMetadataChildWsResult>
+  getMismatchedParentJournalArticles() throws LockssWebServicesFault {
+    final String DEBUG_HEADER = "getMismatchedParentJournalArticles(): ";
+    List<MismatchedMetadataChildWsResult> mismatchedChildren =
+	new ArrayList<MismatchedMetadataChildWsResult>();
+
+    try {
+      if (log.isDebug2()) log.debug2(DEBUG_HEADER + "Invoked.");
+
+      for (Map<String, String> mismatchedChild :
+	getMetadataManager().getMismatchedParentJournalArticles()) {
+	MismatchedMetadataChildWsResult result =
+	    new MismatchedMetadataChildWsResult();
+	result.setChildName(mismatchedChild.get("col1"));
+	result.setParentName(mismatchedChild.get("col2"));
+	result.setParentType(mismatchedChild.get("col3"));
+
+	String auId = PluginManager.generateAuId(mismatchedChild.get("col5"),
+	    mismatchedChild.get("col4"));
+	if (log.isDebug3()) log.debug3(DEBUG_HEADER + "auId = " + auId);
+
+	ArchivalUnit au = getPluginManager().getAuFromId(auId);
+	if (log.isDebug3()) log.debug3(DEBUG_HEADER + "au = " + au);
+
+	if (au != null) {
+	  result.setAuName(au.getName());
+	} else {
+	  result.setAuName(auId);
+	}
+
+	mismatchedChildren.add(result);
+      }
+
+      return mismatchedChildren;
+    } catch (Exception e) {
+      throw new LockssWebServicesFault(e);
+    }
+  }
+
+  /**
+   * Provides the book chapters in the database whose parent is not a book or a
+   * book series.
+   * 
+   * @return a List<MismatchedChildWsResult> with the mismatched book chapters
+   *         sorted by Archival Unit, parent name and child name.
+   * @throws LockssWebServicesFault
+   */
+  @Override
+  public List<MismatchedMetadataChildWsResult> getMismatchedParentBookChapters()
+      throws LockssWebServicesFault {
+    final String DEBUG_HEADER = "getMismatchedParentBookChapters(): ";
+    List<MismatchedMetadataChildWsResult> mismatchedChildren =
+	new ArrayList<MismatchedMetadataChildWsResult>();
+
+    try {
+      if (log.isDebug2()) log.debug2(DEBUG_HEADER + "Invoked.");
+
+      for (Map<String, String> mismatchedChild :
+	getMetadataManager().getMismatchedParentBookChapters()) {
+	MismatchedMetadataChildWsResult result =
+	    new MismatchedMetadataChildWsResult();
+	result.setChildName(mismatchedChild.get("col1"));
+	result.setParentName(mismatchedChild.get("col2"));
+	result.setParentType(mismatchedChild.get("col3"));
+
+	String auId = PluginManager.generateAuId(mismatchedChild.get("col5"),
+	    mismatchedChild.get("col4"));
+	if (log.isDebug3()) log.debug3(DEBUG_HEADER + "auId = " + auId);
+
+	ArchivalUnit au = getPluginManager().getAuFromId(auId);
+	if (log.isDebug3()) log.debug3(DEBUG_HEADER + "au = " + au);
+
+	if (au != null) {
+	  result.setAuName(au.getName());
+	} else {
+	  result.setAuName(auId);
+	}
+
+	mismatchedChildren.add(result);
+      }
+
+      return mismatchedChildren;
+    } catch (Exception e) {
+      throw new LockssWebServicesFault(e);
+    }
+  }
+
+  /**
+   * Provides the book volumes in the database whose parent is not a book or a
+   * book series.
+   * 
+   * @return a List<MismatchedChildWsResult> with the mismatched book volumes
+   *         sorted by Archival Unit, parent name and child name.
+   * @throws LockssWebServicesFault
+   */
+  @Override
+  public List<MismatchedMetadataChildWsResult> getMismatchedParentBookVolumes()
+      throws LockssWebServicesFault {
+    final String DEBUG_HEADER = "getMismatchedParentBookVolumes(): ";
+    List<MismatchedMetadataChildWsResult> mismatchedChildren =
+	new ArrayList<MismatchedMetadataChildWsResult>();
+
+    try {
+      if (log.isDebug2()) log.debug2(DEBUG_HEADER + "Invoked.");
+
+      for (Map<String, String> mismatchedChild :
+	getMetadataManager().getMismatchedParentBookChapters()) {
+	MismatchedMetadataChildWsResult result =
+	    new MismatchedMetadataChildWsResult();
+	result.setChildName(mismatchedChild.get("col1"));
+	result.setParentName(mismatchedChild.get("col2"));
+	result.setParentType(mismatchedChild.get("col3"));
+
+	String auId = PluginManager.generateAuId(mismatchedChild.get("col5"),
+	    mismatchedChild.get("col4"));
+	if (log.isDebug3()) log.debug3(DEBUG_HEADER + "auId = " + auId);
+
+	ArchivalUnit au = getPluginManager().getAuFromId(auId);
+	if (log.isDebug3()) log.debug3(DEBUG_HEADER + "au = " + au);
+
+	if (au != null) {
+	  result.setAuName(au.getName());
+	} else {
+	  result.setAuName(auId);
+	}
+
+	mismatchedChildren.add(result);
+      }
+
+      return mismatchedChildren;
+    } catch (Exception e) {
+      throw new LockssWebServicesFault(e);
+    }
+  }
+
+  /**
+   * Provides the publishers for the Archival Units in the database with
+   * multiple publishers.
+   * 
+   * @return a List<KeyValueListPair> with the publishers keyed by the Archival
+   *         Unit name.
+   * @throws LockssWebServicesFault
+   */
+  @Override
+  public List<KeyValueListPair> getAuNamesWithMultiplePublishers()
+      throws LockssWebServicesFault {
+    final String DEBUG_HEADER = "getAuNamesWithMultiplePublishers(): ";
+
+    try {
+      if (log.isDebug2()) log.debug2(DEBUG_HEADER + "Invoked.");
+      List<KeyValueListPair> results = new ArrayList<KeyValueListPair>();
+
+      // Get the publishers linked to the Archival Units.
+      Map<String, Collection<String>> ausPublishers =
+	  getMetadataManager().getAuNamesWithMultiplePublishers();
+
+      if (log.isDebug3()) log.debug3(DEBUG_HEADER + "ausPublishers.size() = "
+	  + ausPublishers.size());
+
+      // Check whether there are results to display.
+      if (ausPublishers.size() > 0) {
+        // Yes: Loop through the Archival Unit names.
+        for (String auName : ausPublishers.keySet()) {
+          if (log.isDebug3()) log.debug3(DEBUG_HEADER + "auName = " + auName);
+
+          ArrayList<String> publishers = new ArrayList<String>();
+
+          for (String publisher : ausPublishers.get(auName)) {
+            if (log.isDebug3())
+              log.debug3(DEBUG_HEADER + "publisher = " + publisher);
+            publishers.add(publisher);
+          }
+
+          results.add(new KeyValueListPair(auName, publishers));
+        }
+      }
+
+      return results;
+    } catch (Exception e) {
+      throw new LockssWebServicesFault(e);
+    }
+  }
+
+  /**
+   * Provides the metadata items in the database that do not have a name.
+   * 
+   * @return a List<UnnamedItemWsResult> with the unnamed metadata items sorted
+   *         sorted by publisher, Archival Unit, parent type, parent name and
+   *         item type.
+   * @throws LockssWebServicesFault
+   */
+  @Override
+  public List<UnnamedItemWsResult> getUnnamedItems()
+      throws LockssWebServicesFault {
+    final String DEBUG_HEADER = "getUnnamedItems(): ";
+    List<UnnamedItemWsResult> unnamedItems =
+	new ArrayList<UnnamedItemWsResult>();
+
+    try {
+      if (log.isDebug2()) log.debug2(DEBUG_HEADER + "Invoked.");
+
+      for (Map<String, String> unnamedItem :
+	getMetadataManager().getUnnamedItems()) {
+	UnnamedItemWsResult result = new UnnamedItemWsResult();
+	result.setItemCount(Integer.valueOf(unnamedItem.get("col1")));
+	result.setItemType(unnamedItem.get("col2"));
+	result.setParentName(unnamedItem.get("col3"));
+	result.setParentType(unnamedItem.get("col4"));
+
+	String auId = PluginManager.generateAuId(unnamedItem.get("col6"),
+	    unnamedItem.get("col5"));
+	if (log.isDebug3()) log.debug3(DEBUG_HEADER + "auId = " + auId);
+
+	ArchivalUnit au = getPluginManager().getAuFromId(auId);
+	if (log.isDebug3()) log.debug3(DEBUG_HEADER + "au = " + au);
+
+	if (au != null) {
+	  result.setAuName(au.getName());
+	} else {
+	  result.setAuName(auId);
+	}
+
+	result.setPublisherName(unnamedItem.get("col7"));
+
+	unnamedItems.add(result);
+      }
+
+      return unnamedItems;
+    } catch (Exception e) {
+      throw new LockssWebServicesFault(e);
+    }
+  }
+
+  /**
+   * Provides the proprietary identifiers for the publications in the database
+   * with multiple proprietary identifiers.
+   * 
+   * @return a List<KeyValueListPair> with the proprietary identifiers keyed by
+   *         the publication name.
+   * @throws LockssWebServicesFault
+   */
+  @Override
+  public List<KeyValueListPair> getPublicationsWithMultiplePids()
+      throws LockssWebServicesFault {
+    final String DEBUG_HEADER = "getPublicationsWithMultiplePids(): ";
+
+    try {
+      if (log.isDebug2()) log.debug2(DEBUG_HEADER + "Invoked.");
+      List<KeyValueListPair> results = new ArrayList<KeyValueListPair>();
+
+      // Get the proprietary identifiers linked to the publications.
+      Map<String, Collection<String>> publicationsPids =
+	  getMetadataManager().getPublicationsWithMultiplePids();
+
+      if (log.isDebug3()) log.debug3(DEBUG_HEADER
+  	+ "publicationsPids.size() = " + publicationsPids.size());
+
+      // Check whether there are results to display.
+      if (publicationsPids.size() > 0) {
+        // Yes: Loop through the publications.
+        for (String publicationName : publicationsPids.keySet()) {
+          if (log.isDebug3())
+            log.debug3(DEBUG_HEADER + "publicationName = " + publicationName);
+
+          ArrayList<String> pids = new ArrayList<String>();
+
+          for (String pid : publicationsPids.get(publicationName)) {
+            if (log.isDebug3()) log.debug3(DEBUG_HEADER + "pid = " + pid);
+            pids.add(pid);
+          }
+
+          results.add(new KeyValueListPair(publicationName, pids));
+        }
+      }
+
+      if (log.isDebug2())
+	log.debug2(DEBUG_HEADER + "results.size() = " + results.size());
+      return results;
     } catch (Exception e) {
       throw new LockssWebServicesFault(e);
     }
@@ -529,5 +813,14 @@ public class MetadataMonitorServiceImpl implements MetadataMonitorService {
   private MetadataManager getMetadataManager() {
     return (MetadataManager) LockssDaemon
 	.getManager(LockssDaemon.METADATA_MANAGER);
+  }
+
+  /**
+   * Provides the plugin manager.
+   * 
+   * @return a PluginManager with the plugin manager.
+   */
+  private PluginManager getPluginManager() {
+    return (PluginManager) LockssDaemon.getManager(LockssDaemon.PLUGIN_MANAGER);
   }
 }

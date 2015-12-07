@@ -38,6 +38,7 @@ import java.util.*;
 import java.util.Queue;
 
 import org.apache.commons.collections.map.LRUMap;
+import org.apache.commons.lang3.tuple.Pair;
 import org.lockss.alert.Alert;
 import org.lockss.config.*;
 import org.lockss.crawler.CrawlerStatus.ReferrerType;
@@ -92,7 +93,8 @@ public class FollowLinkCrawler extends BaseCrawler {
   public static final String DEFAULT_CRAWL_END_REPORT_HASH_ALG = "SHA-1";
 
   /** If true, empty files will be refetched independent of depth unless
-   * the plugin declares that empty files shouldn't be reported. */
+   * the plugin declares that empty files shouldn't be reported by mapping
+   * ContentValidationException.EmptyFile to CacheSuccess. */
   public static final String PARAM_REFETCH_EMPTY_FILES =
     PREFIX + "refetchEmptyFiles";
   public static final boolean DEFAULT_REFETCH_EMPTY_FILES = false;
@@ -642,7 +644,14 @@ public class FollowLinkCrawler extends BaseCrawler {
                   // Might be reparsing with new content (if depth reduced
                   // below refetch depth); clear any existing children
                   curl.clearChildren();
-                  String charset = getCharset(cu);
+                  String charset =
+                    HeaderUtil.getCharsetOrDefaultFromContentType(cu.getContentType());
+                  if (CharsetUtil.inferCharset())  {
+                    CharsetUtil.InputStreamAndCharset
+                      isc =CharsetUtil.getCharsetStream(in, charset);
+                    charset = isc.getCharset();
+                    in = isc.getInStream();
+                  }
                   in = FilterUtil.getCrawlFilteredStream(au, in, charset,
                       cu.getContentType());
                   extractor.extractUrls(au, in, charset,
@@ -722,7 +731,7 @@ public class FollowLinkCrawler extends BaseCrawler {
     res = HeaderUtil.getCharsetFromContentType(cu.getContentType());
     if (res == null) {
       res = Constants.DEFAULT_ENCODING;
-    }
+      }
     return res;
   }
 

@@ -4,7 +4,7 @@
 
 /*
 
-Copyright (c) 2010-2011 Board of Trustees of Leland Stanford Jr. University,
+Copyright (c) 2010-2015 Board of Trustees of Leland Stanford Jr. University,
 all rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -107,6 +107,8 @@ public class TestKbartTitle extends LockssTestCase {
    * Try getting a field value, and passing null values.
    */
   public final void testGetField() {
+    boolean isLast = testTitle.isLast();
+    testTitle.setLast(true);
     // Set a field value (note we use an otherwise unused field)
     testTitle.setField(Field.COVERAGE_DEPTH, DEFAULT_TEST_STRING);
     String s = testTitle.getField(Field.COVERAGE_DEPTH);
@@ -125,9 +127,12 @@ public class TestKbartTitle extends LockssTestCase {
         s = testTitle.getField(f);
         assertNotNull(s);
         assertNotEquals(s, yr);
-        assertEquals(s, "");
+        if (f != Field.NUM_LAST_VOL_ONLINE) {
+          assertEquals(s, "");
+        }
       }
     }
+    testTitle.setLast(isLast);
   }
 
 

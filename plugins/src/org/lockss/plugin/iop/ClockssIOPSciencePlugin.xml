@@ -1,4 +1,5 @@
 <map>
+  <!-- PD-1309 PD-1361 -->
   <entry>
     <string>plugin_status</string>
     <string>ready</string>
@@ -9,18 +10,18 @@
   </entry>
   <entry>
     <string>plugin_version</string>
-    <string>30</string>
+    <string>40</string>
   </entry>
   <entry>
     <string>plugin_feature_version_map</string>
     <map>
       <entry>
         <string>Metadata</string>
-        <string>6</string>
+        <string>7</string>
       </entry>
       <entry>
         <string>Poll</string>
-        <string>21</string>
+        <string>27</string>
       </entry>
       <entry>
         <string>Substance</string>
@@ -30,7 +31,7 @@
   </entry>
   <entry>
     <string>plugin_name</string>
-    <string>IOP Publishing Plugin (IOPscience for CLOCKSS)</string>
+    <string>IOP Publishing Plugin (CLOCKSS)</string>
   </entry>
   <entry>
     <string>required_daemon_version</string>
@@ -69,7 +70,7 @@
   </entry>
   <entry>
     <string>au_name</string>
-    <string>"IOP Publishing Plugin (IOPscience for CLOCKSS), Base URL %s, ISSN %s, Volume %s", base_url, journal_issn, volume_name</string>
+    <string>"IOP Publishing Plugin (CLOCKSS), Base URL %s, ISSN %s, Volume %s", base_url, journal_issn, volume_name</string>
   </entry>
   <entry>
     <string>au_start_url</string>
@@ -99,10 +100,12 @@
   <entry>
     <string>au_crawlrules</string>
     <list>
+      <!-- content from CDN -->
+      <string>1,"^https?://(cdn[.]mathjax[.]org|cdn[^.]*[.]iopscience[.]com/images/%s)/.", journal_issn</string>
       <string>1,"^https?://%s/.*[.](bmp|css|gif|ico|jpe?g|js|png|tif?f)$", base_url_host</string>
       <string>1,"^https?://%s/fonts/", base_url_host</string>
       <string>4,"^%s", base_url</string>
-      <string>2,"^%s.*;jsessionid=", base_url</string>
+      <string>2,"^%s.*(\?rel=|;jsessionid)=", base_url</string>
       <string>2,"^%s%s/%s/[^/]+/[^/]+/(article\?|powerpoint/|refs/[^/]+/)", base_url, journal_issn, volume_name</string>
       <string>2,"^%s%s/%s/[^/]+/[^/]+/(cites|related|metrics)$", base_url, journal_issn, volume_name</string>
       <string>1,"^%s%s/%s(/|$)", base_url, journal_issn, volume_name</string>
@@ -152,15 +155,6 @@
     </map>
   </entry>
   <entry>
-    <string>clockss_override</string>
-    <map>
-      <entry>
-        <string>au_def_pause_time</string>
-        <long>100</long>
-      </entry>
-    </map>
-  </entry>
-  <entry>
     <string>au_url_normalizer</string>
     <string>org.lockss.plugin.iop.IOPScienceUrlNormalizer</string>
   </entry>
@@ -175,11 +169,42 @@
     <string>/download(HR)?Figure/figure/</string>
   </entry>
   <entry>
+    <!-- the au_permitted_host_pattern must also find match in lockss-daemon config
+         org.lockss.crawler.allowedPluginPermittedHosts -->
+    <string>au_permitted_host_pattern</string>
+    <string>cdn[.]mathjax[.]org|cdn[^.]*[.]iopscience[.]com</string>
+  </entry>
+  <entry>
     <string>au_repair_from_peer_if_missing_url_pattern</string>
     <string>/(css|js)/[^?]+[.](css|js|png)$</string>
   </entry>
   <entry>
-    <string>au_exclude_urls_from_poll_results_pattern</string>
-    <string>/((css|js)/[^?]+[.](css|js|png)|/refs)$</string>
+    <string>au_exclude_urls_from_polls_pattern</string>
+    <string>/((css|js)/[^?]+[.](css|js|png)$|refs$|download(HR)?Figure/figure/)</string>
+  </entry>
+  <entry>
+    <string>au_def_pause_time</string>
+    <long>3000</long>
+  </entry>
+  <entry>
+    <string>clockss_override</string>
+    <map>
+      <entry>
+        <string>au_def_pause_time</string>
+        <long>100</long>
+      </entry>
+    </map>
+  </entry>
+  <entry>
+    <string>triggered_override</string>
+    <map>
+      <entry>
+        <string>plugin_rewrite_html_meta_urls</string>
+        <list>
+          <string>citation_abstract_html_url</string>
+          <string>citation_pdf_url</string>
+        </list>
+      </entry>
+    </map>
   </entry>
 </map>

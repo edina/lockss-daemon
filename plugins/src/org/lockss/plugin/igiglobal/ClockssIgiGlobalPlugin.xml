@@ -9,11 +9,11 @@
   </entry>
   <entry>
     <string>plugin_name</string>
-    <string>IGI Global Plugin (CLOCKSS)</string>
+    <string>IGI Global Journals Plugin (CLOCKSS)</string>
   </entry>
   <entry>
     <string>plugin_version</string>
-    <string>19</string>
+    <string>22</string>
   </entry>
   <entry>
     <string>plugin_parent</string>
@@ -21,11 +21,11 @@
   </entry>
    <entry>
     <string>plugin_parent_version</string>
-    <string>19</string>
+    <string>22</string>
   </entry>
   <entry>
     <string>au_name</string>
-    <string>"IGI Global Plugin (CLOCKSS), Base URL %s, Journal ISSN %s, Volume %s", base_url, journal_issn, volume</string>
+    <string>"IGI Global Journals Plugin (CLOCKSS), Base URL %s, Journal ISSN %s, Volume %s", base_url, journal_issn, volume</string>
   </entry>
   <entry>
     <string>clockss_override</string>

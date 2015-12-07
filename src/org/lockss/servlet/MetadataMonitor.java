@@ -1,5 +1,5 @@
 /*
- * $Id$
+ * $Id: MetadataMonitor.java 44382 2015-10-02 20:05:46Z fergaloy-sf $
  */
 
 /*
@@ -125,6 +125,38 @@ public class MetadataMonitor extends LockssServlet {
       "Lists the names of Archival Units with an unknown provider";
   private static final String LIST_UNKNOWN_PROVIDER_AUS_HEADER =
       "Archival Units With Unknown Provider";
+  private static final String LIST_MISMATCHED_PARENT_TO_CHILDREN_LINK =
+      "Children Mismatched To Parents";
+  private static final String LIST_MISMATCHED_PARENT_TO_CHILDREN_ACTION =
+      "listMismatchedParentToChildren";
+  private static final String LIST_MISMATCHED_PARENT_TO_CHILDREN_HELP =
+      "Lists the children whose parents are of the wrong type";
+  private static final String LIST_MISMATCHED_PARENT_TO_CHILDREN_HEADER =
+      "Children Mismatched To Parents";
+  private static final String LIST_MULTIPLE_PUBLISHER_AUS_LINK =
+      "Archival Units With Multiple Publishers";
+  private static final String LIST_MULTIPLE_PUBLISHER_AUS_ACTION =
+      "listMultiplePublisherAus";
+  private static final String LIST_MULTIPLE_PUBLISHER_AUS_HELP =
+      "Lists the names of Archival Units with more than one publisher";
+  private static final String LIST_MULTIPLE_PUBLISHER_AUS_HEADER =
+      "Archival Units With Multiple Publishers";
+  private static final String LIST_ITEMS_WITHOUT_NAME_LINK =
+      "Metadata Items Without Name";
+  private static final String LIST_ITEMS_WITHOUT_NAME_ACTION =
+      "listMetadataItemsWithoutName";
+  private static final String LIST_ITEMS_WITHOUT_NAME_HELP =
+      "Lists the metadata items that have no name";
+  private static final String LIST_ITEMS_WITHOUT_NAME_HEADER =
+      "Metadata Items Without Name";
+  private static final String LIST_MULTIPLE_PID_PUBLICATIONS_LINK =
+      "Publications With Multiple Proprietary Identifiers";
+  private static final String LIST_MULTIPLE_PID_PUBLICATIONS_ACTION =
+      "listMultiplePidPublications";
+  private static final String LIST_MULTIPLE_PID_PUBLICATIONS_HELP =
+      "Lists the names of publications with multiple proprietary identifiers";
+  private static final String LIST_MULTIPLE_PID_PUBLICATIONS_HEADER =
+      "Publications With Multiple Proprietary Identifiers";
 
   private static final String BACK_LINK_PREFIX = "Back to ";
 
@@ -184,6 +216,14 @@ public class MetadataMonitor extends LockssServlet {
 	listMismatchedPublicationTypeIsbsns();
       } else if (LIST_UNKNOWN_PROVIDER_AUS_ACTION.equals(action)) {
 	listUnknownProviderAus();
+      } else if (LIST_MISMATCHED_PARENT_TO_CHILDREN_ACTION.equals(action)) {
+	listMismatchedParentToChildren();
+      } else if (LIST_MULTIPLE_PUBLISHER_AUS_ACTION.equals(action)) {
+	listMultiplePublisherAus();
+      } else if (LIST_ITEMS_WITHOUT_NAME_ACTION.equals(action)) {
+	listMetadataItemsWithoutName();
+      } else if (LIST_MULTIPLE_PID_PUBLICATIONS_ACTION.equals(action)) {
+	listMultiplePidPublications();
       } else {
 	displayMainPage();
       }
@@ -267,6 +307,30 @@ public class MetadataMonitor extends LockssServlet {
 	ACTION + LIST_UNKNOWN_PROVIDER_AUS_ACTION,
 	LIST_UNKNOWN_PROVIDER_AUS_HELP));
 
+    // List the children whose parents are of the wrong type.
+    list.add(getMenuDescriptor(myDescr,
+	LIST_MISMATCHED_PARENT_TO_CHILDREN_LINK,
+	ACTION + LIST_MISMATCHED_PARENT_TO_CHILDREN_ACTION,
+	LIST_MISMATCHED_PARENT_TO_CHILDREN_HELP));
+
+    // List the Archival Units with multiple publishers.
+    list.add(getMenuDescriptor(myDescr,
+	LIST_MULTIPLE_PUBLISHER_AUS_LINK,
+	ACTION + LIST_MULTIPLE_PUBLISHER_AUS_ACTION,
+	LIST_MULTIPLE_PUBLISHER_AUS_HELP));
+
+    // List the metadata items that have no name.
+    list.add(getMenuDescriptor(myDescr,
+	LIST_ITEMS_WITHOUT_NAME_LINK,
+	ACTION + LIST_ITEMS_WITHOUT_NAME_ACTION,
+	LIST_ITEMS_WITHOUT_NAME_HELP));
+
+    // List the publications with multiple proprietary identifiers.
+    list.add(getMenuDescriptor(myDescr,
+	LIST_MULTIPLE_PID_PUBLICATIONS_LINK,
+	ACTION + LIST_MULTIPLE_PID_PUBLICATIONS_ACTION,
+	LIST_MULTIPLE_PID_PUBLICATIONS_HELP));
+
     return list.iterator();
   }
 
@@ -333,6 +397,24 @@ public class MetadataMonitor extends LockssServlet {
    */
   private void makeTablePage(String heading, Table results1, Table results2)
       throws IOException {
+    makeTablePage(heading, results1, results2, null);
+  }
+
+  /**
+   * Creates a page with three tables of results.
+   * 
+   * @param heading
+   *          A String with the page heading.
+   * @param results1
+   *          A Table with the first results to be displayed.
+   * @param results2
+   *          A Table with the second results to be displayed.
+   * @param results3
+   *          A Table with the last results to be displayed.
+   * @throws IOException
+   */
+  private void makeTablePage(String heading, Table results1, Table results2,
+      Table results3) throws IOException {
     final String DEBUG_HEADER = "makeTablePage(): ";
     if (log.isDebug2()) log.debug2(DEBUG_HEADER + "heading = " + heading);
 
@@ -357,6 +439,15 @@ public class MetadataMonitor extends LockssServlet {
       mainTable.newCell();
 
       mainTable.add(results2);
+
+      if (results3 != null) {
+	mainTable.newRow();
+	mainTable.newCell();
+	mainTable.newRow();
+	mainTable.newCell();
+
+	mainTable.add(results3);
+      }
     }
 
     Composite comp = new Block(Block.Center);
@@ -958,6 +1049,405 @@ public class MetadataMonitor extends LockssServlet {
     }
 
     makeTablePage(LIST_UNKNOWN_PROVIDER_AUS_HEADER, results);
+    if (log.isDebug2()) log.debug2(DEBUG_HEADER + "Done.");
+  }
+
+  /**
+   * Displays the children whose parents are of the wrong type.
+   * 
+   * @throws DbException
+   *           if any problem occurred accessing the database.
+   * @throws IOException
+   */
+  private void listMismatchedParentToChildren()
+      throws DbException, IOException {
+    final String DEBUG_HEADER = "listMismatchedParentToChildren(): ";
+    if (log.isDebug2()) log.debug2(DEBUG_HEADER + "Starting...");
+
+    String attributes = "align=\"center\" cellspacing=\"4\" cellpadding=\"5\"";
+
+    // Create the journal articles table.
+    Table results1 = new Table(0, attributes);
+    results1.newRow();
+    results1.newCell("align=\"center\" class=\"colhead\"");
+    results1.add("Journal Article Title");
+    results1.newCell("align=\"center\" class=\"colhead\"");
+    results1.add("Parent Title");
+    results1.newCell("align=\"center\" class=\"colhead\"");
+    results1.add("Parent Type");
+    results1.newCell("align=\"center\" class=\"colhead\"");
+    results1.add("Archival Unit Name");
+
+    // Get the journal articles not linked to journals.
+    Collection<Map<String, String>> mismatchedArticles =
+	mdManager.getMismatchedParentJournalArticles();
+    if (log.isDebug3()) log.debug3(DEBUG_HEADER
+	+ "mismatchedArticles.size() = " + mismatchedArticles.size());
+
+    // Check whether there are results to display.
+    if (mismatchedArticles.size() > 0) {
+      // Yes: Loop through the articles.
+      for (Map<String, String> articleData : mismatchedArticles) {
+	if (log.isDebug3())
+	  log.debug3(DEBUG_HEADER + "articleData = " + articleData);
+
+	results1.newRow();
+	results1.newCell("align=\"center\"");
+	results1.add(articleData.get("col1"));
+	results1.newCell("align=\"center\"");
+	results1.add(articleData.get("col2"));
+	results1.newCell("align=\"center\"");
+	results1.add(articleData.get("col3"));
+	results1.newCell("align=\"center\"");
+
+	String auId = PluginManager.generateAuId(articleData.get("col5"),
+	    articleData.get("col4"));
+	if (log.isDebug3()) log.debug3(DEBUG_HEADER + "auId = " + auId);
+
+	ArchivalUnit au = pluginManager.getAuFromId(auId);
+	if (log.isDebug3()) log.debug3(DEBUG_HEADER + "au = " + au);
+
+	if (au != null) {
+	  results1.add(au.getName());
+	} else {
+	  results1.add(auId);
+	}
+      }
+    } else {
+      // No.
+      results1.newRow();
+      results1.newCell();
+      results1.add("");
+      results1.newRow();
+      results1.newCell("colspan=\"4\" align=\"center\"");
+      results1.add("No journal articles have a mismatched parent");
+    }
+
+    // Create the book chapters table.
+    Table results2 = new Table(0, attributes);
+    results2.newRow();
+    results2.newCell("align=\"center\" class=\"colhead\"");
+    results2.add("Book Chapter Title");
+    results2.newCell("align=\"center\" class=\"colhead\"");
+    results2.add("Parent Title");
+    results2.newCell("align=\"center\" class=\"colhead\"");
+    results2.add("Parent Type");
+    results2.newCell("align=\"center\" class=\"colhead\"");
+    results2.add("Archival Unit Name");
+
+    // Get the book chapters not linked to books or book series.
+    Collection<Map<String, String>> mismatchedChapters =
+	mdManager.getMismatchedParentBookChapters();
+    if (log.isDebug3()) log.debug3(DEBUG_HEADER + "mismatchedChapters.size() = "
+	+ mismatchedChapters.size());
+
+    // Check whether there are results to display.
+    if (mismatchedChapters.size() > 0) {
+      // Yes: Loop through the chapters.
+      for (Map<String, String> chapterData : mismatchedChapters) {
+	if (log.isDebug3())
+	  log.debug3(DEBUG_HEADER + "chapterData = " + chapterData);
+
+	results2.newRow();
+	results2.newCell("align=\"center\"");
+	results2.add(chapterData.get("col1"));
+	results2.newCell("align=\"center\"");
+	results2.add(chapterData.get("col2"));
+	results2.newCell("align=\"center\"");
+	results2.add(chapterData.get("col3"));
+	results2.newCell("align=\"center\"");
+
+	String auId = PluginManager.generateAuId(chapterData.get("col5"),
+	    chapterData.get("col4"));
+	if (log.isDebug3()) log.debug3(DEBUG_HEADER + "auId = " + auId);
+
+	ArchivalUnit au = pluginManager.getAuFromId(auId);
+	if (log.isDebug3()) log.debug3(DEBUG_HEADER + "au = " + au);
+
+	if (au != null) {
+	  results2.add(au.getName());
+	} else {
+	  results2.add(auId);
+	}
+      }
+    } else {
+      // No.
+      results2.newRow();
+      results2.newCell();
+      results2.add("");
+      results2.newRow();
+      results2.newCell("colspan=\"4\" align=\"center\"");
+      results2.add("No book chapters have a mismatched parent");
+    }
+
+    // Create the book volumes table.
+    Table results3 = new Table(0, attributes);
+    results3.newRow();
+    results3.newCell("align=\"center\" class=\"colhead\"");
+    results3.add("Book Volume Title");
+    results3.newCell("align=\"center\" class=\"colhead\"");
+    results3.add("Parent Title");
+    results3.newCell("align=\"center\" class=\"colhead\"");
+    results3.add("Parent Type");
+    results3.newCell("align=\"center\" class=\"colhead\"");
+    results3.add("Archival Unit Name");
+
+    // Get the book volumes not linked to books or book series.
+    Collection<Map<String, String>> mismatchedVolumes =
+	mdManager.getMismatchedParentBookVolumes();
+    if (log.isDebug3()) log.debug3(DEBUG_HEADER	+ "mismatchedVolumes.size() = "
+	+ mismatchedVolumes.size());
+
+    // Check whether there are results to display.
+    if (mismatchedVolumes.size() > 0) {
+      // Yes: Loop through the volumes.
+      for (Map<String, String> volumeData : mismatchedVolumes) {
+	if (log.isDebug3())
+	  log.debug3(DEBUG_HEADER + "volumeData = " + volumeData);
+
+	results3.newRow();
+	results3.newCell("align=\"center\"");
+	results3.add(volumeData.get("col1"));
+	results3.newCell("align=\"center\"");
+	results3.add(volumeData.get("col2"));
+	results3.newCell("align=\"center\"");
+	results3.add(volumeData.get("col3"));
+	results3.newCell("align=\"center\"");
+
+	String auId = PluginManager.generateAuId(volumeData.get("col5"),
+	    volumeData.get("col4"));
+	if (log.isDebug3()) log.debug3(DEBUG_HEADER + "auId = " + auId);
+
+	ArchivalUnit au = pluginManager.getAuFromId(auId);
+	if (log.isDebug3()) log.debug3(DEBUG_HEADER + "au = " + au);
+
+	if (au != null) {
+	  results3.add(au.getName());
+	} else {
+	  results3.add(auId);
+	}
+      }
+    } else {
+      // No.
+      results3.newRow();
+      results3.newCell();
+      results3.add("");
+      results3.newRow();
+      results3.newCell("colspan=\"4\" align=\"center\"");
+      results3.add("No book volumes have a mismatched parent");
+    }
+
+    makeTablePage(LIST_MISMATCHED_PARENT_TO_CHILDREN_HEADER, results1, results2,
+	results3);
+    if (log.isDebug2()) log.debug2(DEBUG_HEADER + "Done.");
+  }
+
+  /**
+   * Displays the publisher for the Archival Units in the database with multiple
+   * publishers.
+   * 
+   * @throws DbException
+   *           if any problem occurred accessing the database.
+   * @throws IOException
+   */
+  private void listMultiplePublisherAus() throws DbException, IOException {
+    final String DEBUG_HEADER = "listMultiplePublisherAus(): ";
+    if (log.isDebug2()) log.debug2(DEBUG_HEADER + "Starting...");
+
+    String attributes = "align=\"left\" cellspacing=\"4\" cellpadding=\"5\"";
+
+    // Create the results table.
+    Table results = new Table(0, attributes);
+    results.newRow();
+    results.newCell("align=\"right\" class=\"colhead\"");
+    results.add("Archival Unit Name");
+    results.newCell("align=\"left\" class=\"colhead\"");
+    results.add("Publishers");
+
+    // The Archival Units that have multiple publishers, sorted by name.
+    Map<String, Collection<String>> ausToList =
+	mdManager.getAuNamesWithMultiplePublishers();
+    if (log.isDebug3()) log.debug3(DEBUG_HEADER
+	+ "ausToList.size() = " + ausToList.size());
+
+    // Check whether there are results to display.
+    if (ausToList.size() > 0) {
+      // Yes: Loop through the Archival Units to be listed.
+      for (String auName : ausToList.keySet()) {
+	results.newRow();
+	results.newCell("align=\"right\"");
+	results.add(auName);
+	results.newCell("align=\"left\"");
+      
+	Table publishers = new Table(1, attributes);
+
+	for (String publisher : ausToList.get(auName)) {
+	  publishers.newRow();
+	  publishers.newCell("align=\"left\"");
+	  publishers.add(publisher);
+	}
+
+	results.add(publishers);
+      }
+    } else {
+      // No.
+      results.newRow();
+      results.newCell();
+      results.add("");
+      results.newRow();
+      results.newCell("colspan=\"2\" align=\"center\"");
+      results.add("No Archival Units are linked to more than one publisher");
+    }
+
+    makeTablePage(LIST_MULTIPLE_PUBLISHER_AUS_HEADER, results);
+    if (log.isDebug2()) log.debug2(DEBUG_HEADER + "Done.");
+  }
+
+  /**
+   * Displays the metadata items that have no name.
+   * 
+   * @throws DbException
+   *           if any problem occurred accessing the database.
+   * @throws IOException
+   */
+  private void listMetadataItemsWithoutName() throws DbException, IOException {
+    final String DEBUG_HEADER = "listMetadataItemsWithoutName(): ";
+    if (log.isDebug2()) log.debug2(DEBUG_HEADER + "Starting...");
+
+    String attributes = "align=\"left\" cellspacing=\"4\" cellpadding=\"5\"";
+
+    // Create the results table.
+    Table results = new Table(0, attributes);
+    results.newRow();
+    results.newCell("align=\"center\" class=\"colhead\"");
+    results.add("Item Count");
+    results.newCell("align=\"center\" class=\"colhead\"");
+    results.add("Item Type");
+    results.newCell("align=\"center\" class=\"colhead\"");
+    results.add("Publisher");
+    results.newCell("align=\"center\" class=\"colhead\"");
+    results.add("Parent Title");
+    results.newCell("align=\"center\" class=\"colhead\"");
+    results.add("Parent Type");
+    results.newCell("align=\"center\" class=\"colhead\"");
+    results.add("Archival Unit Name");
+
+    // The metadata items that have no name, sorted by publisher, parent type,
+    // parent title and item type.
+    Collection<Map<String, String>> unnamedItems = mdManager.getUnnamedItems();
+    if (log.isDebug3()) log.debug3(DEBUG_HEADER
+	+ "unnamedItems.size() = " + unnamedItems.size());
+
+    // Check whether there are results to display.
+    if (unnamedItems.size() > 0) {
+      // Yes: Loop through the items.
+      for (Map<String, String> itemData : unnamedItems) {
+	if (log.isDebug3())
+	  log.debug3(DEBUG_HEADER + "itemData = " + itemData);
+
+	results.newRow();
+	results.newCell("align=\"center\"");
+	results.add(itemData.get("col1"));
+	results.newCell("align=\"center\"");
+	results.add(itemData.get("col2"));
+	results.newCell("align=\"center\"");
+	results.add(itemData.get("col7"));
+	results.newCell("align=\"center\"");
+	results.add(itemData.get("col3"));
+	results.newCell("align=\"center\"");
+	results.add(itemData.get("col4"));
+	results.newCell("align=\"center\"");
+
+	String auId = PluginManager.generateAuId(itemData.get("col6"),
+	    itemData.get("col5"));
+	if (log.isDebug3()) log.debug3(DEBUG_HEADER + "auId = " + auId);
+
+	ArchivalUnit au = pluginManager.getAuFromId(auId);
+	if (log.isDebug3()) log.debug3(DEBUG_HEADER + "au = " + au);
+
+	if (au != null) {
+	  results.add(au.getName());
+	} else {
+	  results.add(auId);
+	}
+
+      }
+    } else {
+      // No.
+      results.newRow();
+      results.newCell();
+      results.add("");
+      results.newRow();
+      results.newCell("colspan=\"6\" align=\"center\"");
+      results.add("No metadata items without name");
+    }
+
+    makeTablePage(LIST_ITEMS_WITHOUT_NAME_HEADER, results);
+    if (log.isDebug2()) log.debug2(DEBUG_HEADER + "Done.");
+  }
+
+  /**
+   * Displays the proprietary identifiers for the publications in the database
+   * with multiple proprietary identifiers.
+   * 
+   * @throws DbException
+   *           if any problem occurred accessing the database.
+   * @throws IOException
+   */
+  private void listMultiplePidPublications() throws DbException, IOException {
+    final String DEBUG_HEADER = "listMultiplePidPublications(): ";
+    if (log.isDebug2()) log.debug2(DEBUG_HEADER + "Starting...");
+
+    String attributes = "align=\"left\" cellspacing=\"4\" cellpadding=\"5\"";
+
+    // Create the results table.
+    Table results = new Table(0, attributes);
+    results.newRow();
+    results.newCell("align=\"right\" class=\"colhead\"");
+    results.add("Publication Name");
+    results.newCell("align=\"left\" class=\"colhead\"");
+    results.add("Proprietary IDs");
+
+    // Get the proprietary identifiers linked to the publications.
+    Map<String, Collection<String>> publicationsPids =
+	mdManager.getPublicationsWithMultiplePids();
+    if (log.isDebug3()) log.debug3(DEBUG_HEADER
+	+ "publicationsPids.size() = " + publicationsPids.size());
+
+    // Check whether there are results to display.
+    if (publicationsPids.size() > 0) {
+      // Yes: Loop through the publications.
+      for (String publicationName : publicationsPids.keySet()) {
+	if (log.isDebug3())
+	  log.debug3(DEBUG_HEADER + "publicationName = " + publicationName);
+
+	results.newRow();
+	results.newCell("align=\"right\"");
+	results.add(publicationName);
+	results.newCell("align=\"left\"");
+
+	Table pids = new Table(1, attributes);
+
+	for (String pid : publicationsPids.get(publicationName)) {
+	  pids.newRow();
+	  pids.newCell("align=\"left\"");
+	  pids.add(pid);
+	}
+
+	results.add(pids);
+      }
+    } else {
+      // No.
+      results.newRow();
+      results.newCell();
+      results.add("");
+      results.newRow();
+      results.newCell("colspan=\"2\" align=\"center\"");
+      results.add("No publications are linked to more than one proprietary "
+	  + "identifier");
+    }
+
+    makeTablePage(LIST_MULTIPLE_PID_PUBLICATIONS_HEADER, results);
     if (log.isDebug2()) log.debug2(DEBUG_HEADER + "Done.");
   }
 }

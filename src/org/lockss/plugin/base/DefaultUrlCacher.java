@@ -33,23 +33,18 @@ in this Software without prior written authorization from Stanford University.
 package org.lockss.plugin.base;
 
 import java.io.*;
-import java.net.*;
 import java.util.*;
-import java.text.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import org.lockss.app.*;
 import org.lockss.state.*;
 import org.lockss.alert.*;
 import org.lockss.config.*;
 import org.lockss.plugin.*;
-import org.lockss.plugin.definable.*;
 import org.lockss.repository.*;
 import org.lockss.util.*;
 import org.lockss.util.urlconn.*;
 import org.lockss.daemon.*;
-import org.lockss.crawler.*;
 
 /**
  * Basic, fully functional UrlCacher.  Utilizes the LockssRepository for
@@ -301,7 +296,15 @@ public class DefaultUrlCacher implements UrlCacher {
         }
       }
       os.close();
-      infoException = validate(bytes);
+      CacheException vExp = validate(bytes);
+      if (vExp != null) {
+	if (vExp.isAttributeSet(CacheException.ATTRIBUTE_FAIL) ||
+	    vExp.isAttributeSet(CacheException.ATTRIBUTE_FATAL)) {
+	  throw vExp;
+	} else {
+	  infoException = vExp;
+	}
+      }
       headers.setProperty(CachedUrl.PROPERTY_NODE_URL, url);
       if (checksumProducer != null) {
         byte bdigest[] = checksumProducer.digest();
@@ -343,7 +346,9 @@ public class DefaultUrlCacher implements UrlCacher {
           // just being paranoid
         }
       }
-      throw ex;
+      // XXX some code below here maps the exception
+      throw ex instanceof CacheException
+	? ex : resultMap.mapException(au, url, ex, null);
     } finally {
       IOUtil.safeClose(os);
     }
@@ -368,6 +373,7 @@ public class DefaultUrlCacher implements UrlCacher {
   // XXX need to make it possible for validator to access CU before seal(),
   // so it can prevent file from being committed.
   protected CacheException validate(long size) throws CacheException {
+    LinkedList<Exception> validationFailures = new LinkedList<Exception>();
     long contLen = getContentLength();
     if (contLen >= 0 && contLen != size) {
       Alert alert = Alert.auAlert(Alert.FILE_VERIFICATION, au);
@@ -377,17 +383,29 @@ public class DefaultUrlCacher implements UrlCacher {
 	+ getFetchUrl();
       alert.setAttribute(Alert.ATTR_TEXT, msg);
       raiseAlert(alert);
+      validationFailures.add(new ContentValidationException.WrongLength(msg));
     }
 //     try {
       if (size == 0) {
         Exception ex =
             new ContentValidationException.EmptyFile("Empty file stored");
-        return resultMap.mapException(au, fetchUrl, ex, null);
+	validationFailures.addFirst(ex);
       }
-      return null;
+      return firstMappedException(validationFailures);
 //     } catch (Exception e) {
 //       throw resultMap.mapException(au, conn, e, null);
 //     }
+  }
+
+
+  private CacheException firstMappedException(List<Exception> exps) {
+    for (Exception ex : exps) {
+      CacheException mapped = resultMap.mapException(au, fetchUrl, ex, null);
+      if (mapped != null) {
+	return mapped;
+      }
+    }
+    return null;
   }
 
 

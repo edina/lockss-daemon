@@ -4,7 +4,7 @@
 
 /*
 
-Copyright (c) 2000-2014 Board of Trustees of Leland Stanford Jr. University,
+Copyright (c) 2000-2015 Board of Trustees of Leland Stanford Jr. University,
 all rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -43,7 +43,6 @@ import org.lockss.plugin.definable.*;
 import org.lockss.test.*;
 import org.lockss.util.ListUtil;
 import org.lockss.util.urlconn.CacheException;
-import org.lockss.util.urlconn.CacheException.RetrySameUrlException;
 import org.lockss.util.urlconn.HttpResultMap;
 
 public class TestHighWireDrupalPlugin extends LockssTestCase {
@@ -128,11 +127,11 @@ public class TestHighWireDrupalPlugin extends LockssTestCase {
     CacheException exc =
         ((HttpResultMap)plugin.getCacheResultMap()).mapException(au, conn,
             500, "foo");
-    assertClass(HighWireDrupalHttpResponseHandler.NoFailRetryableNetworkException_3_60S.class, exc);
+    assertClass(CacheException.RetryDeadLinkException.class, exc);
     
     conn.setURL(starturl);
     exc = ((HttpResultMap)plugin.getCacheResultMap()).mapException(au, conn, 500, "foo");
-    assertClass(RetrySameUrlException.class, exc);
+    assertClass(CacheException.RetrySameUrlException.class, exc);
     
   }
   
@@ -188,6 +187,7 @@ public class TestHighWireDrupalPlugin extends LockssTestCase {
     
     shouldCacheTest(ROOT_URL + "content/hw/suppl/2014/04/23/hw.02130.DC1/hw02130_Supplemental_files.zip", true, au);
     shouldCacheTest("http://cdn.cloudfront.net/content/2015/1/3/F1.medium.gif", true, au);
+    shouldCacheTest("http://cdn.cloudfront.net/content/2015/1/3/F1.medium.gif?width=400", false, au);
     shouldCacheTest("http://cdn.mathjax.org/mathjax/latest/MathJax.js", true, au);
     shouldCacheTest("https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js", true, au);
     shouldCacheTest("", false, au);

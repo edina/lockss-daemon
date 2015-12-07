@@ -53,6 +53,7 @@ import org.lockss.metadata.MetadataManager.PrioritizedAuId;
 import org.lockss.plugin.ArchivalUnit;
 import org.lockss.plugin.AuUtil;
 import org.lockss.plugin.PluginManager;
+import org.lockss.util.KeyPair;
 import org.lockss.util.Logger;
 import org.lockss.util.StringUtil;
 import org.lockss.util.TimeBase;
@@ -211,19 +212,6 @@ public class MetadataManagerSql {
       + "," + CREATION_TIME_COLUMN
       + "," + PROVIDER_SEQ_COLUMN
       + ") values (default,?,?,?,?,?)";
-
-  // Query to find a publisher by its name.
-  private static final String FIND_PUBLISHER_QUERY = "select "
-      + PUBLISHER_SEQ_COLUMN
-      + " from " + PUBLISHER_TABLE
-      + " where " + PUBLISHER_NAME_COLUMN + " = ?";
-
-  // Query to add a publisher.
-  private static final String INSERT_PUBLISHER_QUERY = "insert into "
-      + PUBLISHER_TABLE
-      + "(" + PUBLISHER_SEQ_COLUMN
-      + "," + PUBLISHER_NAME_COLUMN
-      + ") values (default,?)";
 
   // Query to update the extraction time of the metadata of an Archival Unit.
   private static final String UPDATE_AU_MD_EXTRACT_TIME_QUERY = "update "
@@ -432,6 +420,16 @@ public class MetadataManagerSql {
       + "(select coalesce(max(" + PRIORITY_COLUMN + "), 0) + 1 as next_priority"
       + " from " + PENDING_AU_TABLE
       + " where " + PRIORITY_COLUMN + " >= 0) as temp_pau_table),?)";
+
+  // Query to add an enabled pending AU at the top of the current priority list.
+  private static final String INSERT_HIGHEST_PRIORITY_PENDING_AU_QUERY =
+      "insert into "
+      + PENDING_AU_TABLE
+      + "(" + PLUGIN_ID_COLUMN
+      + "," + AU_KEY_COLUMN
+      + "," + PRIORITY_COLUMN
+      + "," + FULLY_REINDEX_COLUMN
+      + ") values (?,?,0,?)";
 
   // Query to find a pending AU by its key and plugin identifier.
   private static final String FIND_PENDING_AU_QUERY = "select "
@@ -1067,6 +1065,311 @@ public class MetadataManagerSql {
       + " and pr." + PROVIDER_NAME_COLUMN
       + " = '" + UNKNOWN_PROVIDER_NAME + "'";
 
+  // Query to retrieve all the journal articles in the database whose parent
+  // is not a journal.
+  private static final String GET_MISMATCHED_PARENT_JOURNAL_ARTICLES_QUERY =
+	"select min1." + NAME_COLUMN + " as \"col1\""
+	+ ", min2." + NAME_COLUMN + " as \"col2\""
+	+ ", mit." + TYPE_NAME_COLUMN + " as \"col3\""
+	+ ", au." + AU_KEY_COLUMN + " as \"col4\""
+	+ ", pl." + PLUGIN_ID_COLUMN + " as \"col5\""
+	+ " from " + MD_ITEM_TYPE_TABLE + " mit"
+	+ ", " + AU_TABLE
+	+ ", " + PLUGIN_TABLE + " pl"
+	+ ", " + AU_MD_TABLE + " am"
+	+ ", " + MD_ITEM_TABLE + " mi1"
+	+ " left outer join " + MD_ITEM_NAME_TABLE + " min1"
+	+ " on mi1." + MD_ITEM_SEQ_COLUMN + " = min1." + MD_ITEM_SEQ_COLUMN
+	+ " and min1." + NAME_TYPE_COLUMN + " = '" + PRIMARY_NAME_TYPE + "'"
+	+ ", " + MD_ITEM_TABLE + " mi2"
+	+ " left outer join " + MD_ITEM_NAME_TABLE + " min2"
+	+ " on mi2." + MD_ITEM_SEQ_COLUMN + " = min2." + MD_ITEM_SEQ_COLUMN
+	+ " and min2." + NAME_TYPE_COLUMN + " = '" + PRIMARY_NAME_TYPE + "'"
+	+ " where mi1." + PARENT_SEQ_COLUMN + " = mi2." + MD_ITEM_SEQ_COLUMN
+	+ " and mit." + MD_ITEM_TYPE_SEQ_COLUMN
+	+ " = mi2." + MD_ITEM_TYPE_SEQ_COLUMN
+	+ " and mi1." + AU_MD_SEQ_COLUMN + " = am." + AU_MD_SEQ_COLUMN
+	+ " and am." + AU_SEQ_COLUMN + " = au." + AU_SEQ_COLUMN
+	+ " and au." + PLUGIN_SEQ_COLUMN + " = pl." + PLUGIN_SEQ_COLUMN
+	+ " and mi1." + MD_ITEM_TYPE_SEQ_COLUMN + " = 5"
+	+ " and mi2." + MD_ITEM_TYPE_SEQ_COLUMN + " != 4"
+	+ " union "
+	+ "select min1." + NAME_COLUMN + " as \"col1\""
+	+ ", '' as \"col2\""
+	+ ", '' as \"col3\""
+	+ ", au." + AU_KEY_COLUMN + " as \"col4\""
+	+ ", pl." + PLUGIN_ID_COLUMN + " as \"col5\""
+	+ " from " + AU_TABLE
+	+ ", " + PLUGIN_TABLE + " pl"
+	+ ", " + AU_MD_TABLE + " am"
+	+ ", " + MD_ITEM_TABLE + " mi1"
+	+ " left outer join " + MD_ITEM_NAME_TABLE + " min1"
+	+ " on mi1." + MD_ITEM_SEQ_COLUMN + " = min1." + MD_ITEM_SEQ_COLUMN
+	+ " and min1." + NAME_TYPE_COLUMN + " = '" + PRIMARY_NAME_TYPE + "'"
+	+ " where mi1." + PARENT_SEQ_COLUMN + " is null"
+	+ " and mi1." + AU_MD_SEQ_COLUMN + " = am." + AU_MD_SEQ_COLUMN
+	+ " and am." + AU_SEQ_COLUMN + " = au." + AU_SEQ_COLUMN
+	+ " and au." + PLUGIN_SEQ_COLUMN + " = pl." + PLUGIN_SEQ_COLUMN
+	+ " and mi1." + MD_ITEM_TYPE_SEQ_COLUMN + " = 5"
+	+ " order by \"col5\", \"col4\", \"col2\", \"col1\"";
+
+  // Query to retrieve all the book chapters in the database whose parent is not
+  // a book nor a book series.
+  private static final String GET_MISMATCHED_PARENT_BOOK_CHAPTERS_QUERY =
+	"select min1." + NAME_COLUMN + " as \"col1\""
+	+ ", min2." + NAME_COLUMN + " as \"col2\""
+	+ ", mit." + TYPE_NAME_COLUMN + " as \"col3\""
+	+ ", au." + AU_KEY_COLUMN + " as \"col4\""
+	+ ", pl." + PLUGIN_ID_COLUMN + " as \"col5\""
+	+ " from " + MD_ITEM_TYPE_TABLE + " mit"
+	+ ", " + AU_TABLE
+	+ ", " + PLUGIN_TABLE + " pl"
+	+ ", " + AU_MD_TABLE + " am"
+	+ ", " + MD_ITEM_TABLE + " mi1"
+	+ " left outer join " + MD_ITEM_NAME_TABLE + " min1"
+	+ " on mi1." + MD_ITEM_SEQ_COLUMN + " = min1." + MD_ITEM_SEQ_COLUMN
+	+ " and min1." + NAME_TYPE_COLUMN + " = '" + PRIMARY_NAME_TYPE + "'"
+	+ ", " + MD_ITEM_TABLE + " mi2"
+	+ " left outer join " + MD_ITEM_NAME_TABLE + " min2"
+	+ " on mi2." + MD_ITEM_SEQ_COLUMN + " = min2." + MD_ITEM_SEQ_COLUMN
+	+ " and min2." + NAME_TYPE_COLUMN + " = '" + PRIMARY_NAME_TYPE + "'"
+	+ " where mi1." + PARENT_SEQ_COLUMN + " = mi2." + MD_ITEM_SEQ_COLUMN
+	+ " and mit." + MD_ITEM_TYPE_SEQ_COLUMN
+	+ " = mi2." + MD_ITEM_TYPE_SEQ_COLUMN
+	+ " and mi1." + AU_MD_SEQ_COLUMN + " = am." + AU_MD_SEQ_COLUMN
+	+ " and am." + AU_SEQ_COLUMN + " = au." + AU_SEQ_COLUMN
+	+ " and au." + PLUGIN_SEQ_COLUMN + " = pl." + PLUGIN_SEQ_COLUMN
+	+ " and mi1." + MD_ITEM_TYPE_SEQ_COLUMN + " = 3"
+	+ " and mi2." + MD_ITEM_TYPE_SEQ_COLUMN + " != 2"
+	+ " and mi2." + MD_ITEM_TYPE_SEQ_COLUMN + " != 1"
+	+ " union "
+	+ "select min1." + NAME_COLUMN + " as \"col1\""
+	+ ", '' as \"col2\""
+	+ ", '' as \"col3\""
+	+ ", au." + AU_KEY_COLUMN + " as \"col4\""
+	+ ", pl." + PLUGIN_ID_COLUMN + " as \"col5\""
+	+ " from " + AU_TABLE
+	+ ", " + PLUGIN_TABLE + " pl"
+	+ ", " + AU_MD_TABLE + " am"
+	+ ", " + MD_ITEM_TABLE + " mi1"
+	+ " left outer join " + MD_ITEM_NAME_TABLE + " min1"
+	+ " on mi1." + MD_ITEM_SEQ_COLUMN + " = min1." + MD_ITEM_SEQ_COLUMN
+	+ " and min1." + NAME_TYPE_COLUMN + " = '" + PRIMARY_NAME_TYPE + "'"
+	+ " where mi1." + PARENT_SEQ_COLUMN + " is null"
+	+ " and mi1." + AU_MD_SEQ_COLUMN + " = am." + AU_MD_SEQ_COLUMN
+	+ " and am." + AU_SEQ_COLUMN + " = au." + AU_SEQ_COLUMN
+	+ " and au." + PLUGIN_SEQ_COLUMN + " = pl." + PLUGIN_SEQ_COLUMN
+	+ " and mi1." + MD_ITEM_TYPE_SEQ_COLUMN + " = 3"
+	+ " order by \"col5\", \"col4\", \"col2\", \"col1\"";
+
+  // Query to retrieve all the book volumes in the database whose parent is not
+  // a book nor a book series.
+  private static final String GET_MISMATCHED_PARENT_BOOK_VOLUMES_QUERY =
+	"select min1." + NAME_COLUMN + " as \"col1\""
+	+ ", min2." + NAME_COLUMN + " as \"col2\""
+	+ ", mit." + TYPE_NAME_COLUMN + " as \"col3\""
+	+ ", au." + AU_KEY_COLUMN + " as \"col4\""
+	+ ", pl." + PLUGIN_ID_COLUMN + " as \"col5\""
+	+ " from " + MD_ITEM_TYPE_TABLE + " mit"
+	+ ", " + AU_TABLE
+	+ ", " + PLUGIN_TABLE + " pl"
+	+ ", " + AU_MD_TABLE + " am"
+	+ ", " + MD_ITEM_TABLE + " mi1"
+	+ " left outer join " + MD_ITEM_NAME_TABLE + " min1"
+	+ " on mi1." + MD_ITEM_SEQ_COLUMN + " = min1." + MD_ITEM_SEQ_COLUMN
+	+ " and min1." + NAME_TYPE_COLUMN + " = '" + PRIMARY_NAME_TYPE + "'"
+	+ ", " + MD_ITEM_TABLE + " mi2"
+	+ " left outer join " + MD_ITEM_NAME_TABLE + " min2"
+	+ " on mi2." + MD_ITEM_SEQ_COLUMN + " = min2." + MD_ITEM_SEQ_COLUMN
+	+ " and min2." + NAME_TYPE_COLUMN + " = '" + PRIMARY_NAME_TYPE + "'"
+	+ " where mi1." + PARENT_SEQ_COLUMN + " = mi2." + MD_ITEM_SEQ_COLUMN
+	+ " and mit." + MD_ITEM_TYPE_SEQ_COLUMN
+	+ " = mi2." + MD_ITEM_TYPE_SEQ_COLUMN
+	+ " and mi1." + AU_MD_SEQ_COLUMN + " = am." + AU_MD_SEQ_COLUMN
+	+ " and am." + AU_SEQ_COLUMN + " = au." + AU_SEQ_COLUMN
+	+ " and au." + PLUGIN_SEQ_COLUMN + " = pl." + PLUGIN_SEQ_COLUMN
+	+ " and mi1." + MD_ITEM_TYPE_SEQ_COLUMN + " = 6"
+	+ " and mi2." + MD_ITEM_TYPE_SEQ_COLUMN + " != 2"
+	+ " and mi2." + MD_ITEM_TYPE_SEQ_COLUMN + " != 1"
+	+ " union "
+	+ "select min1." + NAME_COLUMN + " as \"col1\""
+	+ ", '' as \"col2\""
+	+ ", '' as \"col3\""
+	+ ", au." + AU_KEY_COLUMN + " as \"col4\""
+	+ ", pl." + PLUGIN_ID_COLUMN + " as \"col5\""
+	+ " from " + AU_TABLE
+	+ ", " + PLUGIN_TABLE + " pl"
+	+ ", " + AU_MD_TABLE + " am"
+	+ ", " + MD_ITEM_TABLE + " mi1"
+	+ " left outer join " + MD_ITEM_NAME_TABLE + " min1"
+	+ " on mi1." + MD_ITEM_SEQ_COLUMN + " = min1." + MD_ITEM_SEQ_COLUMN
+	+ " and min1." + NAME_TYPE_COLUMN + " = '" + PRIMARY_NAME_TYPE + "'"
+	+ " where mi1." + PARENT_SEQ_COLUMN + " is null"
+	+ " and mi1." + AU_MD_SEQ_COLUMN + " = am." + AU_MD_SEQ_COLUMN
+	+ " and am." + AU_SEQ_COLUMN + " = au." + AU_SEQ_COLUMN
+	+ " and au." + PLUGIN_SEQ_COLUMN + " = pl." + PLUGIN_SEQ_COLUMN
+	+ " and mi1." + MD_ITEM_TYPE_SEQ_COLUMN + " = 6"
+	+ " order by \"col5\", \"col4\", \"col2\", \"col1\"";
+
+  // Query to retrieve all the different publishers of all the Archival Units
+  // with multiple publishers.
+  private static final String GET_AUS_MULTIPLE_PUBLISHERS_QUERY = "select "
+      + "distinct pl." + PLUGIN_ID_COLUMN
+      + ", au." + AU_KEY_COLUMN
+      + ", pr." + PUBLISHER_NAME_COLUMN
+      + " from " + PLUGIN_TABLE + " pl"
+      + ", " + AU_TABLE
+      + ", " + PUBLISHER_TABLE + " pr"
+      + ", " + AU_MD_TABLE + " am"
+      + ", " + MD_ITEM_TABLE + " m"
+      + ", " + PUBLICATION_TABLE + " pn"
+      + " where pl." + PLUGIN_SEQ_COLUMN + " = au." + PLUGIN_SEQ_COLUMN
+      + " and au." + AU_SEQ_COLUMN + " = am." + AU_SEQ_COLUMN
+      + " and am." + AU_MD_SEQ_COLUMN + " = m." + AU_MD_SEQ_COLUMN
+      + " and m." + PARENT_SEQ_COLUMN + " = pn." + MD_ITEM_SEQ_COLUMN
+      + " and pn." + PUBLISHER_SEQ_COLUMN + " = pr." + PUBLISHER_SEQ_COLUMN
+      + " and au." + AU_SEQ_COLUMN + " in ("
+      + " select subq." + AU_SEQ_COLUMN
+      + " from ("
+      + "select distinct au." + AU_SEQ_COLUMN
+      + ", pr." + PUBLISHER_SEQ_COLUMN
+      + " from " + AU_TABLE
+      + ", " + PUBLISHER_TABLE + " pr"
+      + ", " + AU_MD_TABLE + " am"
+      + ", " + MD_ITEM_TABLE + " m"
+      + ", " + PUBLICATION_TABLE + " pn"
+      + " where au." + AU_SEQ_COLUMN + " = am." + AU_SEQ_COLUMN
+      + " and am." + AU_MD_SEQ_COLUMN + " = m." + AU_MD_SEQ_COLUMN
+      + " and m." + PARENT_SEQ_COLUMN + " = pn." + MD_ITEM_SEQ_COLUMN
+      + " and pn." + PUBLISHER_SEQ_COLUMN + " = pr." + PUBLISHER_SEQ_COLUMN
+      + ") as subq"
+      + " group by subq." + AU_SEQ_COLUMN
+      + " having count(subq." + AU_SEQ_COLUMN + ") > 1)"
+      + " order by pl." + PLUGIN_ID_COLUMN
+      + ", au." + AU_KEY_COLUMN
+      + ", pr." + PUBLISHER_NAME_COLUMN;
+
+  // Query to retrieve all the metadata items that have no name.
+  private static final String GET_UNNAMED_ITEMS_QUERY = "select "
+      + "count(mi1." + MD_ITEM_SEQ_COLUMN + ") as \"col1\""
+      + ", mit1." + MD_ITEM_TYPE_SEQ_COLUMN + " as \"ts1\""
+      + ", mit1." + TYPE_NAME_COLUMN + " as \"col2\""
+      + ", min2." + NAME_COLUMN + " as \"col3\""
+      + ", mit2." + MD_ITEM_TYPE_SEQ_COLUMN + " as \"ts2\""
+      + ", mit2." + TYPE_NAME_COLUMN + " as \"col4\""
+      + ", au." + AU_KEY_COLUMN + " as \"col5\""
+      + ", pl." + PLUGIN_ID_COLUMN + " as \"col6\""
+      + ", pr." + PUBLISHER_NAME_COLUMN + " as \"col7\""
+      + " from " + MD_ITEM_TYPE_TABLE + " mit1"
+      + ", " + MD_ITEM_TYPE_TABLE + " mit2"
+      + ", " + AU_TABLE
+      + ", " + PLUGIN_TABLE + " pl"
+      + ", " + AU_MD_TABLE + " am"
+      + ", " + PUBLICATION_TABLE + " pn"
+      + ", " + PUBLISHER_TABLE + " pr"
+      + ", " + MD_ITEM_TABLE + " mi1"
+      + " left outer join " + MD_ITEM_NAME_TABLE + " min1"
+      + " on mi1." + MD_ITEM_SEQ_COLUMN + " = min1." + MD_ITEM_SEQ_COLUMN
+      + " and min1." + NAME_TYPE_COLUMN + " = '" + PRIMARY_NAME_TYPE + "'"
+      + ", " + MD_ITEM_TABLE + " mi2"
+      + " left outer join " + MD_ITEM_NAME_TABLE + " min2"
+      + " on mi2." + MD_ITEM_SEQ_COLUMN + " = min2." + MD_ITEM_SEQ_COLUMN
+      + " and min2." + NAME_TYPE_COLUMN + " = '" + PRIMARY_NAME_TYPE + "'"
+      + " where mi1." + PARENT_SEQ_COLUMN + " = mi2." + MD_ITEM_SEQ_COLUMN
+      + " and mit1." + MD_ITEM_TYPE_SEQ_COLUMN
+      + " = mi1." + MD_ITEM_TYPE_SEQ_COLUMN
+      + " and mit2." + MD_ITEM_TYPE_SEQ_COLUMN
+      + " = mi2." + MD_ITEM_TYPE_SEQ_COLUMN
+      + " and mi1." + AU_MD_SEQ_COLUMN + " = am." + AU_MD_SEQ_COLUMN
+      + " and am." + AU_SEQ_COLUMN + " = au." + AU_SEQ_COLUMN
+      + " and au." + PLUGIN_SEQ_COLUMN + " = pl." + PLUGIN_SEQ_COLUMN
+      + " and mi2." + MD_ITEM_SEQ_COLUMN + " = pn." + MD_ITEM_SEQ_COLUMN
+      + " and pn." + PUBLISHER_SEQ_COLUMN + " = pr." + PUBLISHER_SEQ_COLUMN
+      + " and min1." + NAME_COLUMN + " is null"
+      + " group by mit1." + MD_ITEM_TYPE_SEQ_COLUMN
+      + ", mit1." + TYPE_NAME_COLUMN
+      + ", min2." + NAME_COLUMN
+      + ", mit2." + MD_ITEM_TYPE_SEQ_COLUMN
+      + ", mit2." + TYPE_NAME_COLUMN
+      + ", au." + AU_KEY_COLUMN
+      + ", pl." + PLUGIN_ID_COLUMN
+      + ", pr." + PUBLISHER_NAME_COLUMN
+      + " union "
+      + "select count(mi1." + MD_ITEM_SEQ_COLUMN + ") as \"col1\""
+      + ", mit1." + MD_ITEM_TYPE_SEQ_COLUMN + " as \"ts1\""
+      + ", mit1." + TYPE_NAME_COLUMN + " as \"col2\""
+      + ", '' as \"col3\""
+      + ", 0 as \"ts2\""
+      + ", '' as \"col4\""
+      + ", au." + AU_KEY_COLUMN + " as \"col5\""
+      + ", pl." + PLUGIN_ID_COLUMN + " as \"col6\""
+      + ", pr." + PUBLISHER_NAME_COLUMN + " as \"col7\""
+      + " from " + MD_ITEM_TYPE_TABLE + " mit1"
+      + ", " + AU_TABLE
+      + ", " + PLUGIN_TABLE + " pl"
+      + ", " + AU_MD_TABLE + " am"
+      + ", " + PUBLICATION_TABLE + " pn"
+      + ", " + PUBLISHER_TABLE + " pr"
+      + ", " + MD_ITEM_TABLE + " mi1"
+      + " left outer join " + MD_ITEM_NAME_TABLE + " min1"
+      + " on mi1." + MD_ITEM_SEQ_COLUMN + " = min1." + MD_ITEM_SEQ_COLUMN
+      + " and min1." + NAME_TYPE_COLUMN + " = '" + PRIMARY_NAME_TYPE + "'"
+      + " where mi1." + PARENT_SEQ_COLUMN + " is null"
+      + " and mit1." + MD_ITEM_TYPE_SEQ_COLUMN
+      + " = mi1." + MD_ITEM_TYPE_SEQ_COLUMN
+      + " and mi1." + AU_MD_SEQ_COLUMN + " = am." + AU_MD_SEQ_COLUMN
+      + " and am." + AU_SEQ_COLUMN + " = au." + AU_SEQ_COLUMN
+      + " and au." + PLUGIN_SEQ_COLUMN + " = pl." + PLUGIN_SEQ_COLUMN
+      + " and mi1." + MD_ITEM_SEQ_COLUMN + " = pn." + MD_ITEM_SEQ_COLUMN
+      + " and pn." + PUBLISHER_SEQ_COLUMN + " = pr." + PUBLISHER_SEQ_COLUMN
+      + " and min1." + NAME_COLUMN + " is null"
+      + " group by mit1." + MD_ITEM_TYPE_SEQ_COLUMN
+      + ", mit1." + TYPE_NAME_COLUMN
+      + ", au." + AU_KEY_COLUMN
+      + ", pl." + PLUGIN_ID_COLUMN
+      + ", pr." + PUBLISHER_NAME_COLUMN
+      + " order by \"col7\", \"col6\", \"col5\", \"ts2\", \"col3\", \"ts1\"";
+
+  // Query to find the publication date interval of an Archival Unit.
+  private static final String FIND_PUBLICATION_DATE_INTERVAL_QUERY = "select "
+      + "min(mi." + DATE_COLUMN + ") as earliest"
+      + ", max(mi." + DATE_COLUMN + ") as latest"
+      + " from " + MD_ITEM_TABLE + " mi"
+      + ", " + AU_MD_TABLE + " am"
+      + ", " + AU_TABLE
+      + ", " + PLUGIN_TABLE + " p"
+      + " where mi." + AU_MD_SEQ_COLUMN + " = am." + AU_MD_SEQ_COLUMN
+      + " and am." + AU_SEQ_COLUMN + " = au." + AU_SEQ_COLUMN
+      + " and " + AU_TABLE + "." + AU_KEY_COLUMN + " = ?"
+      + " and " + AU_TABLE + "." + PLUGIN_SEQ_COLUMN
+      + " = p." + PLUGIN_SEQ_COLUMN
+      + " and p." + PLUGIN_ID_COLUMN + " = ?";
+
+  // Query to retrieve all the different proprietary identifiers of all the
+  // publications with multiple proprietary identifiers.
+  private static final String GET_PUBLICATIONS_MULTIPLE_PIDS_QUERY =
+      "select n." + NAME_COLUMN
+      + ", pi." + PROPRIETARY_ID_COLUMN
+      + " from " + MD_ITEM_NAME_TABLE + " n"
+      + ", " + PROPRIETARY_ID_TABLE + " pi"
+      + ", " + PUBLICATION_TABLE + " pn"
+      + " where n." + MD_ITEM_SEQ_COLUMN + " = pn." + MD_ITEM_SEQ_COLUMN
+      + " and pn." + MD_ITEM_SEQ_COLUMN + " = pi." + MD_ITEM_SEQ_COLUMN
+      + " and n." + NAME_TYPE_COLUMN + " = 'primary'"
+      + " and pn." + MD_ITEM_SEQ_COLUMN + " in ("
+      + " select subq." + MD_ITEM_SEQ_COLUMN
+      + " from ("
+      + "select pn." + MD_ITEM_SEQ_COLUMN
+      + ", pi." + PROPRIETARY_ID_COLUMN
+      + " from " + PUBLICATION_TABLE + " pn"
+      + ", " + PROPRIETARY_ID_TABLE + " pi"
+      + " where pn." + MD_ITEM_SEQ_COLUMN + " = pi." + MD_ITEM_SEQ_COLUMN
+      + ") as subq"
+      + " group by subq." + MD_ITEM_SEQ_COLUMN
+      + " having count(subq." + MD_ITEM_SEQ_COLUMN + ") > 1)"
+      + " order by n." + NAME_COLUMN
+      + ", pi." + PROPRIETARY_ID_COLUMN;
+
   private DbManager dbManager;
   private MetadataManager metadataManager;
 
@@ -1329,9 +1632,9 @@ public class MetadataManagerSql {
   }
 
   /**
-   * Provides the number of publishers in the metadata database.
+   * Provides the number of providers in the metadata database.
    * 
-   * @return a long with the number of publishers in the metadata database.
+   * @return a long with the number of providers in the metadata database.
    * @throws DbException
    *           if any problem occurred accessing the database.
    */
@@ -1354,11 +1657,11 @@ public class MetadataManagerSql {
   }
 
   /**
-   * Provides the number of publishers in the metadata database.
+   * Provides the number of providers in the metadata database.
    * 
    * @param conn
    *          A Connection with the database connection to be used.
-   * @return a long with the number of publishers in the metadata database.
+   * @return a long with the number of providers in the metadata database.
    * @throws DbException
    *           if any problem occurred accessing the database.
    */
@@ -2088,100 +2391,6 @@ public class MetadataManagerSql {
     }
 
     if (log.isDebug2()) log.debug2(DEBUG_HEADER + "Done.");
-  }
-
-  /**
-   * Provides the identifier of a publisher.
-   * 
-   * @param conn
-   *          A Connection with the database connection to be used.
-   * @param publisher
-   *          A String with the publisher name.
-   * @return a Long with the identifier of the publisher.
-   * @throws DbException
-   *           if any problem occurred accessing the database.
-   */
-  Long findPublisher(Connection conn, String publisher) throws DbException {
-    final String DEBUG_HEADER = "findPublisher(): ";
-    if (log.isDebug2()) log.debug2(DEBUG_HEADER + "publisher = " + publisher);
-
-    Long publisherSeq = null;
-    ResultSet resultSet = null;
-
-    PreparedStatement findPublisher =
-	dbManager.prepareStatement(conn, FIND_PUBLISHER_QUERY);
-
-    try {
-      findPublisher.setString(1, publisher);
-
-      resultSet = dbManager.executeQuery(findPublisher);
-      if (resultSet.next()) {
-	publisherSeq = resultSet.getLong(PUBLISHER_SEQ_COLUMN);
-      }
-    } catch (SQLException sqle) {
-      String message = "Cannot find publisher";
-      log.error(message, sqle);
-      log.error("SQL = '" + FIND_PUBLISHER_QUERY + "'.");
-      log.error("publisher = '" + publisher + "'.");
-      throw new DbException(message, sqle);
-    } finally {
-      DbManager.safeCloseResultSet(resultSet);
-      DbManager.safeCloseStatement(findPublisher);
-    }
-
-    if (log.isDebug2())
-      log.debug2(DEBUG_HEADER + "publisherSeq = " + publisherSeq);
-    return publisherSeq;
-  }
-
-  /**
-   * Adds a publisher to the database.
-   * 
-   * @param conn
-   *          A Connection with the database connection to be used.
-   * @param publisher
-   *          A String with the publisher name.
-   * @return a Long with the identifier of the publisher just added.
-   * @throws DbException
-   *           if any problem occurred accessing the database.
-   */
-  Long addPublisher(Connection conn, String publisher) throws DbException {
-    final String DEBUG_HEADER = "addPublisher(): ";
-    if (log.isDebug2()) log.debug2(DEBUG_HEADER + "publisher = " + publisher);
-
-    Long publisherSeq = null;
-    ResultSet resultSet = null;
-    PreparedStatement insertPublisher = dbManager.prepareStatement(conn,
-	INSERT_PUBLISHER_QUERY, Statement.RETURN_GENERATED_KEYS);
-
-    try {
-      // skip auto-increment key field #0
-      insertPublisher.setString(1, publisher);
-      dbManager.executeUpdate(insertPublisher);
-      resultSet = insertPublisher.getGeneratedKeys();
-
-      if (!resultSet.next()) {
-	log.error("Unable to create publisher table row.");
-	return null;
-      }
-
-      publisherSeq = resultSet.getLong(1);
-      if (log.isDebug3())
-	log.debug3(DEBUG_HEADER + "Added publisherSeq = " + publisherSeq);
-    } catch (SQLException sqle) {
-      String message = "Cannot add publisher";
-      log.error(message, sqle);
-      log.error("SQL = '" + INSERT_PUBLISHER_QUERY + "'.");
-      log.error("publisher = '" + publisher + "'.");
-      throw new DbException(message, sqle);
-    } finally {
-      DbManager.safeCloseResultSet(resultSet);
-      DbManager.safeCloseStatement(insertPublisher);
-    }
-
-    if (log.isDebug2())
-      log.debug2(DEBUG_HEADER + "publisherSeq = " + publisherSeq);
-    return publisherSeq;
   }
 
   /**
@@ -3327,12 +3536,36 @@ public class MetadataManagerSql {
    */
   PreparedStatement getInsertPendingAuBatchStatement(Connection conn)
       throws DbException {
+    final String DEBUG_HEADER = "getInsertPendingAuBatchStatement(): ";
     if (dbManager.isTypeMysql()) {
+      if (log.isDebug3()) log.debug3(DEBUG_HEADER + "SQL = "
+	  + INSERT_ENABLED_PENDING_AU_MYSQL_QUERY);
       return dbManager.prepareStatement(conn,
 	  INSERT_ENABLED_PENDING_AU_MYSQL_QUERY);
     }
 
+    if (log.isDebug3())
+      log.debug3(DEBUG_HEADER + "SQL = " + INSERT_ENABLED_PENDING_AU_QUERY);
     return dbManager.prepareStatement(conn, INSERT_ENABLED_PENDING_AU_QUERY);
+  }
+
+  /**
+   * Provides the prepared statement used to insert pending AUs with the
+   * highest priority.
+   * 
+   * @param conn
+   *          A Connection with the database connection to be used.
+   * @return a PreparedStatement with the prepared statement used to insert
+   *         pending AUs with the highest priority.
+   */
+  PreparedStatement getPrioritizedInsertPendingAuBatchStatement(Connection conn)
+      throws DbException {
+    final String DEBUG_HEADER =
+	"getPrioritizedInsertPendingAuBatchStatement(): ";
+    if (log.isDebug3()) log.debug3(DEBUG_HEADER + "SQL = "
+	+ INSERT_HIGHEST_PRIORITY_PENDING_AU_QUERY);
+    return dbManager.prepareStatement(conn,
+	INSERT_HIGHEST_PRIORITY_PENDING_AU_QUERY);
   }
 
   /**
@@ -5514,5 +5747,522 @@ public class MetadataManagerSql {
     if (log.isDebug2()) log.debug2(DEBUG_HEADER
 	+ "unknownProviderAuIds.size() = " + unknownProviderAuIds.size());
     return unknownProviderAuIds;
+  }
+
+  /**
+   * Provides the journal articles in the database whose parent is not a
+   * journal.
+   * 
+   * @return a Collection<Map<String, String>> with the mismatched journal
+   *         articles sorted by Archival Unit, parent name and child name.
+   * @throws DbException
+   *           if any problem occurred accessing the database.
+   */
+  Collection<Map<String, String>> getMismatchedParentJournalArticles()
+      throws DbException {
+    return getMismatchedParentChildren(
+	GET_MISMATCHED_PARENT_JOURNAL_ARTICLES_QUERY);
+  }
+
+  /**
+   * Provides the book chapters in the database whose parent is not a book or a
+   * book series.
+   * 
+   * @return a Collection<Map<String, String>> with the mismatched book chapters
+   *         sorted by Archival Unit, parent name and child name.
+   * @throws DbException
+   *           if any problem occurred accessing the database.
+   */
+  Collection<Map<String, String>> getMismatchedParentBookChapters()
+      throws DbException {
+    return getMismatchedParentChildren(
+	GET_MISMATCHED_PARENT_BOOK_CHAPTERS_QUERY);
+  }
+
+  /**
+   * Provides the book volumes in the database whose parent is not a book or a
+   * book series.
+   * 
+   * @return a Collection<Map<String, String>> with the mismatched book volumes
+   *         sorted by Archival Unit, parent name and child name.
+   * @throws DbException
+   *           if any problem occurred accessing the database.
+   */
+  Collection<Map<String, String>> getMismatchedParentBookVolumes()
+      throws DbException {
+    return getMismatchedParentChildren(
+	GET_MISMATCHED_PARENT_BOOK_VOLUMES_QUERY);
+  }
+
+  /**
+   * Provides the children in the database with a mismatched parent.
+   * 
+   * @param A
+   *          String with the database query to be used.
+   * @return a Collection<Map<String, String>> with the mismatched children
+   *         sorted by Archival Unit, parent name and child name.
+   * @throws DbException
+   *           if any problem occurred accessing the database.
+   */
+  private Collection<Map<String, String>> getMismatchedParentChildren(
+      String query) throws DbException {
+    final String DEBUG_HEADER = "getMismatchedParentChildren(): ";
+    if (log.isDebug2()) log.debug2(DEBUG_HEADER + "query = " + query);
+    Collection<Map<String, String>> mismatchedChildren = null;
+    Connection conn = null;
+
+    try {
+      // Get a connection to the database.
+      conn = dbManager.getConnection();
+
+      // Get the children in the database with a mismatched parent.
+      mismatchedChildren = getMismatchedParentChildren(conn, query);
+    } finally {
+      DbManager.safeRollbackAndClose(conn);
+    }
+
+    if (log.isDebug2()) log.debug2(DEBUG_HEADER
+	+ "mismatchedChildren.size() = " + mismatchedChildren.size());
+    return mismatchedChildren;
+  }
+
+  /**
+   * Provides the children in the database with a mismatched parent.
+   * 
+   * @param conn
+   *          A Connection with the database connection to be used.
+   * @param A
+   *          String with the database query to be used.
+   * @return a Collection<Map<String, String>> with the mismatched children
+   *         sorted by Archival Unit, parent name and child name.
+   * @throws DbException
+   *           if any problem occurred accessing the database.
+   */
+  private Collection<Map<String, String>> getMismatchedParentChildren(
+      Connection conn, String query) throws DbException {
+    final String DEBUG_HEADER = "getMismatchedParentChildren(): ";
+    if (log.isDebug2()) log.debug2(DEBUG_HEADER + "query = " + query);
+    Collection<Map<String, String>> mismatchedChildren =
+	new ArrayList<Map<String, String>>();
+
+    PreparedStatement stmt = null;
+    ResultSet resultSet = null;
+
+    try {
+      stmt = dbManager.prepareStatement(conn, query);
+      resultSet = dbManager.executeQuery(stmt);
+
+      // Loop through the mismatched children. 
+      while (resultSet.next()) {
+	Map<String, String> mismatchedChild = new HashMap<String, String>();
+
+	String col1 = resultSet.getString("col1");
+	if (log.isDebug3()) log.debug3(DEBUG_HEADER + "col1 = " + col1);
+
+	mismatchedChild.put("col1", col1);
+
+	String col2 = resultSet.getString("col2");
+	if (log.isDebug3()) log.debug3(DEBUG_HEADER + "col2 = " + col2);
+
+	mismatchedChild.put("col2", col2);
+
+	String col3 = resultSet.getString("col3");
+	if (log.isDebug3()) log.debug3(DEBUG_HEADER + "col3 = " + col3);
+
+	mismatchedChild.put("col3", col3);
+
+	String col4 = resultSet.getString("col4");
+	if (log.isDebug3()) log.debug3(DEBUG_HEADER + "col4 = " + col4);
+
+	mismatchedChild.put("col4", col4);
+
+	String col5 = resultSet.getString("col5");
+	if (log.isDebug3()) log.debug3(DEBUG_HEADER + "col5 = " + col5);
+
+	mismatchedChild.put("col5", col5);
+
+	mismatchedChildren.add(mismatchedChild);
+      }
+    } catch (SQLException sqle) {
+      String message = "Cannot get the children with mismatched parents";
+      log.error(message, sqle);
+      log.error("SQL = '" + query + "'.");
+      throw new DbException(message, sqle);
+    } finally {
+      DbManager.safeCloseResultSet(resultSet);
+      DbManager.safeCloseStatement(stmt);
+    }
+
+    if (log.isDebug2()) log.debug2(DEBUG_HEADER
+	+ "mismatchedChildren.size() = " + mismatchedChildren.size());
+    return mismatchedChildren;
+  }
+
+  /**
+   * Provides the publishers linked to the Archival Unit identifier for the
+   * Archival Units in the database with multiple publishers.
+   * 
+   * @return a Map<String, Collection<String>> with the publishers keyed by the
+   *         Archival Unit identifier.
+   * @throws DbException
+   *           if any problem occurred accessing the database.
+   */
+  Map<String, Collection<String>> getAuIdsWithMultiplePublishers()
+      throws DbException {
+    final String DEBUG_HEADER = "getAuIdsWithMultiplePublishers(): ";
+    if (log.isDebug2()) log.debug2(DEBUG_HEADER + "Starting...");
+    Map<String, Collection<String>> ausPublishers = null;
+    Connection conn = null;
+
+    try {
+      // Get a connection to the database.
+      conn = dbManager.getConnection();
+
+      // Get the Archival Unit publishers.
+      ausPublishers = getAuIdsWithMultiplePublishers(conn);
+    } finally {
+      DbManager.safeRollbackAndClose(conn);
+    }
+
+    if (log.isDebug2()) log.debug2(DEBUG_HEADER + "ausPublishers.size() = "
+	+ ausPublishers.size());
+    return ausPublishers;
+  }
+
+  /**
+   * Provides the publishers linked to the Archival Unit identifier for the
+   * Archival Units in the database with multiple publishers.
+   * 
+   * @param conn
+   *          A Connection with the database connection to be used.
+   * @return a Map<String, Collection<String>> with the publishers keyed by the
+   *         Archival Unit identifier.
+   * @throws DbException
+   *           if any problem occurred accessing the database.
+   */
+  Map<String, Collection<String>> getAuIdsWithMultiplePublishers(
+      Connection conn) throws DbException {
+    final String DEBUG_HEADER = "getAuIdsWithMultiplePublishers(): ";
+    if (log.isDebug2()) log.debug2(DEBUG_HEADER + "Starting...");
+    Map<String, Collection<String>> ausPublishers =
+	new TreeMap<String, Collection<String>>();
+
+    PreparedStatement stmt = null;
+    ResultSet resultSet = null;
+
+    try {
+      String previousAuId = null;
+
+      // Get the Archival Unit publishers.
+      stmt =
+	  dbManager.prepareStatement(conn, GET_AUS_MULTIPLE_PUBLISHERS_QUERY);
+      resultSet = dbManager.executeQuery(stmt);
+
+      // Loop through the Archival Unit publishers. 
+      while (resultSet.next()) {
+	String pluginId = resultSet.getString(PLUGIN_ID_COLUMN);
+	if (log.isDebug3()) log.debug3(DEBUG_HEADER + "pluginId = " + pluginId);
+
+	String auKey = resultSet.getString(AU_KEY_COLUMN);
+	if (log.isDebug3()) log.debug3(DEBUG_HEADER + "auKey = " + auKey);
+
+	String auId = PluginManager.generateAuId(pluginId, auKey);
+	if (log.isDebug3()) log.debug3(DEBUG_HEADER + "auId = " + auId);
+
+	String publisherName = resultSet.getString(PUBLISHER_NAME_COLUMN);
+	if (log.isDebug3())
+	  log.debug3(DEBUG_HEADER + "publisherName = " + publisherName);
+
+	if (auId.equals(previousAuId)) {
+	  ausPublishers.get(auId).add(publisherName);
+	} else {
+	  Collection<String> auPublishers = new ArrayList<String>();
+	  auPublishers.add(publisherName);
+	  ausPublishers.put(auId, auPublishers);
+	  previousAuId = auId;
+	}
+      }
+    } catch (SQLException sqle) {
+      String message = "Cannot get the Archival Units publishers";
+      log.error(message, sqle);
+      log.error("SQL = '" + GET_AUS_MULTIPLE_PUBLISHERS_QUERY + "'.");
+      throw new DbException(message, sqle);
+    } finally {
+      DbManager.safeCloseResultSet(resultSet);
+      DbManager.safeCloseStatement(stmt);
+    }
+
+    if (log.isDebug2()) log.debug2(DEBUG_HEADER + "ausPublishers.size() = "
+	+ ausPublishers.size());
+    return ausPublishers;
+  }
+
+  /**
+   * Provides the metadata items in the database that have no name.
+   * 
+   * @return a Collection<Map<String, String>> with the unnamed metadata items
+   *         articles sorted by publisher, parent type, parent title and item
+   *         type.
+   * @throws DbException
+   *           if any problem occurred accessing the database.
+   */
+  Collection<Map<String, String>> getUnnamedItems() throws DbException {
+    final String DEBUG_HEADER = "getUnnamedItems(): ";
+    if (log.isDebug2()) log.debug2(DEBUG_HEADER + "Starting...");
+    Collection<Map<String, String>> unnamedItems = null;
+    Connection conn = null;
+
+    try {
+      // Get a connection to the database.
+      conn = dbManager.getConnection();
+
+      // Get the metadata items in the database that have no name.
+      unnamedItems = getUnnamedItems(conn);
+    } finally {
+      DbManager.safeRollbackAndClose(conn);
+    }
+
+    if (log.isDebug2()) log.debug2(DEBUG_HEADER
+	+ "unnamedItems.size() = " + unnamedItems.size());
+    return unnamedItems;
+  }
+
+  /**
+   * Provides the metadata items in the database that have no name.
+   * 
+   * @param conn
+   *          A Connection with the database connection to be used.
+   * @return a Collection<Map<String, String>> with the unnamed metadata items
+   *         articles sorted by publisher, parent type, parent title and item
+   *         type.
+   * @throws DbException
+   *           if any problem occurred accessing the database.
+   */
+  private Collection<Map<String, String>> getUnnamedItems(Connection conn)
+      throws DbException {
+    final String DEBUG_HEADER = "getUnnamedItems(): ";
+    if (log.isDebug2()) log.debug2(DEBUG_HEADER + "Starting...");
+    Collection<Map<String, String>> unnamedItems =
+	new ArrayList<Map<String, String>>();
+
+    PreparedStatement stmt = null;
+    ResultSet resultSet = null;
+
+    try {
+      stmt = dbManager.prepareStatement(conn, GET_UNNAMED_ITEMS_QUERY);
+      resultSet = dbManager.executeQuery(stmt);
+
+      // Loop through the unnamed items. 
+      while (resultSet.next()) {
+	Map<String, String> unnamedItem = new HashMap<String, String>();
+
+	String col1 = "" + resultSet.getInt("col1");
+	if (log.isDebug3()) log.debug3(DEBUG_HEADER + "col1 = " + col1);
+
+	unnamedItem.put("col1", col1);
+
+	String col2 = resultSet.getString("col2");
+	if (log.isDebug3()) log.debug3(DEBUG_HEADER + "col2 = " + col2);
+
+	unnamedItem.put("col2", col2);
+
+	String col3 = resultSet.getString("col3");
+	if (log.isDebug3()) log.debug3(DEBUG_HEADER + "col3 = " + col3);
+
+	unnamedItem.put("col3", col3);
+
+	String col4 = resultSet.getString("col4");
+	if (log.isDebug3()) log.debug3(DEBUG_HEADER + "col4 = " + col4);
+
+	unnamedItem.put("col4", col4);
+
+	String col5 = resultSet.getString("col5");
+	if (log.isDebug3()) log.debug3(DEBUG_HEADER + "col5 = " + col5);
+
+	unnamedItem.put("col5", col5);
+
+	String col6 = resultSet.getString("col6");
+	if (log.isDebug3()) log.debug3(DEBUG_HEADER + "col6 = " + col6);
+
+	unnamedItem.put("col6", col6);
+
+	String col7 = resultSet.getString("col7");
+	if (log.isDebug3()) log.debug3(DEBUG_HEADER + "col7 = " + col7);
+
+	unnamedItem.put("col7", col7);
+
+	unnamedItems.add(unnamedItem);
+      }
+    } catch (SQLException sqle) {
+      String message = "Cannot get the unnamed items";
+      log.error(message, sqle);
+      log.error("SQL = '" + GET_UNNAMED_ITEMS_QUERY + "'.");
+      throw new DbException(message, sqle);
+    } finally {
+      DbManager.safeCloseResultSet(resultSet);
+      DbManager.safeCloseStatement(stmt);
+    }
+
+    if (log.isDebug2()) log.debug2(DEBUG_HEADER
+	+ "unnamedItems.size() = " + unnamedItems.size());
+    return unnamedItems;
+  }
+
+  /**
+   * Provides the earliest and latest publication dates of all the metadata
+   * items included in an Archival Unit.
+   * 
+   * @param conn
+   *          A Connection with the database connection to be used.
+   * @param pluginId
+   *          A String with the plugin identifier.
+   * @param auKey
+   *          A String with the Archival Unit key.
+   * @return a KeyPair with the earliest and latest publication dates.
+   * @throws DbException
+   *           if any problem occurred accessing the database.
+   */
+  KeyPair findPublicationDateInterval(Connection conn, String pluginId,
+      String auKey) throws DbException {
+    final String DEBUG_HEADER = "findPublicationDateInterval(): ";
+    if (log.isDebug2()) {
+      log.debug2(DEBUG_HEADER + "pluginId = " + pluginId);
+      log.debug2(DEBUG_HEADER + "auKey = " + auKey);
+    }
+
+    KeyPair publicationInterval = null;
+
+    PreparedStatement stmt = null;
+    ResultSet resultSet = null;
+
+    try {
+      stmt = dbManager.prepareStatement(conn,
+	  FIND_PUBLICATION_DATE_INTERVAL_QUERY);
+      stmt.setString(1, auKey);
+      stmt.setString(2, pluginId);
+
+      resultSet = dbManager.executeQuery(stmt);
+
+      // Get the single result. 
+      if (resultSet.next()) {
+	String earliest = resultSet.getString("earliest");
+	if (log.isDebug3()) log.debug3(DEBUG_HEADER + "earliest = " + earliest);
+
+	String latest = resultSet.getString("latest");
+	if (log.isDebug3()) log.debug3(DEBUG_HEADER + "latest = " + latest);
+
+	// Handle the case where the earliest value is wider than the latest.
+	if (latest.startsWith(earliest)) {
+	  latest = earliest;
+	}
+
+	publicationInterval = new KeyPair(earliest, latest);
+      }
+    } catch (SQLException sqle) {
+      String message = "Cannot find publication date interval";
+      log.error(message, sqle);
+      log.error("SQL = '" + FIND_PUBLICATION_DATE_INTERVAL_QUERY + "'.");
+      throw new DbException(message, sqle);
+    } finally {
+      DbManager.safeCloseResultSet(resultSet);
+      DbManager.safeCloseStatement(stmt);
+    }
+
+    if (log.isDebug2()) log.debug2(DEBUG_HEADER + "publicationInterval = '"
+	+ publicationInterval.car + "' - '" + publicationInterval.cdr + "'");
+
+    return publicationInterval;
+  }
+
+  /**
+   * Provides the proprietary identifiers for the publications in the database
+   * with multiple proprietary identifiers.
+   * 
+   * @return a Map<String, Collection<String>> with the proprietary identifiers
+   *         keyed by the publication name.
+   * @throws DbException
+   *           if any problem occurred accessing the database.
+   */
+  Map<String, Collection<String>> getPublicationsWithMultiplePids()
+      throws DbException {
+    final String DEBUG_HEADER = "getPublicationsWithMultiplePids(): ";
+    if (log.isDebug2()) log.debug2(DEBUG_HEADER + "Starting...");
+    Map<String, Collection<String>> publicationsPids = null;
+    Connection conn = null;
+
+    try {
+      // Get a connection to the database.
+      conn = dbManager.getConnection();
+
+      // Get the publication proprietary identifiers.
+      publicationsPids = getPublicationsWithMultiplePids(conn);
+    } finally {
+      DbManager.safeRollbackAndClose(conn);
+    }
+
+    if (log.isDebug2()) log.debug2(DEBUG_HEADER
+	+ "publicationsPids.size() = " + publicationsPids.size());
+    return publicationsPids;
+  }
+
+  /**
+   * Provides the proprietary identifiers for the publications in the database
+   * with multiple proprietary identifiers.
+   * 
+   * @return a Map<String, Collection<String>> with the proprietary identifiers
+   *         keyed by the publication name.
+   * @throws DbException
+   *           if any problem occurred accessing the database.
+   */
+  Map<String, Collection<String>> getPublicationsWithMultiplePids(
+      Connection conn) throws DbException {
+    final String DEBUG_HEADER = "getPublicationsWithMultiplePids(): ";
+    if (log.isDebug2()) log.debug2(DEBUG_HEADER + "Starting...");
+    Map<String, Collection<String>> publicationsPids =
+	new TreeMap<String, Collection<String>>();
+
+    PreparedStatement stmt = null;
+    ResultSet resultSet = null;
+
+    try {
+      String previousPublicationName = null;
+
+      // Get the publication proprietary identifiers.
+      stmt = dbManager.prepareStatement(conn,
+	  GET_PUBLICATIONS_MULTIPLE_PIDS_QUERY);
+      resultSet = dbManager.executeQuery(stmt);
+
+      // Loop through the publication proprietary identifiers. 
+      while (resultSet.next()) {
+	String publicationName = resultSet.getString(NAME_COLUMN);
+	if (log.isDebug3())
+	  log.debug3(DEBUG_HEADER + "publicationName = " + publicationName);
+
+	String proprietaryId = resultSet.getString(PROPRIETARY_ID_COLUMN);
+	if (log.isDebug3())
+	  log.debug3(DEBUG_HEADER + "proprietaryId = " + proprietaryId);
+
+	if (publicationName.equals(previousPublicationName)) {
+	  publicationsPids.get(publicationName).add(proprietaryId);
+	} else {
+	  Collection<String> publicationPids = new ArrayList<String>();
+	  publicationPids.add(proprietaryId);
+	  publicationsPids.put(publicationName, publicationPids);
+	  previousPublicationName = publicationName;
+	}
+      }
+    } catch (SQLException sqle) {
+      String message = "Cannot get the publications proprietary identifiers";
+      log.error(message, sqle);
+      log.error("SQL = '" + GET_PUBLICATIONS_MULTIPLE_PIDS_QUERY + "'.");
+      throw new DbException(message, sqle);
+    } finally {
+      DbManager.safeCloseResultSet(resultSet);
+      DbManager.safeCloseStatement(stmt);
+    }
+
+    if (log.isDebug2()) log.debug2(DEBUG_HEADER
+	+ "publicationsPids.size() = " + publicationsPids.size());
+    return publicationsPids;
   }
 }

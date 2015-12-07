@@ -115,15 +115,20 @@ public class ScHtmlHashFilterFactory implements FilterFactory {
                                              new OrFilter(HtmlNodeFilters.tagWithAttribute("div", "class", "tableCaption"), // [SPIE article/tables]
                                                           HtmlNodeFilters.tagWithAttributeRegex("span", "class", "^Table "))), // [AMA article/tables]
             HtmlNodeFilters.tagWithAttributeRegex("span", "class", "^Figure "), // freeform, e.g. http://jama.jamanetwork.com/article.aspx?articleid=1487499 [AMA]
-            // DROP Letters (7), CME (8) and Responses (10) tabs and panels [AMA article]
-            // [SPIE]: not sure how these work there yet
-            HtmlNodeFilters.tagWithAttributeRegex("div", "class", "tab(7|8|10)Div"),
-            HtmlNodeFilters.tagWithAttributeRegex("div", "id", "^tab(7|8|10)$"),
+            // DROP Letters(7), CME(8), Citing(9) & Responses(10) tabs and panels [AMA  article]
+            // DROP Figures(3),Tables(4) because they are in random order when presented outside
+            // of the Article(1) view
+            // [SPIE]: has only (10) for now
+            HtmlNodeFilters.tagWithAttributeRegex("div", "class", "tab(3|4|7|8|9|10)Div"),
+            HtmlNodeFilters.tagWithAttributeRegex("div", "id", "^tab(3|4|7|8|9|10)$"),
             // DROP external links in References [AMA/SPIE article/references]
             HtmlNodeFilters.tagWithAttributeRegex("span", "class", "pubmedLink"), // [AMA article/references]
             HtmlNodeFilters.tagWithAttributeRegex("span", "class", "crossrefDoi"), // [AMA/SPIE article/references]
             // First page preview sometimes appears, sometimes not [AMA article]
             HtmlNodeFilters.tagWithAttribute("div", "id", "divFirstPagePreview"),
+            HtmlNodeFilters.tagWithAttribute("div", "class", "adPortlet"), // rightside ads
+            HtmlNodeFilters.tagWithAttribute("div", "class", "portletContentHolder"), // rightside
+            // related content and metrics
         }))
       )
     );

@@ -42,10 +42,7 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.nio.charset.Charset;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -87,6 +84,7 @@ import org.lockss.remote.RemoteApi.BatchAuStatus;
 import org.lockss.util.Logger;
 import org.lockss.util.MetadataUtil;
 import org.lockss.util.PlatformUtil;
+import org.lockss.util.RateLimiter;
 import org.lockss.util.StringUtil;
 
 /**
@@ -117,210 +115,88 @@ public class SubscriptionManager extends BaseLockssDaemonManager implements
   public static final boolean DEFAULT_SUBSCRIPTION_ENABLED = false;
 
   /**
-   * Maximum number of retries for transient SQL exceptions.
+   * Repository available space threshold.
+   * <p />
+   * Defaults to 0.
    */
   public static final String PARAM_REPOSITORY_AVAIL_SPACE_THRESHOLD =
       PREFIX + "repositoryAvailSpaceThreshold";
+
+  /**
+   * Default value of the repository available space threshold configuration
+   * parameter.
+   */
   public static final int DEFAULT_REPOSITORY_AVAIL_SPACE_THRESHOLD = 0;
 
-  // Query to find a subscription by its publication and provider.
-  private static final String FIND_SUBSCRIPTION_QUERY = "select "
-      + SUBSCRIPTION_SEQ_COLUMN
-      + " from " + SUBSCRIPTION_TABLE
-      + " where " + PUBLICATION_SEQ_COLUMN + " = ?"
-      + " and " + PROVIDER_SEQ_COLUMN + " = ?";
+  /**
+   * Batch size to configure archival units.
+   * <p />
+   * Defaults to 1000.
+   */
+  public static final String PARAM_SUBSCRIPTION_AU_CONFIGURATION_BATCH_SIZE =
+      PREFIX + "auConfigurationBatchSize";
 
-  // Query to add a subscription.
-  private static final String INSERT_SUBSCRIPTION_QUERY = "insert into "
-      + SUBSCRIPTION_TABLE
-      + "(" + SUBSCRIPTION_SEQ_COLUMN
-      + "," + PUBLICATION_SEQ_COLUMN
-      + "," + PROVIDER_SEQ_COLUMN
-      + ") values (default,?,?)";
+  /**
+   * Default value of the configuration parameter with the batch size used to
+   * configure archival units.
+   */
+  public static final int DEFAULT_SUBSCRIPTION_AU_CONFIGURATION_BATCH_SIZE =
+      1000;
 
-  // Query to find the subscription ranges of a publication.
-  private static final String FIND_SUBSCRIPTION_RANGES_QUERY = "select "
-      + SUBSCRIPTION_RANGE_COLUMN
-      + "," + RANGE_IDX_COLUMN
-      + " from " + SUBSCRIPTION_RANGE_TABLE
-      + " where " + SUBSCRIPTION_SEQ_COLUMN + " = ?"
-      + " and " + SUBSCRIBED_COLUMN + " = ?"
-      + " order by " + RANGE_IDX_COLUMN;
+  /**
+   * Maximum rate at which we will configure archival units.
+   * <p />
+   * Defaults to 1000/1m.
+   */
+  public static final String PARAM_SUBSCRIPTION_AU_CONFIGURATION_RATE =
+      PREFIX + "auConfigurationRate";
 
-  // Query to add a subscription range.
-  private static final String INSERT_SUBSCRIPTION_RANGE_QUERY = "insert into "
-      + SUBSCRIPTION_RANGE_TABLE
-      + "(" + SUBSCRIPTION_SEQ_COLUMN
-      + "," + SUBSCRIPTION_RANGE_COLUMN
-      + "," + SUBSCRIBED_COLUMN
-      + "," + RANGE_IDX_COLUMN
-      + ") values (?,?,?,"
-      + "(select coalesce(max(" + RANGE_IDX_COLUMN + "), 0) + 1"
-      + " from " + SUBSCRIPTION_RANGE_TABLE
-      + " where " + SUBSCRIPTION_SEQ_COLUMN + " = ?"
-      + " and " + SUBSCRIBED_COLUMN + " = ?))";
+  /**
+   * Default value of the configuration parameter with the maximum rate at which
+   * we will configure archival units.
+   */
+  public static final String DEFAULT_SUBSCRIPTION_AU_CONFIGURATION_RATE =
+      "1000/1m";
 
-  // Query to add a subscription range using MySQL.
-  private static final String INSERT_SUBSCRIPTION_RANGE_MYSQL_QUERY = "insert "
-      + "into " + SUBSCRIPTION_RANGE_TABLE
-      + "(" + SUBSCRIPTION_SEQ_COLUMN
-      + "," + SUBSCRIPTION_RANGE_COLUMN
-      + "," + SUBSCRIBED_COLUMN
-      + "," + RANGE_IDX_COLUMN
-      + ") values (?,?,?,"
-      + "(select next_idx from "
-      + "(select coalesce(max(" + RANGE_IDX_COLUMN + "), 0) + 1 as next_idx"
-      + " from " + SUBSCRIPTION_RANGE_TABLE
-      + " where " + SUBSCRIPTION_SEQ_COLUMN + " = ?"
-      + " and " + SUBSCRIBED_COLUMN + " = ?) as temp_sub_range_table))";
+  /**
+   * Indication of whether the Total Subscription option is enabled.
+   * <p />
+   * Defaults to false.
+   */
+  public static final String PARAM_TOTAL_SUBSCRIPTION_ENABLED =
+      PREFIX + "totalSubscriptionEnabled";
 
-  // Query to delete all of the ranges of one type of a subscription.
-  private static final String DELETE_ALL_SUBSCRIPTION_RANGES_TYPE_QUERY =
-      "delete"
-      + " from " + SUBSCRIPTION_RANGE_TABLE
-      + " where " + SUBSCRIPTION_SEQ_COLUMN + " = ?"
-      + " and " + SUBSCRIBED_COLUMN + " = ?";
-
-  // Query to delete all of the ranges of a subscription.
-  private static final String DELETE_ALL_SUBSCRIPTION_RANGES_QUERY = "delete"
-      + " from " + SUBSCRIPTION_RANGE_TABLE
-      + " where " + SUBSCRIPTION_SEQ_COLUMN + " = ?";
-
-  // Query to find all the subscriptions and their publisher.
-  private static final String FIND_ALL_SUBSCRIPTIONS_AND_PUBLISHERS_QUERY =
-      "select distinct"
-      + " pu." + PUBLISHER_NAME_COLUMN
-      + ",n." + NAME_COLUMN
-      + ",pr." + PROVIDER_LID_COLUMN
-      + ",pr." + PROVIDER_NAME_COLUMN
-      + " from " + SUBSCRIPTION_RANGE_TABLE + " sr"
-      + "," + SUBSCRIPTION_TABLE + " s"
-      + "," + PUBLISHER_TABLE + " pu"
-      + "," + PUBLICATION_TABLE + " p"
-      + "," + MD_ITEM_NAME_TABLE + " n"
-      + "," + PROVIDER_TABLE + " pr"
-      + " where sr." + SUBSCRIPTION_SEQ_COLUMN + " = s."
-      + SUBSCRIPTION_SEQ_COLUMN
-      + " and s." + PUBLICATION_SEQ_COLUMN + " = p." + PUBLICATION_SEQ_COLUMN
-      + " and p." + PUBLISHER_SEQ_COLUMN + " = pu." + PUBLISHER_SEQ_COLUMN
-      + " and p." + MD_ITEM_SEQ_COLUMN + " = n." + MD_ITEM_SEQ_COLUMN
-      + " and s." + PROVIDER_SEQ_COLUMN + " = pr." + PROVIDER_SEQ_COLUMN
-      + " order by pu." + PUBLISHER_NAME_COLUMN
-      + ",n." + NAME_COLUMN
-      + ",pr." + PROVIDER_NAME_COLUMN;
-
-  // Query to find all the subscriptions and their ranges.
-  private static final String FIND_ALL_SUBSCRIPTIONS_AND_RANGES_QUERY = "select"
-      + " distinct s." + SUBSCRIPTION_SEQ_COLUMN
-      + ",n." + NAME_COLUMN
-      + ",pi." + PROPRIETARY_ID_COLUMN
-      + ",pu." + PUBLISHER_NAME_COLUMN
-      + ",pr." + PROVIDER_LID_COLUMN
-      + ",pr." + PROVIDER_NAME_COLUMN
-      + ",sr." + SUBSCRIPTION_RANGE_COLUMN
-      + ",sr." + SUBSCRIBED_COLUMN
-      + ",sr." + RANGE_IDX_COLUMN
-      + ",i1." + ISSN_COLUMN + " as " + P_ISSN_TYPE
-      + ",i2." + ISSN_COLUMN + " as " + E_ISSN_TYPE
-      + " from " + SUBSCRIPTION_TABLE + " s"
-      + "," + PUBLICATION_TABLE + " p"
-      + "," + PUBLISHER_TABLE + " pu"
-      + "," + MD_ITEM_NAME_TABLE + " n"
-      + "," + PROVIDER_TABLE + " pr"
-      + "," + SUBSCRIPTION_RANGE_TABLE + " sr"
-      + "," + MD_ITEM_TABLE + " mi"
-      + " left outer join " + ISSN_TABLE + " i1"
-      + " on mi." + MD_ITEM_SEQ_COLUMN + " = i1." + MD_ITEM_SEQ_COLUMN
-      + " and i1." + ISSN_TYPE_COLUMN + " = '" + P_ISSN_TYPE + "'"
-      + " left outer join " + ISSN_TABLE + " i2"
-      + " on mi." + MD_ITEM_SEQ_COLUMN + " = i2." + MD_ITEM_SEQ_COLUMN
-      + " and i2." + ISSN_TYPE_COLUMN + " = '" + E_ISSN_TYPE + "'"
-      + " left outer join " + PROPRIETARY_ID_TABLE + " pi"
-      + " on mi." + MD_ITEM_SEQ_COLUMN + " = pi." + MD_ITEM_SEQ_COLUMN
-      + " where s." + PUBLICATION_SEQ_COLUMN + " = p." + PUBLICATION_SEQ_COLUMN
-      + " and p." + PUBLISHER_SEQ_COLUMN + " = pu." + PUBLISHER_SEQ_COLUMN
-      + " and p." + MD_ITEM_SEQ_COLUMN + " = mi." + MD_ITEM_SEQ_COLUMN
-      + " and p." + MD_ITEM_SEQ_COLUMN + " = n." + MD_ITEM_SEQ_COLUMN
-      + " and n." + NAME_TYPE_COLUMN + " = 'primary'"
-      + " and s." + PROVIDER_SEQ_COLUMN + " = pr." + PROVIDER_SEQ_COLUMN
-      + " and s." + SUBSCRIPTION_SEQ_COLUMN + " = sr." + SUBSCRIPTION_SEQ_COLUMN
-      + " order by pu." + PUBLISHER_NAME_COLUMN
-      + ",n." + NAME_COLUMN
-      + ",pr." + PROVIDER_NAME_COLUMN
-      + ",sr." + SUBSCRIPTION_RANGE_COLUMN
-      + ",sr." + SUBSCRIBED_COLUMN
-      + ",sr." + RANGE_IDX_COLUMN
-      + ",pi." + PROPRIETARY_ID_COLUMN;
-
-  // Query to get the subscription ranges.
-  private static final String FIND_ALL_SUBSCRIPTION_RANGES_QUERY = "select "
-      + SUBSCRIPTION_SEQ_COLUMN
-      + " from " + SUBSCRIPTION_RANGE_TABLE;
+  /**
+   * Default value of Total Subscription configuration parameter.
+   * <p />
+   * <code>false</code> to disable, <code>true</code> to enable.
+   */
+  public static final boolean DEFAULT_TOTAL_SUBSCRIPTION_ENABLED = false;
 
   private static final String CANNOT_CONNECT_TO_DB_ERROR_MESSAGE =
       "Cannot connect to the database";
 
-  private static final String CANNOT_CHECK_FIRST_RUN_ERROR_MESSAGE = "Cannot "
-      + "determine whether this is the first run of the subscription manager";
-
   private static final String CANNOT_ROLL_BACK_DB_CONNECTION_ERROR_MESSAGE =
       "Cannot rollback the connection";
 
+  private static final String CANNOT_DELETE_TOTAL_SUBSCRIPTION_ERROR_MESSAGE =
+      "Cannot delete Total Subscription";
+
+  private static final String CANNOT_UPDATE_TOTAL_SUBSCRIPTION_ERROR_MESSAGE =
+      "Cannot update Total Subscription";
+
+  // The name of the file used to back-up publisher subscriptions.
+  private static final String PUBLISHER_SUBSCRIPTION_BACKUP_FILENAME =
+      "pubsubscriptions.bak";
+
   // The name of the file used for back-up purposes.
-  private static final String BACKUP_FILENAME = "subscriptions.bak";
-
-  // Query to find all the subscription data for backup purposes.
-  private static final String FIND_SUBSCRIPTION_BACKUP_DATA_QUERY = "select"
-      + " distinct pu." + PUBLISHER_NAME_COLUMN
-      + ",pi." + PROPRIETARY_ID_COLUMN
-      + ",n." + NAME_COLUMN
-      + ",pr." + PROVIDER_LID_COLUMN
-      + ",pr." + PROVIDER_NAME_COLUMN
-      + ",i1." + ISSN_COLUMN + " as " + P_ISSN_TYPE
-      + ",i2." + ISSN_COLUMN + " as " + E_ISSN_TYPE
-      + ",sr." + SUBSCRIPTION_RANGE_COLUMN
-      + ",sr." + SUBSCRIBED_COLUMN
-      + ",sr." + RANGE_IDX_COLUMN
-      + " from " + SUBSCRIPTION_RANGE_TABLE + " sr"
-      + "," + SUBSCRIPTION_TABLE + " s"
-      + "," + PUBLISHER_TABLE + " pu"
-      + "," + PUBLICATION_TABLE + " p"
-      + "," + MD_ITEM_NAME_TABLE + " n"
-      + "," + PROVIDER_TABLE + " pr"
-      + "," + MD_ITEM_TABLE + " mi"
-      + " left outer join " + ISSN_TABLE + " i1"
-      + " on mi." + MD_ITEM_SEQ_COLUMN + " = i1." + MD_ITEM_SEQ_COLUMN
-      + " and i1." + ISSN_TYPE_COLUMN + " = '" + P_ISSN_TYPE + "'"
-      + " left outer join " + ISSN_TABLE + " i2"
-      + " on mi." + MD_ITEM_SEQ_COLUMN + " = i2." + MD_ITEM_SEQ_COLUMN
-      + " and i2." + ISSN_TYPE_COLUMN + " = '" + E_ISSN_TYPE + "'"
-      + " left outer join " + PROPRIETARY_ID_TABLE + " pi"
-      + " on mi." + MD_ITEM_SEQ_COLUMN + " = pi." + MD_ITEM_SEQ_COLUMN
-      + " where sr." + SUBSCRIPTION_SEQ_COLUMN + " = s."
-      + SUBSCRIPTION_SEQ_COLUMN
-      + " and s." + PUBLICATION_SEQ_COLUMN + " = p." + PUBLICATION_SEQ_COLUMN
-      + " and p." + PUBLISHER_SEQ_COLUMN + " = pu." + PUBLISHER_SEQ_COLUMN
-      + " and p." + MD_ITEM_SEQ_COLUMN + " = mi." + MD_ITEM_SEQ_COLUMN
-      + " and mi." + MD_ITEM_SEQ_COLUMN + " = n." + MD_ITEM_SEQ_COLUMN
-      + " and n." + NAME_TYPE_COLUMN + " = '" + PRIMARY_NAME_TYPE + "'"
-      + " and s." + PROVIDER_SEQ_COLUMN + " = pr." + PROVIDER_SEQ_COLUMN
-      + " order by pu." + PUBLISHER_NAME_COLUMN
-      + ",n." + NAME_COLUMN
-      + ",pr." + PROVIDER_NAME_COLUMN
-      + ",sr." + SUBSCRIPTION_RANGE_COLUMN
-      + ",sr." + SUBSCRIBED_COLUMN
-      + ",sr." + RANGE_IDX_COLUMN
-      + ",pi." + PROPRIETARY_ID_COLUMN;
-
-  // Query to update the type of a subscription range.
-  private static final String UPDATE_SUBSCRIPTION_RANGE_TYPE_QUERY = "update "
-      + SUBSCRIPTION_RANGE_TABLE
-      + " set " + SUBSCRIBED_COLUMN + " = ?"
-      + " where " + SUBSCRIPTION_SEQ_COLUMN + " = ?"
-      + " and " + SUBSCRIPTION_RANGE_COLUMN + " = ?";
+  private static final String SUBSCRIPTION_BACKUP_FILENAME =
+      "subscriptions.bak";
 
   // The field separator in the subscription backup file.
   private static final String BACKUP_FIELD_SEPARATOR = "\t";
+
+  static final String ALL_PUBLISHERS_NAME = "SUBSCRIPTIONS ALL PUBLISHERS";
 
   // The database manager.
   private DbManager dbManager = null;
@@ -337,19 +213,6 @@ public class SubscriptionManager extends BaseLockssDaemonManager implements
   // An indication of whether this object is ready to be used.
   private boolean ready = false;
 
-  // The current TdbTitle when processing multiple TdbAus.
-  private TdbTitle currentTdbTitle;
-
-  // The current list of subscribed ranges when processing multiple TdbAus.
-  private List<BibliographicPeriod> currentSubscribedRanges;
-
-  // The current list of unsubscribed ranges when processing multiple TdbAus.
-  private List<BibliographicPeriod> currentUnsubscribedRanges;
-
-  // The current set of TdbAus matched by the subscribed ranges and not matched
-  // by the unsubscribed ranges when processing multiple TdbAus.
-  private Set<TdbAu> currentCoveredTdbAus;
-
   // The list of repositories to use when configuring AUs.
   private List<String> repositories = null;
 
@@ -358,6 +221,27 @@ public class SubscriptionManager extends BaseLockssDaemonManager implements
 
   // The handler for Archival Unit events.
   private AuEventHandler auEventHandler;
+
+  // The size of the batch used to configure archival units.
+  private int configureAuBatchSize = 1000;
+
+  // Pacer used to limit the rate at which archival units are configured.
+  private RateLimiter configureAuRateLimiter;
+
+  private boolean isTotalSubscriptionEnabled = false;
+
+  // The setting of the Total Subscription feature.
+  private Boolean isTotalSubscription = null; 
+
+  // The thread that processes archival units in a collection to configure them
+  // or not depending on subscription settings.
+  private SubscriptionStarter starter = null;
+  private Thread starterThread = null;
+
+  // The thread that processes archival units in a collection to configure them
+  // regardless of other considerations.
+  private SubscriptionStarter mustConfigureStarter = null;
+  private Thread mustConfigureStarterThread = null;
 
   // Sorter of publications.
   private static Comparator<SerialPublication> PUBLICATION_COMPARATOR =
@@ -395,6 +279,9 @@ public class SubscriptionManager extends BaseLockssDaemonManager implements
     }
   };
 
+  // The SQL code executor.
+  private SubscriptionManagerSql subManagerSql;
+
   /**
    * Starts the SubscriptionManager service.
    */
@@ -421,6 +308,7 @@ public class SubscriptionManager extends BaseLockssDaemonManager implements
     pluginManager = getDaemon().getPluginManager();
     mdManager = getDaemon().getMetadataManager();
     remoteApi = getDaemon().getRemoteApi();
+    subManagerSql = new SubscriptionManagerSql(dbManager);
 
     // Register the event handler to receive Archival Unit removal notifications
     // and to be able to unsubscribe such Archival Units, if necessary.
@@ -458,6 +346,65 @@ public class SubscriptionManager extends BaseLockssDaemonManager implements
       }
     };
 
+    Connection conn;
+
+    // Get a connection to the database.
+    try {
+      conn = dbManager.getConnection();
+    } catch (DbException ex) {
+      log.error(CANNOT_CONNECT_TO_DB_ERROR_MESSAGE, ex);
+      return;
+    }
+
+    // Check whether the Total Subscription feature is enabled.
+    if (isTotalSubscriptionEnabled) {
+      // Yes: Determine the Total Subscription setting.
+      boolean success = false;
+
+      try {
+	isTotalSubscription = findTotalSubscription(conn);
+	success = true;
+      } catch (DbException dbe) {
+	String errorMessage = "Cannot find the Total Subscription setting";
+	log.error(errorMessage, dbe);
+      } finally {
+	if (success) {
+	  try {
+	    conn.commit();
+	    DbManager.safeCloseConnection(conn);
+	  } catch (SQLException sqle) {
+	    log.error("Exception caught committing the connection", sqle);
+	    DbManager.safeRollbackAndClose(conn);
+	    success = false;
+	  }
+	} else {
+	  DbManager.safeRollbackAndClose(conn);
+	}
+      }
+
+      if (!success) {
+        return;
+      }
+    } else {
+      // No: Remove any old setting from the database.
+      try {
+	Long publisherSeq = dbManager.findPublisher(conn, ALL_PUBLISHERS_NAME);
+	if (log.isDebug3())
+	  log.debug3(DEBUG_HEADER + "publisherSeq = " + publisherSeq);
+
+	if (publisherSeq != null) {
+	  int deletedCount =
+	      subManagerSql.deletePublisherSubscription(conn, publisherSeq);
+	  if (log.isDebug3())
+	    log.debug3(DEBUG_HEADER + "deletedCount = " + deletedCount);
+
+	  DbManager.commitOrRollback(conn, log);
+	}
+      } catch (DbException dbe) {
+	log.error(CANNOT_DELETE_TOTAL_SUBSCRIPTION_ERROR_MESSAGE, dbe);
+      }
+    }
+
     pluginManager.registerAuEventHandler(auEventHandler);
     ready = true;
 
@@ -493,17 +440,86 @@ public class SubscriptionManager extends BaseLockssDaemonManager implements
     // Force a re-calculation of the relative weights of the repositories.
     repositories = null;
 
-    // On daemon startup, perform the handling of configuration changes in its
-    // own thread.
-    if (!isReady()) {
-      SubscriptionStarter starter =
-	  new SubscriptionStarter(this, newConfig, prevConfig, changedKeys);
-      new Thread(starter).start();
+    if (changedKeys.contains(PARAM_SUBSCRIPTION_AU_CONFIGURATION_BATCH_SIZE)) {
+      configureAuBatchSize =
+	  newConfig.getInt(PARAM_SUBSCRIPTION_AU_CONFIGURATION_BATCH_SIZE,
+	  DEFAULT_SUBSCRIPTION_AU_CONFIGURATION_BATCH_SIZE);
+      if (log.isDebug3()) log.debug3(DEBUG_HEADER + "configureAuBatchSize = "
+		+ configureAuBatchSize);
+    }
+
+    if (changedKeys.contains(PARAM_SUBSCRIPTION_AU_CONFIGURATION_RATE)) {
+      configureAuRateLimiter = RateLimiter.getConfiguredRateLimiter(newConfig,
+	  configureAuRateLimiter, PARAM_SUBSCRIPTION_AU_CONFIGURATION_RATE,
+	  DEFAULT_SUBSCRIPTION_AU_CONFIGURATION_RATE);
+      if (log.isDebug3()) log.debug3(DEBUG_HEADER + "configureAuRateLimiter = "
+		+ configureAuRateLimiter);
+    }
+
+    if (changedKeys.contains(PARAM_TOTAL_SUBSCRIPTION_ENABLED)) {
+      isTotalSubscriptionEnabled =
+	  newConfig.getBoolean(PARAM_TOTAL_SUBSCRIPTION_ENABLED,
+	  DEFAULT_TOTAL_SUBSCRIPTION_ENABLED);
+      if (log.isDebug3()) log.debug3(DEBUG_HEADER
+	  + "isTotalSubscriptionEnabled = " + isTotalSubscriptionEnabled);
+
+      isTotalSubscription = null;
+
+      if (!isTotalSubscriptionEnabled && dbManager != null
+	  && dbManager.isReady()) {
+	updateTotalSubscription(null, new SubscriptionOperationStatus());
+      }
+    }
+
+    // Check whether the handling of configuration changes should be done in a
+    // new thread.
+    if (!isReady() || starter == null || starterThread == null
+	|| !starterThread.isAlive()) {
+      // Yes: Create it and start it.
+      starter = new SubscriptionStarter(this, configureAuBatchSize,
+	  configureAuRateLimiter,
+	  changedKeys.getTdbDifferences().newTdbAuIterator(), false);
+
+      starterThread = new Thread(starter);
+      starterThread.start();
+      if (log.isDebug3())
+	log.debug3(DEBUG_HEADER + "Created new SubscriptionStarter.");
     } else {
-      handleConfigurationChange(newConfig, prevConfig, changedKeys);
+      // No: Reuse the existing thread.
+      if (changedKeys.contains(PARAM_SUBSCRIPTION_AU_CONFIGURATION_BATCH_SIZE))
+      {
+	starter.setConfigureAuBatchSize(configureAuBatchSize);
+      }
+
+      if (changedKeys.contains(PARAM_SUBSCRIPTION_AU_CONFIGURATION_RATE)) {
+	starter.setConfigureAuRateLimiter(configureAuRateLimiter);
+      }
+
+      // Add the new workload to the existing thread.
+      boolean added = starter.addTdbAuIterator(
+	  changedKeys.getTdbDifferences().newTdbAuIterator());
+      if (log.isDebug3()) log.debug3(DEBUG_HEADER + "added = " + added);
+
+      // Check whether the new workload was successfully added.
+      if (added) {
+	// Yes.
+	if (log.isDebug3())
+	  log.debug3(DEBUG_HEADER + "Reused existing SubscriptionStarter.");
+      } else {
+	// No: Create a new thread and start it.
+	starter = new SubscriptionStarter(this, configureAuBatchSize,
+	    configureAuRateLimiter,
+	    changedKeys.getTdbDifferences().newTdbAuIterator(),false);
+
+	starterThread = new Thread(starter);
+	starterThread.start();
+	if (log.isDebug3())
+	  log.debug3(DEBUG_HEADER + "Created new SubscriptionStarter.");
+      }
     }
 
     if (log.isDebug2()) log.debug2(DEBUG_HEADER + "Done.");
+    return;
   }
 
   /**
@@ -514,201 +530,6 @@ public class SubscriptionManager extends BaseLockssDaemonManager implements
    */
   public boolean isReady() {
     return ready;
-  }
-
-  /**
-   * Performs the necessary work on configuration changes.
-   * 
-   * @param newConfig
-   *          A Configuration with the new configuration.
-   * @param prevConfig
-   *          A Configuration with the previous configuration.
-   * @param changedKeys
-   *          A Configuration.Differences with the keys of the configuration
-   *          elements that have changed.
-   */
-  void handleConfigurationChange(Configuration newConfig,
-      Configuration prevConfig, Configuration.Differences changedKeys) {
-    final String DEBUG_HEADER = "handleConfigurationChange(): ";
-    if (log.isDebug2()) log.debug2(DEBUG_HEADER + "Starting...");
-
-    // Sanity check.
-    if (dbManager == null || !dbManager.isReady()) {
-      if (log.isDebug()) log.debug(DEBUG_HEADER + "DbManager is not ready.");
-      return;
-    }
-
-    Connection conn = null;
-    boolean isFirstRun = false;
-    String message = CANNOT_CONNECT_TO_DB_ERROR_MESSAGE;
-
-    try {
-      // Get a connection to the database.
-      conn = dbManager.getConnection();
-
-      message = CANNOT_CHECK_FIRST_RUN_ERROR_MESSAGE;
-
-      // Determine whether this is the first run of the subscription manager.
-      isFirstRun = mdManager.countUnconfiguredAus(conn) == 0;
-      if (log.isDebug3())
-	log.debug3(DEBUG_HEADER + "isFirstRun = " + isFirstRun);
-    } catch (DbException dbe) {
-      log.error(message, dbe);
-      if (log.isDebug2()) log.debug(DEBUG_HEADER + "Done.");
-      return;
-    }
-
-    TdbAu tdbAu = null;
-    currentTdbTitle = null;
-    currentSubscribedRanges = null;
-    currentUnsubscribedRanges = null;
-
-    // Initialize the configuration used to configure the archival units.
-    Configuration config = ConfigManager.newConfiguration();
-
-    try {
-      // Get access to the changed archival units.
-      Iterator<TdbAu> tdbAuIterator = changedKeys.getTdbDifferences()
-  	.newTdbAuIterator();
-
-      // Loop through all the changed archival units.
-      while (tdbAuIterator.hasNext()) {
-	try {
-	  // Get the archival unit.
-	  tdbAu = tdbAuIterator.next();
-	  if (log.isDebug3()) log.debug3(DEBUG_HEADER + "tdbAu = " + tdbAu);
-
-	  // Process the archival unit.
-	  processNewTdbAu(tdbAu, conn, isFirstRun, config);
-	  DbManager.commitOrRollback(conn, log);
-	} catch (DbException dbe) {
-	  log.error("Error handling archival unit " + tdbAu, dbe);
-	  conn.rollback();
-	} catch (RuntimeException re) {
-	  log.error("Error handling archival unit " + tdbAu, re);
-	  conn.rollback();
-	}
-      }
-    } catch (SQLException sqle) {
-      log.error(CANNOT_ROLL_BACK_DB_CONNECTION_ERROR_MESSAGE, sqle);
-    } finally {
-      DbManager.safeRollbackAndClose(conn);
-    }
-
-    // Configure the archival units.
-    try {
-      configureAuBatch(config);
-    } catch (IOException ioe) {
-      log.error("Exception caught configuring a batch of archival units. "
-	  + "Config = " + config, ioe);
-    }
-
-    if (log.isDebug2()) log.debug2(DEBUG_HEADER + "Done.");
-  }
-
-  /**
-   * Performs the necessary processing for an archival unit that appears in the
-   * configuration changeset.
-   * 
-   * @param tdbAu
-   *          A TdbAu for the archival unit to be processed.
-   * @param conn
-   *          A Connection with the database connection to be used.
-   * @param isFirstRun
-   *          A boolean with <code>true</code> if this is the first run of the
-   *          subscription manager, <code>false</code> otherwise.
-   * @param config
-   *          A Configuration to which to add the archival unit configuration.
-   * @throws DbException
-   *           if any problem occurred accessing the database.
-   */
-  private void processNewTdbAu(TdbAu tdbAu, Connection conn, boolean isFirstRun,
-      Configuration config) throws DbException {
-    final String DEBUG_HEADER = "processNewTdbAu(): ";
-    if (log.isDebug2()) {
-      log.debug2(DEBUG_HEADER + "tdbAu = " + tdbAu);
-      log.debug2(DEBUG_HEADER + "isFirstRun = " + isFirstRun);
-      log.debug2(DEBUG_HEADER + "config = " + config);
-    }
-
-    // Get the archival unit identifier.
-    String auId;
-
-    try {
-      auId = tdbAu.getAuId(pluginManager);
-      if (log.isDebug3()) log.debug3(DEBUG_HEADER + "auId = " + auId);
-    } catch (IllegalStateException ise) {
-      log.debug2("Ignored " + tdbAu
-	  + " because of problems getting its identifier: " + ise.getMessage());
-      return;
-    } catch (RuntimeException re) {
-      log.error("Ignored " + tdbAu
-	  + " because of problems getting its identifier: " + re.getMessage());
-      return;
-    }
-
-    // Check whether the archival unit is already configured.
-    if (pluginManager.getAuFromId(auId) != null) {
-      // Yes: Nothing more to do.
-      if (log.isDebug3()) log.debug3(DEBUG_HEADER + "TdbAu '" + tdbAu
-	  + "' is already configured.");
-      return;
-    }
-
-    // Check whether this is the first run of the subscription manager.
-    if (isFirstRun) {
-      // Yes: Add the archival unit to the table of unconfigured archival units.
-      mdManager.persistUnconfiguredAu(conn, auId);
-      if (log.isDebug2()) log.debug2(DEBUG_HEADER + "Done.");
-      return;
-    }
-
-    // Nothing to do if the archival unit is in the table of unconfigured
-    // archival units already.
-    if (mdManager.isAuInUnconfiguredAuTable(conn, auId)) {
-      if (log.isDebug2()) log.debug2(DEBUG_HEADER + "Done.");
-      return;
-    }
-
-    if (log.isDebug3()) {
-      log.debug3(DEBUG_HEADER + "currentTdbTitle = " + currentTdbTitle);
-      log.debug3(DEBUG_HEADER + "tdbAu.getTdbTitle() = " + tdbAu.getTdbTitle());
-    }
-
-    // Check whether this archival unit belongs to a different title than the
-    // previous archival unit processed.
-    if (!tdbAu.getTdbTitle().equals(currentTdbTitle)) {
-      // Yes: Update the title data for this archival unit.
-      currentTdbTitle = tdbAu.getTdbTitle();
-
-      // Get the subscription ranges for the archival unit title.
-      currentSubscribedRanges = new ArrayList<BibliographicPeriod>();
-      currentUnsubscribedRanges = new ArrayList<BibliographicPeriod>();
-
-      populateTitleSubscriptionRanges(conn, currentTdbTitle,
-	  currentSubscribedRanges, currentUnsubscribedRanges);
-
-      // Get the archival units covered by the subscription.
-      currentCoveredTdbAus = getCoveredTdbAus(currentTdbTitle,
-	  currentSubscribedRanges, currentUnsubscribedRanges);
-    } else {
-      // No: Reuse the title data from the previous archival unit.
-      if (log.isDebug3()) log.debug3(DEBUG_HEADER + "Reusing data from title = "
-	  + currentTdbTitle);
-    }
-
-    // Check whether the archival unit covers a subscribed range and it does not
-    // cover any unsubscribed range.
-    if (currentCoveredTdbAus.contains(tdbAu)) {
-      // Yes: Add the archival unit configuration to those to be configured.
-      config = addAuConfiguration(tdbAu, auId, config);
-    } else {
-      // No: Add it to the table of unconfigured archival units.
-      mdManager.persistUnconfiguredAu(conn, auId);
-    }
-
-    if (log.isDebug2()) log.debug2(DEBUG_HEADER + "Done.");
-    return;
   }
 
   /**
@@ -729,7 +550,7 @@ public class SubscriptionManager extends BaseLockssDaemonManager implements
    * @throws DbException
    *           if any problem occurred accessing the database.
    */
-  private Set<Long> populateTitleSubscriptionRanges(Connection conn,
+  Set<Long> populateTitleSubscriptionRanges(Connection conn,
       TdbTitle title, List<BibliographicPeriod> subscribedRanges,
       List<BibliographicPeriod> unsubscribedRanges) throws DbException {
     final String DEBUG_HEADER = "populateTitleSubscriptionRanges(): ";
@@ -748,7 +569,7 @@ public class SubscriptionManager extends BaseLockssDaemonManager implements
     if (log.isDebug3()) log.debug3(DEBUG_HEADER + "publisher = " + publisher);
 
     // Locate the publisher database identifier.
-    Long publisherSeq = mdManager.findPublisher(conn, publisher);
+    Long publisherSeq = dbManager.findPublisher(conn, publisher);
     if (log.isDebug3())
       log.debug3(DEBUG_HEADER + "publisherSeq = " + publisherSeq);
 
@@ -824,7 +645,8 @@ public class SubscriptionManager extends BaseLockssDaemonManager implements
       if (providerSeq != null) {
 	// Yes: Find in the database the publication subscription for the
 	// provider.
-	subscriptionSeq = findSubscription(conn, publicationSeq, providerSeq);
+	subscriptionSeq =
+	    subManagerSql.findSubscription(conn, publicationSeq, providerSeq);
 	if (log.isDebug3())
 	  log.debug3(DEBUG_HEADER + "subscriptionSeq = " + subscriptionSeq);
 
@@ -832,13 +654,13 @@ public class SubscriptionManager extends BaseLockssDaemonManager implements
 	if (subscriptionSeq != null) {
 	  // Yes: Find in the database the subscribed ranges and add them to the
 	  // results.
-	  subscribedRanges
-	  	.addAll(findSubscriptionRanges(conn, subscriptionSeq, true));
+	  subscribedRanges.addAll(subManagerSql.findSubscriptionRanges(conn,
+	      subscriptionSeq, true));
 
 	  // Find in the database the unsubscribed ranges and add them to the
 	  // results.
-	  unsubscribedRanges
-	  	.addAll(findSubscriptionRanges(conn, subscriptionSeq, false));
+	  unsubscribedRanges.addAll(subManagerSql.findSubscriptionRanges(conn,
+	      subscriptionSeq, false));
 
 	  // Add this subscription identifier to the results.
 	  result.add(subscriptionSeq);
@@ -1020,16 +842,20 @@ public class SubscriptionManager extends BaseLockssDaemonManager implements
    * @throws IOException
    *           if there are problems configuring the batch of archival units.
    */
-  private BatchAuStatus configureAuBatch(Configuration config)
+  BatchAuStatus configureAuBatch(Configuration config)
       throws IOException {
     final String DEBUG_HEADER = "configureAuBatch(): ";
-    if (log.isDebug2()) log.debug2(DEBUG_HEADER + "config = " + config);
+    if (log.isDebug2()) log.debug2(DEBUG_HEADER + "config.isEmpty = "
+	+ config.isEmpty());
     BatchAuStatus status = null;
 
     // Check whether there are archival units to configure.
     if (!config.isEmpty()) {
-      // Yes: Perform the actual configuration into the system of the archival
-      // units in the configuration.
+      // Yes.
+      if (log.isDebug3()) log.debug3(DEBUG_HEADER + "config.keySet().size() = "
+		+ config.keySet().size());
+      // Perform the actual configuration into the system of the archival units
+      // in the configuration.
       status = remoteApi.batchAddAus(RemoteApi.BATCH_ADD_ADD, config, null);
       log.info("Successful configuration of " + status.getOkCnt() + " AUs.");
 
@@ -1065,13 +891,13 @@ public class SubscriptionManager extends BaseLockssDaemonManager implements
    * @return a Configuration with the archival unit configuration added to the
    *         passed configuration.
    */
-  private Configuration addAuConfiguration(TdbAu tdbAu, String auId,
+  Configuration addAuConfiguration(TdbAu tdbAu, String auId,
       Configuration config) {
     final String DEBUG_HEADER = "addAuConfiguration(): ";
     if (log.isDebug2()) {
       log.debug2(DEBUG_HEADER + "tdbAu = " + tdbAu);
       log.debug2(DEBUG_HEADER + "auId = " + auId);
-      log.debug2(DEBUG_HEADER + "config = " + config);
+      //log.debug2(DEBUG_HEADER + "config = " + config);
     }
 
     Plugin plugin = tdbAu.getPlugin(pluginManager);
@@ -1093,7 +919,7 @@ public class SubscriptionManager extends BaseLockssDaemonManager implements
     // Add the archival unit configuration to the passed configuration.
     config.addAsSubTree(auConfig, prefix);
 
-    if (log.isDebug2()) log.debug2(DEBUG_HEADER + "config = " + config);
+    //if (log.isDebug2()) log.debug2(DEBUG_HEADER + "config = " + config);
     return config;
   }
 
@@ -1109,114 +935,6 @@ public class SubscriptionManager extends BaseLockssDaemonManager implements
   private boolean isSerialPublicationType(String pubType) {
     return (MetadataField.PUBLICATION_TYPE_BOOKSERIES.equals(pubType) ||
 	MetadataField.PUBLICATION_TYPE_JOURNAL.equals(pubType));
-  }
-
-  /**
-   * Provides the identifier of a subscription.
-   * 
-   * @param conn
-   *          A Connection with the database connection to be used.
-   * @param publicationSeq
-   *          A Long with the identifier of the publication.
-   * @param providerSeq
-   *          A Long with the identifier of the provider.
-   * @return a Long with the identifier of the subscription.
-   * @throws DbException
-   *           if any problem occurred accessing the database.
-   */
-  private Long findSubscription(Connection conn, Long publicationSeq,
-      Long providerSeq) throws DbException {
-    final String DEBUG_HEADER = "findSubscription(): ";
-    if (log.isDebug2()) {
-      log.debug2(DEBUG_HEADER + "publicationSeq = " + publicationSeq);
-      log.debug2(DEBUG_HEADER + "providerSeq = " + providerSeq);
-    }
-
-    PreparedStatement findSubscription =
-	dbManager.prepareStatement(conn, FIND_SUBSCRIPTION_QUERY);
-    ResultSet resultSet = null;
-    Long subscriptionSeq = null;
-
-    try {
-      findSubscription.setLong(1, publicationSeq);
-      findSubscription.setLong(2, providerSeq);
-      resultSet = dbManager.executeQuery(findSubscription);
-      if (resultSet.next()) {
-	subscriptionSeq = resultSet.getLong(SUBSCRIPTION_SEQ_COLUMN);
-	if (log.isDebug3()) log.debug3(DEBUG_HEADER + "Found subscriptionSeq = "
-	      + subscriptionSeq);
-      }
-    } catch (SQLException sqle) {
-      log.error("Cannot find subscription", sqle);
-      log.error("SQL = '" + FIND_SUBSCRIPTION_QUERY + "'.");
-      log.error("publicationSeq = " + publicationSeq);
-      log.error("providerSeq = " + providerSeq);
-      throw new DbException("Cannot find subscription", sqle);
-    } finally {
-      DbManager.safeCloseResultSet(resultSet);
-      DbManager.safeCloseStatement(findSubscription);
-    }
-
-    if (log.isDebug2())
-      log.debug2(DEBUG_HEADER + "subscriptionSeq = " + subscriptionSeq);
-    return subscriptionSeq;
-  }
-
-  /**
-   * Provides the subscription ranges for a subscription.
-   * 
-   * @param conn
-   *          A Connection with the database connection to be used.
-   * @param subscriptionSeq
-   *          A Long with the identifier of the subscription.
-   * @param subscribed
-   *          A boolean with the subscribed attribute of the ranges to be
-   *          provided.
-   * @return a List<BibliographicPeriod> with the ranges for the subscription.
-   * @throws DbException
-   *           if any problem occurred accessing the database.
-   */
-  List<BibliographicPeriod> findSubscriptionRanges(Connection conn,
-      Long subscriptionSeq, boolean subscribed) throws DbException {
-    final String DEBUG_HEADER = "findSubscriptionsRanges(): ";
-    if (log.isDebug2()) {
-      log.debug2(DEBUG_HEADER + "subscriptionSeq = " + subscriptionSeq);
-      log.debug2(DEBUG_HEADER + "subscribed = " + subscribed);
-    }
-
-    String range;
-    List<BibliographicPeriod> ranges = new ArrayList<BibliographicPeriod>();
-    String query = FIND_SUBSCRIPTION_RANGES_QUERY;
-    if (log.isDebug3()) log.debug3(DEBUG_HEADER + "SQL = " + query);
-
-    PreparedStatement getSubscriptionRanges =
-	dbManager.prepareStatement(conn, query);
-    ResultSet resultSet = null;
-
-    try {
-      getSubscriptionRanges.setLong(1, subscriptionSeq);
-      getSubscriptionRanges.setBoolean(2, subscribed);
-      resultSet = dbManager.executeQuery(getSubscriptionRanges);
-
-      while (resultSet.next()) {
-	range = resultSet.getString(SUBSCRIPTION_RANGE_COLUMN);
-	if (log.isDebug3()) log.debug3(DEBUG_HEADER + "range = " + range);
-
-	ranges.add(new BibliographicPeriod(range));
-      }
-    } catch (SQLException sqle) {
-      log.error("Cannot get ranges", sqle);
-      log.error("SQL = '" + query + "'.");
-      log.error("subscriptionSeq = " + subscriptionSeq);
-      log.error("subscribed = " + subscribed);
-      throw new DbException("Cannot get ranges", sqle);
-    } finally {
-      DbManager.safeCloseResultSet(resultSet);
-      DbManager.safeCloseStatement(getSubscriptionRanges);
-    }
-
-    if (log.isDebug2()) log.debug2(DEBUG_HEADER + "ranges = " + ranges);
-    return ranges;
   }
 
   /**
@@ -1328,7 +1046,7 @@ public class SubscriptionManager extends BaseLockssDaemonManager implements
 
     try {
       // Find the publisher in the database or create it.
-      Long publisherSeq = mdManager.findOrCreatePublisher(conn, publisher);
+      Long publisherSeq = dbManager.findOrCreatePublisher(conn, publisher);
       if (log.isDebug3())
 	log.debug3(DEBUG_HEADER + "publisherSeq = " + publisherSeq);
 
@@ -1575,8 +1293,8 @@ public class SubscriptionManager extends BaseLockssDaemonManager implements
    *           if any problem occurred accessing the database.
    */
   private void subscribePublicationProviderConfiguredAus(Long publicationSeq,
-      TdbProvider/*Map<String, String>*/ provider, List<BibliographicPeriod> periods,
-      Connection conn) throws DbException {
+      TdbProvider provider, List<BibliographicPeriod> periods, Connection conn)
+	  throws DbException {
     final String DEBUG_HEADER = "subscribePublicationProviderConfiguredAus(): ";
     if (log.isDebug2()) {
       log.debug2(DEBUG_HEADER + "publicationSeq = " + publicationSeq);
@@ -1600,7 +1318,7 @@ public class SubscriptionManager extends BaseLockssDaemonManager implements
 
     // Delete all the subscribed ranges.
     int deletedRangesCount =
-	deleteSubscriptionTypeRanges(conn, subscriptionSeq, true);
+	subManagerSql.deleteSubscriptionTypeRanges(conn, subscriptionSeq, true);
     if (log.isDebug3())
       log.debug3(DEBUG_HEADER + "deletedRangesCount = " + deletedRangesCount);
 
@@ -1624,10 +1342,12 @@ public class SubscriptionManager extends BaseLockssDaemonManager implements
 	if (log.isDebug3())
 	  log.debug3(DEBUG_HEADER + "lastPeriod = " + lastPeriod);
 
-	persistSubscriptionRange(conn, subscriptionSeq, lastPeriod, true);
+	subManagerSql.persistSubscriptionRange(conn, subscriptionSeq,
+	    lastPeriod, true);
       } else {
 	// No: Just persist it.
-	persistSubscriptionRange(conn, subscriptionSeq, period, true);
+	subManagerSql.persistSubscriptionRange(conn, subscriptionSeq, period,
+	    true);
       }
     }
 
@@ -1657,14 +1377,16 @@ public class SubscriptionManager extends BaseLockssDaemonManager implements
     }
 
     // Locate the subscription in the database.
-    Long subscriptionSeq = findSubscription(conn, publicationSeq, providerSeq);
+    Long subscriptionSeq =
+	subManagerSql.findSubscription(conn, publicationSeq, providerSeq);
     if (log.isDebug3())
       log.debug3(DEBUG_HEADER + "old subscriptionSeq = " + subscriptionSeq);
 
     // Check whether it is a new subscription.
     if (subscriptionSeq == null) {
       // Yes: Add to the database the new subscription.
-      subscriptionSeq = persistSubscription(conn, publicationSeq, providerSeq);
+      subscriptionSeq =
+	  subManagerSql.persistSubscription(conn, publicationSeq, providerSeq);
       if (log.isDebug3())
 	log.debug3(DEBUG_HEADER + "new subscriptionSeq = " + subscriptionSeq);
     }
@@ -1675,348 +1397,20 @@ public class SubscriptionManager extends BaseLockssDaemonManager implements
   }
 
   /**
-   * Adds a subscription range to the database.
-   * 
-   * @param conn
-   *          A Connection with the database connection to be used.
-   * @param subscriptionSeq
-   *          A Long with the identifier of the subscription.
-   * @param range
-   *          A BibliographicPeriod with the subscription range.
-   * @param subscribed
-   *          A boolean with the indication of whether the LOCKSS installation
-   *          is subscribed to the publication range or not.
-   * @throws DbException
-   *           if any problem occurred accessing the database.
-   */
-  private int persistSubscriptionRange(Connection conn, Long subscriptionSeq,
-      BibliographicPeriod range, boolean subscribed) throws DbException {
-    final String DEBUG_HEADER = "persistSubscriptionRange(): ";
-    if (log.isDebug2()) {
-      log.debug2(DEBUG_HEADER + "subscriptionSeq = " + subscriptionSeq);
-      log.debug2(DEBUG_HEADER + "range = " + range);
-      log.debug2(DEBUG_HEADER + "subscribed = " + subscribed);
-    }
-
-    int count = 0;
-
-    // Skip an empty range that does not accomplish anything.
-    if (range.isEmpty()) {
-      if (log.isDebug2()) log.debug2(DEBUG_HEADER + "count = " + count);
-      return count;
-    }
-
-    String sql = getInsertSubscriptionRangeSql();
-    PreparedStatement insertSubscriptionRange =
-	dbManager.prepareStatement(conn, sql);
-
-    try {
-      insertSubscriptionRange.setLong(1, subscriptionSeq);
-      insertSubscriptionRange.setString(2, range.toDisplayableString());
-      insertSubscriptionRange.setBoolean(3, subscribed);
-      insertSubscriptionRange.setLong(4, subscriptionSeq);
-      insertSubscriptionRange.setBoolean(5, subscribed);
-
-      count = dbManager.executeUpdate(insertSubscriptionRange);
-      if (log.isDebug3()) log.debug3(DEBUG_HEADER + "count = " + count);
-    } catch (SQLException sqle) {
-      log.error("Cannot insert subscription range", sqle);
-      log.error("SQL = '" + sql + "'.");
-      log.error("subscriptionSeq = " + subscriptionSeq);
-      log.error("range = " + range);
-      log.error("subscribed = " + subscribed);
-      throw new DbException("Cannot insert subscription range", sqle);
-    } finally {
-      DbManager.safeCloseStatement(insertSubscriptionRange);
-    }
-
-    if (log.isDebug2()) log.debug2(DEBUG_HEADER + "count = " + count);
-    return count;
-  }
-
-  /**
-   * Deletes all ranges of a type belonging to a subscription from the database.
-   * 
-   * @param conn
-   *          A Connection with the database connection to be used.
-   * @param subscriptionSeq
-   *          A Long with the identifier of the subscription.
-   * @param subscribed
-   *          A boolean with the indication of whether the LOCKSS installation
-   *          is subscribed to the publication range or not.
-   * @return an int with the number of deleted rows.
-   * @throws DbException
-   *           if any problem occurred accessing the database.
-   */
-  int deleteSubscriptionTypeRanges(Connection conn, Long subscriptionSeq,
-      boolean subscribed) throws DbException {
-    final String DEBUG_HEADER = "deleteSubscriptionTypeRanges(): ";
-    if (log.isDebug2()) {
-      log.debug2(DEBUG_HEADER + "subscriptionSeq = " + subscriptionSeq);
-      log.debug2(DEBUG_HEADER + "subscribed = " + subscribed);
-    }
-
-    int count = 0;
-    PreparedStatement deleteSubscriptionRange = dbManager.prepareStatement(conn,
-	DELETE_ALL_SUBSCRIPTION_RANGES_TYPE_QUERY);
-
-    try {
-      deleteSubscriptionRange.setLong(1, subscriptionSeq);
-      deleteSubscriptionRange.setBoolean(2, subscribed);
-
-      count = dbManager.executeUpdate(deleteSubscriptionRange);
-      if (log.isDebug3()) log.debug3(DEBUG_HEADER + "count = " + count);
-    } catch (SQLException sqle) {
-      log.error("Cannot delete subscription range", sqle);
-      log.error("SQL = '" + DELETE_ALL_SUBSCRIPTION_RANGES_TYPE_QUERY + "'.");
-      log.error("subscriptionSeq = " + subscriptionSeq);
-      log.error("subscribed = " + subscribed);
-      throw new DbException("Cannot delete subscription range", sqle);
-    } finally {
-      DbManager.safeCloseStatement(deleteSubscriptionRange);
-    }
-
-    if (log.isDebug2()) log.debug2(DEBUG_HEADER + "count = " + count);
-    return count;
-  }
-
-  /**
-   * Adds a subscription to the database.
-   * 
-   * @param conn
-   *          A Connection with the database connection to be used.
-   * @param publicationSeq
-   *          A Long with the identifier of the publication.
-   * @param providerSeq
-   *          A Long with the identifier of the provider.
-   * @return a Long with the identifier of the subscription just added.
-   * @throws DbException
-   *           if any problem occurred accessing the database.
-   */
-  Long persistSubscription(Connection conn, Long publicationSeq,
-      Long providerSeq) throws DbException {
-    final String DEBUG_HEADER = "persistSubscription(): ";
-    if (log.isDebug2()) {
-      log.debug2(DEBUG_HEADER + "publicationSeq = " + publicationSeq);
-      log.debug2(DEBUG_HEADER + "providerSeq = " + providerSeq);
-    }
-
-    PreparedStatement insertSubscription = dbManager.prepareStatement(conn,
-	INSERT_SUBSCRIPTION_QUERY, Statement.RETURN_GENERATED_KEYS);
-
-    ResultSet resultSet = null;
-    Long subscriptionSeq = null;
-
-    try {
-      // Skip auto-increment key field #0
-      insertSubscription.setLong(1, publicationSeq);
-      insertSubscription.setLong(2, providerSeq);
-      dbManager.executeUpdate(insertSubscription);
-      resultSet = insertSubscription.getGeneratedKeys();
-
-      if (!resultSet.next()) {
-	log.error("Unable to create SUBSCRIPTION table row: publicationSeq = "
-	    + publicationSeq + ", providerSeq = " + providerSeq
-	    + " - No keys were generated.");
-	if (log.isDebug2()) log.debug2(DEBUG_HEADER + "subscriptionSeq = null");
-	return null;
-      }
-
-      subscriptionSeq = resultSet.getLong(1);
-      if (log.isDebug3())
-	log.debug3(DEBUG_HEADER + "Added subscriptionSeq = " + subscriptionSeq);
-    } catch (SQLException sqle) {
-      log.error("Cannot insert subscription", sqle);
-      log.error("SQL = '" + INSERT_SUBSCRIPTION_QUERY + "'.");
-      log.error("publicationSeq = " + publicationSeq);
-      log.error("providerSeq = " + providerSeq);
-      throw new DbException("Cannot insert subscription", sqle);
-    } finally {
-      DbManager.safeCloseResultSet(resultSet);
-      DbManager.safeCloseStatement(insertSubscription);
-    }
-
-    if (log.isDebug2())
-      log.debug2(DEBUG_HEADER + "subscriptionSeq = " + subscriptionSeq);
-    return subscriptionSeq;
-  }
-
-  /**
    * Provides all the subscriptions in the system and their ranges.
    * 
+   * @param subscribedPublishers
+   *          A Map<String, PublisherSubscription> with the subscribed
+   *          publishers keyed by the publisher name.
    * @return a List<Subscription> with all the subscriptions and their ranges in
    *         the system.
    * @throws DbException
    *           if any problem occurred accessing the database.
    */
-  public List<Subscription> findAllSubscriptionsAndRanges()
-      throws DbException {
-    final String DEBUG_HEADER = "findAllSubscriptionsAndRanges(): ";
-    if (log.isDebug2()) log.debug2(DEBUG_HEADER + "Starting...");
-
-    Long subscriptionSeq = null;
-    String publicationName;
-    String proprietaryId;
-    String pIssn;
-    String eIssn;
-    String publisherName;
-    String providerLid;
-    String providerName;
-    String ranges = null;
-    boolean subscribed = false;
-    SerialPublication publication;
-    Subscription subscription = new Subscription();
-    List<Subscription> subscriptions = new ArrayList<Subscription>();
-    Set<String> proprietaryIds = null;
-
-    // Get a connection to the database.
-    Connection conn = dbManager.getConnection();
-
-    String query = FIND_ALL_SUBSCRIPTIONS_AND_RANGES_QUERY;
-    if (log.isDebug3()) log.debug3(DEBUG_HEADER + "SQL = " + query);
-
-    PreparedStatement getAllSubscriptionRanges =
-	dbManager.prepareStatement(conn, query);
-    ResultSet resultSet = null;
-
-    try {
-      // Get all the subscriptions and ranges from the database.
-      resultSet = dbManager.executeQuery(getAllSubscriptionRanges);
-
-      // Loop through all the results.
-      while (resultSet.next()) {
-	// Check whether this subscription is the same as the previous one.
-	if (subscriptionSeq != null
-	    && resultSet.getLong(SUBSCRIPTION_SEQ_COLUMN) == subscriptionSeq
-	    && ranges != null
-	    && resultSet.getString(SUBSCRIPTION_RANGE_COLUMN).equals(ranges)
-	    && resultSet.getBoolean(SUBSCRIBED_COLUMN) == subscribed) {
-	  // Yes: This means that the publication has multiple values for some
-	  // attributes. Get the proprietary identifier.
-	  proprietaryId = resultSet.getString(PROPRIETARY_ID_COLUMN);
-	  if (log.isDebug3())
-	    log.debug3(DEBUG_HEADER + "proprietaryId = " + proprietaryId);
-
-	  // Add it to the list of proprietary identifiers, if it exists.
-	  if (!StringUtil.isNullString(proprietaryId)) {
-	    proprietaryIds.add(proprietaryId);
-	    if (log.isDebug3()) log.debug3(DEBUG_HEADER
-		+ "Added proprietaryId = '" + proprietaryId + "'.");
-	  }
-
-	  continue;
-	}
-
-	subscriptionSeq = resultSet.getLong(SUBSCRIPTION_SEQ_COLUMN);
-	if (log.isDebug3())
-	  log.debug3(DEBUG_HEADER + "subscriptionSeq = " + subscriptionSeq);
-
-	publicationName = resultSet.getString(NAME_COLUMN);
-	if (log.isDebug3())
-	  log.debug3(DEBUG_HEADER + "publicationName = " + publicationName);
-
-	// Initialize the collection of proprietary identifiers.
-	proprietaryIds = new LinkedHashSet<String>();
-
-	proprietaryId = resultSet.getString(PROPRIETARY_ID_COLUMN);
-	if (log.isDebug3())
-	  log.debug3(DEBUG_HEADER + "proprietaryId = " + proprietaryId);
-
-	// Add it to the list of proprietary identifiers, if it exists.
-	if (!StringUtil.isNullString(proprietaryId)) {
-	  proprietaryIds.add(proprietaryId);
-	  if (log.isDebug3()) log.debug3(DEBUG_HEADER
-	      + "Added proprietaryId = '" + proprietaryId + "'.");
-	}
-
-        pIssn = resultSet.getString(P_ISSN_TYPE);
-	if (log.isDebug3()) log.debug3(DEBUG_HEADER + "pIssn = " + pIssn);
-
-        eIssn = resultSet.getString(E_ISSN_TYPE);
-	if (log.isDebug3()) log.debug3(DEBUG_HEADER + "eIssn = " + eIssn);
-
-	publisherName = resultSet.getString(PUBLISHER_NAME_COLUMN);
-	if (log.isDebug3())
-	  log.debug3(DEBUG_HEADER + "publisherName = " + publisherName);
-
-	providerLid = resultSet.getString(PROVIDER_LID_COLUMN);
-	if (log.isDebug3())
-	  log.debug3(DEBUG_HEADER + "providerLid = " + providerLid);
-
-	providerName = resultSet.getString(PROVIDER_NAME_COLUMN);
-	if (log.isDebug3())
-	  log.debug3(DEBUG_HEADER + "providerName = " + providerName);
-
-	ranges = resultSet.getString(SUBSCRIPTION_RANGE_COLUMN);
-	if (log.isDebug3()) log.debug3(DEBUG_HEADER + "ranges = " + ranges);
-
-	subscribed = resultSet.getBoolean(SUBSCRIBED_COLUMN);
-	if (log.isDebug3())
-	  log.debug3(DEBUG_HEADER + "subscribed = " + subscribed);
-
-	// Convert the text ranges into a list of bibliographic periods.
-	List<BibliographicPeriod> periods =
-	    BibliographicPeriod.createList(ranges);
-
-	// Check whether this is another range for the same subscription as the
-	// last one.
-	if (subscriptionSeq.equals(subscription.getSubscriptionSeq())) {
-	  // Yes: Check whether it is a subscribed range.
-	  if (subscribed) {
-	    // Yes: Add it to the subscription subscribed ranges.
-	    subscription.addSubscribedRanges(periods);
-	  } else {
-	    // No: Add it to the subscription unsubscribed ranges.
-	    subscription.addUnsubscribedRanges(periods);
-	  }
-	} else {
-	  // No: Add the previous subscription to the results.
-	  if (subscription.getSubscriptionSeq() != null) {
-	    subscriptions.add(subscription);
-	  }
-
-	  // Initialize the new subscription publication.
-	  publication = new SerialPublication();
-	  publication.setPublicationName(publicationName);
-	  publication.setProprietaryIds(proprietaryIds);
-	  publication.setPissn(pIssn);
-	  publication.setEissn(eIssn);
-	  publication.setPublisherName(publisherName);
-	  publication.setProviderLid(providerLid);
-	  publication.setProviderName(providerName);
-
-	  // Initialize the new subscription.
-	  subscription = new Subscription();
-	  subscription.setPublication(publication);
-	  subscription.setSubscriptionSeq(subscriptionSeq);
-
-	  // Check whether it is a subscribed range.
-	  if (subscribed) {
-	    // Yes: Add it to the subscription subscribed ranges.
-	    subscription.setSubscribedRanges(periods);
-	  } else {
-	    // No: Add it to the subscription unsubscribed ranges.
-	    subscription.setUnsubscribedRanges(periods);
-	  }
-	}
-      }
-
-      // Add the last subscription to the results.
-      if (subscription.getSubscriptionSeq() != null) {
-	subscriptions.add(subscription);
-      }
-    } catch (SQLException sqle) {
-      log.error("Cannot get existing subscriptions", sqle);
-      log.error("SQL = '" + query + "'.");
-      throw new DbException("Cannot get existing subscriptions", sqle);
-    } finally {
-      DbManager.safeCloseResultSet(resultSet);
-      DbManager.safeCloseStatement(getAllSubscriptionRanges);
-    }
-
-    if (log.isDebug2())
-      log.debug2(DEBUG_HEADER + "subscriptions = " + subscriptions);
-    return subscriptions;
+  public List<Subscription> findAllSubscriptionsAndRanges(
+      Map<String, PublisherSubscription> subscribedPublishers)
+	  throws DbException {
+    return subManagerSql.findAllSubscriptionsAndRanges(subscribedPublishers);
   }
 
   /**
@@ -2028,79 +1422,80 @@ public class SubscriptionManager extends BaseLockssDaemonManager implements
    *           if any problem occurred accessing the database.
    */
   public boolean hasSubscriptionRanges() throws DbException {
-    // Get a connection to the database.
-    Connection conn = dbManager.getConnection();
+    boolean response = false;
+    Connection conn = null;
 
-    return hasSubscriptionRanges(conn);
+    try {
+      // Get a connection to the database.
+      conn = dbManager.getConnection();
+
+      response = subManagerSql.hasSubscriptionRanges(conn);
+    } finally {
+      DbManager.safeRollbackAndClose(conn);
+    }
+
+    return response;
   }
 
   /**
-   * Provides an indication of whether there are subscription ranges.
+   * Provides an indication of whether there are publisher subscriptions.
    * 
-   * @param conn
-   *          A Connection with the database connection to be used.
-   * @return a boolean with <code>true</code> if there are subscribed
-   *         publications, <code>false</code> otherwise.
+   * @return a boolean with <code>true</code> if there are publisher
+   *         subscriptions, <code>false</code> otherwise.
    * @throws DbException
    *           if any problem occurred accessing the database.
    */
-  boolean hasSubscriptionRanges(Connection conn) throws DbException {
-    final String DEBUG_HEADER = "hasSubscriptionRanges(): ";
-    if (log.isDebug2()) log.debug2(DEBUG_HEADER + "Starting...");
-
-    boolean result = false;
-
-    String query = FIND_ALL_SUBSCRIPTION_RANGES_QUERY;
-    if (log.isDebug3()) log.debug3(DEBUG_HEADER + "SQL = " + query);
-
-    PreparedStatement findAnySubscription = null;
-    ResultSet resultSet = null;
+  public boolean hasPublisherSubscriptions() throws DbException {
+    boolean response = false;
+    Connection conn = null;
 
     try {
-      findAnySubscription = dbManager.prepareStatement(conn, query);
-      findAnySubscription.setMaxRows(1);
-      resultSet = dbManager.executeQuery(findAnySubscription);
-      result = resultSet.next();
-    } catch (SQLException sqle) {
-      String message = "Cannot find any subscribed publications";
-      log.error(message, sqle);
-      log.error("SQL = '" + query + "'.");
-      throw new DbException(message, sqle);
+      // Get a connection to the database.
+      conn = dbManager.getConnection();
+
+      response = subManagerSql.hasPublisherSubscriptions(conn);
     } finally {
-      DbManager.safeCloseResultSet(resultSet);
-      DbManager.safeCloseStatement(findAnySubscription);
+      DbManager.safeRollbackAndClose(conn);
     }
 
-    if (log.isDebug2()) log.debug2(DEBUG_HEADER + "result = " + result);
-    return result;
+    return response;
   }
 
   /**
    * Provides the publications for which subscription decisions have not been
-   * made yet.
+   * made yet and populates their publishers.
    * 
+   * @param undecidedPublicationsPublishers
+   *          A Map<String, Publisher> with the undecided publishers keyed by
+   *          the publisher name.
    * @return A List<SerialPublication> with the publications for which
    *         subscription decisions have not been made yet.
    * @throws DbException
    *           if any problem occurred accessing the database.
    */
-  public List<SerialPublication> getUndecidedPublications()
-      throws DbException {
+  public List<SerialPublication> getUndecidedPublications(
+      Map<String, Publisher> undecidedPublicationsPublishers)
+	  throws DbException {
     final String DEBUG_HEADER = "getUndecidedPublications(): ";
     if (log.isDebug2()) log.debug2(DEBUG_HEADER + "Starting...");
+
+    // Get the publishers for which a subscription decision has been made.
+    Map<String, PublisherSubscription> subscribedPublishers =
+	subManagerSql.findAllSubscribedPublishers();
 
     List<SerialPublication> unsubscribedPublications =
 	new ArrayList<SerialPublication>();
 
     // Get the existing subscriptions with publisher names.
-    MultiValueMap subscriptionMap =
-	mapSubscriptionsByPublisher(findAllSubscriptionsAndPublishers());
+    MultiValueMap subscriptionMap = mapSubscriptionsByPublisher(subManagerSql
+	.findAllSubscriptionsAndPublishers());
 
     Collection<Subscription> publisherSubscriptions = null;
     String publisherName;
     String titleName;
     SerialPublication publication;
-    int publicationNumber = 1;
+    long publisherNumber = 1;
+    long publicationNumber = 1;
 
     // Loop through all the publishers.
     for (TdbPublisher publisher :
@@ -2109,7 +1504,17 @@ public class SubscriptionManager extends BaseLockssDaemonManager implements
       if (log.isDebug3())
 	log.debug3(DEBUG_HEADER + "publisherName = " + publisherName);
 
-      // Get the subscribed publications that belong to the publisher.
+      // Check whether a decision has been made regarding the subscription to
+      // all the publications of this publisher. 
+      if (subscribedPublishers.containsKey(publisherName)) {
+	// Yes: Skip all the publications from this publisher.
+	if (log.isDebug3()) log.debug3(DEBUG_HEADER + "publisher = '"
+	    + publisherName + "' has subscription: "
+	    + subscribedPublishers.get(publisherName));
+	continue;
+      }
+
+      // No: Get the subscribed publications that belong to the publisher.
       publisherSubscriptions =
 	  (Collection<Subscription>)subscriptionMap.get(publisherName);
       if (log.isDebug3()) {
@@ -2161,11 +1566,31 @@ public class SubscriptionManager extends BaseLockssDaemonManager implements
 	    publication.setProprietaryIds(new LinkedHashSet<String>(Arrays
 		.asList(title.getProprietaryIds())));
 	    publication.setTdbTitle(title);
+	    publication.setAuCount(title.getTdbAuCount());
 
 	    if (log.isDebug3())
 	      log.debug3(DEBUG_HEADER + "publication = " + publication);
 
 	    unsubscribedPublications.add(normalizePublication(publication));
+
+	    // Check whether this publisher is not already among the publishers
+	    // of undecided publications.
+	    if (!undecidedPublicationsPublishers.containsKey(publisherName)) {
+	      // Yes: Add this publication publisher to the list of publishers
+	      // for which no decision has been made.
+	      Publisher undecidedPublicationPublisher = new Publisher();
+	      undecidedPublicationPublisher
+	      .setAuCount(publisher.getTdbAuCount());
+	      undecidedPublicationPublisher.setPublisherName(publisherName);
+	      undecidedPublicationPublisher
+	      .setPublisherNumber(publisherNumber++);
+	      if (log.isDebug3()) log.debug3(DEBUG_HEADER
+		  + "undecidedPublicationPublisher = "
+		  + undecidedPublicationPublisher);
+
+	      undecidedPublicationsPublishers.put(publisherName,
+		  undecidedPublicationPublisher);
+	    }
 	  }
 	}
       }
@@ -2182,81 +1607,6 @@ public class SubscriptionManager extends BaseLockssDaemonManager implements
 	+ "unsubscribedPublications.size() = "
 	+ unsubscribedPublications.size());
     return unsubscribedPublications;
-  }
-
-  /**
-   * Provides all the subscriptions and their publishers.
-   * 
-   * @return a List<Subscription> with the subscriptions and their publishers.
-   * @throws DbException
-   *           if any problem occurred accessing the database.
-   */
-  private List<Subscription> findAllSubscriptionsAndPublishers()
-      throws DbException {
-    final String DEBUG_HEADER = "findAllSubscriptionsAndPublishers(): ";
-    if (log.isDebug2()) log.debug2(DEBUG_HEADER + "Starting...");
-
-    String publicationName;
-    String providerLid;
-    String providerName;
-    String publisherName;
-    SerialPublication publication;
-    Subscription subscription;
-    List<Subscription> subscriptions = new ArrayList<Subscription>();
-
-    // Get a connection to the database.
-    Connection conn = dbManager.getConnection();
-
-    String query = FIND_ALL_SUBSCRIPTIONS_AND_PUBLISHERS_QUERY;
-    if (log.isDebug3()) log.debug3(DEBUG_HEADER + "SQL = " + query);
-
-    PreparedStatement getAllSubscriptionsAndPublishers =
-	dbManager.prepareStatement(conn, query);
-    ResultSet resultSet = null;
-
-    try {
-      resultSet = dbManager.executeQuery(getAllSubscriptionsAndPublishers);
-
-      while (resultSet.next()) {
-	publisherName = resultSet.getString(PUBLISHER_NAME_COLUMN);
-	if (log.isDebug3())
-	  log.debug3(DEBUG_HEADER + "publisherName = " + publisherName);
-
-	publicationName = resultSet.getString(NAME_COLUMN);
-	if (log.isDebug3())
-	  log.debug3(DEBUG_HEADER + "publicationName = " + publicationName);
-
-	providerLid = resultSet.getString(PROVIDER_LID_COLUMN);
-	if (log.isDebug3())
-	  log.debug3(DEBUG_HEADER + "providerLid = " + providerLid);
-
-	providerName = resultSet.getString(PROVIDER_NAME_COLUMN);
-	if (log.isDebug3())
-	  log.debug3(DEBUG_HEADER + "providerName = " + providerName);
-
-	publication = new SerialPublication();
-	publication.setPublisherName(publisherName);
-	publication.setPublicationName(publicationName);
-	publication.setProviderLid(providerLid);
-	publication.setProviderName(providerName);
-
-	subscription = new Subscription();
-	subscription.setPublication(publication);
-
-	subscriptions.add(subscription);
-      }
-    } catch (SQLException sqle) {
-      log.error("Cannot get subscriptions and publishers", sqle);
-      log.error("SQL = '" + query + "'.");
-      throw new DbException("Cannot get subscriptions and publishers", sqle);
-    } finally {
-      DbManager.safeCloseResultSet(resultSet);
-      DbManager.safeCloseStatement(getAllSubscriptionsAndPublishers);
-    }
-
-    if (log.isDebug2()) log.debug2(DEBUG_HEADER + "subscriptions.size() = "
-	+ subscriptions.size());
-    return subscriptions;
   }
 
   /**
@@ -2314,7 +1664,7 @@ public class SubscriptionManager extends BaseLockssDaemonManager implements
    * @return <code>true</code> if the TdbTitle can be the subject of a
    *         subscription, <code>false</code> otherwise.
    */
-  public boolean isSubscribable(TdbTitle tdbTitle) {
+  boolean isSubscribable(TdbTitle tdbTitle) {
     final String DEBUG_HEADER = "isSubscribable(): ";
     if (log.isDebug2()) log.debug2(DEBUG_HEADER + "tdbTitle = " + tdbTitle);
     boolean result = false;
@@ -2651,16 +2001,39 @@ public class SubscriptionManager extends BaseLockssDaemonManager implements
   /**
    * Adds subscriptions to the system.
    * 
+   * @param totalSubscriptionChanged
+   *          A Boolean with the indication of whether the total subscription
+   *          setting has changed.
+   * @param updatedTotalSubscriptionSetting
+   *          A Boolean with the updated total subscription setting.
+   * @param publisherSubscriptions
+   *          A Collection<PublisherSubscription> with the publisher
+   *          subscriptions to be added.
    * @param subscriptions
    *          A Collection<Subscription> with the subscriptions to be added.
    * @param status
    *          A SubscriptionOperationStatus where to return the status of the
    *          operation.
    */
-  public void addSubscriptions(Collection<Subscription> subscriptions,
+  public void addSubscriptions(boolean totalSubscriptionChanged,
+      Boolean updatedTotalSubscriptionSetting,
+      Collection<PublisherSubscription> publisherSubscriptions,
+      Collection<Subscription> subscriptions,
       SubscriptionOperationStatus status) {
     final String DEBUG_HEADER = "addSubscriptions(): ";
     if (log.isDebug2()) {
+      log.debug2(DEBUG_HEADER + "totalSubscriptionChanged = "
+	  + totalSubscriptionChanged);
+      log.debug2(DEBUG_HEADER + "updatedTotalSubscriptionSetting = "
+	  + updatedTotalSubscriptionSetting);
+
+      if (publisherSubscriptions != null) {
+	log.debug2(DEBUG_HEADER + "publisherSubscriptions.size() = "
+	    + publisherSubscriptions.size());
+      } else {
+	log.debug2(DEBUG_HEADER + "publisherSubscriptions is null");
+      }
+
       if (subscriptions != null) {
 	log.debug2(DEBUG_HEADER + "subscriptions.size() = "
 	    + subscriptions.size());
@@ -2680,6 +2053,12 @@ public class SubscriptionManager extends BaseLockssDaemonManager implements
     } catch (DbException dbe) {
       log.error(CANNOT_CONNECT_TO_DB_ERROR_MESSAGE, dbe);
 
+      for (PublisherSubscription publisherSubscription
+	  : publisherSubscriptions) {
+	status.addPublisherStatusEntry(publisherSubscription.getPublisher()
+	      .getPublisherName(), false, dbe.getMessage(), null);
+      }
+
       for (Subscription subscription : subscriptions) {
 	status.addStatusEntry(subscription.getPublication()
 	    .getPublicationName(), false, dbe.getMessage(), null);
@@ -2689,9 +2068,54 @@ public class SubscriptionManager extends BaseLockssDaemonManager implements
       return;
     }
 
+    if (isTotalSubscriptionEnabled && totalSubscriptionChanged) {
+      updateTotalSubscription(conn, updatedTotalSubscriptionSetting, status);
+    }
+
     BatchAuStatus bas;
 
     try {
+      // Loop through all the publisher subscriptions.
+      for (PublisherSubscription publisherSubscription
+	  : publisherSubscriptions) {
+	if (log.isDebug3()) log.debug3(DEBUG_HEADER
+	    + "publisherSubscriptions = " + publisherSubscriptions);
+
+	String publisherName =
+	    publisherSubscription.getPublisher().getPublisherName();
+	if (log.isDebug3())
+	  log.debug3(DEBUG_HEADER + "publisherName = " + publisherName);
+
+	Boolean subscribed = publisherSubscription.getSubscribed();
+	if (log.isDebug3())
+	  log.debug3(DEBUG_HEADER + "subscribed = " + subscribed);
+
+	try {
+	  // Persist the publisher subscription in the database.
+	  persistPublisherSubscription(conn, publisherSubscription);
+	  DbManager.commitOrRollback(conn, log);
+
+	  if (subscribed != null && subscribed.booleanValue()) {
+	    handleStartingPublisherSubscription(publisherSubscription);
+	  }
+
+	  status.addPublisherStatusEntry(publisherName, true, null, subscribed);
+	} catch (DbException dbe) {
+	  try {
+	    if ((conn != null) && !conn.isClosed()) {
+	      conn.rollback();
+	    }
+	  } catch (SQLException sqle) {
+	    log.error(CANNOT_ROLL_BACK_DB_CONNECTION_ERROR_MESSAGE, sqle);
+	  }
+
+	  log.error("Cannot add publisher subscription "
+	      + publisherSubscription, dbe);
+	  status.addPublisherStatusEntry(publisherSubscription.getPublisher()
+	      .getPublisherName(), false, dbe.getMessage(), null);
+	}
+      }
+
       // Loop through all the subscriptions.
       for (Subscription subscription : subscriptions) {
 	if (log.isDebug3())
@@ -2714,7 +2138,7 @@ public class SubscriptionManager extends BaseLockssDaemonManager implements
 	          || !subscribedRanges.iterator().next().isEmpty())) {
 	    // Yes: Configure the archival units that correspond to this
 	    // subscription.
-	    bas = configureAus(conn, subscription);
+	    bas = configureAus(subscription);
 	  } else {
 	    bas = null;
 	  }
@@ -2776,6 +2200,45 @@ public class SubscriptionManager extends BaseLockssDaemonManager implements
   }
 
   /**
+   * Persists a publisher subscription in the database.
+   * 
+   * @param conn
+   *          A Connection with the database connection to be used.
+   * @param publisherSubscription
+   *          A PublisherSubscription with the publisher subscription to be
+   *          persisted.
+   * @throws DbException
+   *           if any problem occurred accessing the database.
+   */
+  private Long persistPublisherSubscription(Connection conn,
+      PublisherSubscription publisherSubscription) throws DbException {
+    final String DEBUG_HEADER = "persistPublisherSubscription(): ";
+    if (log.isDebug2()) log.debug2(DEBUG_HEADER + "publisherSubscription = "
+	+ publisherSubscription);
+
+    Long publisherSeq = dbManager.findOrCreatePublisher(conn,
+	publisherSubscription.getPublisher().getPublisherName());
+    if (log.isDebug3())
+	log.debug3(DEBUG_HEADER + "publisherSeq = " + publisherSeq);
+
+    Boolean subscribed = publisherSubscription.getSubscribed();
+    if (log.isDebug3()) log.debug3(DEBUG_HEADER + "subscribed = " + subscribed);
+
+    Long publisherSubscriptionSeq = null;
+
+    if (subscribed == null) {
+      subManagerSql.deletePublisherSubscription(conn, publisherSeq);
+    } else {
+      publisherSubscriptionSeq = subManagerSql
+	  .updateOrCreatePublisherSubscription(conn, publisherSeq, subscribed);
+    }
+
+    if (log.isDebug2()) log.debug2(DEBUG_HEADER + "publisherSubscriptionSeq = "
+	+ publisherSubscriptionSeq);
+    return publisherSubscriptionSeq;
+  }
+
+  /**
    * Persists a subscription in the database.
    * 
    * @param conn
@@ -2817,7 +2280,7 @@ public class SubscriptionManager extends BaseLockssDaemonManager implements
 
     // Find the publisher in the database or create it.
     Long publisherSeq =
-	mdManager.findOrCreatePublisher(conn,  publication.getPublisherName());
+	dbManager.findOrCreatePublisher(conn,  publication.getPublisherName());
     if (log.isDebug3())
       log.debug3(DEBUG_HEADER + "publisherSeq = " + publisherSeq);
 
@@ -2932,20 +2395,16 @@ public class SubscriptionManager extends BaseLockssDaemonManager implements
   /**
    * Configures the archival units covered by a subscription.
    * 
-   * @param conn
-   *          A Connection with the database connection to be used.
    * @param subscription
    *          A Subscription with the subscription involved.
    * @return a BatchAuStatus with the status of the operation.
    * @throws IOException
    *           if there are problems configuring the archival units.
-   * @throws DbException
-   *           if any problem occurred accessing the database.
    * @throws SubscriptionException
    *           if there are problems with the subscription publication.
    */
-  BatchAuStatus configureAus(Connection conn, Subscription subscription)
-      throws IOException, DbException, SubscriptionException {
+  BatchAuStatus configureAus(Subscription subscription)
+      throws IOException, SubscriptionException {
     final String DEBUG_HEADER = "configureAus(): ";
     if (log.isDebug2())
       log.debug2(DEBUG_HEADER + "subscription = " + subscription);
@@ -2976,7 +2435,7 @@ public class SubscriptionManager extends BaseLockssDaemonManager implements
     }
 
     // Configure the archival units.
-    return configureAus(conn, publication, subscribedRanges,
+    return configureAus(publication, subscribedRanges,
 	subscription.getUnsubscribedRanges());
   }
 
@@ -3000,14 +2459,15 @@ public class SubscriptionManager extends BaseLockssDaemonManager implements
     if (subscribedRanges != null) {
       // Find the existing subscribed ranges for the subscription.
       List<BibliographicPeriod> existingRanges =
-	  findSubscriptionRanges(conn, subscriptionSeq, true);
+	  subManagerSql.findSubscriptionRanges(conn, subscriptionSeq, true);
 
       // Loop through all the subscribed ranges to be persisted.
       for (BibliographicPeriod range : subscribedRanges) {
 	// Check whether the range to be persisted does not exist already.
 	if (!existingRanges.contains(range)) {
 	  // Yes: Persist the subscribed ranges.
-	  count += persistSubscriptionRange(conn, subscriptionSeq, range, true);
+	  count += subManagerSql.persistSubscriptionRange(conn, subscriptionSeq,
+	      range, true);
 	}
       }
     }
@@ -3035,15 +2495,15 @@ public class SubscriptionManager extends BaseLockssDaemonManager implements
     if (unsubscribedRanges != null) {
       // Find the existing unsubscribed ranges for the subscription.
       List<BibliographicPeriod> existingRanges =
-	  findSubscriptionRanges(conn, subscriptionSeq, false);
+	  subManagerSql.findSubscriptionRanges(conn, subscriptionSeq, false);
 
       // Loop through all the unsubscribed ranges to be persisted.
       for (BibliographicPeriod range : unsubscribedRanges) {
 	// Check whether the range to be persisted does not exist already.
 	if (!existingRanges.contains(range)) {
 	  // Persist the unsubscribed range.
-	  count +=
-	      persistSubscriptionRange(conn, subscriptionSeq, range, false);
+	  count += subManagerSql.persistSubscriptionRange(conn, subscriptionSeq,
+	      range, false);
 	}
       }
     }
@@ -3055,8 +2515,6 @@ public class SubscriptionManager extends BaseLockssDaemonManager implements
    * Configures the archival units covered by the subscribed ranges of a
    * publication and not covered by the unsubscribed ranges.
    * 
-   * @param conn
-   *          A Connection with the database connection to be used.
    * @param publication
    *          A SerialPublication with the publication involved.
    * @param subscribedRanges
@@ -3068,14 +2526,10 @@ public class SubscriptionManager extends BaseLockssDaemonManager implements
    * @return a BatchAuStatus with the status of the operation.
    * @throws IOException
    *           if there are problems configuring the archival units.
-   * @throws DbException
-   *           if any problem occurred accessing the database.
    */
-  private BatchAuStatus configureAus(Connection conn,
-      SerialPublication publication,
+  private BatchAuStatus configureAus(SerialPublication publication,
       List<BibliographicPeriod> subscribedRanges,
-      List<BibliographicPeriod> unsubscribedRanges)
-	  throws IOException, DbException {
+      List<BibliographicPeriod> unsubscribedRanges) throws IOException {
     final String DEBUG_HEADER = "configureAus(): ";
     if (log.isDebug2()) {
       log.debug2(DEBUG_HEADER + "publication = " + publication);
@@ -3113,7 +2567,7 @@ public class SubscriptionManager extends BaseLockssDaemonManager implements
 	// Yes: Add the archival unit to the configuration of those to be
 	// configured.
 	config = addAuConfiguration(tdbAu, auId, config);
-	if (log.isDebug3()) log.debug3(DEBUG_HEADER + "config = " + config);
+	//if (log.isDebug3()) log.debug3(DEBUG_HEADER + "config = " + config);
       } else {
 	if (log.isDebug3()) log.debug3(DEBUG_HEADER + "TdbAu '" + tdbAu
 	    + "' is already configured.");
@@ -3128,16 +2582,39 @@ public class SubscriptionManager extends BaseLockssDaemonManager implements
   /**
    * Updates existing subscriptions.
    * 
+   * @param totalSubscriptionChanged
+   *          A Boolean with the indication of whether the total subscription
+   *          setting has changed.
+   * @param updatedTotalSubscriptionSetting
+   *          A Boolean with the updated total subscription setting.
+   * @param publisherSubscriptions
+   *          A Collection<PublisherSubscription> with the publisher
+   *          subscriptions to be updated.
    * @param subscriptions
    *          A Collection<Subscription> with the subscriptions to be updated.
    * @param status
    *          A SubscriptionOperationStatus where to return the status of the
    *          operation.
    */
-  public void updateSubscriptions(Collection<Subscription> subscriptions,
+  public void updateSubscriptions(boolean totalSubscriptionChanged,
+      Boolean updatedTotalSubscriptionSetting,
+      Collection<PublisherSubscription> publisherSubscriptions,
+      Collection<Subscription> subscriptions,
       SubscriptionOperationStatus status) {
     final String DEBUG_HEADER = "updateSubscriptions(): ";
     if (log.isDebug2()) {
+      log.debug2(DEBUG_HEADER + "totalSubscriptionChanged = "
+	  + totalSubscriptionChanged);
+      log.debug2(DEBUG_HEADER + "updatedTotalSubscriptionSetting = "
+	  + updatedTotalSubscriptionSetting);
+
+      if (publisherSubscriptions != null) {
+	log.debug2(DEBUG_HEADER + "publisherSubscriptions.size() = "
+	    + publisherSubscriptions.size());
+      } else {
+	log.debug2(DEBUG_HEADER + "publisherSubscriptions is null");
+      }
+
       if (subscriptions != null) {
 	log.debug2(DEBUG_HEADER + "subscriptions.size() = "
 	    + subscriptions.size());
@@ -3157,6 +2634,13 @@ public class SubscriptionManager extends BaseLockssDaemonManager implements
     } catch (DbException dbe) {
       log.error(CANNOT_CONNECT_TO_DB_ERROR_MESSAGE, dbe);
 
+      for (PublisherSubscription publisherSubscription
+	  : publisherSubscriptions) {
+	status.addPublisherStatusEntry(publisherSubscription.getPublisher()
+	    .getPublisherName(), false, dbe.getMessage(),
+	    publisherSubscription.getSubscribed());
+      }
+
       for (Subscription subscription : subscriptions) {
 	status.addStatusEntry(subscription.getPublication()
 	    .getPublicationName(), false, dbe.getMessage(), null);
@@ -3166,9 +2650,55 @@ public class SubscriptionManager extends BaseLockssDaemonManager implements
       return;
     }
 
+    if (isTotalSubscriptionEnabled && totalSubscriptionChanged) {
+      updateTotalSubscription(conn, updatedTotalSubscriptionSetting, status);
+    }
+
     BatchAuStatus bas;
 
     try {
+      // Loop through all the publisher subscriptions.
+      for (PublisherSubscription publisherSubscription
+	  : publisherSubscriptions) {
+	if (log.isDebug3()) log.debug3(DEBUG_HEADER + "publisherSubscription = "
+	  + publisherSubscription);
+
+	String publisherName =
+	    publisherSubscription.getPublisher().getPublisherName();
+	if (log.isDebug3())
+	  log.debug3(DEBUG_HEADER + "publisherName = " + publisherName);
+
+	Boolean subscribed = publisherSubscription.getSubscribed();
+	if (log.isDebug3())
+	  log.debug3(DEBUG_HEADER + "subscribed = " + subscribed);
+
+	try {
+	  // Update the publisher subscription in the database.
+	  persistPublisherSubscription(conn, publisherSubscription);
+	  DbManager.commitOrRollback(conn, log);
+
+	  if (subscribed != null && subscribed.booleanValue()) {
+	    handleStartingPublisherSubscription(publisherSubscription);
+	  }
+
+	  status.addPublisherStatusEntry(publisherName, true, null, subscribed);
+	} catch (DbException dbe) {
+	  try {
+	    if ((conn != null) && !conn.isClosed()) {
+	      conn.rollback();
+	    }
+	  } catch (SQLException sqle) {
+	    log.error(CANNOT_ROLL_BACK_DB_CONNECTION_ERROR_MESSAGE, sqle);
+	  }
+
+	  log.error("Cannot update publisher subscription "
+	      + publisherSubscription, dbe);
+
+	  status.addPublisherStatusEntry(publisherName, false, dbe.getMessage(),
+	      subscribed);
+	}
+      }
+
       // Loop through all the subscriptions.
       for (Subscription subscription : subscriptions) {
 	if (log.isDebug3())
@@ -3191,7 +2721,7 @@ public class SubscriptionManager extends BaseLockssDaemonManager implements
 	          || !subscribedRanges.iterator().next().isEmpty())) {
 	    // Yes: Configure the archival units that correspond to this
 	    // subscription.
-	    bas = configureAus(conn, subscription);
+	    bas = configureAus(subscription);
 	  } else {
 	    bas = null;
 	  }
@@ -3274,7 +2804,8 @@ public class SubscriptionManager extends BaseLockssDaemonManager implements
       log.debug3(DEBUG_HEADER + "subscriptionSeq = " + subscriptionSeq);
 
     // Delete all the subscription ranges.
-    int deletedRangesCount = deleteAllSubscriptionRanges(conn, subscriptionSeq);
+    int deletedRangesCount =
+	subManagerSql.deleteAllSubscriptionRanges(conn, subscriptionSeq);
     if (log.isDebug3())
       log.debug3(DEBUG_HEADER + "deletedRangesCount = " + deletedRangesCount);
 
@@ -3295,46 +2826,6 @@ public class SubscriptionManager extends BaseLockssDaemonManager implements
     persistSubscriptionRanges(conn, subscriptionSeq, ranges, false);
 
     if (log.isDebug2()) log.debug2(DEBUG_HEADER + "Done.");
-  }
-
-  /**
-   * Deletes all the ranges of a given subscription.
-   * 
-   * @param conn
-   *          A Connection with the database connection to be used.
-   * @param subscriptionSeq
-   *          A Long with the identifier of the subscription.
-   * @return an int with the number of deleted rows.
-   * @throws DbException
-   *           if any problem occurred accessing the database.
-   */
-  private int deleteAllSubscriptionRanges(Connection conn, Long subscriptionSeq)
-      throws DbException {
-    final String DEBUG_HEADER = "deleteAllSubscriptionRanges(): ";
-    if (log.isDebug2())
-      log.debug2(DEBUG_HEADER + "subscriptionSeq = " + subscriptionSeq);
-
-    int count = 0;
-    PreparedStatement deleteAllSubscriptionRanges =
-	dbManager.prepareStatement(conn, DELETE_ALL_SUBSCRIPTION_RANGES_QUERY);
-
-    try {
-      deleteAllSubscriptionRanges.setLong(1, subscriptionSeq);
-
-      count = dbManager.executeUpdate(deleteAllSubscriptionRanges);
-      if (log.isDebug3())
-	log.debug3(DEBUG_HEADER + "Deleted " + count + " subscription ranges.");
-    } catch (SQLException sqle) {
-      log.error("Cannot delete subscription ranges", sqle);
-      log.error("SQL = '" + DELETE_ALL_SUBSCRIPTION_RANGES_QUERY + "'.");
-      log.error("subscriptionSeq = " + subscriptionSeq);
-      throw new DbException("Cannot delete subscription ranges", sqle);
-    } finally {
-      DbManager.safeCloseStatement(deleteAllSubscriptionRanges);
-    }
-
-    if (log.isDebug2()) log.debug2(DEBUG_HEADER + "count = " + count);
-    return count;
   }
 
   /**
@@ -3365,9 +2856,9 @@ public class SubscriptionManager extends BaseLockssDaemonManager implements
     // Loop through the ranges to be persisted.
     if (ranges != null) {
       for (BibliographicPeriod range : ranges) {
-	if (log.isDebug3())
-	  log.debug3(DEBUG_HEADER + "range = " + range);
-	persistSubscriptionRange(conn, subscriptionSeq, range, subscribed);
+	if (log.isDebug3()) log.debug3(DEBUG_HEADER + "range = " + range);
+	subManagerSql.persistSubscriptionRange(conn, subscriptionSeq, range,
+	    subscribed);
       }
     }
 
@@ -3398,7 +2889,7 @@ public class SubscriptionManager extends BaseLockssDaemonManager implements
    * 
    * @return a String identifying the repository to be used.
    */
-  synchronized String getRepository() {
+  private synchronized String getRepository() {
     final String DEBUG_HEADER = "getRepository(): ";
 
     // Check whether there is no list of weighted repositories.
@@ -3612,20 +3103,6 @@ public class SubscriptionManager extends BaseLockssDaemonManager implements
   };
 
   /**
-   * Provides the SQL statement used to insert a subscription range.
-   * 
-   * @return a String with the SQL statement used to insert a subscription
-   *         range.
-   */
-  private String getInsertSubscriptionRangeSql() {
-    if (dbManager.isTypeMysql()) {
-      return INSERT_SUBSCRIPTION_RANGE_MYSQL_QUERY;
-    }
-
-    return INSERT_SUBSCRIPTION_RANGE_QUERY;
-  }
-
-  /**
    * Writes to a zip file the subscription definitions.
    * 
    * @param zipStream
@@ -3638,8 +3115,35 @@ public class SubscriptionManager extends BaseLockssDaemonManager implements
     final String DEBUG_HEADER = "writeSubscriptionsBackupToZip(): ";
     if (log.isDebug2()) log.debug2(DEBUG_HEADER + "Starting...");
 
+    // Get the publisher subscriptions.
+    List<PublisherSubscription> publisherSubscriptions =
+	subManagerSql.findPublisherSubscriptionDataForBackup();
+    if (log.isDebug3()) log.debug3(DEBUG_HEADER + "publisherSubscriptions = "
+	+ publisherSubscriptions);
+
+    // Do nothing if there are no publisher subscriptions.
+    if (publisherSubscriptions == null || publisherSubscriptions.size() == 0) {
+      if (log.isDebug3())
+	log.debug3(DEBUG_HEADER + "No publisher subscriptions to write.");
+    }
+
+    // Create the publisher subscription backup file entry.
+    zipStream.putNextEntry(new ZipEntry(
+	PUBLISHER_SUBSCRIPTION_BACKUP_FILENAME));
+
+    // Loop through all the subscription definitions to be backed up.
+    for (PublisherSubscription publisherSubscription : publisherSubscriptions) {
+      // Write this publisher subscription definition to the zip file.
+      writePublisherSubscriptionBackupToStream(publisherSubscription,
+	  zipStream);
+    }
+
+    // Close the subscription backup file entry.
+    zipStream.closeEntry();
+
     // Get the subscriptions.
-    List<Subscription> subscriptions = findSubscriptionDataForBackup();
+    List<Subscription> subscriptions =
+	subManagerSql.findSubscriptionDataForBackup();
     if (log.isDebug3())
       log.debug3(DEBUG_HEADER + "subscriptions = " + subscriptions);
 
@@ -3651,7 +3155,7 @@ public class SubscriptionManager extends BaseLockssDaemonManager implements
     }
 
     // Create the subscription backup file entry.
-    zipStream.putNextEntry(new ZipEntry(BACKUP_FILENAME));
+    zipStream.putNextEntry(new ZipEntry(SUBSCRIPTION_BACKUP_FILENAME));
 
     // Loop through all the subscription definitions to be backed up.
     for (Subscription subscription : subscriptions) {
@@ -3666,191 +3170,52 @@ public class SubscriptionManager extends BaseLockssDaemonManager implements
   }
 
   /**
-   * Provides the subscription data for backup purposes.
+   * Writes to a stream the definition of a publisher subscription for backup
+   * purposes.
    * 
-   * @return a List<Subscription> with the subscription data.
-   * @throws DbException
-   *           if any problem occurred accessing the database.
+   * @param publisherSubscription
+   *          A PublisherSubscription with the publisher subscription
+   *          definition.
+   * @param outputStream
+   *          An OutputStream where to write the publisher subscription data.
+   * 
+   * @throws IOException
    */
-  private List<Subscription> findSubscriptionDataForBackup()
-      throws DbException {
-    final String DEBUG_HEADER = "findSubscriptionDataForBackup(): ";
-    if (log.isDebug2()) log.debug2(DEBUG_HEADER + "Starting...");
+  private void writePublisherSubscriptionBackupToStream(
+      PublisherSubscription publisherSubscription, OutputStream outputStream)
+	  throws IOException {
+    final String DEBUG_HEADER = "writePublisherSubscriptionBackupToStream(): ";
+    if (log.isDebug2()) log.debug2(DEBUG_HEADER + "publisherSubscription = "
+	+ publisherSubscription);
 
-    String publicationName = null;
-    String providerLid;
-    String providerName = null;
-    String publisherName = null;
-    String proprietaryId;
-    String pIssn;
-    String eIssn;
-    String range = null;
-    Boolean subscribed = null;
-    String previousPublicationName = null;
-    String previousProviderLid = null;
-    String previousProviderName = null;
-    String previousPublisherName = null;
-    String previousPissn = null;
-    String previousEissn = null;
-    SerialPublication publication;
-    Subscription subscription = null;
-    List<Subscription> subscriptions = new ArrayList<Subscription>();
-    Set<String> proprietaryIds = null;
-
-    // Get a connection to the database.
-    Connection conn = dbManager.getConnection();
-
-    String query = FIND_SUBSCRIPTION_BACKUP_DATA_QUERY;
-    if (log.isDebug3()) log.debug3(DEBUG_HEADER + "SQL = " + query);
-
-    PreparedStatement getSubscriptionDataForBackup =
-	dbManager.prepareStatement(conn, query);
-    ResultSet resultSet = null;
-
-    try {
-      // Get the subscriptions from the database.
-      resultSet = dbManager.executeQuery(getSubscriptionDataForBackup);
-
-      // Loop through all the results.
-      while (resultSet.next()) {
-	// Check whether this subscription is the same as the previous one.
-	if (resultSet.getString(PUBLISHER_NAME_COLUMN).equals(publisherName)
-	    && resultSet.getString(NAME_COLUMN).equals(publicationName)
-	    && resultSet.getString(PROVIDER_NAME_COLUMN).equals(providerName)
-	    && resultSet.getString(SUBSCRIPTION_RANGE_COLUMN).equals(range)
-	    && resultSet.getBoolean(SUBSCRIBED_COLUMN) == subscribed) {
-	  // Yes: This means that the publication has multiple values for some
-	  // attributes. Get the proprietary identifier.
-	  proprietaryId = resultSet.getString(PROPRIETARY_ID_COLUMN);
-	  if (log.isDebug3())
-	    log.debug3(DEBUG_HEADER + "proprietaryId = " + proprietaryId);
-
-	  // Add it to the list of proprietary identifiers, if it exists.
-	  if (!StringUtil.isNullString(proprietaryId)) {
-	    proprietaryIds.add(proprietaryId);
-	    if (log.isDebug3()) log.debug3(DEBUG_HEADER
-		+ "Added proprietaryId = '" + proprietaryId + "'.");
-	  }
-
-	  continue;
-	}
-
-	// Get the publication data.
-	publisherName = resultSet.getString(PUBLISHER_NAME_COLUMN);
-	if (log.isDebug3())
-	  log.debug3(DEBUG_HEADER + "publisherName = " + publisherName);
-
-	publicationName = resultSet.getString(NAME_COLUMN);
-	if (log.isDebug3())
-	  log.debug3(DEBUG_HEADER + "publicationName = " + publicationName);
-
-	providerLid = resultSet.getString(PROVIDER_LID_COLUMN);
-	if (log.isDebug3())
-	  log.debug3(DEBUG_HEADER + "providerLid = " + providerLid);
-
-	providerName = resultSet.getString(PROVIDER_NAME_COLUMN);
-	if (log.isDebug3())
-	  log.debug3(DEBUG_HEADER + "providerName = " + providerName);
-
-	// Initialize the collection of proprietary identifiers.
-	proprietaryIds = new LinkedHashSet<String>();
-
-	proprietaryId = resultSet.getString(PROPRIETARY_ID_COLUMN);
-	if (log.isDebug3())
-	  log.debug3(DEBUG_HEADER + "proprietaryId = " + proprietaryId);
-
-	// Add it to the list of proprietary identifiers, if it exists.
-	if (!StringUtil.isNullString(proprietaryId)) {
-	  proprietaryIds.add(proprietaryId);
-	  if (log.isDebug3()) log.debug3(DEBUG_HEADER
-	      + "Added proprietaryId = '" + proprietaryId + "'.");
-	}
-
-	pIssn = resultSet.getString(P_ISSN_TYPE);
-	if (log.isDebug3()) log.debug3(DEBUG_HEADER + "pIssn = " + pIssn);
-
-	eIssn = resultSet.getString(E_ISSN_TYPE);
-	if (log.isDebug3()) log.debug3(DEBUG_HEADER + "eIssn = " + eIssn);
-
-	// Check whether the publication of this result does not correspond to
-	// the publication of the previous result.
-	if (((publicationName == null && previousPublicationName != null)
-	     || (publicationName != null
-	         && !publicationName.equals(previousPublicationName)))
-	    || ((providerLid == null && previousProviderLid != null)
-		|| (providerLid != null
-		    && !providerLid.equals(previousProviderLid)))
-	    || ((providerName == null && previousProviderName != null)
-		|| (providerName != null
-		    && !providerName.equals(previousProviderName)))
-	    || ((publisherName == null && previousPublisherName != null)
-		|| (publisherName != null
-		    && !publisherName.equals(previousPublisherName)))
-	    || ((pIssn == null && previousPissn != null)
-		|| (pIssn != null && !pIssn.equals(previousPissn)))
-	    || ((eIssn == null && previousEissn != null)
-		|| (eIssn != null && !eIssn.equals(previousEissn)))) {
-
-	  // Yes: Start a new subscription.
-	  publication = new SerialPublication();
-	  publication.setPublisherName(publisherName);
-	  publication.setPublicationName(publicationName);
-	  publication.setProviderLid(providerLid);
-	  publication.setProviderName(providerName);
-	  publication.setProprietaryIds(proprietaryIds);
-	  publication.setPissn(pIssn);
-	  publication.setEissn(eIssn);
-
-	  // Validate the publication name.
-	  publication.getTdbTitle();
-
-	  subscription = new Subscription();
-	  subscription.setPublication(publication);
-	  subscription.
-	  setSubscribedRanges(new ArrayList<BibliographicPeriod>());
-	  subscription.
-	  setUnsubscribedRanges(new ArrayList<BibliographicPeriod>());
-
-	  subscriptions.add(subscription);
-
-	  // Remember the publication for this subscription.
-	  previousPublisherName = publisherName;
-	  previousPublicationName = publicationName;
-	  previousProviderLid = providerLid;
-	  previousProviderName = providerName;
-	  previousPissn = pIssn;
-	  previousEissn = eIssn;
-	}
-
-	// Get the subscription data.
-	range = resultSet.getString(SUBSCRIPTION_RANGE_COLUMN);
-	if (log.isDebug3()) log.debug3(DEBUG_HEADER + "range = " + range);
-
-	subscribed = resultSet.getBoolean(SUBSCRIBED_COLUMN);
-	if (log.isDebug3())
-	  log.debug3(DEBUG_HEADER + "subscribed = " + subscribed);
-
-	if (subscribed.booleanValue()) {
-	  subscription.getSubscribedRanges().
-	  add(new BibliographicPeriod(range));
-	} else {
-	  subscription.getUnsubscribedRanges().
-	  add(new BibliographicPeriod(range));
-	}
-      }
-    } catch (SQLException sqle) {
-      String message = "Cannot get subscriptions for backup";
-      log.error(message, sqle);
-      log.error("SQL = '" + query + "'.");
-      throw new DbException(message, sqle);
-    } finally {
-      DbManager.safeCloseResultSet(resultSet);
-      DbManager.safeCloseStatement(getSubscriptionDataForBackup);
+    // Ignore empty subscriptions.
+    if (publisherSubscription == null) {
+      log.warning("Null publisher subscription not added to backup file.");
+      return;
     }
 
-    if (log.isDebug2()) log.debug2(DEBUG_HEADER + "subscriptions.size() = "
-	+ subscriptions.size());
-    return subscriptions;
+    // Get the publisher subscription publisher name.
+    String publisherName =
+	publisherSubscription.getPublisher().getPublisherName();
+    if (log.isDebug3())
+      log.debug3(DEBUG_HEADER + "publisherName = " + publisherName);
+
+    // Get the publisher subscription setting.
+    Boolean subscribed = publisherSubscription.getSubscribed();
+    if (log.isDebug3()) log.debug3(DEBUG_HEADER + "subscribed = " + subscribed);
+
+    // Ignore publisher subscriptions with no subscription setting.
+    if (subscribed == null) {
+      log.warning("Publisher subscription with null subscription setting not "
+	  + "added to backup file.");
+      return;
+    }
+
+    // Write the entry to the output stream.
+    outputStream.write((publisherName + BACKUP_FIELD_SEPARATOR + subscribed
+	+ "\n").getBytes(Charset.forName("UTF-8")));
+
+    if (log.isDebug2()) log.debug2(DEBUG_HEADER + "Done.");
   }
 
   /**
@@ -3940,29 +3305,205 @@ public class SubscriptionManager extends BaseLockssDaemonManager implements
     final String DEBUG_HEADER = "loadSubscriptionsFromBackup(): ";
     if (log.isDebug2()) log.debug2(DEBUG_HEADER + "backupDir = " + backupDir);
 
-    // Get the backup file.
-    File backupFile = new File(backupDir, BACKUP_FILENAME);
+    boolean totalSubscriptionChanged = false;
+    Boolean totalSubscriptionSetting = null;
+    List<PublisherSubscription> publisherSubscriptions =
+    new ArrayList<PublisherSubscription>();
+    List<Subscription> subscriptions = new ArrayList<Subscription>();
 
-    // Do nothing more if the backup file does not exist.
-    if (!backupFile.exists()) {
+    // Get the publisher subscriptions backup file.
+    File backupFile =
+	new File(backupDir, PUBLISHER_SUBSCRIPTION_BACKUP_FILENAME);
+
+    // Check whether the backup file exists.
+    if (backupFile.exists()) {
+      // Yes: Get the publisher subscriptions defined in the backup file.
+      publisherSubscriptions =
+	  getPublisherSubscriptionsFromBackupFile(backupFile);
+      if (log.isDebug3()) log.debug3(DEBUG_HEADER
+	  + "publisherSubscriptions.size() = " + publisherSubscriptions.size());
+
+      PublisherSubscription totalSubscription = null;
+
+      // Determine the total subscription setting, if specified.
+      for (PublisherSubscription publisherSubscription
+	  : publisherSubscriptions) {
+	if (ALL_PUBLISHERS_NAME.equals(
+	    publisherSubscription.getPublisher().getPublisherName())) {
+	  totalSubscription = publisherSubscription;
+	  break;
+	}
+      }
+
+      // Check whether the total subscription setting was specified.
+      if (totalSubscription != null) {
+	// Yes: Remove  it from the list of publisher subscriptions.
+	publisherSubscriptions.remove(totalSubscription);
+
+	// Remember the total subscription setting.
+	totalSubscriptionChanged = true;
+	totalSubscriptionSetting = totalSubscription.getSubscribed();
+	if (log.isDebug3()) log.debug3(DEBUG_HEADER
+	    + "totalSubscriptionSetting = " + totalSubscriptionSetting);
+      }
+    } else {
+      // No.
       if (log.isDebug()) log.debug("No subscription backup file named '" +
-	  BACKUP_FILENAME + "' found in directory '" + backupDir + "'.");
-
-      return;
+	  PUBLISHER_SUBSCRIPTION_BACKUP_FILENAME + "' found in directory '"
+	  + backupDir + "'.");
     }
 
-    // Get the subscriptions defined in the backup file.
-    List<Subscription> subscriptions =
-	getSubscriptionsFromBackupFile(backupFile);
-    if (log.isDebug3()) log.debug3(DEBUG_HEADER + "subscriptions.size() = "
-	+ subscriptions.size());
+    // Get the publication subscriptions backup file.
+    backupFile = new File(backupDir, SUBSCRIPTION_BACKUP_FILENAME);
+
+    // Check whether the backup file exists.
+    if (backupFile.exists()) {
+      // Yes: Get the subscriptions defined in the backup file.
+      subscriptions = getSubscriptionsFromBackupFile(backupFile);
+      if (log.isDebug3()) log.debug3(DEBUG_HEADER + "subscriptions.size() = "
+  	+ subscriptions.size());
+    } else {
+      // No.
+      if (log.isDebug()) log.debug("No subscription backup file named '" +
+	  SUBSCRIPTION_BACKUP_FILENAME + "' found in directory '" + backupDir
+	  + "'.");
+    }
 
     // Add to the system any subscriptions defined in the backup file.
-    if (subscriptions.size() > 0) {
-      addSubscriptions(subscriptions, new SubscriptionOperationStatus());
+    if (totalSubscriptionChanged || publisherSubscriptions.size() > 0
+	|| subscriptions.size() > 0) {
+      addSubscriptions(totalSubscriptionChanged, totalSubscriptionSetting,
+	  publisherSubscriptions, subscriptions,
+	  new SubscriptionOperationStatus());
     }
 
     if (log.isDebug2()) log.debug2(DEBUG_HEADER + "Done.");
+  }
+
+  /**
+   * Provides the publisher subscriptions defined in a backup file.
+   * 
+   * @param backupFile
+   *          A File with the backup file.
+   * @return a List<PublisherSubscription> with the publisher subscriptions
+   *         defined in the backup file.
+   */
+  private List<PublisherSubscription> getPublisherSubscriptionsFromBackupFile(
+      File backupFile) {
+    final String DEBUG_HEADER = "getPublisherSubscriptionsFromBackupFile(): ";
+    if (log.isDebug2()) log.debug2(DEBUG_HEADER + "backupFile = " + backupFile);
+
+    List<PublisherSubscription> publisherSubscriptions =
+	new ArrayList<PublisherSubscription>();
+
+    InputStream is = null;
+    Reader r = null;
+    BufferedReader br = null;
+    PublisherSubscription publisherSubscription = null;
+
+    try {
+      String line;
+      is = new FileInputStream(backupFile);
+      r = new InputStreamReader(is, "UTF-8");
+      br = new BufferedReader(r);
+
+      // Loop through all the lines in the backup file.
+      while ((line = br.readLine()) != null) {
+	// Get the publisher subscription defined in the line, if any.
+	publisherSubscription =
+	    getPublisherSubscriptionFromBackupFileLine(line);
+
+	// Add the defined subscription to the results.
+	if (publisherSubscription != null) {
+	  publisherSubscriptions.add(publisherSubscription);
+	}
+      }
+    } catch (Exception e) {
+      log.error("Exception caught processing publisher subscription backup "
+	  + "file = " + backupFile, e);
+    } finally {
+      if (br != null) {
+	try {
+	  br.close();
+	} catch(Throwable t) {
+	  if (log.isDebug()) log.debug(DEBUG_HEADER
+	      + "Cound not close BufferedReader for file = " + backupFile);
+	}
+      }
+
+      if (r != null) {
+	try {
+	  r.close();
+	} catch(Throwable t) {
+	  if (log.isDebug()) log.debug(DEBUG_HEADER
+	      + "Cound not close Reader for file = " + backupFile);
+	}
+      }
+
+      if (is != null) {
+	try {
+	  is.close();
+	} catch(Throwable t) {
+	  if (log.isDebug()) log.debug(DEBUG_HEADER
+	      + "Cound not close InputStream for file = " + backupFile);
+	}
+      }
+    }
+
+    if (log.isDebug2()) log.debug2(DEBUG_HEADER + "publisherSubscriptions = "
+	+ publisherSubscriptions);
+    return publisherSubscriptions;
+  }
+
+  /**
+   * Provides the publisher subscription defined in one line of a backup file.
+   * 
+   * @param line
+   *          A String with the publisher subscription definition.
+   * @return a PublisherSubscription with the publisher subscriptions defined in
+   *         the line.
+   */
+  private PublisherSubscription getPublisherSubscriptionFromBackupFileLine(
+      String line) {
+    final String DEBUG_HEADER =
+	"getPublisherSubscriptionFromBackupFileLine(): ";
+    if (log.isDebug2()) log.debug2(DEBUG_HEADER + "line = " + line);
+
+    // Ignore empty lines.
+    if (line == null || line.length() == 0) {
+      if (log.isDebug()) log.debug("No publisher subscription definition in "
+	  + "line '" + line + "'.");
+
+      return null;
+    }
+
+    // Parse the line.
+    Collection<String> items = StringUtil.breakAt(line, BACKUP_FIELD_SEPARATOR);
+
+    // Ignore lines that do not contain a complete publisher subscription
+    // definition.
+    if (items == null || items.size() < 2) {
+      if (log.isDebug()) log.debug("No publisher subscription definition in "
+	  + "line '" + line + "'.");
+
+      return null;
+    }
+
+    Iterator<String> iterator = items.iterator();
+
+    // Get the publisher of the subscription.
+    Publisher publisher = new Publisher();
+    publisher.setPublisherName(iterator.next());
+
+    // Create the publisher subscription to be returned.
+    PublisherSubscription publisherSubscription = new PublisherSubscription();
+
+    publisherSubscription.setPublisher(publisher);
+    publisherSubscription.setSubscribed(Boolean.valueOf(iterator.next()));
+
+    if (log.isDebug2()) log.debug2(DEBUG_HEADER + "publisherSubscription = "
+	+ publisherSubscription);
+    return publisherSubscription;
   }
 
   /**
@@ -4158,170 +3699,527 @@ public class SubscriptionManager extends BaseLockssDaemonManager implements
     List<BibliographicPeriod> unsubscribedRanges =
 	new ArrayList<BibliographicPeriod>();
 
-    //try {
-      Set<Long> subscriptionSeqs = populateTitleSubscriptionRanges(conn, title,
-	  subscribedRanges, unsubscribedRanges);
-      if (log.isDebug3()) {
-	log.debug3(DEBUG_HEADER + "subscriptionSeqs = " + subscriptionSeqs);
-	log.debug3(DEBUG_HEADER + "subscribedRanges = " + subscribedRanges);
-	log.debug3(DEBUG_HEADER + "unsubscribedRanges = " + unsubscribedRanges);
+    Set<Long> subscriptionSeqs = populateTitleSubscriptionRanges(conn, title,
+	subscribedRanges, unsubscribedRanges);
+    if (log.isDebug3()) {
+      log.debug3(DEBUG_HEADER + "subscriptionSeqs = " + subscriptionSeqs);
+      log.debug3(DEBUG_HEADER + "subscribedRanges = " + subscribedRanges);
+      log.debug3(DEBUG_HEADER + "unsubscribedRanges = " + unsubscribedRanges);
+    }
+
+    // Nothing to do if the publication is not covered by any subscription at
+    // all.
+    if (subscriptionSeqs == null || subscriptionSeqs.size() == 0
+	|| subscribedRanges == null || subscribedRanges.size() == 0) {
+      return;
+    }
+
+    // Determine whether the archival unit is currently covered by a subscribed
+    // range.
+    List<TdbAu> tdbAus = new ArrayList<TdbAu>(1);
+    tdbAus.add(tdbAu);
+
+    boolean isSubscribed = false;
+
+    // Loop through all the subscribed ranges.
+    for (BibliographicPeriod range : subscribedRanges) {
+      if (getRangeCoveredTdbAus(range, tdbAus).size() > 0) {
+	isSubscribed = true;
+	break;
       }
+    }
 
-      // Nothing to do if the publication is not covered by any subscription at
-      // all.
-      if (subscriptionSeqs == null || subscriptionSeqs.size() == 0
-	  || subscribedRanges == null || subscribedRanges.size() == 0) {
-	return;
-      }
+    if (log.isDebug3())
+      log.debug3(DEBUG_HEADER + "isSubscribed = " + isSubscribed);
 
-      // Determine whether the archival unit is currently covered by a
-      // subscribed range.
-      List<TdbAu> tdbAus = new ArrayList<TdbAu>(1);
-      tdbAus.add(tdbAu);
-
-      boolean isSubscribed = false;
-
-      // Loop through all the subscribed ranges.
-      for (BibliographicPeriod range : subscribedRanges) {
+    // Nothing to do if the archival unit is not currently covered by a
+    // subscribed range.
+    if (!isSubscribed) {
+      return;
+    }
+    
+    // Determine whether the archival unit is currently covered by an
+    // unsubscribed range, even though it is also covered by a subscribed range.
+    boolean isUnsubscribed = false;
+    
+    // Check whether there are unsubscribed ranges.
+    if (unsubscribedRanges != null && unsubscribedRanges.size() > 0) {
+      // Yes: Loop through all the unsubscribed ranges.
+      for (BibliographicPeriod range : unsubscribedRanges) {
 	if (getRangeCoveredTdbAus(range, tdbAus).size() > 0) {
-	  isSubscribed = true;
+	  isUnsubscribed = true;
 	  break;
 	}
       }
+    }
 
-      if (log.isDebug3())
-	log.debug3(DEBUG_HEADER + "isSubscribed = " + isSubscribed);
+    if (log.isDebug3())
+      log.debug3(DEBUG_HEADER + "isUnsubscribed = " + isUnsubscribed);
 
-      // Nothing to do if the archival unit is not currently covered by a
-      // subscribed range.
-      if (!isSubscribed) {
-	return;
-      }
-    
-      // Determine whether the archival unit is currently covered by an
-      // unsubscribed range, even though it is also covered by a subscribed
-      // range.
-      boolean isUnsubscribed = false;
-    
-      // Check whether there are unsubscribed ranges.
-      if (unsubscribedRanges != null && unsubscribedRanges.size() > 0) {
-	// Yes: Loop through all the unsubscribed ranges.
-	for (BibliographicPeriod range : unsubscribedRanges) {
-	  if (getRangeCoveredTdbAus(range, tdbAus).size() > 0) {
-	    isUnsubscribed = true;
-	    break;
-	  }
+    // Nothing to do if the archival unit is currently covered by an
+    // unsubscribed range.
+    if (isUnsubscribed) {
+      return;
+    }
+
+    // Get the archival unit publication ranges.
+    List<BibliographicPeriod> ranges = tdbAu.getPublicationRanges();
+    if (log.isDebug3()) log.debug3(DEBUG_HEADER + "ranges = " + ranges);
+
+    // Loop through all the archival unit publication ranges to be unsubscribed.
+    for (BibliographicPeriod range : ranges) {
+      if (log.isDebug3()) log.debug3(DEBUG_HEADER + "range = " + range);
+
+      // Loop through all the publication subscriptions in the database.
+      for (Long subscriptionSeq : subscriptionSeqs) {
+	if (log.isDebug3())
+	  log.debug3(DEBUG_HEADER + "subscriptionSeq = " + subscriptionSeq);
+
+	// Find the existing subscribed ranges for the subscription.
+	List<BibliographicPeriod> existingRanges =
+	    subManagerSql.findSubscriptionRanges(conn, subscriptionSeq, true);
+
+	// Check whether the range to be unsubscribed is subscribed.
+	if (existingRanges.contains(range)) {
+	  // Yes: Switch the range from subscribed to unsubscribed.
+	  int count = subManagerSql.updateSubscriptionRangeType(conn,
+	      subscriptionSeq, range, false);
+	  if (log.isDebug3()) log.debug3(DEBUG_HEADER + "count = " + count);
+
+	  if (count > 0) continue;
+	}
+
+	// Find the existing unsubscribed ranges for the subscription.
+	existingRanges =
+	    subManagerSql.findSubscriptionRanges(conn, subscriptionSeq, false);
+
+	// Check whether the range to be persisted does not exist already.
+	if (!existingRanges.contains(range)) {
+	  // Yes: Persist the unsubscribed range.
+	  int count = subManagerSql.persistSubscriptionRange(conn,
+	      subscriptionSeq, range, false);
+	  if (log.isDebug3()) log.debug3(DEBUG_HEADER + "count = " + count);
 	}
       }
-
-      if (log.isDebug3())
-	log.debug3(DEBUG_HEADER + "isUnsubscribed = " + isUnsubscribed);
-
-      // Nothing to do if the archival unit is currently covered by an
-      // unsubscribed range.
-      if (isUnsubscribed) {
-	return;
-      }
-
-      // Get the archival unit publication ranges.
-      List<BibliographicPeriod> ranges = tdbAu.getPublicationRanges();
-      if (log.isDebug3()) log.debug3(DEBUG_HEADER + "ranges = " + ranges);
-
-      // Loop through all the archival unit publication ranges to be
-      // unsubscribed.
-      for (BibliographicPeriod range : ranges) {
-	if (log.isDebug3()) log.debug3(DEBUG_HEADER + "range = " + range);
-
-	// Loop through all the publication subscriptions in the database.
-	for (Long subscriptionSeq : subscriptionSeqs) {
-	  if (log.isDebug3())
-	    log.debug3(DEBUG_HEADER + "subscriptionSeq = " + subscriptionSeq);
-
-	  // Find the existing subscribed ranges for the subscription.
-	  List<BibliographicPeriod> existingRanges =
-	      findSubscriptionRanges(conn, subscriptionSeq, true);
-
-	  // Check whether the range to be unsubscribed is subscribed.
-	  if (existingRanges.contains(range)) {
-	    // Yes: Switch the range from subscribed to unsubscribed.
-	    int count = updateSubscriptionRangeType(conn, subscriptionSeq,
-		range, false);
-	    if (log.isDebug3()) log.debug3(DEBUG_HEADER + "count = " + count);
-
-	    if (count > 0) continue;
-	  }
-
-	  // Find the existing unsubscribed ranges for the subscription.
-	  existingRanges = findSubscriptionRanges(conn, subscriptionSeq, false);
-
-	  // Check whether the range to be persisted does not exist already.
-	  if (!existingRanges.contains(range)) {
-	    // Yes: Persist the unsubscribed range.
-	    int count =
-		persistSubscriptionRange(conn, subscriptionSeq, range, false);
-	    if (log.isDebug3()) log.debug3(DEBUG_HEADER + "count = " + count);
-	  }
-	}
-      }
+    }
 
     if (log.isDebug2()) log.debug2(DEBUG_HEADER + "Done.");
   }
 
   /**
-   * Updates the type of a subscription range.
+   * Provides the SQL code executor.
+   * 
+   * @return a SubscriptionManagerSql with the SQL code executor.
+   */
+  SubscriptionManagerSql getSubscriptionManagerSql() {
+    return subManagerSql;
+  }
+
+  /**
+   * Provides an indication of whether the Total Subscription feature is
+   * enabled.
+   * 
+   * @return a boolean with <code>true</code> if the Total Subscription feature
+   *         is enabled, <code>false</code> otherwise.
+   */
+  public boolean isTotalSubscriptionEnabled() {
+    return isTotalSubscriptionEnabled;
+  }
+
+  /**
+   * Provides the current setting of the Total Subscription feature in the
+   * database.
    * 
    * @param conn
    *          A Connection with the database connection to be used.
-   * @param subscriptionSeq
-   *          A Long with the identifier of the subscription.
-   * @param range
-   *          A BibliographicPeriod with the subscription range.
-   * @param subscribed
-   *          A boolean with the indication of whether the LOCKSS installation
-   *          is subscribed to the publication range or not.
-   * @return an int with the count of rows updated in the database.
+   * @return a Boolean with the current setting of the Total Subscription
+   *         feature in the database.
    * @throws DbException
    *           if any problem occurred accessing the database.
    */
-  private int updateSubscriptionRangeType(Connection conn, Long subscriptionSeq,
-      BibliographicPeriod range, boolean subscribed) throws DbException {
-    final String DEBUG_HEADER = "updateSubscriptionRangeType(): ";
-    if (log.isDebug2()) {
-      log.debug2(DEBUG_HEADER + "subscriptionSeq = " + subscriptionSeq);
-      log.debug2(DEBUG_HEADER + "range = " + range);
-      log.debug2(DEBUG_HEADER + "subscribed = " + subscribed);
+  Boolean findTotalSubscription(Connection conn) throws DbException {
+    final String DEBUG_HEADER = "findTotalSubscription(): ";
+    if (log.isDebug2()) log.debug2(DEBUG_HEADER + "Starting...");
+
+    String errorMessage = "Cannot get the identifier of the publisher used for "
+	+ "the Total Subscription feature";
+
+    Long publisherSeq =
+	dbManager.findOrCreatePublisher(conn, ALL_PUBLISHERS_NAME);
+    if (log.isDebug3())
+      log.debug3(DEBUG_HEADER + "publisherSeq = " + publisherSeq);
+
+    if (publisherSeq == null) {
+      throw new DbException(errorMessage);
     }
 
-    int count = 0;
+    Boolean result =
+	subManagerSql.findPublisherSubscription(conn, publisherSeq);
+    if (log.isDebug2()) log.debug2(DEBUG_HEADER + "result = " + result);
+    return result;
+  }
 
-    // Skip an empty range that does not accomplish anything.
-    if (range.isEmpty()) {
-      if (log.isDebug2()) log.debug2(DEBUG_HEADER + "count = " + count);
-      return count;
-    }
+  /**
+   * Provides the current setting of the Total Subscription feature cached in
+   * this object.
+   * 
+   * @return a Boolean with the current setting of the Total Subscription
+   *         feature cached in this object.
+   */
+  public Boolean isTotalSubscription() {
+    return isTotalSubscription;
+  }
 
-    PreparedStatement updateSubscriptionRange =
-	dbManager.prepareStatement(conn, UPDATE_SUBSCRIPTION_RANGE_TYPE_QUERY);
+  /**
+   * Updates in the database the setting of the Total Subscription feature.
+   * 
+   * @param totalSubscriptionSetting
+   *          A Boolean with the setting of the Total Subscription feature to be
+   *          updated in the database.
+   * @param status
+   *          A SubscriptionOperationStatus with the status of the operation.
+   */
+  private void updateTotalSubscription(Boolean totalSubscriptionSetting,
+      SubscriptionOperationStatus status) {
+    final String DEBUG_HEADER = "updateTotalSubscription(): ";
+    if (log.isDebug2()) log.debug2(DEBUG_HEADER + "totalSubscriptionSetting = "
+	+ totalSubscriptionSetting);
+
+    Connection conn = null;
 
     try {
-      updateSubscriptionRange.setBoolean(1, subscribed);
-      updateSubscriptionRange.setLong(2, subscriptionSeq);
-      updateSubscriptionRange.setString(3, range.toDisplayableString());
+      // Get a connection to the database.
+      conn = dbManager.getConnection();
 
-      count = dbManager.executeUpdate(updateSubscriptionRange);
-      if (log.isDebug3()) log.debug3(DEBUG_HEADER + "count = " + count);
-    } catch (SQLException sqle) {
-      log.error("Cannot update subscription range", sqle);
-      log.error("SQL = '" + UPDATE_SUBSCRIPTION_RANGE_TYPE_QUERY + "'.");
-      log.error("subscriptionSeq = " + subscriptionSeq);
-      log.error("range = " + range);
-      log.error("subscribed = " + subscribed);
-      throw new DbException("Cannot update subscription range", sqle);
-    } finally {
-      DbManager.safeCloseStatement(updateSubscriptionRange);
+      // Update the database.
+      updateTotalSubscription(conn, totalSubscriptionSetting, status);
+    } catch (DbException dbe) {
+      log.error(CANNOT_CONNECT_TO_DB_ERROR_MESSAGE, dbe);
+      status.createTotalSubscriptionStatusEntry(false, dbe.getMessage(),
+	  totalSubscriptionSetting);
+    }
+  }
+
+  /**
+   * Updates in the database the setting of the Total Subscription feature.
+   * 
+   * @param conn
+   *          A Connection with the database connection to be used.
+   * @param totalSubscriptionSetting
+   *          A Boolean with the setting of the Total Subscription feature to be
+   *          updated in the database.
+   * @param status
+   *          A SubscriptionOperationStatus with the status of the operation.
+   */
+  private void updateTotalSubscription(Connection conn,
+      Boolean totalSubscriptionSetting, SubscriptionOperationStatus status) {
+    final String DEBUG_HEADER = "updateTotalSubscription(): ";
+    if (log.isDebug2()) log.debug2(DEBUG_HEADER + "totalSubscriptionSetting = "
+	+ totalSubscriptionSetting);
+
+    try {
+      // Update the database.
+      Long publisherSeq = dbManager.findPublisher(conn, ALL_PUBLISHERS_NAME);
+      if (log.isDebug3())
+        log.debug3(DEBUG_HEADER + "publisherSeq = " + publisherSeq);
+
+      if (publisherSeq == null) {
+	String errorMessage = "Cannot get the identifier of the publisher used "
+	    + "for the Total Subscription feature";
+	log.error(errorMessage);
+	status.createTotalSubscriptionStatusEntry(false, errorMessage,
+		  totalSubscriptionSetting);
+
+	return;
+      }
+
+      if (totalSubscriptionSetting == null) {
+        subManagerSql.deletePublisherSubscription(conn, publisherSeq);
+      } else {
+        subManagerSql.updateOrCreatePublisherSubscription(conn, publisherSeq,
+            totalSubscriptionSetting.booleanValue());
+      }
+
+      DbManager.commitOrRollback(conn, log);
+
+      // Update the local cached value.
+      isTotalSubscription = totalSubscriptionSetting;
+
+      status.createTotalSubscriptionStatusEntry(true, null,
+	  totalSubscriptionSetting);
+    } catch (DbException dbe) {
+      log.error(CANNOT_UPDATE_TOTAL_SUBSCRIPTION_ERROR_MESSAGE, dbe);
+      status.createTotalSubscriptionStatusEntry(false, dbe.getMessage(),
+	  totalSubscriptionSetting);
+    }
+  }
+
+  /**
+   * Provides iterators to the publications that are subscribable.
+   * 
+   * @return A List<Iterator<TdbAu>> with the iterators to the publications that
+   *         are subscribable.
+   */
+  public List<Iterator<TdbAu>> getSubscribableTdbAuIterators() {
+    final String DEBUG_HEADER = "getSubscribableTdbAuIterators(): ";
+    if (log.isDebug2()) log.debug2(DEBUG_HEADER + "Starting...");
+
+    List<Iterator<TdbAu>> subscribableTdbAuIterators =
+	new ArrayList<Iterator<TdbAu>>();
+
+    // Loop through all the publishers.
+    for (TdbPublisher publisher :
+      TdbUtil.getTdb().getAllTdbPublishers().values()) {
+      String publisherName = publisher.getName();
+      if (log.isDebug3())
+	log.debug3(DEBUG_HEADER + "publisherName = " + publisherName);
+
+      // Loop through all the titles (subscribed or not) of the publisher.
+      for (TdbTitle title : publisher.getTdbTitles()) {
+	// Skip any titles that are not subscribable.
+	if (!isSubscribable(title)) {
+	  continue;
+	}
+
+	String titleName = title.getName();
+	if (log.isDebug3())
+	  log.debug3(DEBUG_HEADER + "titleName = " + titleName);
+
+	// Loop through all the title providers. 
+	for (TdbProvider provider : title.getTdbProviders()) {
+	  String providerName = provider.getName();
+	  if (log.isDebug3())
+	    log.debug3(DEBUG_HEADER + "providerName = " + providerName);
+
+	  // TODO: Replace with provider.getLid() when available.
+	  String providerLid = null;
+	  if (log.isDebug3())
+	    log.debug3(DEBUG_HEADER + "providerLid = " + providerLid);
+
+	  subscribableTdbAuIterators.add(provider.tdbAuIterator());
+	}
+      }
     }
 
-    if (log.isDebug2()) log.debug2(DEBUG_HEADER + "count = " + count);
-    return count;
+    if (log.isDebug2()) log.debug2(DEBUG_HEADER
+	+ "subscribableTdbAuIterators.size() = "
+	+ subscribableTdbAuIterators.size());
+    return subscribableTdbAuIterators;
+  }
+
+  /**
+   * Handles the turning on of the Total Subscription feature.
+   * 
+   * @param status
+   *          A SubscriptionOperationStatus where to return the status of the
+   *          operation.
+   */
+  public void handleStartingTotalSubscription(SubscriptionOperationStatus
+      status) {
+    final String DEBUG_HEADER = "handleStartingTotalSubscription(): ";
+    if (log.isDebug2()) log.debug2(DEBUG_HEADER + "Starting...");
+
+    if (!isTotalSubscriptionEnabled) {
+      if (log.isDebug2()) log.debug2(DEBUG_HEADER + "Done.");
+    }
+
+    Connection conn = null;
+
+    try {
+      // Get a connection to the database.
+      conn = dbManager.getConnection();
+    } catch (DbException dbe) {
+      log.error(CANNOT_CONNECT_TO_DB_ERROR_MESSAGE, dbe);
+      status.createTotalSubscriptionStatusEntry(false, dbe.getMessage(), null);
+      if (log.isDebug2()) log.debug(DEBUG_HEADER + "Done.");
+      return;
+    }
+
+    try {
+      updateTotalSubscription(conn, true, status);
+    } finally {
+      DbManager.safeRollbackAndClose(conn);
+    }
+
+    for (Iterator<TdbAu> tdbAuIterator : getSubscribableTdbAuIterators()) {
+      // Check whether this should be done in a new thread.
+      if (mustConfigureStarter == null || mustConfigureStarterThread == null
+	  || !mustConfigureStarterThread.isAlive()) {
+	// Yes: Create it and start it.
+	mustConfigureStarter = new SubscriptionStarter(this,
+	    configureAuBatchSize, configureAuRateLimiter, tdbAuIterator, true);
+
+	mustConfigureStarterThread = new Thread(mustConfigureStarter);
+	mustConfigureStarterThread.start();
+	if (log.isDebug3()) log.debug3(DEBUG_HEADER
+	    + "Created new 'must configure' SubscriptionStarter.");
+      } else {
+	// No: Reuse the existing thread.
+	boolean added = mustConfigureStarter.addTdbAuIterator(tdbAuIterator);
+	if (log.isDebug3()) log.debug3(DEBUG_HEADER + "added = " + added);
+
+	// Check whether the new workload was successfully added.
+	if (added) {
+	  // Yes.
+	  if (log.isDebug3()) log.debug3(DEBUG_HEADER
+	      + "Reused existing 'must configure' SubscriptionStarter.");
+	} else {
+	  // No: Create a new thread and start it.
+	  mustConfigureStarter = new SubscriptionStarter(this,
+	      configureAuBatchSize, configureAuRateLimiter, tdbAuIterator,
+	      true);
+
+	  mustConfigureStarterThread = new Thread(mustConfigureStarter);
+	  mustConfigureStarterThread.start();
+	  if (log.isDebug3()) log.debug3(DEBUG_HEADER
+	      + "Created new 'must configure' SubscriptionStarter.");
+	}
+      }
+    }
+
+    if (log.isDebug2()) log.debug2(DEBUG_HEADER + "Done.");
+  }
+
+  /**
+   * Provides all the subscribed publishers.
+   * 
+   * @return a Map<String, PublisherSubscription> with the subscribed publishers
+   *         keyed by the publisher name.
+   * @throws DbException
+   *           if any problem occurred accessing the database.
+   */
+  public Map<String, PublisherSubscription> findAllSubscribedPublishers()
+      throws DbException {
+    return subManagerSql.findAllSubscribedPublishers();
+  }
+
+  /**
+   * Handles the turning on of the Total Subscription feature.
+   * 
+   * @param status
+   *          A SubscriptionOperationStatus where to return the status of the
+   *          operation.
+   */
+  public void handleStartingPublisherSubscription(
+      PublisherSubscription publisherSubscription) {
+    final String DEBUG_HEADER = "handleStartingPublisherSubscription(): ";
+    if (log.isDebug2()) log.debug2(DEBUG_HEADER + "publisherSubscription = "
+	+ publisherSubscription);
+
+    String publisherName =
+	publisherSubscription.getPublisher().getPublisherName();
+    if (log.isDebug3())
+      log.debug3(DEBUG_HEADER + "publisherName = " + publisherName);
+
+    Boolean subscribed = publisherSubscription.getSubscribed();
+    if (log.isDebug3()) log.debug3(DEBUG_HEADER + "subscribed = " + subscribed);
+
+    List<Iterator<TdbAu>> subscribableTdbAus = null;
+
+    TdbPublisher tdbPublisher = TdbUtil.getTdb().getTdbPublisher(publisherName);
+    subscribableTdbAus = getSubscribableTdbAuIterators(tdbPublisher);
+
+    for (Iterator<TdbAu> tdbAuIterator : subscribableTdbAus) {
+      // Check whether this should be done in a new thread.
+      if (mustConfigureStarter == null || mustConfigureStarterThread == null
+	  || !mustConfigureStarterThread.isAlive()) {
+	// Yes: Create it and start it.
+	mustConfigureStarter = new SubscriptionStarter(this,
+	    configureAuBatchSize, configureAuRateLimiter, tdbAuIterator, true);
+
+	mustConfigureStarterThread = new Thread(mustConfigureStarter);
+	mustConfigureStarterThread.start();
+	if (log.isDebug3()) log.debug3(DEBUG_HEADER
+	    + "Created new 'must configure' SubscriptionStarter.");
+      } else {
+	// No: Reuse the existing thread.
+	boolean added = mustConfigureStarter.addTdbAuIterator(tdbAuIterator);
+	if (log.isDebug3()) log.debug3(DEBUG_HEADER + "added = " + added);
+
+	// Check whether the new workload was successfully added.
+	if (added) {
+	  // Yes.
+	  if (log.isDebug3()) log.debug3(DEBUG_HEADER
+	      + "Reused existing 'must configure' SubscriptionStarter.");
+	} else {
+	  // No: Create a new thread and start it.
+	  mustConfigureStarter = new SubscriptionStarter(this,
+	      configureAuBatchSize, configureAuRateLimiter, tdbAuIterator,
+	      true);
+
+	  mustConfigureStarterThread = new Thread(mustConfigureStarter);
+	  mustConfigureStarterThread.start();
+	  if (log.isDebug3()) log.debug3(DEBUG_HEADER
+	      + "Created new 'must configure' SubscriptionStarter.");
+	}
+      }
+    }
+
+    if (log.isDebug2()) log.debug2(DEBUG_HEADER + "Done.");
+  }
+
+  /**
+   * Provides iterators to the publications that are subscribable.
+   * 
+   * @return A List<Iterator<TdbAu>> with the iterators to the publications that
+   *         are subscribable.
+   */
+  public List<Iterator<TdbAu>> getSubscribableTdbAuIterators(
+      TdbPublisher publisher) {
+    final String DEBUG_HEADER = "getSubscribableTdbAuIterators(): ";
+    if (log.isDebug2()) log.debug2(DEBUG_HEADER + "publisher = " + publisher);
+
+    List<Iterator<TdbAu>> subscribableTdbAuIterators =
+	new ArrayList<Iterator<TdbAu>>();
+
+    String publisherName = publisher.getName();
+    if (log.isDebug3())
+      log.debug3(DEBUG_HEADER + "publisherName = " + publisherName);
+
+    // Loop through all the titles (subscribed or not) of the publisher.
+    for (TdbTitle title : publisher.getTdbTitles()) {
+      // Skip any titles that are not subscribable.
+      if (!isSubscribable(title)) {
+	continue;
+      }
+
+      String titleName = title.getName();
+      if (log.isDebug3()) log.debug3(DEBUG_HEADER + "titleName = " + titleName);
+
+      // Loop through all the title providers. 
+      for (TdbProvider provider : title.getTdbProviders()) {
+	String providerName = provider.getName();
+	if (log.isDebug3())
+	  log.debug3(DEBUG_HEADER + "providerName = " + providerName);
+
+	// TODO: Replace with provider.getLid() when available.
+	String providerLid = null;
+	if (log.isDebug3())
+	  log.debug3(DEBUG_HEADER + "providerLid = " + providerLid);
+
+	subscribableTdbAuIterators.add(provider.tdbAuIterator());
+      }
+    }
+
+    if (log.isDebug2()) log.debug2(DEBUG_HEADER
+	+ "subscribableTdbAuIterators.size() = "
+	+ subscribableTdbAuIterators.size());
+    return subscribableTdbAuIterators;
+  }
+
+  /**
+   * Provides the setting of a publisher subscription.
+   * 
+   * @param conn
+   *          A Connection with the database connection to be used.
+   * @param publisherName
+   *          A String with the name of the publisher.
+   * @return a Boolean with the setting of the publisher subscription.
+   * @throws DbException
+   *           if any problem occurred accessing the database.
+   */
+  public Boolean findPublisherSubscription(Connection conn,
+      String publisherName) throws DbException {
+    return subManagerSql.findPublisherSubscription(conn, publisherName);
   }
 }

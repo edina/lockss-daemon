@@ -42,6 +42,7 @@ import org.lockss.crawler.CrawlManagerStatus;
 import org.lockss.daemon.ConfigParamDescr;
 import org.lockss.daemon.CrawlWindow;
 import org.lockss.daemon.RangeCachedUrlSetSpec;
+import org.lockss.daemon.TitleConfig;
 import org.lockss.extractor.MetadataTarget;
 import org.lockss.plugin.ArchivalUnit;
 import org.lockss.plugin.ArticleFiles;
@@ -117,6 +118,7 @@ public class AuWsSource extends AuWsResult {
   private boolean urlsPopulated = false;
   private boolean substanceUrlsPopulated = false;
   private boolean articleUrlsPopulated = false;
+  private boolean journalTitlePopulated;
 
   private LockssDaemon theDaemon = null;
   private Plugin plugin = null;
@@ -733,36 +735,38 @@ public class AuWsSource extends AuWsResult {
       // Initialize the results.
       List<String> results = new ArrayList<String>();
 
-      int logException = 3;
+      if (AuUtil.hasSubstancePatterns(au)) {
+	int logException = 3;
 
-      CuIterator iterator = getAuCachedUrlSet().getCuIterator();
-      CachedUrl cu = null;
-      SubstanceChecker subChecker = new SubstanceChecker(au);
+	CuIterator iterator = getAuCachedUrlSet().getCuIterator();
+	CachedUrl cu = null;
+	SubstanceChecker subChecker = new SubstanceChecker(au);
 
-      // Loop through all the cached URLs.
-      while (iterator.hasNext()) {
-	try {
-	  cu = iterator.next();
+	// Loop through all the cached URLs.
+	while (iterator.hasNext()) {
+	  try {
+	    cu = iterator.next();
 
-	  // Check whether the cached URL has content.
-	  if (cu.hasContent()) {
-	    // Yes: Get the URL.
-	    String url = cu.getUrl();
+	    // Check whether the cached URL has content.
+	    if (cu.hasContent()) {
+	      // Yes: Get the URL.
+	      String url = cu.getUrl();
 
-	    // Check whether the URL has substance.
-	    if (subChecker.isSubstanceUrl(url)) {
-	      // Yes: Add it to the results.
-	      results.add(url);
+	      // Check whether the URL has substance.
+	      if (subChecker.isSubstanceUrl(url)) {
+		// Yes: Add it to the results.
+		results.add(url);
+	      }
 	    }
+	  } catch (Exception e) {
+	    // It shouldn't happen, but, if it does, it will likely happen many
+	    // times, so avoid cluttering the log.
+	    if (logException-- > 0) {
+	      log.warning("getSubstanceUrls() threw for cu " + cu, e);
+	    }
+	  } finally {
+	    AuUtil.safeRelease(cu);
 	  }
-	} catch (Exception e) {
-	  // It shouldn't happen, but, if it does, it will likely happen many
-	  // times, so avoid cluttering the log.
-	  if (logException-- > 0) {
-	    log.warning("getSubstanceUrls() threw for cu " + cu, e);
-	  }
-	} finally {
-	  AuUtil.safeRelease(cu);
 	}
       }
 
@@ -834,6 +838,25 @@ public class AuWsSource extends AuWsResult {
     }
 
     return super.getArticleUrls();
+  }
+
+  /**
+   * Provides the Archival Unit journal title.
+   * 
+   * @return a String with the journal title.
+   */
+  public String getJournalTitle() {
+    if (!journalTitlePopulated) {
+      TitleConfig tc = au.getTitleConfig();
+
+      if (tc != null) {
+	setJournalTitle(tc.getJournalTitle());
+      }
+
+      journalTitlePopulated = true;
+    }
+
+    return super.getJournalTitle();
   }
 
   /**

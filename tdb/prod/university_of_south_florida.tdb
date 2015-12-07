@@ -19,10 +19,10 @@
     
     param[journal_abbr] = abo
 
-    au < ready ; 2011 ; ABO: Interactive Journal for Women in the Arts, 1640-1830 Volume 1 ; 1 >
-    au < ready ; 2012 ; ABO: Interactive Journal for Women in the Arts, 1640-1830 Volume 2 ; 2 >
-    au < ready ; 2013 ; ABO: Interactive Journal for Women in the Arts, 1640-1830 Volume 3 ; 3 >
-    au < ready ; 2014 ; ABO: Interactive Journal for Women in the Arts, 1640-1830 Volume 4 ; 4 >
+    au < released ; 2011 ; ABO: Interactive Journal for Women in the Arts, 1640-1830 Volume 1 ; 1 >
+    au < released ; 2012 ; ABO: Interactive Journal for Women in the Arts, 1640-1830 Volume 2 ; 2 >
+    au < released ; 2013 ; ABO: Interactive Journal for Women in the Arts, 1640-1830 Volume 3 ; 3 >
+    au < released ; 2014 ; ABO: Interactive Journal for Women in the Arts, 1640-1830 Volume 4 ; 4 >
     au < manifest ; 2015 ; ABO: Interactive Journal for Women in the Arts, 1640-1830 Volume 5 ; 5 >
 
   }
@@ -37,9 +37,9 @@
     
     param[journal_abbr] = alambique
 
-    au < ready ; 2013 ; ABO: Alambique Volume 1 ; 1 >
-    au < ready ; 2014 ; ABO: Alambique Volume 2 ; 2 >
-    au < expected ; 2015 ; ABO: Alambique Volume 3 ; 3 >
+    au < released ; 2013 ; Alambique Volume 1 ; 1 >
+    au < released ; 2014 ; Alambique Volume 2 ; 2 >
+    au < expected ; 2015 ; Alambique Volume 3 ; 3 >
 
   }
 
@@ -54,15 +54,15 @@
 
     param[journal_abbr] = gsp
 
-    au < ready ; 2006 ; Genocide Studies and Prevention Volume 1 ; 1 >
-    au < ready ; 2007 ; Genocide Studies and Prevention Volume 2 ; 2 >
-    au < ready ; 2008 ; Genocide Studies and Prevention Volume 3 ; 3 >
-    au < ready ; 2009 ; Genocide Studies and Prevention Volume 4 ; 4 >
-    au < ready ; 2010 ; Genocide Studies and Prevention Volume 5 ; 5 >
-    au < ready ; 2011 ; Genocide Studies and Prevention Volume 6 ; 6 >
-    au < ready ; 2012 ; Genocide Studies and Prevention Volume 7 ; 7 >
-    au < ready ; 2014 ; Genocide Studies and Prevention Volume 8 ; 8 >
-    au < expected ; 2015 ; Genocide Studies and Prevention Volume 9 ; 9 >
+    au < released ; 2006 ; Genocide Studies and Prevention Volume 1 ; 1 >
+    au < released ; 2007 ; Genocide Studies and Prevention Volume 2 ; 2 >
+    au < released ; 2008 ; Genocide Studies and Prevention Volume 3 ; 3 >
+    au < released ; 2009 ; Genocide Studies and Prevention Volume 4 ; 4 >
+    au < released ; 2010 ; Genocide Studies and Prevention Volume 5 ; 5 >
+    au < released ; 2011 ; Genocide Studies and Prevention Volume 6 ; 6 >
+    au < released ; 2012 ; Genocide Studies and Prevention Volume 7 ; 7 >
+    au < released ; 2014 ; Genocide Studies and Prevention Volume 8 ; 8 >
+    au < manifest ; 2015 ; Genocide Studies and Prevention Volume 9 ; 9 >
 
   }
 
@@ -78,24 +78,52 @@
     param[journal_abbr] = jea
     comment[0] = titles changed in 2000
 
-    au < ready ; 1997 ; Georgia Journal of Ecological Anthropology Volume 1 ; 1 >
-    au < ready ; 1998 ; Georgia Journal of Ecological Anthropology Volume 2 ; 2 >
-    au < ready ; 1999 ; Georgia Journal of Ecological Anthropology Volume 3 ; 3 >
-    au < ready ; 2000 ; Journal of Ecological Anthropology Volume 4 ; 4 >
-    au < ready ; 2001 ; Journal of Ecological Anthropology Volume 5 ; 5 >
-    au < ready ; 2002 ; Journal of Ecological Anthropology Volume 6 ; 6 >
-    au < ready ; 2003 ; Journal of Ecological Anthropology Volume 7 ; 7 >
-    au < ready ; 2004 ; Journal of Ecological Anthropology Volume 8 ; 8 >
-    au < ready ; 2005 ; Journal of Ecological Anthropology Volume 9 ; 9 >
-    au < ready ; 2006 ; Journal of Ecological Anthropology Volume 10 ; 10 >
-    au < ready ; 2007 ; Journal of Ecological Anthropology Volume 11 ; 11 >
-    au < ready ; 2008 ; Journal of Ecological Anthropology Volume 12 ; 12 >
-    au < ready ; 2009 ; Journal of Ecological Anthropology Volume 13 ; 13 >
-    au < ready ; 2010 ; Journal of Ecological Anthropology Volume 14 ; 14 >
-    au < ready ; 2012 ; Journal of Ecological Anthropology Volume 15 ; 15 >
-    au < ready ; 2013 ; Journal of Ecological Anthropology Volume 16 ; 16 >
-    au < testing ; 2014 ; Journal of Ecological Anthropology Volume 17 ; 17 >
+    au < released ; 1997 ; Georgia Journal of Ecological Anthropology Volume 1 ; 1 >
+    au < released ; 1998 ; Georgia Journal of Ecological Anthropology Volume 2 ; 2 >
+    au < released ; 1999 ; Georgia Journal of Ecological Anthropology Volume 3 ; 3 >
+    au < released ; 2000 ; Journal of Ecological Anthropology Volume 4 ; 4 >
+    au < released ; 2001 ; Journal of Ecological Anthropology Volume 5 ; 5 >
+    au < released ; 2002 ; Journal of Ecological Anthropology Volume 6 ; 6 >
+    au < released ; 2003 ; Journal of Ecological Anthropology Volume 7 ; 7 >
+    au < released ; 2004 ; Journal of Ecological Anthropology Volume 8 ; 8 >
+    au < released ; 2005 ; Journal of Ecological Anthropology Volume 9 ; 9 >
+    au < released ; 2006 ; Journal of Ecological Anthropology Volume 10 ; 10 >
+    au < released ; 2007 ; Journal of Ecological Anthropology Volume 11 ; 11 >
+    au < released ; 2008 ; Journal of Ecological Anthropology Volume 12 ; 12 >
+    au < released ; 2009 ; Journal of Ecological Anthropology Volume 13 ; 13 >
+    au < released ; 2010 ; Journal of Ecological Anthropology Volume 14 ; 14 >
+    au < released ; 2012 ; Journal of Ecological Anthropology Volume 15 ; 15 >
+    au < released ; 2013 ; Journal of Ecological Anthropology Volume 16 ; 16 >
+    au < released ; 2014 ; Journal of Ecological Anthropology Volume 17 ; 17 >
     au < manifest ; 2015 ; Journal of Ecological Anthropology Volume 18 ; 18 >
+
+  }
+
+  {
+  
+    title <
+      name = Journal of Public Transportation ;
+      issn = 1077-291X ;
+      eissn = 2375-0901 ;
+      issnl = 1077-291X
+    >
+
+    param[journal_abbr] = jpt
+
+    au < released ; 2002 ; Journal of Public Transportation Volume 5 ; 5 >
+    au < released ; 2003 ; Journal of Public Transportation Volume 6 ; 6 >
+    au < released ; 2004 ; Journal of Public Transportation Volume 7 ; 7 >
+    au < released ; 2005 ; Journal of Public Transportation Volume 8 ; 8 >
+    au < released ; 2006 ; Journal of Public Transportation Volume 9 ; 9 >
+    au < released ; 2007 ; Journal of Public Transportation Volume 10 ; 10 >
+    au < released ; 2008 ; Journal of Public Transportation Volume 11 ; 11 >
+    au < released ; 2009 ; Journal of Public Transportation Volume 12 ; 12 >
+    au < released ; 2010 ; Journal of Public Transportation Volume 13 ; 13 >
+    au < released ; 2011 ; Journal of Public Transportation Volume 14 ; 14 >
+    au < released ; 2012 ; Journal of Public Transportation Volume 15 ; 15 >
+    au < released ; 2013 ; Journal of Public Transportation Volume 16 ; 16 >
+    au < released ; 2014 ; Journal of Public Transportation Volume 17 ; 17 >
+    au < manifest ; 2015 ; Journal of Public Transportation Volume 18 ; 18 >
 
   }
 
@@ -109,13 +137,13 @@
 
     param[journal_abbr] = numeracy
 
-    au < ready ; 2008 ; Numeracy Volume 1 ; 1 >
-    au < testing ; 2009 ; Numeracy Volume 2 ; 2 >
-    au < ready ; 2010 ; Numeracy Volume 3 ; 3 >
-    au < ready ; 2011 ; Numeracy Volume 4 ; 4 >
-    au < ready ; 2012 ; Numeracy Volume 5 ; 5 >
-    au < ready ; 2013 ; Numeracy Volume 6 ; 6 >
-    au < ready ; 2014 ; Numeracy Volume 7 ; 7 >
+    au < released ; 2008 ; Numeracy Volume 1 ; 1 >
+    au < released ; 2009 ; Numeracy Volume 2 ; 2 >
+    au < released ; 2010 ; Numeracy Volume 3 ; 3 >
+    au < released ; 2011 ; Numeracy Volume 4 ; 4 >
+    au < released ; 2012 ; Numeracy Volume 5 ; 5 >
+    au < released ; 2013 ; Numeracy Volume 6 ; 6 >
+    au < released ; 2014 ; Numeracy Volume 7 ; 7 >
     au < manifest ; 2015 ; Numeracy Volume 8 ; 8 >
 
   }
@@ -131,10 +159,10 @@
 
     param[journal_abbr] = surcosur
 
-    au < ready ; 2011 ; Revista Surco Sur Volume 1 ; 1 >
-    au < ready ; 2012 ; Revista Surco Sur Volume 2 ; 2 >
-    au < ready ; 2013 ; Revista Surco Sur Volume 3 ; 3 >
-    au < ready ; 2014 ; Revista Surco Sur Volume 4 ; 4 >
+    au < released ; 2011 ; Revista Surco Sur Volume 1 ; 1 >
+    au < released ; 2012 ; Revista Surco Sur Volume 2 ; 2 >
+    au < released ; 2013 ; Revista Surco Sur Volume 3 ; 3 >
+    au < released ; 2014 ; Revista Surco Sur Volume 4 ; 4 >
     au < manifest ; 2015 ; Revista Surco Sur Volume 5 ; 5 >
 
   }

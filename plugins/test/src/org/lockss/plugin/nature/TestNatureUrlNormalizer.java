@@ -36,12 +36,41 @@ import org.lockss.test.LockssTestCase;
  */
 public class TestNatureUrlNormalizer extends LockssTestCase {
 
-  public void testUrlNormalizer() throws Exception { 
+  public void testUrlNormalizerMessageRemoval() throws Exception { 
     UrlNormalizer normalizer = new NaturePublishingGroupUrlNormalizer();
     assertEquals("http://www.nature.com/onc/journal/v29/n37/full/onc2010273a.html",
     			 normalizer.normalizeUrl("http://www.nature.com/onc/journal/v29/n37/full/onc2010273a.html", null));
     assertEquals("http://www.nature.com/onc/journal/v29/n37/full/onc2010273a.html",
-    			 normalizer.normalizeUrl("http://www.nature.com/onc/journal/v29/n37/full/onc2010273a.html?message=remove", null));
+        normalizer.normalizeUrl("http://www.nature.com/onc/journal/v29/n37/full/onc2010273a.html?message=remove", null));
+    assertEquals("http://www.nature.com/onc/journal/v29/n37/full/onc2010273a.html",
+        normalizer.normalizeUrl("http://www.nature.com/onc/journal/v29/n37/full/onc2010273a.html?message-global=remove", null));
+    assertEquals("http://www.nature.com/onc/journal/v29/n37/full/onc2010273a.html?message-foo=remove",
+        normalizer.normalizeUrl("http://www.nature.com/onc/journal/v29/n37/full/onc2010273a.html?message-foo=remove", null));
+    assertEquals("http://www.nature.com/onc/journal/v29/n37/full/onc2010273a.html?other=blah",
+        normalizer.normalizeUrl("http://www.nature.com/onc/journal/v29/n37/full/onc2010273a.html?other=blah", null));
+    //in the middle of the argument list
+    assertEquals("http://www.nature.com/am/journal/v5/n9/suppinfo/am201343s1.html?url=/am/journal/v5/n9/abs/am201343a.html",
+        normalizer.normalizeUrl("http://www.nature.com/am/journal/v5/n9/suppinfo/am201343s1.html?message=remove&url=/am/journal/v5/n9/abs/am201343a.html",null));
+    // not seen yet but being proactive
+    assertEquals("http://www.nature.com/am/journal/v5/n9/suppinfo/am201343s1.html?url=/am/journal/v5/n9/abs/am201343a.html&arg=foo",
+        normalizer.normalizeUrl("http://www.nature.com/am/journal/v5/n9/suppinfo/am201343s1.html?url=/am/journal/v5/n9/abs/am201343a.html&message=remove&arg=foo",null));
+    // what if it was at the end, but not the only argument
+    assertEquals("http://www.nature.com/am/journal/v5/n9/suppinfo/am201343s1.html?url=/am/journal/v5/n9/abs/am201343a.html&arg=foo",
+        normalizer.normalizeUrl("http://www.nature.com/am/journal/v5/n9/suppinfo/am201343s1.html?url=/am/journal/v5/n9/abs/am201343a.html&arg=foo&message=remove",null));
+
   }
+  public void testUrlNormalizerTOCindex() throws Exception { 
+    UrlNormalizer normalizer = new NaturePublishingGroupUrlNormalizer();
+    // article still works
+    assertEquals("http://www.nature.com/onc/journal/v29/n37/full/onc2010273a.html",
+        normalizer.normalizeUrl("http://www.nature.com/onc/journal/v29/n37/full/onc2010273a.html", null));
+    // a correct toc still works
+    assertEquals("http://www.nature.com/onc/journal/v29/n37/index.html",
+        normalizer.normalizeUrl("http://www.nature.com/onc/journal/v29/n37/index.html", null));
+    // correct the incomplete toc url
+    assertEquals("http://www.nature.com/onc/journal/v29/n37/index.html",
+        normalizer.normalizeUrl("http://www.nature.com/onc/journal/v29/n37", null));
+  }
+
   
 }

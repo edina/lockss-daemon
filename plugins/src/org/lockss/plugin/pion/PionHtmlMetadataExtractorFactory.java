@@ -4,7 +4,7 @@
 
 /*
 
- Copyright (c) 2000-2014 Board of Trustees of Leland Stanford Jr. University,
+ Copyright (c) 2000-2015 Board of Trustees of Leland Stanford Jr. University,
  all rights reserved.
 
  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -54,7 +54,6 @@ public class PionHtmlMetadataExtractorFactory
   public FileMetadataExtractor createFileMetadataExtractor(MetadataTarget target,
 							   String contentType)
       throws PluginException {
-	  log.debug("createFME was called");
     return new PionHtmlMetadataExtractor();
   }
 
@@ -98,10 +97,40 @@ public class PionHtmlMetadataExtractorFactory
     @Override
     public void extract(MetadataTarget target, CachedUrl cu, Emitter emitter)
       throws IOException {
-    	log.debug("The MetadataExtractor attempted to extract metadata from cu: "+cu);
-    	ArticleMetadata am = 
-        new SimpleHtmlMetaTagMetadataExtractor().extract(target, cu);
-      am.cook(tagMap);
+      log.debug3("The MetadataExtractor attempted to extract metadata from cu: "+cu);
+      ArticleMetadata am = 
+          new SimpleHtmlMetaTagMetadataExtractor().extract(target, cu);
+      String curl = cu.getUrl();
+      if (am != null) {
+        String url = am.get(MetadataField.FIELD_ACCESS_URL);
+        if (url != null && !url.isEmpty()) {
+          CachedUrl val = cu.getArchivalUnit().makeCachedUrl(url);
+          if (!val.hasContent()) {
+            am.replace(MetadataField.FIELD_ACCESS_URL, curl);
+          }
+        }
+        am.cook(tagMap);
+        if (!am.hasValidValue(MetadataField.FIELD_DOI)) {
+          // fill in DOI from accessURL
+          // http://www.envplan.com/abstract.cgi?id=a42117
+          // -> doi=10.1068/a42117
+          if (curl != null) {
+            int i = curl.lastIndexOf("id=");
+            if (i > 0) {
+              String doi = "10.1068/" + curl.substring(i+3);
+              am.put(MetadataField.FIELD_DOI, doi);
+            } 
+            else {
+              log.debug3("Using alternate match for DOI :" + curl);
+              i = curl.lastIndexOf('/');
+              if (i > 0) {
+                String doi = "10.1068/" + curl.substring(i+1).replace(".pdf", "");
+                am.put(MetadataField.FIELD_DOI, doi);
+              }
+            }
+          }
+        }
+      }
 
       // XXX Should this be conditional on
       //     !am.hasValidValue(MetadataField.FIELD_ISSN) ?
@@ -138,7 +167,7 @@ public class PionHtmlMetadataExtractorFactory
      
       if (issnBegin <= 0) 
       {
-    	  log.debug(line + " : no " + issnFlag);
+    	  log.debug3(line + " : no " + issnFlag);
 		return;
       }
       
@@ -146,7 +175,7 @@ public class PionHtmlMetadataExtractorFactory
       String issn = line.substring(issnBegin, issnBegin + 9);
       if (issn.length() < 9)
       {
-    	log.debug(line + " : too short");
+    	log.debug3(line + " : too short");
 		return;
       }		
       

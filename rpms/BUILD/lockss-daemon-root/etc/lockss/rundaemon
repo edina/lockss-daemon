@@ -43,7 +43,7 @@ if [ -f ${CFG_FILE} ]; then
     # CFG_FILE should only set environment variables - avoid executing it
     TMP_CFG_FILE=`mktemp /tmp/CFG_FILE_XXXXXX`
     for KEY in `sed -n 's/^\([A-Z0-9_]*\)=.*$/\1/p' <${CFG_FILE}` ; do
-        VALUE=`sed -n -e '/\`/d' -e /${KEY}=/s///p <${CFG_FILE}`
+        VALUE=`sed -n -e '/\`/d' -e /^${KEY}=/s///p <${CFG_FILE}`
         echo ${KEY}=${VALUE}
     done >${TMP_CFG_FILE}
     . ${TMP_CFG_FILE}
@@ -115,8 +115,8 @@ if [ "X${LOCKSS_TEST_GROUP}" != "X" ]; then
 else
     DAEMON_ARGS="-g ${DEFAULT_TEST_GROUP} ${DAEMON_ARGS}"
 fi
-if [ "X${EXTRA_DAEMON_ARGS}" != X ]; then
-    DAEMON_ARGS="${DAEMON_ARGS} ${EXTRA_DAEMON_ARGS}"
+if [ "X${LOCKSS_EXTRA_DAEMON_ARGS}" != X ]; then
+    DAEMON_ARGS="${DAEMON_ARGS} ${LOCKSS_EXTRA_DAEMON_ARGS}"
 fi
 
 if [ "X${LOCKSS_EXTERNAL_IPADDR}" != X ]; then

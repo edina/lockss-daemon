@@ -4,14 +4,8 @@
   >
   plugin = org.lockss.plugin.projmuse.ProjectMusePlugin
   implicit < status ; year ; name ; param[volume] >
-  param[base_url] = http://muse.jhu.edu/
 
   {
-
-  param[journal_dir] = victorian_review
-  attr[journal_id] = vcr
-
-    {
 
     title <
       name = Victorian Review ;
@@ -20,9 +14,26 @@
       issnl = 0848-1512
     >
 
-    au < released ; 2009 ; Victorian Review Volume 35 ; 35 >
-    au < released ; 2010 ; Victorian Review Volume 36 ; 36 >
-    au < released ; 2011 ; Victorian Review Volume 37 ; 37 >
+    param[journal_dir] = victorian_review
+    attr[journal_id] = vcr
+
+    {
+
+      param[base_url] = http://muse.jhu.edu/
+
+      au < released ; 2009 ; Victorian Review Volume 35 ; 35 >
+      au < released ; 2010 ; Victorian Review Volume 36 ; 36 >
+      au < released ; 2011 ; Victorian Review Volume 37 ; 37 >
+
+    }
+
+    {
+
+      param[base_url] = https://muse.jhu.edu/
+
+      au < released ; 2012 ; Victorian Review Volume 38 ; 38 >
+      au < released ; 2013 ; Victorian Review Volume 39 ; 39 >
+      au < released ; 2014 ; Victorian Review Volume 40 ; 40 >
 
     }
 

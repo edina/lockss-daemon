@@ -3,7 +3,7 @@
   publisher <
     name = National Academy of Sciences
   >
-
+  
   {
   
     title <
@@ -17,8 +17,11 @@
     param[base_url] = http://www.pnas.org/
     implicit < status ; year ; name ; param[volume_name] >
 
-    comment[doNotProcess] = most of this title is preserved in its own PLN (prod-nas)
+    # since 1.68, this title has its own crawl pool
+    attr[highwire_crawl_pool] = PNAS
 
+    # doNotProcess: most of this title is preserved in its own PLN (prod-nas)
+  
     au < doNotProcess ; 1915 ; Proceedings of the National Academy of Sciences Volume 1 ; 1 >
     au < doNotProcess ; 1916 ; Proceedings of the National Academy of Sciences Volume 2 ; 2 >
     au < doNotProcess ; 1917 ; Proceedings of the National Academy of Sciences Volume 3 ; 3 >
@@ -131,6 +134,7 @@
     au < manifest ; 2013 ; Proceedings of the National Academy of Sciences Volume 110 ; 110 >
     au < manifest ; 2014 ; Proceedings of the National Academy of Sciences Volume 111 ; 111 >
     au < manifest ; 2015 ; Proceedings of the National Academy of Sciences Volume 112 ; 112 >
+    au < expected ; 2016 ; Proceedings of the National Academy of Sciences Volume 113 ; 113 >
 
   }
 

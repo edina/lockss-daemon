@@ -350,6 +350,23 @@ public class TestBaseAtyponHtmlHashFilterFactory extends LockssTestCase {
 
   }
   
+  private static final String htmlTagWithId = 
+      "<!DOCTYPE html>" +
+       "<html lang=\"en\" class=\"pb-page\"  data-request-id=\"6e56e369-793f-4108-8bb2-813336b037c1\">" +
+       "<head>boo</head><body>FOO</body></html>";
+  
+  private static final String htmlTagWithIdFiltered = 
+      "<!DOCTYPE html>" +
+          "<html lang=\"en\" class=\"pb-page\"  >" +
+          "<body>FOO</body></html>";
+     
+  
+  public void testHtmlAttribute() throws Exception {
+    InputStream actIn = fact.createFilteredInputStream(mau,
+        new StringInputStream(htmlTagWithId), Constants.DEFAULT_ENCODING);
+    assertEquals(htmlTagWithIdFiltered, StringUtil.fromInputStream(actIn));
+  }
+  
   /* This section tests variants that the child plugins can turn on or not */
   private static final String wsVariant = 
       "<html>" +
@@ -408,10 +425,30 @@ public class TestBaseAtyponHtmlHashFilterFactory extends LockssTestCase {
           "</span>" +
           "</div>" +
           "</div>Hello World";
+  
+  private static final String wsVariant_withWSFilter_withoutTags = 
+  " This is a title lots of spaces foo ";
+  private static final String wsVariant_noWSFilter_withoutTags = 
+      "  This is a title      lots of spaces   " +
+      "   foo" +
+      "  ";
+  
+  private static final String tagIDVariant_defaultfilter_withoutTags = 
+          "  " +
+          "             "+
+          "    Journals"+
+          "    E-Books" +
+          " inside the span" +
+          "Hello World";
+  
+  private static final String tagIDVariant_allFilters = 
+      " Journals"+
+      " E-Books" +
+      " inside the span" +
+      " Hello World";
       
   
-  
-  public void test_WSVariations() throws Exception {
+  public void test_Variations() throws Exception {
     TestRigHashFilterFactory rigFact = new TestRigHashFilterFactory();
 
     InputStream actIn;
@@ -435,6 +472,34 @@ public class TestBaseAtyponHtmlHashFilterFactory extends LockssTestCase {
     actIn = rigFact.createFilteredInputStream(mau,
         new StringInputStream(tagIDVariant), Constants.DEFAULT_ENCODING);
     assertEquals(tagIDVariant_allfilter, StringUtil.fromInputStream(actIn));
+    
+    // 5. WS off, but remove all tags
+    rigFact.setTagFiltering(false); // back to default
+    rigFact.setWSFiltering(false); // back to default
+    rigFact.setRemoveTagsFiltering(true);
+    actIn = rigFact.createFilteredInputStream(mau,
+        new StringInputStream(wsVariant), Constants.DEFAULT_ENCODING);
+    assertEquals(wsVariant_noWSFilter_withoutTags, StringUtil.fromInputStream(actIn));
+    
+    // 6. WS on, AND remov all all tags
+    rigFact.setWSFiltering(true);
+    actIn = rigFact.createFilteredInputStream(mau,
+        new StringInputStream(wsVariant), Constants.DEFAULT_ENCODING);
+    assertEquals(wsVariant_withWSFilter_withoutTags, StringUtil.fromInputStream(actIn));
+    
+    // 7. WS filter off, default tagID, remove all tags
+    rigFact.setWSFiltering(false);
+    actIn = rigFact.createFilteredInputStream(mau,
+        new StringInputStream(tagIDVariant), Constants.DEFAULT_ENCODING);
+    assertEquals(tagIDVariant_defaultfilter_withoutTags, StringUtil.fromInputStream(actIn));
+    
+    // 8. WS filter on, tagID filter on (will do nothing), remove all tags
+    rigFact.setWSFiltering(true);
+    rigFact.setTagFiltering(true);
+    actIn = rigFact.createFilteredInputStream(mau,
+        new StringInputStream(tagIDVariant), Constants.DEFAULT_ENCODING);
+    assertEquals(tagIDVariant_allFilters, StringUtil.fromInputStream(actIn));
+    
   }
   
   /*
@@ -444,6 +509,7 @@ public class TestBaseAtyponHtmlHashFilterFactory extends LockssTestCase {
   private class TestRigHashFilterFactory extends BaseAtyponHtmlHashFilterFactory {
     private boolean do_ws_filtering = false;
     private boolean do_all_tag_id_filtering = false;
+    private boolean do_remove_tags_filtering = false;
     
     public void setWSFiltering(boolean ws) {
       this.do_ws_filtering = ws;
@@ -451,6 +517,10 @@ public class TestBaseAtyponHtmlHashFilterFactory extends LockssTestCase {
 
     public void setTagFiltering(boolean tag) {
       this.do_all_tag_id_filtering = tag;
+    }
+
+    public void setRemoveTagsFiltering(boolean rem) {
+      this.do_remove_tags_filtering = rem;
     }
 
 
@@ -462,6 +532,11 @@ public class TestBaseAtyponHtmlHashFilterFactory extends LockssTestCase {
     @Override
     public boolean doTagIDFiltering() {
       return this.do_all_tag_id_filtering;
+    }
+    
+    @Override
+    public boolean doTagRemovalFiltering() {
+      return this.do_remove_tags_filtering;
     }
 
   }

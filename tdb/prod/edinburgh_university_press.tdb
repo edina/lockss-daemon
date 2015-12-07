@@ -1,8 +1,7 @@
 {
 
   publisher <
-    name = Edinburgh University Press;
-    info[tester] = 4
+    name = Edinburgh University Press
   >
 
   {
@@ -17,34 +16,62 @@
     {
 
       plugin = org.lockss.plugin.projmuse.ProjectMusePlugin
-      param[base_url] = http://muse.jhu.edu/
       param[journal_dir] = africa_the_journal_of_the_international_african_institute
       attr[journal_id] = afr
       implicit < status ; year ; name ; param[volume] >
       comment[doNotProcess] = move to Cambridge University Press
       comment[year2005] = Bibliography only
     
-      au < released ; 2005 ; Africa: The Journal of the International African Institute Bibliography 2005 ; 2005 >
-      au < released ; 2006 ; Africa: The Journal of the International African Institute Bibliography 2006 ; 2006 >
-      au < released ; 2007 ; Africa: The Journal of the International African Institute Bibliography 2007 ; 2007 >
-      au < released ; 2008 ; Africa: The Journal of the International African Institute Bibliography 2008 ; 2008 >
-      au < released ; 2009 ; Africa: The Journal of the International African Institute Bibliography 2009 ; 2009 >
+      {
 
-      au < doNotProcess ; 2000 ; Africa: The Journal of the International African Institute Volume 70 ; 70 >
-      au < doNotProcess ; 2001 ; Africa: The Journal of the International African Institute Volume 71 ; 71 >
-      au < doNotProcess ; 2002 ; Africa: The Journal of the International African Institute Volume 72 ; 72 >
-      au < doNotProcess ; 2003 ; Africa: The Journal of the International African Institute Volume 73 ; 73 >
-      au < doNotProcess ; 2004 ; Africa: The Journal of the International African Institute Volume 74 ; 74 >
-      au < doNotProcess ; 2005 ; Africa: The Journal of the International African Institute Volume 75 ; 75 >
-      au < released ; 2006 ; Africa: The Journal of the International African Institute Volume 76 ; 76 >
-      au < released ; 2007 ; Africa: The Journal of the International African Institute Volume 77 ; 77 >
-      au < released ; 2008 ; Africa: The Journal of the International African Institute Volume 78 ; 78 >
-      au < released ; 2009 ; Africa: The Journal of the International African Institute Volume 79 ; 79 >
-      au < released ; 2010 ; Africa: The Journal of the International African Institute Volume 80 ; 80 >
-      au < released ; 2011 ; Africa: The Journal of the International African Institute Volume 81 ; 81 >
-      au < released ; 2012 ; Africa: The Journal of the International African Institute Volume 82 ; 82 >
-      au < released ; 2013 ; Africa: The Journal of the International African Institute Volume 83 ; 83 >
-      au < manifest ; 2014 ; Africa: The Journal of the International African Institute Volume 84 ; 84 >
+        param[base_url] = http://muse.jhu.edu/
+
+        au < released ; 2005 ; Africa: The Journal of the International African Institute Bibliography 2005 ; 2005 >
+        au < released ; 2006 ; Africa: The Journal of the International African Institute Bibliography 2006 ; 2006 >
+        au < released ; 2007 ; Africa: The Journal of the International African Institute Bibliography 2007 ; 2007 >
+        au < released ; 2008 ; Africa: The Journal of the International African Institute Bibliography 2008 ; 2008 >
+        au < released ; 2009 ; Africa: The Journal of the International African Institute Bibliography 2009 ; 2009 >
+
+      }
+
+
+      {
+
+        param[base_url] = https://muse.jhu.edu/
+
+        au < doNotProcess ; 2000 ; Africa: The Journal of the International African Institute Volume 70 ; 70 >
+        au < doNotProcess ; 2001 ; Africa: The Journal of the International African Institute Volume 71 ; 71 >
+        au < doNotProcess ; 2002 ; Africa: The Journal of the International African Institute Volume 72 ; 72 >
+        au < doNotProcess ; 2003 ; Africa: The Journal of the International African Institute Volume 73 ; 73 >
+        au < doNotProcess ; 2004 ; Africa: The Journal of the International African Institute Volume 74 ; 74 >
+        au < doNotProcess ; 2005 ; Africa: The Journal of the International African Institute Volume 75 ; 75 >
+
+      }
+
+      {
+
+        param[base_url] = http://muse.jhu.edu/
+
+        au < released ; 2006 ; Africa: The Journal of the International African Institute Volume 76 ; 76 >
+        au < released ; 2007 ; Africa: The Journal of the International African Institute Volume 77 ; 77 >
+        au < released ; 2008 ; Africa: The Journal of the International African Institute Volume 78 ; 78 >
+        au < released ; 2009 ; Africa: The Journal of the International African Institute Volume 79 ; 79 >
+        au < released ; 2010 ; Africa: The Journal of the International African Institute Volume 80 ; 80 >
+        au < released ; 2011 ; Africa: The Journal of the International African Institute Volume 81 ; 81 >
+        au < released ; 2012 ; Africa: The Journal of the International African Institute Volume 82 ; 82 >
+        au < released ; 2013 ; Africa: The Journal of the International African Institute Volume 83 ; 83 >
+
+      }
+
+      {
+
+        param[base_url] = https://muse.jhu.edu/
+
+        au < ready ; 2014 ; Africa: The Journal of the International African Institute Volume 84 ; 84 >
+        au < ready ; 2015 ; Africa: The Journal of the International African Institute Volume 85 ; 85 >
+
+      }
+
 
     }
 
@@ -75,8 +102,8 @@
       au < released ; 2011 ; African Journal of International and Comparative Law Volume 19 ; 19 >
       au < released ; 2012 ; African Journal of International and Comparative Law Volume 20 ; 20 >
       au < released ; 2013 ; African Journal of International and Comparative Law Volume 21 ; 21 >
-      au < manifest ; 2014 ; African Journal of International and Comparative Law Volume 22 ; 22 >
-      au < manifest ; 2015 ; African Journal of International and Comparative Law Volume 23 ; 23 >
+      au < ready ; 2014 ; African Journal of International and Comparative Law Volume 22 ; 22 >
+      au < ready ; 2015 ; African Journal of International and Comparative Law Volume 23 ; 23 >
     
     }
     
@@ -104,14 +131,14 @@
       au < released ; 2006 ; Architectural Heritage Volume 17 ; 17 >
       au < released ; 2007 ; Architectural Heritage Volume 18 ; 18 >
       au < superseded ; 2008 ; Architectural Heritage Volume XIX [superseded] ; XIX >
-      au < manifest ; 2008 ; Architectural Heritage Volume 19 ; 19 >
+      au < ready ; 2008 ; Architectural Heritage Volume 19 ; 19 >
       au < superseded ; 2009 ; Architectural Heritage Volume XX [superseded] ; XX >
-      au < manifest ; 2009 ; Architectural Heritage Volume 20 ; 20 >
+      au < ready ; 2009 ; Architectural Heritage Volume 20 ; 20 >
       au < released ; 2010 ; Architectural Heritage Volume 21 ; 21 >
       au < released ; 2011 ; Architectural Heritage Volume 22 ; 22 >
       au < released ; 2012 ; Architectural Heritage Volume 23 ; 23 >
       au < released ; 2013 ; Architectural Heritage Volume 24 ; 24 >
-      au < manifest ; 2014 ; Architectural Heritage Volume 25 ; 25 >
+      au < ready ; 2014 ; Architectural Heritage Volume 25 ; 25 >
       au < expected ; 2015 ; Architectural Heritage Volume 26 ; 26 >
 
     }
@@ -145,8 +172,8 @@
       au < released ; 2010 ; Archives of Natural History Volume 37 ; 37 >
       au < released ; 2011 ; Archives of Natural History Volume 38 ; 38 >
       au < released ; 2012 ; Archives of Natural History Volume 39 ; 39 >
-      au < notReady ; 2013 ; Archives of Natural History Volume 40 ; 40 >
-      au < manifest ; 2014 ; Archives of Natural History Volume 41 ; 41 >
+      au < ready ; 2013 ; Archives of Natural History Volume 40 ; 40 >
+      au < testing ; 2014 ; Archives of Natural History Volume 41 ; 41 >
       au < manifest ; 2015 ; Archives of Natural History Volume 42 ; 42 >
 
     }
@@ -176,8 +203,8 @@
       au < released ; 2011 ; Ben Jonson Journal Volume 18 ; 18 >
       au < released ; 2012 ; Ben Jonson Journal Volume 19 ; 19 >
       au < released ; 2013 ; Ben Jonson Journal Volume 20 ; 20 >
-      au < manifest ; 2014 ; Ben Jonson Journal Volume 21 ; 21 >
-      au < manifest ; 2015 ; Ben Jonson Journal Volume 22 ; 22 >
+      au < ready ; 2014 ; Ben Jonson Journal Volume 21 ; 21 >
+      au < ready ; 2015 ; Ben Jonson Journal Volume 22 ; 22 >
 
     }
 
@@ -192,21 +219,31 @@
       issnl = 2043-8567 
      >
 
-    {
-    
       plugin = org.lockss.plugin.edinburgh.EdinburghUniversityPressPlugin
       param[base_url] = http://www.euppublishing.com/
-      param[journal_id] = brw
       implicit < status ; year ; name ; param[volume_name] >
+
+    {
+      param[journal_id] = brw
     
-      au < released ; 2008-2009 ; Britain and the World Volume 1 ; 1 >
-      au < released ; 2009-2010 ; Britain and the World Volume 2 ; 2 >
-      au < released ; 2010 ; Britain and the World Volume 3 ; 3 >
+      au < superseded ; 2008-2009 ; Britain and the World Volume 1 [superseded] ; 1 >
+      au < superseded ; 2009-2010 ; Britain and the World Volume 2 [superseded] ; 2 >
+      au < superseded ; 2010 ; Britain and the World Volume 3 [superseded] ; 3 >
       au < released ; 2011 ; Britain and the World Volume 4 ; 4 >
       au < released ; 2012 ; Britain and the World Volume 5 ; 5 >
       au < released ; 2013 ; Britain and the World Volume 6 ; 6 >
-      au < manifest ; 2014 ; Britain and the World Volume 7 ; 7 >
-      au < manifest ; 2015 ; Britain and the World Volume 8 ; 8 >
+      au < testing ; 2014 ; Britain and the World Volume 7 ; 7 >
+      au < ready ; 2015 ; Britain and the World Volume 8 ; 8 >
+
+    }
+
+    {
+        param[journal_id] = brs
+        comment[0] = old title used
+
+        au < ready ; 2008-2009 ; British Scholar Volume 1 ; 1 >
+        au < ready ; 2009-2010 ; British Scholar Volume 2 ; 2 >
+        au < ready ; 2010 ; British Scholar Volume 3 ; 3 >
 
     }
     
@@ -247,15 +284,21 @@
     {
 
       plugin = org.lockss.plugin.projmuse.ProjectMusePlugin
-      param[base_url] = http://muse.jhu.edu/
       comment[platform] = This journal no longer contributes new issues to Muse
       param[journal_dir] = comparative_critical_studies
       attr[journal_id] = ccs
       implicit < status ; year ; name ; param[volume] >
 
-      au < released ; 2006 ; Comparative Critical Studies Volume 3 [Project MUSE] ; 3 >
-      au < released ; 2007 ; Comparative Critical Studies Volume 4 [Project MUSE] ; 4 >
-      au < released ; 2008 ; Comparative Critical Studies Volume 5 [Project MUSE] ; 5 >
+      {
+
+        param[base_url] = http://muse.jhu.edu/
+
+        au < released ; 2006 ; Comparative Critical Studies Volume 3 [Project MUSE] ; 3 >
+        au < released ; 2007 ; Comparative Critical Studies Volume 4 [Project MUSE] ; 4 >
+        au < released ; 2008 ; Comparative Critical Studies Volume 5 [Project MUSE] ; 5 >
+
+      }
+
 
     }
 
@@ -285,8 +328,8 @@
       au < released ; 2011 ; Corpora Volume 6 ; 6 >
       au < released ; 2012 ; Corpora Volume 7 ; 7 >
       au < released ; 2013 ; Corpora Volume 8 ; 8 >
-      au < manifest ; 2014 ; Corpora Volume 9 ; 9 >
-      au < manifest ; 2015 ; Corpora Volume 10 ; 10 >
+      au < ready ; 2014 ; Corpora Volume 9 ; 9 >
+      au < ready ; 2015 ; Corpora Volume 10 ; 10 >
     
     }
     
@@ -322,23 +365,29 @@
       au < released ; 2011 ; Dance Research Volume 29 ; 29 >
       au < released ; 2012 ; Dance Research Volume 30 ; 30 >
       au < released ; 2013 ; Dance Research Volume 31 ; 31 >
-      au < manifest ; 2014 ; Dance Research Volume 32 ; 32 >
-      au < expected ; 2015 ; Dance Research Volume 33 ; 33 >
+      au < ready ; 2014 ; Dance Research Volume 32 ; 32 >
+      au < ready ; 2015 ; Dance Research Volume 33 ; 33 >
 
     }
 
     {
 
       plugin = org.lockss.plugin.projmuse.ProjectMusePlugin
-      param[base_url] = http://muse.jhu.edu/
       comment[platform] = This journal no longer contributes new issues to Muse
       param[journal_dir] = dance_research
       attr[journal_id] = dar
       implicit < status ; year ; name ; param[volume] >
 
-      au < released ; 2006 ; Dance Research Volume 24 [Project MUSE] ; 24 >
-      au < released ; 2007 ; Dance Research Volume 25 [Project MUSE] ; 25 >
-      au < released ; 2008 ; Dance Research Volume 26 [Project MUSE] ; 26 >
+      {
+
+        param[base_url] = http://muse.jhu.edu/
+
+        au < released ; 2006 ; Dance Research Volume 24 [Project MUSE] ; 24 >
+        au < released ; 2007 ; Dance Research Volume 25 [Project MUSE] ; 25 >
+        au < released ; 2008 ; Dance Research Volume 26 [Project MUSE] ; 26 >
+
+      }
+
 
     }
 
@@ -367,8 +416,8 @@
       au < released ; 2011 ; Deleuze Studies Volume 5 ; 5 >
       au < released ; 2012 ; Deleuze Studies Volume 6 ; 6 >
       au < released ; 2013 ; Deleuze Studies Volume 7 ; 7 >
-      au < manifest ; 2014 ; Deleuze Studies Volume 8 ; 8 >
-      au < manifest ; 2015 ; Deleuze Studies Volume 9 ; 9 >
+      au < released ; 2014 ; Deleuze Studies Volume 8 ; 8 >
+      au < ready ; 2015 ; Deleuze Studies Volume 9 ; 9 >
     
     }
     
@@ -396,8 +445,8 @@
       au < released ; 2011 ; Derrida Today Volume 4 ; 4 >
       au < released ; 2012 ; Derrida Today Volume 5 ; 5 >
       au < released ; 2013 ; Derrida Today Volume 6 ; 6 >
-      au < manifest ; 2014 ; Derrida Today Volume 7 ; 7 >
-      au < manifest ; 2015 ; Derrida Today Volume 8 ; 8 >
+      au < testing ; 2014 ; Derrida Today Volume 7 ; 7 >
+      au < ready ; 2015 ; Derrida Today Volume 8 ; 8 >
 
     }
     
@@ -429,8 +478,8 @@
       au < released ; 2011 ; Edinburgh Law Review Volume 15 ; 15 >
       au < released ; 2012 ; Edinburgh Law Review Volume 16 ; 16 >
       au < released ; 2013 ; Edinburgh Law Review Volume 17 ; 17 >
-      au < manifest ; 2014 ; Edinburgh Law Review Volume 18 ; 18 >
-      au < manifest ; 2015 ; Edinburgh Law Review Volume 19 ; 19 >
+      au < ready ; 2014 ; Edinburgh Law Review Volume 18 ; 18 >
+      au < ready ; 2015 ; Edinburgh Law Review Volume 19 ; 19 >
     
     }
     
@@ -468,15 +517,21 @@
     {
 
       plugin = org.lockss.plugin.projmuse.ProjectMusePlugin
-      param[base_url] = http://muse.jhu.edu/
       comment[platform] = This journal no longer contributes new issues to Muse
       param[journal_dir] = episteme
       attr[journal_id] = epi
       implicit < status ; year ; name ; param[volume] >
 
-      au < released ; 2006 ; Episteme: A Journal of Social Epistemology Volume 3 [Project MUSE] ; 3 >
-      au < released ; 2007 ; Episteme: A Journal of Social Epistemology Volume 4 [Project MUSE] ; 4 >
-      au < released ; 2008 ; Episteme: A Journal of Social Epistemology Volume 5 [Project MUSE] ; 5 >
+      {
+
+        param[base_url] = http://muse.jhu.edu/
+
+        au < released ; 2006 ; Episteme: A Journal of Social Epistemology Volume 3 [Project MUSE] ; 3 >
+        au < released ; 2007 ; Episteme: A Journal of Social Epistemology Volume 4 [Project MUSE] ; 4 >
+        au < released ; 2008 ; Episteme: A Journal of Social Epistemology Volume 5 [Project MUSE] ; 5 >
+
+      }
+
 
     }
 
@@ -508,7 +563,7 @@
       au < released ; 2011 ; Holy Land Studies Volume 10 ; 10 >
       au < released ; 2012 ; Holy Land Studies Volume 11 ; 11 >
       au < released ; 2013 ; Holy Land Studies Volume 12 ; 12 >
-      au < manifest ; 2014 ; Holy Land Studies Volume 13 ; 13 >
+      au < released ; 2014 ; Holy Land Studies Volume 13 ; 13 >
       au < manifest ; 2015 ; Holy Land Studies Volume 14 ; 14 >
 
     }
@@ -516,15 +571,21 @@
     {
 
       plugin = org.lockss.plugin.projmuse.ProjectMusePlugin
-      param[base_url] = http://muse.jhu.edu/
       comment[platform] = This journal no longer contributes new issues to Muse
       param[journal_dir] = holy_land_studies
       attr[journal_id] = hls
       implicit < status ; year ; name ; param[volume] >
 
-      au < released ; 2006 ; Holy Land Studies: A Multidisciplinary Journal Volume 5 [Project MUSE] ; 5 >
-      au < released ; 2007 ; Holy Land Studies: A Multidisciplinary Journal Volume 6 [Project MUSE] ; 6 >
-      au < released ; 2008 ; Holy Land Studies: A Multidisciplinary Journal Volume 7 [Project MUSE] ; 7 >
+      {
+
+        param[base_url] = http://muse.jhu.edu/
+
+        au < released ; 2006 ; Holy Land Studies: A Multidisciplinary Journal Volume 5 [Project MUSE] ; 5 >
+        au < released ; 2007 ; Holy Land Studies: A Multidisciplinary Journal Volume 6 [Project MUSE] ; 6 >
+        au < released ; 2008 ; Holy Land Studies: A Multidisciplinary Journal Volume 7 [Project MUSE] ; 7 >
+
+      }
+
 
     }
 
@@ -556,22 +617,28 @@
       au < released ; 2011 ; The Innes Review Volume 62 ; 62 >
       au < released ; 2012 ; The Innes Review Volume 63 ; 63 >
       au < released ; 2013 ; The Innes Review Volume 64 ; 64 >
-      au < manifest ; 2014 ; The Innes Review Volume 65 ; 65 >
-      au < expected ; 2015 ; The Innes Review Volume 66 ; 66 >
+      au < testing ; 2014 ; The Innes Review Volume 65 ; 65 >
+      au < manifest ; 2015 ; The Innes Review Volume 66 ; 66 >
     
     }
 
     {
 
       plugin = org.lockss.plugin.projmuse.ProjectMusePlugin
-      param[base_url] = http://muse.jhu.edu/
       comment[platform] = This journal no longer contributes new issues to Muse
       param[journal_dir] = the_innes_review
       attr[journal_id] = inn
       implicit < status ; year ; name ; param[volume] >
 
-      au < released ; 2007 ; The Innes Review Volume 58 [Project MUSE] ; 58 >
-      au < released ; 2008 ; The Innes Review Volume 59 [Project MUSE] ; 59 >
+      {
+
+        param[base_url] = http://muse.jhu.edu/
+
+        au < released ; 2007 ; The Innes Review Volume 58 [Project MUSE] ; 58 >
+        au < released ; 2008 ; The Innes Review Volume 59 [Project MUSE] ; 59 >
+
+      }
+
     
     }
     
@@ -635,7 +702,7 @@
       au < released ; 2011 ; International Journal of Humanities and Arts Computing Volume 5 (2011) ; 5 >
       au < released ; 2012 ; International Journal of Humanities and Arts Computing Volume 6 (2012) ; 6 >
       au < released ; 2013 ; International Journal of Humanities and Arts Computing Volume 7 (2013) ; 7 >
-      au < manifest ; 2014 ; International Journal of Humanities and Arts Computing Volume 8 (2014) ; 8 >
+      au < testing ; 2014 ; International Journal of Humanities and Arts Computing Volume 8 (2014) ; 8 >
       au < manifest ; 2015 ; International Journal of Humanities and Arts Computing Volume 9 (2015) ; 9 >
 
     }
@@ -664,8 +731,8 @@
       au < released ; 2011 ; International Research in Children's Literature Volume 4 ; 4 >
       au < released ; 2012 ; International Research in Children's Literature Volume 5 ; 5 >
       au < released ; 2013 ; International Research in Children's Literature Volume 6 ; 6 >
-      au < manifest ; 2014 ; International Research in Children's Literature Volume 7 ; 7 >
-      au < expected ; 2015 ; International Research in Children's Literature Volume 8 ; 8 >
+      au < testing ; 2014 ; International Research in Children's Literature Volume 7 ; 7 >
+      au < manifest ; 2015 ; International Research in Children's Literature Volume 8 ; 8 >
     
     }
     
@@ -689,7 +756,7 @@
       
       au < released ; 2012 ; Irish University Review Volume 42 ; 42 >
       au < released ; 2013 ; Irish University Review Volume 43 ; 43 >
-      au < manifest ; 2014 ; Irish University Review Volume 44 ; 44 >
+      au < testing ; 2014 ; Irish University Review Volume 44 ; 44 >
       au < manifest ; 2015 ; Irish University Review Volume 45 ; 45 >
   
     }
@@ -718,7 +785,7 @@
       au < released ; 2011 ; Journal of Beckett Studies Volume 20 ; 20 >
       au < released ; 2012 ; Journal of Beckett Studies Volume 21 ; 21 >
       au < released ; 2013 ; Journal of Beckett Studies Volume 22 ; 22 >
-      au < manifest ; 2014 ; Journal of Beckett Studies Volume 23 ; 23 >
+      au < testing ; 2014 ; Journal of Beckett Studies Volume 23 ; 23 >
       au < manifest ; 2015 ; Journal of Beckett Studies Volume 24 ; 24 >
     
     }
@@ -751,7 +818,7 @@
       au < released ; 2011 ; Journal of British Cinema and Television Volume 8 ; 8 >
       au < released ; 2012 ; Journal of British Cinema and Television Volume 9 ; 9 >
       au < released ; 2013 ; Journal of British Cinema and Television Volume 10 ; 10 >
-      au < manifest ; 2014 ; Journal of British Cinema and Television Volume 11 ; 11 >
+      au < testing ; 2014 ; Journal of British Cinema and Television Volume 11 ; 11 >
       au < manifest ; 2015 ; Journal of British Cinema and Television Volume 12 ; 12 >
     
     }
@@ -767,26 +834,36 @@
       issnl = 1755-0882 
      >
 
-    {
-
       plugin = org.lockss.plugin.edinburgh.EdinburghUniversityPressPlugin
       param[base_url] = http://www.euppublishing.com/
-      param[journal_id] = jipt
       implicit < status ; year ; name ; param[volume_name] >
 
-      au < released ; 2005 ; Journal of International Political Theory Volume 1 ; 1 >
-      au < released ; 2006 ; Journal of International Political Theory Volume 2 ; 2 >
-      au < released ; 2007 ; Journal of International Political Theory Volume 3 ; 3 >
+    {
+      param[journal_id] = jipt
+      comment[moved] = journal moved to Sage. http://ipt.sagepub.com. Content no longer online.
+
+      au < superseded ; 2005 ; Journal of International Political Theory Volume 1 [superseded] ; 1 >
+      au < superseded ; 2006 ; Journal of International Political Theory Volume 2 [superseded] ; 2 >
+      au < superseded ; 2007 ; Journal of International Political Theory Volume 3 [superseded] ; 3 >
       au < released ; 2008 ; Journal of International Political Theory Volume 4 ; 4 >
       au < released ; 2009 ; Journal of International Political Theory Volume 5 ; 5 >
       au < released ; 2010 ; Journal of International Political Theory Volume 6 ; 6 >
       au < released ; 2011 ; Journal of International Political Theory Volume 7 ; 7 >
       au < released ; 2012 ; Journal of International Political Theory Volume 8 ; 8 >
       au < released ; 2013 ; Journal of International Political Theory Volume 9 ; 9 >
-      au < expected ; 2014 ; Journal of International Political Theory Volume 10 ; 10 >
 
     }
+
+    {
+      param[journal_id] = per
+      comment[title] = old title used
+
+      au < testing ; 2005 ; Politics and Ethics Review Volume 1 ; 1 >
+      au < testing ; 2006 ; Politics and Ethics Review Volume 2 ; 2 >
+      au < testing ; 2007 ; Politics and Ethics Review Volume 3 ; 3 >
     
+    }
+
   }    
 
   {
@@ -814,7 +891,7 @@
       au < released ; 2011 ; Journal of Qur'anic Studies Volume 13 ; 13 >
       au < released ; 2012 ; Journal of Qur'anic Studies Volume 14 ; 14 >
       au < released ; 2013 ; Journal of Qur'anic Studies Volume 15 ; 15 >
-      au < manifest ; 2014 ; Journal of Qur'anic Studies Volume 16 ; 16 >
+      au < testing ; 2014 ; Journal of Qur'anic Studies Volume 16 ; 16 >
       au < manifest ; 2015 ; Journal of Qur'anic Studies Volume 17 ; 17 >
     
     }
@@ -850,11 +927,11 @@
       au < manifest ; 1993 ; Scottish Economic and Social History Volume 13 ; 13 >
       au < manifest ; 1994 ; Scottish Economic and Social History Volume 14 ; 14 >
       au < manifest ; 1995 ; Scottish Economic and Social History Volume 15 ; 15 >
-      au < manifest ; 1996 ; Scottish Economic and Social History Volume 16 ; 16 >
-      au < manifest ; 1997 ; Scottish Economic and Social History Volume 17 ; 17 >
-      au < manifest ; 1998 ; Scottish Economic and Social History Volume 18 ; 18 >
-      au < manifest ; 1999 ; Scottish Economic and Social History Volume 19 ; 19 >
-      au < manifest ; 2000 ; Scottish Economic and Social History Volume 20 ; 20 >
+      au < testing ; 1996 ; Scottish Economic and Social History Volume 16 ; 16 >
+      au < testing ; 1997 ; Scottish Economic and Social History Volume 17 ; 17 >
+      au < testing ; 1998 ; Scottish Economic and Social History Volume 18 ; 18 >
+      au < testing ; 1999 ; Scottish Economic and Social History Volume 19 ; 19 >
+      au < testing ; 2000 ; Scottish Economic and Social History Volume 20 ; 20 >
     
     }
   }
@@ -888,7 +965,7 @@
       au < released ; 2011 ; Journal of Scottish Historical Studies Volume 31 ; 31 >
       au < released ; 2012 ; Journal of Scottish Historical Studies Volume 32 ; 32 >
       au < released ; 2013 ; Journal of Scottish Historical Studies Volume 33 ; 33 >
-      au < manifest ; 2014 ; Journal of Scottish Historical Studies Volume 34 ; 34 >
+      au < testing ; 2014 ; Journal of Scottish Historical Studies Volume 34 ; 34 >
       au < manifest ; 2015 ; Journal of Scottish Historical Studies Volume 35 ; 35 >
     
     }
@@ -922,7 +999,7 @@
       au < released ; 2011 ; Journal of Scottish Philosophy Volume 9 ; 9 >
       au < released ; 2012 ; Journal of Scottish Philosophy Volume 10 ; 10 >
       au < released ; 2013 ; Journal of Scottish Philosophy Volume 11 ; 11 >
-      au < manifest ; 2014 ; Journal of Scottish Philosophy Volume 12 ; 12 >
+      au < testing ; 2014 ; Journal of Scottish Philosophy Volume 12 ; 12 >
       au < manifest ; 2015 ; Journal of Scottish Philosophy Volume 13 ; 13 >
     
     }
@@ -941,16 +1018,22 @@
     {
 
       plugin = org.lockss.plugin.projmuse.ProjectMusePlugin
-      param[base_url] = http://muse.jhu.edu/
       comment[platform] = This journal no longer contributes new issues to Muse
       param[journal_dir] = journal_of_victorian_culture
       attr[journal_id] = jvc
       comment[change_publisher] = from 2010, published by Taylor and Francis.  
       implicit < status ; year ; name ; param[volume] >
 
-      au < released ; 2006 ; Journal of Victorian Culture Volume 11 [Project MUSE] ; 11 >
-      au < released ; 2007 ; Journal of Victorian Culture Volume 12 [Project MUSE] ; 12 >
-      au < released ; 2008 ; Journal of Victorian Culture Volume 13 [Project MUSE] ; 13 >
+      {
+
+        param[base_url] = http://muse.jhu.edu/
+
+        au < released ; 2006 ; Journal of Victorian Culture Volume 11 [Project MUSE] ; 11 >
+        au < released ; 2007 ; Journal of Victorian Culture Volume 12 [Project MUSE] ; 12 >
+        au < released ; 2008 ; Journal of Victorian Culture Volume 13 [Project MUSE] ; 13 >
+
+      }
+
 
     }
 
@@ -1006,7 +1089,7 @@
       au < released ; 2011 ; Modernist Cultures Volume 6 ; 6 >
       au < released ; 2012 ; Modernist Cultures Volume 7 ; 7 >
       au < released ; 2013 ; Modernist Cultures Volume 8 ; 8 >
-      au < manifest ; 2014 ; Modernist Cultures Volume 9 ; 9 >
+      au < testing ; 2014 ; Modernist Cultures Volume 9 ; 9 >
       au < manifest ; 2015 ; Modernist Cultures Volume 10 ; 10 >
     
     }
@@ -1032,7 +1115,7 @@
       au < released ; 2011 ; The New Soundtrack Volume 1 ; 1 >
       au < released ; 2012 ; The New Soundtrack Volume 2 ; 2 >
       au < released ; 2013 ; The New Soundtrack Volume 3 ; 3 >
-      au < manifest ; 2014 ; The New Soundtrack Volume 4 ; 4 >
+      au < testing ; 2014 ; The New Soundtrack Volume 4 ; 4 >
       au < manifest ; 2015 ; The New Soundtrack Volume 5 ; 5 >
 
     }
@@ -1059,7 +1142,7 @@
       au < released ; 2011 ; Northern Scotland Volume 2 ; 2 >
       au < released ; 2012 ; Northern Scotland Volume 3 ; 3 >
       au < released ; 2013 ; Northern Scotland Volume 4 ; 4 >
-      au < manifest ; 2014 ; Northern Scotland Volume 5 ; 5 >
+      au < testing ; 2014 ; Northern Scotland Volume 5 ; 5 >
       au < manifest ; 2015 ; Northern Scotland Volume 6 ; 6 >
 
     }
@@ -1120,21 +1203,21 @@
       au < manifest ; 1997 ; Nottingham French Studies Volume 36 ; 36 >
       au < manifest ; 1998 ; Nottingham French Studies Volume 37 ; 37 >
       au < manifest ; 1999 ; Nottingham French Studies Volume 38 ; 38 >
-      au < manifest ; 2000 ; Nottingham French Studies Volume 39 ; 39 >
-      au < manifest ; 2001 ; Nottingham French Studies Volume 40 ; 40 >
-      au < manifest ; 2002 ; Nottingham French Studies Volume 41 ; 41 >
-      au < manifest ; 2003 ; Nottingham French Studies Volume 42 ; 42 >
-      au < manifest ; 2004 ; Nottingham French Studies Volume 43 ; 43 >
-      au < manifest ; 2005 ; Nottingham French Studies Volume 44 ; 44 >
-      au < manifest ; 2006 ; Nottingham French Studies Volume 45 ; 45 >
-      au < manifest ; 2007 ; Nottingham French Studies Volume 46 ; 46 >
-      au < manifest ; 2008 ; Nottingham French Studies Volume 47 ; 47 >
-      au < manifest ; 2009 ; Nottingham French Studies Volume 48 ; 48 >
-      au < manifest ; 2010 ; Nottingham French Studies Volume 49 ; 49 >
+      au < testing ; 2000 ; Nottingham French Studies Volume 39 ; 39 >
+      au < testing ; 2001 ; Nottingham French Studies Volume 40 ; 40 >
+      au < testing ; 2002 ; Nottingham French Studies Volume 41 ; 41 >
+      au < testing ; 2003 ; Nottingham French Studies Volume 42 ; 42 >
+      au < testing ; 2004 ; Nottingham French Studies Volume 43 ; 43 >
+      au < testing ; 2005 ; Nottingham French Studies Volume 44 ; 44 >
+      au < testing ; 2006 ; Nottingham French Studies Volume 45 ; 45 >
+      au < testing ; 2007 ; Nottingham French Studies Volume 46 ; 46 >
+      au < testing ; 2008 ; Nottingham French Studies Volume 47 ; 47 >
+      au < testing ; 2009 ; Nottingham French Studies Volume 48 ; 48 >
+      au < testing ; 2010 ; Nottingham French Studies Volume 49 ; 49 >
       au < released ; 2011 ; Nottingham French Studies Volume 50 ; 50 >
       au < released ; 2012 ; Nottingham French Studies Volume 51 ; 51 >
       au < released ; 2013 ; Nottingham French Studies Volume 52 ; 52 >
-      au < manifest ; 2014 ; Nottingham French Studies Volume 53 ; 53 >
+      au < testing ; 2014 ; Nottingham French Studies Volume 53 ; 53 >
       au < manifest ; 2015 ; Nottingham French Studies Volume 54 ; 54 >
   
     }
@@ -1164,8 +1247,8 @@
       au < released ; 2011 ; Oxford Literary Review Volume 33 ; 33 >
       au < released ; 2012 ; Oxford Literary Review Volume 34 ; 34 >
       au < released ; 2013 ; Oxford Literary Review Volume 35 ; 35 >
-      au < manifest ; 2014 ; Oxford Literary Review Volume 36 ; 36 >
-      au < expected ; 2015 ; Oxford Literary Review Volume 37 ; 37 >
+      au < released ; 2014 ; Oxford Literary Review Volume 36 ; 36 >
+      au < manifest ; 2015 ; Oxford Literary Review Volume 37 ; 37 >
     
     }
     
@@ -1200,7 +1283,7 @@
       au < released ; 2011 ; Paragraph Volume 34 ; 34 >
       au < released ; 2012 ; Paragraph Volume 35 ; 35 >
       au < released ; 2013 ; Paragraph Volume 36 ; 36 >
-      au < manifest ; 2014 ; Paragraph Volume 37 ; 37 >
+      au < released ; 2014 ; Paragraph Volume 37 ; 37 >
       au < manifest ; 2015 ; Paragraph Volume 38 ; 38 >
 
     }
@@ -1208,15 +1291,21 @@
     {
 
       plugin = org.lockss.plugin.projmuse.ProjectMusePlugin
-      param[base_url] = http://muse.jhu.edu/
       comment[platform] = This journal no longer contributes new issues to Muse
       param[journal_dir] = paragraph
       attr[journal_id] = prg
       implicit < status ; year ; name ; param[volume] >
 
-      au < released ; 2006 ; Paragraph Volume 29 [Project MUSE] ; 29 >
-      au < released ; 2007 ; Paragraph Volume 30 [Project MUSE] ; 30 >
-      au < released ; 2008 ; Paragraph Volume 31 [Project MUSE] ; 31 >
+      {
+
+        param[base_url] = http://muse.jhu.edu/
+
+        au < released ; 2006 ; Paragraph Volume 29 [Project MUSE] ; 29 >
+        au < released ; 2007 ; Paragraph Volume 30 [Project MUSE] ; 30 >
+        au < released ; 2008 ; Paragraph Volume 31 [Project MUSE] ; 31 >
+
+      }
+
 
     }
 
@@ -1234,14 +1323,20 @@
     {
 
       plugin = org.lockss.plugin.projmuse.ProjectMusePlugin
-      param[base_url] = http://muse.jhu.edu/
       comment[platform] = This journal no longer contributes new issues to Muse
       param[journal_dir] = parliamentary_history
       attr[journal_id] = pah
       implicit < status ; year ; name ; param[volume] >
 
-      au < released ; 2006 ; Parliamentary History Volume 25 [Project MUSE] ; 25 >
-      au < released ; 2007 ; Parliamentary History Volume 26 [Project MUSE] ; 26 >
+      {
+
+        param[base_url] = http://muse.jhu.edu/
+
+        au < released ; 2006 ; Parliamentary History Volume 25 [Project MUSE] ; 25 >
+        au < released ; 2007 ; Parliamentary History Volume 26 [Project MUSE] ; 26 >
+
+      }
+
 
     }
 
@@ -1314,7 +1409,7 @@
       au < released ; 2011 ; Romanticism Volume 17 ; 17 >
       au < released ; 2012 ; Romanticism Volume 18 ; 18 >
       au < released ; 2013 ; Romanticism Volume 19 ; 19 >
-      au < manifest ; 2014 ; Romanticism Volume 20 ; 20 >
+      au < released ; 2014 ; Romanticism Volume 20 ; 20 >
       au < manifest ; 2015 ; Romanticism Volume 21 ; 21 >
     
     }
@@ -1322,15 +1417,21 @@
     {
 
       plugin = org.lockss.plugin.projmuse.ProjectMusePlugin
-      param[base_url] = http://muse.jhu.edu/
       comment[platform] = This journal no longer contributes new issues to Muse
       param[journal_dir] = romanticism
       attr[journal_id] = rom
       implicit < status ; year ; name ; param[volume] >
 
-      au < released ; 2006 ; Romanticism Volume 12 [Project MUSE] ; 12 >
-      au < released ; 2007 ; Romanticism Volume 13 [Project MUSE] ; 13 >
-      au < released ; 2008 ; Romanticism Volume 14 [Project MUSE] ; 14 >
+      {
+
+        param[base_url] = http://muse.jhu.edu/
+
+        au < released ; 2006 ; Romanticism Volume 12 [Project MUSE] ; 12 >
+        au < released ; 2007 ; Romanticism Volume 13 [Project MUSE] ; 13 >
+        au < released ; 2008 ; Romanticism Volume 14 [Project MUSE] ; 14 >
+
+      }
+
 
     }
 
@@ -1559,15 +1660,21 @@
     {
 
       plugin = org.lockss.plugin.projmuse.ProjectMusePlugin
-      param[base_url] = http://muse.jhu.edu/
       comment[platform] = This journal no longer contributes new issues to Muse
       param[journal_dir] = scottish_historical_review
       attr[journal_id] = shr
       implicit < status ; year ; name ; param[volume] >
 
-      au < released ; 2006 ; Scottish Historical Review Volume 85 [Project MUSE] ; 85 >
-      au < released ; 2007 ; Scottish Historical Review Volume 86 [Project MUSE] ; 86 >
-      au < released ; 2008 ; Scottish Historical Review Volume 87 [Project MUSE] ; 87 >
+      {
+
+        param[base_url] = http://muse.jhu.edu/
+
+        au < released ; 2006 ; Scottish Historical Review Volume 85 [Project MUSE] ; 85 >
+        au < released ; 2007 ; Scottish Historical Review Volume 86 [Project MUSE] ; 86 >
+        au < released ; 2008 ; Scottish Historical Review Volume 87 [Project MUSE] ; 87 >
+
+      }
+
 
     }
 
@@ -1610,15 +1717,21 @@
     {
 
       plugin = org.lockss.plugin.projmuse.ProjectMusePlugin
-      param[base_url] = http://muse.jhu.edu/
       comment[platform] = This journal no longer contributes new issues to Muse
       param[journal_dir] = studies_in_world_christianity
       attr[journal_id] = swc
       implicit < status ; year ; name ; param[volume] >
 
-      au < released ; 2006 ; Studies in World Christianity Volume 12 [Project MUSE] ; 12 >
-      au < released ; 2007 ; Studies in World Christianity Volume 13 [Project MUSE] ; 13 >
-      au < released ; 2008 ; Studies in World Christianity Volume 14 [Project MUSE] ; 14 >
+      {
+
+        param[base_url] = http://muse.jhu.edu/
+
+        au < released ; 2006 ; Studies in World Christianity Volume 12 [Project MUSE] ; 12 >
+        au < released ; 2007 ; Studies in World Christianity Volume 13 [Project MUSE] ; 13 >
+        au < released ; 2008 ; Studies in World Christianity Volume 14 [Project MUSE] ; 14 >
+
+      }
+
 
     }
 
@@ -1660,15 +1773,21 @@
     {
 
       plugin = org.lockss.plugin.projmuse.ProjectMusePlugin
-      param[base_url] = http://muse.jhu.edu/
       comment[platform] = This journal no longer contributes new issues to Muse
       param[journal_dir] = translation_and_literature
       attr[journal_id] = tal
       implicit < status ; year ; name ; param[volume] >
 
-      au < released ; 2006 ; Translation and Literature Volume 15 [Project MUSE] ; 15 >
-      au < released ; 2007 ; Translation and Literature Volume 16 [Project MUSE] ; 16 >
-      au < released ; 2008 ; Translation and Literature Volume 17 [Project MUSE] ; 17 >
+      {
+
+        param[base_url] = http://muse.jhu.edu/
+
+        au < released ; 2006 ; Translation and Literature Volume 15 [Project MUSE] ; 15 >
+        au < released ; 2007 ; Translation and Literature Volume 16 [Project MUSE] ; 16 >
+        au < released ; 2008 ; Translation and Literature Volume 17 [Project MUSE] ; 17 >
+
+      }
+
     
     }
 

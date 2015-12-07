@@ -1,5 +1,5 @@
 /*
- * $Id: FuncMetadataMonitorService.java $
+ * $Id: FuncMetadataMonitorService.java 44384 2015-10-02 21:50:01Z fergaloy-sf $
  */
 
 /*
@@ -229,5 +229,11 @@ public class FuncMetadataMonitorService extends LockssTestCase {
     assertNull(proxy.getBooksWithIssns());
     assertNull(proxy.getPeriodicalsWithIsbns());
     assertNull(proxy.getUnknownProviderAuIds());
+    assertNull(proxy.getMismatchedParentJournalArticles());
+    assertNull(proxy.getMismatchedParentBookChapters());
+    assertNull(proxy.getMismatchedParentBookVolumes());
+    assertNull(proxy.getAuNamesWithMultiplePublishers());
+    assertNull(proxy.getUnnamedItems());
+    assertNull(proxy.getPublicationsWithMultiplePids());
   }
 }

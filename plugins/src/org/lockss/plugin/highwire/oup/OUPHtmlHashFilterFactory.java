@@ -46,16 +46,24 @@ public class OUPHtmlHashFilterFactory extends HighWireDrupalHtmlFilterFactory {
   private static final Logger log = Logger.getLogger(OUPHtmlHashFilterFactory.class);
   
   protected static NodeFilter[] filters = new NodeFilter[] {
-    // don't remove any div tags with login, as they should not happen and we don't want to hide
-    // HtmlNodeFilters.tagWithAttributeRegex("div", "class", "-login"),
+//    HtmlNodeFilters.allExceptSubtree(
+//        HtmlNodeFilters.tagWithAttribute("section", "id", "section-content"),
+//        HtmlNodeFilters.tagWithAttribute("div", "class", "highwire-markup")),
+    // the remaining fields will not need to be filtered
     // right sidebar 
     HtmlNodeFilters.tagWithAttributeRegex("div", "class", "sidebar-right-wrapper"),
     // content-header from QJM
     HtmlNodeFilters.tagWithAttributeRegex("div", "class", "content-header"),
     // do not hash citing and related section, nor keywords, by author, and eletters sections
     HtmlNodeFilters.tagWithAttributeRegex("div", "class", "(citing|related)-articles?"),
-    HtmlNodeFilters.tagWithAttributeRegex("div", "class", "-(keywords|by-author|eletters)"),
+    HtmlNodeFilters.tagWithAttributeRegex("div", "class", "-(keywords|by-author|eletters|challenge)"),
     HtmlNodeFilters.tagWithAttribute("div", "class", "panel-separator"),
+    HtmlNodeFilters.tagWithText("h3", "related data", true),
+    // tab text changes -- Information (& metrics)?
+    HtmlNodeFilters.tagWithAttributeRegex("ul", "class", "-ajax-tab"),
+    // links appeared/disappeared http://nutritionreviews.oxfordjournals.org/content/67/4/222
+    HtmlNodeFilters.tagWithAttributeRegex("ul", "class", "highwire-figure-links"),
+    HtmlNodeFilters.tagWithAttributeRegex("div", "class", "highwire.+variants?-list"),
     // OUP author section kept changing formating and spacing
     HtmlNodeFilters.allExceptSubtree(
         HtmlNodeFilters.tagWithAttributeRegex("div", "class", "highwire-article-citation"),
@@ -78,10 +86,10 @@ public class OUPHtmlHashFilterFactory extends HighWireDrupalHtmlFilterFactory {
   }
   @Override
   public boolean doTagAttributeFiltering() {
-    return true;
+    return false;
   }
   @Override
   public boolean doXformToText() {
-    return false;
+    return true;
   }
 }

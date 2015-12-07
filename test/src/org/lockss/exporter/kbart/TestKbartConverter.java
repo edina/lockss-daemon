@@ -4,7 +4,7 @@
 
 /*
 
-Copyright (c) 2010-2011 Board of Trustees of Leland Stanford Jr. University,
+Copyright (c) 2010-2015 Board of Trustees of Leland Stanford Jr. University,
 all rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -395,7 +395,7 @@ public class TestKbartConverter extends LockssTestCase {
   public final void testConvertTitleToKbartTitlesListTdbAus() {
     // If there are no TdbAus, an empty list should be returned
     List<TdbAu> noTdbAus = Collections.emptyList();
-    assertEmpty(KbartConverter.convertTitleToKbartTitles(noTdbAus));
+    assertEmpty(KbartConverter.convertTitleToKbartTitles(noTdbAus, false));
     // NOTE Testing with dummy TdbAus is handled by testCreateKbartTitlesTdbTitle() 
     // createKbartTitlesTdbTitle() merely extracts TdbAus from a dummy title 
   }
@@ -501,7 +501,7 @@ public class TestKbartConverter extends LockssTestCase {
       assertEquals("First date wrong", TdbTestUtil.RANGE_TO_NOW_START, t.getField(Field.DATE_FIRST_ISSUE_ONLINE));
       assertEquals("Last date wrong", "", t.getField(Field.DATE_LAST_ISSUE_ONLINE));
       assertEquals("First vol wrong", TdbTestUtil.RANGE_TO_NOW_START_VOL, t.getField(Field.NUM_FIRST_VOL_ONLINE));
-      assertEquals("Last vol wrong", "", t.getField(Field.NUM_LAST_VOL_ONLINE));
+      assertEquals("Last vol wrong", "2(present)", t.getField(Field.NUM_LAST_VOL_ONLINE));
       assertEquals(TdbTestUtil.DEFAULT_ISSN_3, t.getField(Field.PRINT_IDENTIFIER));
       assertEquals(TdbTestUtil.DEFAULT_EISSN_3, t.getField(Field.ONLINE_IDENTIFIER));
       

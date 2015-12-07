@@ -4,8 +4,6 @@
   <entry>
    <string>plugin_status</string>
    <string>ready</string>
-   <!-- updating the (Clockss)BMCplugin so journal_code is irrelevant
-        -->
   </entry>
   <entry>
     <string>plugin_identifier</string>
@@ -13,7 +11,7 @@
   </entry>
   <entry>
     <string>plugin_version</string>
-    <string>40</string>
+    <string>52</string>
   </entry>
   <entry>
     <string>plugin_name</string>
@@ -25,7 +23,7 @@
   </entry>
   <entry>
     <string>plugin_parent_version</string>
-    <string>40</string>
+    <string>52</string>
   </entry>
   <entry>
     <string>au_name</string>
@@ -39,5 +37,9 @@
         <long>100</long>
       </entry>
     </map>
+  </entry>
+  <entry>
+    <string>au_def_pause_time</string>
+    <long>3000</long> <!-- Faster than the GLN -->
   </entry>
 </map>

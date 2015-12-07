@@ -4,14 +4,8 @@
   >
   plugin = org.lockss.plugin.projmuse.ProjectMusePlugin
   implicit < status ; year ; name ; param[volume] >
-  param[base_url] = http://muse.jhu.edu/
 
   {
-
-  param[journal_dir] = african_economic_history
-  attr[journal_id] = aeh
-
-    {
 
     title <
       name = African Economic History ;
@@ -20,10 +14,27 @@
       issnl = 0145-2258
     >
 
-    au < released ; 2008 ; African Economic History Volume 36 ; 36 >
-    au < released ; 2009 ; African Economic History Volume 37 ; 37 >
-    au < released ; 2010 ; African Economic History Volume 38 ; 38 >
-    au < released ; 2011 ; African Economic History Volume 39 ; 39 >
+    param[journal_dir] = african_economic_history
+    attr[journal_id] = aeh
+
+    {
+
+      param[base_url] = http://muse.jhu.edu/
+
+      au < released ; 2008 ; African Economic History Volume 36 ; 36 >
+      au < released ; 2009 ; African Economic History Volume 37 ; 37 >
+      au < released ; 2010 ; African Economic History Volume 38 ; 38 >
+      au < released ; 2011 ; African Economic History Volume 39 ; 39 >
+
+    }
+
+    {
+
+      param[base_url] = https://muse.jhu.edu/
+
+      au < released ; 2012 ; African Economic History Volume 40 ; 40 >
+      au < released ; 2013 ; African Economic History Volume 41 ; 41 >
+      au < released ; 2014 ; African Economic History Volume 42 ; 42 >
 
     }
 

@@ -613,6 +613,136 @@ public class TestWileySourceXmlMetadataExtractorFactory extends LockssTestCase {
     assertEquals(pdfUrl, md.get(MetadataField.FIELD_ACCESS_URL));
  }
   
+  String oddPDFName1 = firstGoodPortion + "<linkGroup><link href=\"" +  // leading file:
+      "file:123foo.pdf" +
+  "\" type=\"toTypesetVersion\"/></linkGroup>" + endGoodPortion;   
+  String oddPDFName2 = firstGoodPortion + "<linkGroup><link href=\"" + // leading file://
+      "file://123foo.pdf" +
+  "\" type=\"toTypesetVersion\"/></linkGroup>" + endGoodPortion;  
+  String oddPDFName3 = firstGoodPortion + "<linkGroup><link href=\"" + // trailing space - never seen 
+      "123foo.pdf   " +
+  "\" type=\"toTypesetVersion\"/></linkGroup>" + endGoodPortion;  
+  String oddPDFName4 = firstGoodPortion + "<linkGroup><link href=\"" + // trailing fust - never seen 
+      "123foo.pdfss" +
+  "\" type=\"toTypesetVersion\"/></linkGroup>" + endGoodPortion;  
+  
+  public void testFileNameParsing() throws Exception {
+    String pdfUrl = realUrlBase2 + "123foo.pdf";
+    String xmlUrl = realUrlBase2 + realXmlUrlBase2;
+
+    MockCachedUrl mcu = hau.addUrlContype(xmlUrl, true, true, "text/xml");
+    mcu.setContent(oddPDFName1);
+    mcu.setContentSize(oddPDFName1.length());
+    hau.addUrl(pdfUrl, true, true); //doesn't matter what content-type
+    FileMetadataExtractor me = getNewExtractor();
+    assertNotNull(me);
+    FileMetadataListExtractor mle =
+      new FileMetadataListExtractor(me);
+    
+    //first test
+    List<ArticleMetadata> mdlist = mle.extract(MetadataTarget.Any(), mcu);
+    assertNotEmpty(mdlist);
+    ArticleMetadata md = mdlist.get(0);
+    assertNotNull(md);
+   
+    assertEquals("123foo.pdf", md.getRaw("header/publicationMeta/linkGroup/link[@type='toTypesetVersion']/@href"));
+    assertEquals(realUrlBase2 + "123foo.pdf", md.get(MetadataField.FIELD_ACCESS_URL));
+    
+    //2nd test
+    mcu.setContent(oddPDFName2);
+    mcu.setContentSize(oddPDFName2.length());
+    
+    mdlist = mle.extract(MetadataTarget.Any(), mcu);
+    assertNotEmpty(mdlist);
+    md = mdlist.get(0);
+    assertNotNull(md);
+   
+    assertEquals("123foo.pdf", md.getRaw("header/publicationMeta/linkGroup/link[@type='toTypesetVersion']/@href"));
+    assertEquals(realUrlBase2 + "123foo.pdf", md.get(MetadataField.FIELD_ACCESS_URL));
+    
+    //3rd test
+    mcu.setContent(oddPDFName3);
+    mcu.setContentSize(oddPDFName3.length());
+    
+    mdlist = mle.extract(MetadataTarget.Any(), mcu);
+    assertNotEmpty(mdlist);
+    md = mdlist.get(0);
+    assertNotNull(md);
+   
+    assertEquals("123foo.pdf", md.getRaw("header/publicationMeta/linkGroup/link[@type='toTypesetVersion']/@href"));
+    assertEquals(realUrlBase2 + "123foo.pdf", md.get(MetadataField.FIELD_ACCESS_URL));
+    
+    //4th test
+    mcu.setContent(oddPDFName4);
+    mcu.setContentSize(oddPDFName4.length());
+    
+    mdlist = mle.extract(MetadataTarget.Any(), mcu);
+    assertNotEmpty(mdlist);
+    md = mdlist.get(0);
+    assertNotNull(md);
+   
+    assertEquals("123foo.pdf", md.getRaw("header/publicationMeta/linkGroup/link[@type='toTypesetVersion']/@href"));
+    assertEquals(realUrlBase2 + "123foo.pdf", md.get(MetadataField.FIELD_ACCESS_URL));    
+    
+    //5th test - no linkgroup, but use filename with just ".xml" suffix
+    xmlUrl = realUrlBase2  + "foo.file.xml";
+    pdfUrl = realUrlBase2  + "foo.file.pdf";
+    mcu = hau.addUrlContype(xmlUrl, true, true, "text/xml");
+    mcu.setContent(noPDFContent);
+    mcu.setContentSize(noPDFContent.length());
+    hau.addUrl(pdfUrl, true, true); //doesn't matter what content-type
+    
+    mdlist = mle.extract(MetadataTarget.Any(), mcu);
+    assertNotEmpty(mdlist);
+    md = mdlist.get(0);
+    assertNotNull(md);
+    assertEquals(null, md.getRaw("header/publicationMeta/linkGroup/link[@type='toTypesetVersion']/@href"));
+    assertEquals(realUrlBase2 + "foo.file.pdf", md.get(MetadataField.FIELD_ACCESS_URL));    
+
+    //6th test - no linkgroup, but use filename with just ".wml.xml" suffix
+    xmlUrl = realUrlBase2  + "foo.file.wml.xml";
+    pdfUrl = realUrlBase2  + "foo.file.pdf";
+    mcu = hau.addUrlContype(xmlUrl, true, true, "text/xml");
+    mcu.setContent(noPDFContent);
+    mcu.setContentSize(noPDFContent.length());
+    hau.addUrl(pdfUrl, true, true); //doesn't matter what content-type
+    
+    mdlist = mle.extract(MetadataTarget.Any(), mcu);
+    assertNotEmpty(mdlist);
+    md = mdlist.get(0);
+    assertNotNull(md);
+    assertEquals(null, md.getRaw("header/publicationMeta/linkGroup/link[@type='toTypesetVersion']/@href"));
+    assertEquals(realUrlBase2 + "foo.file.pdf", md.get(MetadataField.FIELD_ACCESS_URL));    
+
+    //7th test - no linkgroup, but use filename with just ".wml2.xml" suffix    xmlUrl = realUrlBase2  + "foo.file.xml";
+    xmlUrl = realUrlBase2  + "foo.file.wml2.xml";
+    pdfUrl = realUrlBase2  + "foo.file.pdf";
+    mcu = hau.addUrlContype(xmlUrl, true, true, "text/xml");
+    mcu.setContent(noPDFContent);
+    mcu.setContentSize(noPDFContent.length());
+    hau.addUrl(pdfUrl, true, true); //doesn't matter what content-type
+    
+    mdlist = mle.extract(MetadataTarget.Any(), mcu);
+    assertNotEmpty(mdlist);
+    md = mdlist.get(0);
+    assertNotNull(md);
+    assertEquals(null, md.getRaw("header/publicationMeta/linkGroup/link[@type='toTypesetVersion']/@href"));
+    assertEquals(realUrlBase2 + "foo.file.pdf", md.get(MetadataField.FIELD_ACCESS_URL));    
+
+    // not much we can do here...
+    //8th test - no linkgroup, but use filename with just ".wml2.xml" suffix    xmlUrl = realUrlBase2  + "foo.file.xml";
+    xmlUrl = realUrlBase2  + "foo.file.wmlfoo.xml";
+    pdfUrl = realUrlBase2  + "foo.file.pdf";
+    mcu = hau.addUrlContype(xmlUrl, true, true, "text/xml");
+    mcu.setContent(noPDFContent);
+    mcu.setContentSize(noPDFContent.length());
+    hau.addUrl(pdfUrl, true, true); //doesn't matter what content-type
+    
+    mdlist = mle.extract(MetadataTarget.Any(), mcu);
+    assertEmpty(mdlist);
+  
+  }
+
   // single point of change for new extractor type  
   private FileMetadataExtractor getNewExtractor() {
     return new WileySourceXmlMetadataExtractorFactory.WileySourceXmlMetadataExtractor();

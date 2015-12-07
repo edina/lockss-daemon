@@ -4,7 +4,7 @@
 
 /*
 
-Copyright (c) 2000-2014 Board of Trustees of Leland Stanford Jr. University,
+Copyright (c) 2000-2015 Board of Trustees of Leland Stanford Jr. University,
 all rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -42,7 +42,6 @@ import org.antlr.v4.runtime.tree.*;
 import org.lockss.tdb.AntlrUtil.NamedAntlrInputStream;
 import org.lockss.tdb.AntlrUtil.SyntaxError;
 import org.lockss.tdb.TdbParser.*;
-import org.lockss.util.Constants;
 
 /**
  * <p>
@@ -62,6 +61,15 @@ import org.lockss.util.Constants;
  */
 public class TdbBuilder extends TdbParserBaseListener {
 
+  /**
+   * <p>
+   * A version string for the TdbBuilder module ({@value}).
+   * </p>
+   * 
+   * @since 1.68
+   */
+  public static final String VERSION = "[TdbBuilder:0.2.3]";
+  
   /**
    * <p>
    * The {@link Tdb} structure being built by this instance.
@@ -247,7 +255,7 @@ public class TdbBuilder extends TdbParserBaseListener {
    */
   @Override
   public void enterPublisher(@NotNull PublisherContext pctx) {
-    Map<String, String> map = new HashMap<String, String>();
+    Map<String, String> map = new LinkedHashMap<String, String>();
     for (SimpleAssignmentContext sactx : pctx.listOfSimpleAssignments().simpleAssignment()) {
       map.put(sactx.IDENTIFIER().getText(), sactx.STRING().getText());
     }
@@ -267,7 +275,7 @@ public class TdbBuilder extends TdbParserBaseListener {
    */
   @Override
   public void enterTitle(@NotNull TitleContext tctx) {
-    Map<String, String> map = new HashMap<String, String>();
+    Map<String, String> map = new LinkedHashMap<String, String>();
     for (SimpleAssignmentContext sactx : tctx.listOfSimpleAssignments().simpleAssignment()) {
       map.put(sactx.IDENTIFIER().getText(), sactx.STRING().getText());
     }
@@ -293,6 +301,9 @@ public class TdbBuilder extends TdbParserBaseListener {
   public void enterAu(@NotNull AuContext actx) throws SyntaxError {
     Au au = new Au(currentTitle, stack.peek());
     List<String> currentImplicit = au.getImplicit();
+    if (currentImplicit == null) {
+      AntlrUtil.syntaxError(actx.getStart(), "no implicit statement in scope");
+    }
     int sizeImplicit = currentImplicit.size();
     List<TerminalNode> listOfStrings = actx.listOfStrings().STRING();
     int sizeListOfStrings = listOfStrings.size();

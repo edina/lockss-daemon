@@ -1109,6 +1109,21 @@ public class ArchivalUnitStatus
 					    ColumnDescriptor.TYPE_STRING,
 					    crawlPool));
       }
+      CrawlManager crawlMgr = theDaemon.getCrawlManager();
+      int crawlPrio = crawlMgr.getAuPriority(au);
+      if (crawlPrio != 0) {
+	String val;
+	if (crawlPrio <= CrawlManagerImpl.ABORT_CRAWL_PRIORITY) {
+	  val = crawlPrio + ": DISABLED, ABORT";
+	} else if (crawlPrio <= CrawlManagerImpl.MIN_CRAWL_PRIORITY) {
+	  val = crawlPrio + ": DISABLED";
+	} else {
+	  val = Integer.toString(crawlPrio);
+	}
+	res.add(new StatusTable.SummaryInfo("Crawl Priority",
+					    ColumnDescriptor.TYPE_STRING,
+					    val));
+      }
       long lastCrawlAttempt = state.getLastCrawlAttempt();
       res.add(new StatusTable.SummaryInfo("Last Completed Crawl",
 					  ColumnDescriptor.TYPE_DATE,
@@ -1389,7 +1404,7 @@ public class ArchivalUnitStatus
 	Object val = entry.getValue();
 	Map row = new HashMap();
 	row.put("key", key);
-	row.put("val", val != null ? valString(val) : "(null)");
+	row.put("val", valString(val));
 	putTypeSort(row, key, au, plug);
 	rows.add(row);
       }
@@ -1407,10 +1422,13 @@ public class ArchivalUnitStatus
     }
 
     String valString(Object val) {
-      if (val instanceof org.apache.oro.text.regex.Perl5Pattern) {
+      if (val == null) {
+	return "(null)";
+      } else if (val instanceof org.apache.oro.text.regex.Perl5Pattern) {
 	return ((org.apache.oro.text.regex.Perl5Pattern)val).getPattern();
+      } else {
+	return val.toString();
       }
-      return val.toString();
     }
 
     void addTdbRows(List rows, Map<String,String> tdbMap,

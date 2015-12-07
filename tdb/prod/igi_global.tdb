@@ -140,8 +140,8 @@
     au < released ; 2011 ; International Journal of Advanced Pervasive and Ubiquitous Computing (IJAPUC) Volume 3 ; 3 >
     au < released ; 2012 ; International Journal of Advanced Pervasive and Ubiquitous Computing (IJAPUC) Volume 4 ; 4 >
     au < released ; 2013 ; International Journal of Advanced Pervasive and Ubiquitous Computing (IJAPUC) Volume 5 ; 5 >
-    au < manifest ; 2014 ; International Journal of Advanced Pervasive and Ubiquitous Computing (IJAPUC) Volume 6 ; 6 >
-    au < expected ; 2015 ; International Journal of Advanced Pervasive and Ubiquitous Computing (IJAPUC) Volume 7 ; 7 >
+    au < released ; 2014 ; International Journal of Advanced Pervasive and Ubiquitous Computing (IJAPUC) Volume 6 ; 6 >
+    au < manifest ; 2015 ; International Journal of Advanced Pervasive and Ubiquitous Computing (IJAPUC) Volume 7 ; 7 >
 
   }
 
@@ -161,7 +161,7 @@
     au < released ; 2012 ; International Journal of Agent Technologies and Systems (IJATS) Volume 4 ; 4 >
     au < released ; 2013 ; International Journal of Agent Technologies and Systems (IJATS) Volume 5 ; 5 >
     au < manifest ; 2014 ; International Journal of Agent Technologies and Systems (IJATS) Volume 6 ; 6 >
-    au < expected ; 2015 ; International Journal of Agent Technologies and Systems (IJATS) Volume 7 ; 7 >
+    au < manifest ; 2015 ; International Journal of Agent Technologies and Systems (IJATS) Volume 7 ; 7 >
 
   }
 
@@ -236,7 +236,7 @@
     au < released ; 2012 ; International Journal of Applied Evolutionary Computation (IJAEC) Volume 3 ; 3 >
     au < manifest ; 2013 ; International Journal of Applied Evolutionary Computation (IJAEC) Volume 4 ; 4 >
     au < manifest ; 2014 ; International Journal of Applied Evolutionary Computation (IJAEC) Volume 5 ; 5 >
-    au < expected ; 2015 ; International Journal of Applied Evolutionary Computation (IJAEC) Volume 6 ; 6 >
+    au < manifest ; 2015 ; International Journal of Applied Evolutionary Computation (IJAEC) Volume 6 ; 6 >
 
   }
 
@@ -254,7 +254,7 @@
     au < released ; 2011 ; International Journal of Applied Geospatial Research (IJAGR) Volume 2 ; 2 >
     au < released ; 2012 ; International Journal of Applied Geospatial Research (IJAGR) Volume 3 ; 3 >
     au < manifest ; 2013 ; International Journal of Applied Geospatial Research (IJAGR) Volume 4 ; 4 >
-    au < manifest ; 2014 ; International Journal of Applied Geospatial Research (IJAGR) Volume 5 ; 5 >
+    au < released ; 2014 ; International Journal of Applied Geospatial Research (IJAGR) Volume 5 ; 5 >
     au < manifest ; 2015 ; International Journal of Applied Geospatial Research (IJAGR) Volume 6 ; 6 >
 
   }
@@ -308,7 +308,7 @@
     au < released ; 2011 ; International Journal of Applied Metaheuristic Computing (IJAMC) Volume 2 ; 2 >
     au < released ; 2012 ; International Journal of Applied Metaheuristic Computing (IJAMC) Volume 3 ; 3 >
     au < manifest ; 2013 ; International Journal of Applied Metaheuristic Computing (IJAMC) Volume 4 ; 4 >
-    au < manifest ; 2014 ; International Journal of Applied Metaheuristic Computing (IJAMC) Volume 5 ; 5 >
+    au < released ; 2014 ; International Journal of Applied Metaheuristic Computing (IJAMC) Volume 5 ; 5 >
     au < manifest ; 2015 ; International Journal of Applied Metaheuristic Computing (IJAMC) Volume 6 ; 6 >
 
   }
@@ -416,7 +416,7 @@
     au < manifest ; 2012 ; International Journal of Biomedical and Clinical Engineering (IJBCE) Volume 1 ; 1 > 
     au < manifest ; 2013 ; International Journal of Biomedical and Clinical Engineering (IJBCE) Volume 2 ; 2 > 
     au < manifest ; 2014 ; International Journal of Biomedical and Clinical Engineering (IJBCE) Volume 3 ; 3 > 
-    au < expected ; 2015 ; International Journal of Biomedical and Clinical Engineering (IJBCE) Volume 4 ; 4 > 
+    au < manifest ; 2015 ; International Journal of Biomedical and Clinical Engineering (IJBCE) Volume 4 ; 4 > 
 
   }
 
@@ -459,7 +459,7 @@
     au < released ; 2012 ; International Journal of Business Intelligence Research (IJBIR) Volume 3 ; 3 >
     au < manifest ; 2013 ; International Journal of Business Intelligence Research (IJBIR) Volume 4 ; 4 >
     au < manifest ; 2014 ; International Journal of Business Intelligence Research (IJBIR) Volume 5 ; 5 >
-    au < expected ; 2015 ; International Journal of Business Intelligence Research (IJBIR) Volume 6 ; 6 >
+    au < manifest ; 2015 ; International Journal of Business Intelligence Research (IJBIR) Volume 6 ; 6 >
 
   }
 
@@ -491,7 +491,7 @@
     au < released ; 2011 ; International Journal of Chemoinformatics and Chemical Engineering (IJCCE) Volume 1 ; 1 >
     au < released ; 2012 ; International Journal of Chemoinformatics and Chemical Engineering (IJCCE) Volume 2 ; 2 >
     au < manifest ; 2013 ; International Journal of Chemoinformatics and Chemical Engineering (IJCCE) Volume 3 ; 3 >
-    au < expected ; 2015 ; International Journal of Chemoinformatics and Chemical Engineering (IJCCE) Volume 4 ; 4 >
+    au < manifest ; 2015 ; International Journal of Chemoinformatics and Chemical Engineering (IJCCE) Volume 4 ; 4 >
 
   }
 
@@ -531,7 +531,7 @@
     au < released ; 2012 ; International Journal of Cognitive Informatics and Natural Intelligence (IJCINI) Volume 6 ; 6 >
     au < manifest ; 2013 ; International Journal of Cognitive Informatics and Natural Intelligence (IJCINI) Volume 7 ; 7 >
     au < manifest ; 2014 ; International Journal of Cognitive Informatics and Natural Intelligence (IJCINI) Volume 8 ; 8 >
-    au < expected ; 2015 ; International Journal of Cognitive Informatics and Natural Intelligence (IJCINI) Volume 9 ; 9 >
+    au < manifest ; 2015 ; International Journal of Cognitive Informatics and Natural Intelligence (IJCINI) Volume 9 ; 9 >
 
   }
 
@@ -600,7 +600,7 @@
     param[journal_issn] = 2166-7292
 
     au < manifest ; 2013 ; International Journal of Conceptual Structures and Smart Applications (IJCSSA) Volume 1 ; 1 >
-    au < manifest ; 2014 ; International Journal of Conceptual Structures and Smart Applications (IJCSSA) Volume 2 ; 2 >
+    au < released ; 2014 ; International Journal of Conceptual Structures and Smart Applications (IJCSSA) Volume 2 ; 2 >
     au < expected ; 2015 ; International Journal of Conceptual Structures and Smart Applications (IJCSSA) Volume 3 ; 3 >
 
   }
@@ -620,7 +620,7 @@
     au < released ; 2012 ; International Journal of Creative Interfaces and Computer Graphics (IJCICG) Volume 3 ; 3 >
     au < manifest ; 2013 ; International Journal of Creative Interfaces and Computer Graphics (IJCICG) Volume 4 ; 4 >
     au < manifest ; 2014 ; International Journal of Creative Interfaces and Computer Graphics (IJCICG) Volume 5 ; 5 >
-    au < expected ; 2015 ; International Journal of Creative Interfaces and Computer Graphics (IJCICG) Volume 6 ; 6 >
+    au < manifest ; 2015 ; International Journal of Creative Interfaces and Computer Graphics (IJCICG) Volume 6 ; 6 >
 
   }
 
@@ -690,9 +690,9 @@
 
     au < released ; 2011 ; International Journal of Cyber Warfare and Terrorism (IJCWT) Volume 1 ; 1 >
     au < released ; 2012 ; International Journal of Cyber Warfare and Terrorism (IJCWT) Volume 2 ; 2 >
-    au < manifest ; 2013 ; International Journal of Cyber Warfare and Terrorism (IJCWT) Volume 3 ; 3 >
+    au < released ; 2013 ; International Journal of Cyber Warfare and Terrorism (IJCWT) Volume 3 ; 3 >
     au < manifest ; 2014 ; International Journal of Cyber Warfare and Terrorism (IJCWT) Volume 4 ; 4 >
-    au < expected ; 2015 ; International Journal of Cyber Warfare and Terrorism (IJCWT) Volume 5 ; 5 >
+    au < manifest ; 2015 ; International Journal of Cyber Warfare and Terrorism (IJCWT) Volume 5 ; 5 >
 
   }
 
@@ -735,7 +735,7 @@
     au < released ; 2011 ; International Journal of Decision Support System Technology (IJDSST) Volume 3 ; 3 >
     au < released ; 2012 ; International Journal of Decision Support System Technology (IJDSST) Volume 4 ; 4 >
     au < manifest ; 2013 ; International Journal of Decision Support System Technology (IJDSST) Volume 5 ; 5 >
-    au < manifest ; 2014 ; International Journal of Decision Support System Technology (IJDSST) Volume 6 ; 6 >
+    au < released ; 2014 ; International Journal of Decision Support System Technology (IJDSST) Volume 6 ; 6 >
     au < manifest ; 2015 ; International Journal of Decision Support System Technology (IJDSST) Volume 7 ; 7 >
 
   }
@@ -875,7 +875,7 @@
     au < released ; 2012 ; International Journal of E-Adoption (IJEA) Volume 4 ; 4 >
     au < manifest ; 2013 ; International Journal of E-Adoption (IJEA) Volume 5 ; 5 >
     au < manifest ; 2014 ; International Journal of E-Adoption (IJEA) Volume 6 ; 6 >
-    au < expected ; 2015 ; International Journal of E-Adoption (IJEA) Volume 7 ; 7 >
+    au < manifest ; 2015 ; International Journal of E-Adoption (IJEA) Volume 7 ; 7 >
 
   }
 
@@ -942,7 +942,7 @@
     au < released ; 2011 ; International Journal of E-Entrepreneurship and Innovation (IJEEI) Volume 2 ; 2 >
     au < released ; 2012 ; International Journal of E-Entrepreneurship and Innovation (IJEEI) Volume 3 ; 3 >
     au < manifest ; 2013 ; International Journal of E-Entrepreneurship and Innovation (IJEEI) Volume 4 ; 4 >
-    au < expected ; 2015 ; International Journal of E-Entrepreneurship and Innovation (IJEEI) Volume 5 ; 5 >
+    au < manifest ; 2015 ; International Journal of E-Entrepreneurship and Innovation (IJEEI) Volume 5 ; 5 >
 
 
   }
@@ -1004,7 +1004,7 @@
     au < released ; 2011 ; International Journal of Embedded and Real-Time Communication Systems (IJERTCS) Volume 2 ; 2 >
     au < released ; 2012 ; International Journal of Embedded and Real-Time Communication Systems (IJERTCS) Volume 3 ; 3 >
     au < manifest ; 2013 ; International Journal of Embedded and Real-Time Communication Systems (IJERTCS) Volume 4 ; 4 >
-    au < manifest ; 2014 ; International Journal of Embedded and Real-Time Communication Systems (IJERTCS) Volume 5 ; 5 >
+    au < released ; 2014 ; International Journal of Embedded and Real-Time Communication Systems (IJERTCS) Volume 5 ; 5 >
     au < expected ; 2015 ; International Journal of Embedded and Real-Time Communication Systems (IJERTCS) Volume 6 ; 6 >
 
   }
@@ -1157,7 +1157,7 @@
     au < released ; 2011 ; International Journal of Gaming and Computer-Mediated Simulations (IJGCMS) Volume 3 ; 3 >
     au < released ; 2012 ; International Journal of Gaming and Computer-Mediated Simulations (IJGCMS) Volume 4 ; 4 >
     au < manifest ; 2013 ; International Journal of Gaming and Computer-Mediated Simulations (IJGCMS) Volume 5 ; 5 >
-    au < manifest ; 2014 ; International Journal of Gaming and Computer-Mediated Simulations (IJGCMS) Volume 6 ; 6 >
+    au < released ; 2014 ; International Journal of Gaming and Computer-Mediated Simulations (IJGCMS) Volume 6 ; 6 >
     au < manifest ; 2015 ; International Journal of Gaming and Computer-Mediated Simulations (IJGCMS) Volume 7 ; 7 >
 
   }
@@ -1177,7 +1177,7 @@
     au < released ; 2012 ; International Journal of Geotechnical Earthquake Engineering (IJGEE) Volume 3 ; 3 >
     au < manifest ; 2013 ; International Journal of Geotechnical Earthquake Engineering (IJGEE) Volume 4 ; 4 >
     au < manifest ; 2014 ; International Journal of Geotechnical Earthquake Engineering (IJGEE) Volume 5 ; 5 >
-    au < expected ; 2015 ; International Journal of Geotechnical Earthquake Engineering (IJGEE) Volume 6 ; 6 >
+    au < manifest ; 2015 ; International Journal of Geotechnical Earthquake Engineering (IJGEE) Volume 6 ; 6 >
 
   }
 
@@ -1235,7 +1235,7 @@
     au < released ; 2012 ; International Journal of Handheld Computing Research (IJHCR) Volume 3 ; 3 >
     au < manifest ; 2013 ; International Journal of Handheld Computing Research (IJHCR) Volume 4 ; 4 >
     au < manifest ; 2014 ; International Journal of Handheld Computing Research (IJHCR) Volume 5 ; 5 >
-    au < expected ; 2015 ; International Journal of Handheld Computing Research (IJHCR) Volume 6 ; 6 >
+    au < manifest ; 2015 ; International Journal of Handheld Computing Research (IJHCR) Volume 6 ; 6 >
 
   }
 
@@ -1495,7 +1495,7 @@
     au < released ; 2011 ; International Journal of Information Systems in the Service Sector (IJISSS) Volume 3 ; 3 >
     au < released ; 2012 ; International Journal of Information Systems in the Service Sector (IJISSS) Volume 4 ; 4 >
     au < manifest ; 2013 ; International Journal of Information Systems in the Service Sector (IJISSS) Volume 5 ; 5 >
-    au < manifest ; 2014 ; International Journal of Information Systems in the Service Sector (IJISSS) Volume 6 ; 6 >
+    au < released ; 2014 ; International Journal of Information Systems in the Service Sector (IJISSS) Volume 6 ; 6 >
     au < manifest ; 2015 ; International Journal of Information Systems in the Service Sector (IJISSS) Volume 7 ; 7 >
 
   }
@@ -1540,7 +1540,7 @@
     au < released ; 2012 ; International Journal of Information Technology and Web Engineering (IJITWE) Volume 7 ; 7 >
     au < manifest ; 2013 ; International Journal of Information Technology and Web Engineering (IJITWE) Volume 8 ; 8 >
     au < manifest ; 2014 ; International Journal of Information Technology and Web Engineering (IJITWE) Volume 9 ; 9 >
-    au < expected ; 2015 ; International Journal of Information Technology and Web Engineering (IJITWE) Volume 10 ; 10 >
+    au < manifest ; 2015 ; International Journal of Information Technology and Web Engineering (IJITWE) Volume 10 ; 10 >
 
   }
 
@@ -1577,7 +1577,7 @@
     au < released ; 2011 ; International Journal of Innovation in the Digital Economy (IJIDE) Volume 2 ; 2 >
     au < released ; 2012 ; International Journal of Innovation in the Digital Economy (IJIDE) Volume 3 ; 3 >
     au < manifest ; 2013 ; International Journal of Innovation in the Digital Economy (IJIDE) Volume 4 ; 4 >
-    au < manifest ; 2014 ; International Journal of Innovation in the Digital Economy (IJIDE) Volume 5 ; 5 >
+    au < released ; 2014 ; International Journal of Innovation in the Digital Economy (IJIDE) Volume 5 ; 5 >
     au < manifest ; 2015 ; International Journal of Innovation in the Digital Economy (IJIDE) Volume 6 ; 6 >
 
   }
@@ -1602,7 +1602,7 @@
     au < released ; 2012 ; International Journal of Intelligent Information Technologies (IJIIT) Volume 8 ; 8 >
     au < manifest ; 2013 ; International Journal of Intelligent Information Technologies (IJIIT) Volume 9 ; 9 >
     au < manifest ; 2014 ; International Journal of Intelligent Information Technologies (IJIIT) Volume 10 ; 10 >
-    au < expected ; 2015 ; International Journal of Intelligent Information Technologies (IJIIT) Volume 11 ; 11 >
+    au < manifest ; 2015 ; International Journal of Intelligent Information Technologies (IJIIT) Volume 11 ; 11 >
 
   }
 
@@ -1637,7 +1637,7 @@
     au < released ; 2012 ; International Journal of Interactive Communication Systems and Technologies (IJICST) Volume 2 ; 2 >
     au < manifest ; 2013 ; International Journal of Interactive Communication Systems and Technologies (IJICST) Volume 3 ; 3 >
     au < manifest ; 2014 ; International Journal of Interactive Communication Systems and Technologies (IJICST) Volume 4 ; 4 >
-    au < expected ; 2015 ; International Journal of Interactive Communication Systems and Technologies (IJICST) Volume 5 ; 5 >
+    au < manifest ; 2015 ; International Journal of Interactive Communication Systems and Technologies (IJICST) Volume 5 ; 5 >
 
   }
 
@@ -1656,8 +1656,8 @@
     au < released ; 2011 ; International Journal of Interdisciplinary Telecommunications and Networking (IJITN) Volume 3 ; 3 >
     au < released ; 2012 ; International Journal of Interdisciplinary Telecommunications and Networking (IJITN) Volume 4 ; 4 >
     au < manifest ; 2013 ; International Journal of Interdisciplinary Telecommunications and Networking (IJITN) Volume 5 ; 5 >
-    au < manifest ; 2014 ; International Journal of Interdisciplinary Telecommunications and Networking (IJITN) Volume 6 ; 6 >
-    au < expected ; 2015 ; International Journal of Interdisciplinary Telecommunications and Networking (IJITN) Volume 7 ; 7 >
+    au < released ; 2014 ; International Journal of Interdisciplinary Telecommunications and Networking (IJITN) Volume 6 ; 6 >
+    au < manifest ; 2015 ; International Journal of Interdisciplinary Telecommunications and Networking (IJITN) Volume 7 ; 7 >
 
   }
 
@@ -1702,7 +1702,7 @@
     au < released ; 2012 ; International Journal of IT/Business Alignment and Governance (IJITBAG) Volume 3 ; 3 >
     au < manifest ; 2013 ; International Journal of IT/Business Alignment and Governance (IJITBAG) Volume 4 ; 4 >
     au < manifest ; 2014 ; International Journal of IT/Business Alignment and Governance (IJITBAG) Volume 5 ; 5 >
-    au < expected ; 2015 ; International Journal of IT/Business Alignment and Governance (IJITBAG) Volume 6 ; 6 >
+    au < manifest ; 2015 ; International Journal of IT/Business Alignment and Governance (IJITBAG) Volume 6 ; 6 >
 
   }
 
@@ -1763,7 +1763,7 @@
     au < released ; 2012 ; International Journal of Knowledge Management (IJKM) Volume 8 ; 8 >
     au < manifest ; 2013 ; International Journal of Knowledge Management (IJKM) Volume 9 ; 9 >
     au < manifest ; 2014 ; International Journal of Knowledge Management (IJKM) Volume 10 ; 10 >
-    au < expected ; 2015 ; International Journal of Knowledge Management (IJKM) Volume 11 ; 11 >
+    au < manifest ; 2015 ; International Journal of Knowledge Management (IJKM) Volume 11 ; 11 >
 
   }
 
@@ -1781,8 +1781,8 @@
     au < released ; 2011 ; International Journal of Knowledge Society Research (IJKSR) Volume 2 ; 2 >
     au < released ; 2012 ; International Journal of Knowledge Society Research (IJKSR) Volume 3 ; 3 >
     au < manifest ; 2013 ; International Journal of Knowledge Society Research (IJKSR) Volume 4 ; 4 >
-    au < manifest ; 2014 ; International Journal of Knowledge Society Research (IJKSR) Volume 5 ; 5 >
-    au < expected ; 2015 ; International Journal of Knowledge Society Research (IJKSR) Volume 6 ; 6 >
+    au < released ; 2014 ; International Journal of Knowledge Society Research (IJKSR) Volume 5 ; 5 >
+    au < manifest ; 2015 ; International Journal of Knowledge Society Research (IJKSR) Volume 6 ; 6 >
 
   }
 
@@ -1875,7 +1875,7 @@
     au < released ; 2011 ; International Journal of Mobile Computing and Multimedia Communications (IJMCMC) Volume 3 ; 3 >
     au < released ; 2012 ; International Journal of Mobile Computing and Multimedia Communications (IJMCMC) Volume 4 ; 4 >
     au < manifest ; 2013 ; International Journal of Mobile Computing and Multimedia Communications (IJMCMC) Volume 5 ; 5 >
-    au < manifest ; 2014 ; International Journal of Mobile Computing and Multimedia Communications (IJMCMC) Volume 6 ; 6 >
+    au < released ; 2014 ; International Journal of Mobile Computing and Multimedia Communications (IJMCMC) Volume 6 ; 6 >
     au < expected ; 2015 ; International Journal of Mobile Computing and Multimedia Communications (IJMCMC) Volume 7 ; 7 >
 
   }
@@ -1911,7 +1911,7 @@
     param[journal_issn] = 2166-7241
 
     au < manifest ; 2013 ; International Journal of Monitoring and Surveillance Technologies Research (IJMSTR) Volume 1 ; 1 >
-    au < manifest ; 2014 ; International Journal of Monitoring and Surveillance Technologies Research (IJMSTR) Volume 2 ; 2 >
+    au < released ; 2014 ; International Journal of Monitoring and Surveillance Technologies Research (IJMSTR) Volume 2 ; 2 >
     au < expected ; 2015 ; International Journal of Monitoring and Surveillance Technologies Research (IJMSTR) Volume 3 ; 3 >
 
   }
@@ -2059,7 +2059,7 @@
     au < released ; 2011 ; International Journal of Organizational and Collective Intelligence (IJOCI) Volume 2 ; 2 >
     au < released ; 2012 ; International Journal of Organizational and Collective Intelligence (IJOCI) Volume 3 ; 3 >
     au < manifest ; 2014 ; International Journal of Organizational and Collective Intelligence (IJOCI) Volume 4 ; 4 >
-    au < expected ; 2015 ; International Journal of Organizational and Collective Intelligence (IJOCI) Volume 5 ; 5 >
+    au < manifest ; 2015 ; International Journal of Organizational and Collective Intelligence (IJOCI) Volume 5 ; 5 >
 
   }
 
@@ -2092,8 +2092,8 @@
     param[journal_issn] = 2155-5621
 
     au < manifest ; 2013 ; International Journal of Privacy and Health Information Management (IJPHIM) Volume 1 ; 1 >
-    au < manifest ; 2014 ; International Journal of Privacy and Health Information Management (IJPHIM) Volume 2 ; 2 >
-    au < expected ; 2015 ; International Journal of Privacy and Health Information Management (IJPHIM) Volume 3 ; 3 >
+    au < released ; 2014 ; International Journal of Privacy and Health Information Management (IJPHIM) Volume 2 ; 2 >
+    au < manifest ; 2015 ; International Journal of Privacy and Health Information Management (IJPHIM) Volume 3 ; 3 >
 
   }
 
@@ -2110,7 +2110,7 @@
 
     au < released ; 2012 ; International Journal of Productivity Management and Assessment Technologies (IJPMAT) Volume 1 ; 1 >
     au < manifest ; 2014 ; International Journal of Productivity Management and Assessment Technologies (IJPMAT) Volume 2 ; 2 >
-    au < expected ; 2015 ; International Journal of Productivity Management and Assessment Technologies (IJPMAT) Volume 3 ; 3 >
+    au < manifest ; 2015 ; International Journal of Productivity Management and Assessment Technologies (IJPMAT) Volume 3 ; 3 >
 
   }
 
@@ -2144,7 +2144,7 @@
     au < released ; 2011 ; International Journal of Quality Assurance in Engineering and Technology Education (IJQAETE) Volume 1 ; 1 >
     au < released ; 2012 ; International Journal of Quality Assurance in Engineering and Technology Education (IJQAETE) Volume 2 ; 2 >
     au < manifest ; 2014 ; International Journal of Quality Assurance in Engineering and Technology Education (IJQAETE) Volume 3 ; 3 >
-    au < expected ; 2015 ; International Journal of Quality Assurance in Engineering and Technology Education (IJQAETE) Volume 4 ; 4 >
+    au < manifest ; 2015 ; International Journal of Quality Assurance in Engineering and Technology Education (IJQAETE) Volume 4 ; 4 >
 
   }
 
@@ -2194,8 +2194,8 @@
     param[journal_issn] = 2166-7195
 
     au < manifest ; 2013 ; International Journal of Robotics Applications and Technologies (IJRAT) Volume 1 ; 1 >
-    au < manifest ; 2014 ; International Journal of Robotics Applications and Technologies (IJRAT) Volume 2 ; 2 >
-    au < expected ; 2015 ; International Journal of Robotics Applications and Technologies (IJRAT) Volume 3 ; 3 >
+    au < released ; 2014 ; International Journal of Robotics Applications and Technologies (IJRAT) Volume 2 ; 2 >
+    au < manifest ; 2015 ; International Journal of Robotics Applications and Technologies (IJRAT) Volume 3 ; 3 >
 
   }
 
@@ -2213,7 +2213,7 @@
     au < released ; 2011 ; International Journal of Secure Software Engineering (IJSSE) Volume 2 ; 2 >
     au < released ; 2012 ; International Journal of Secure Software Engineering (IJSSE) Volume 3 ; 3 >
     au < manifest ; 2013 ; International Journal of Secure Software Engineering (IJSSE) Volume 4 ; 4 >
-    au < manifest ; 2014 ; International Journal of Secure Software Engineering (IJSSE) Volume 5 ; 5 >
+    au < released ; 2014 ; International Journal of Secure Software Engineering (IJSSE) Volume 5 ; 5 >
     au < manifest ; 2015 ; International Journal of Secure Software Engineering (IJSSE) Volume 6 ; 6 >
 
   }
@@ -2305,8 +2305,8 @@
      au < released ; 2011 ; International Journal of Sociotechnology and Knowledge Development (IJSKD) Volume 3 ; 3 >
      au < released ; 2012 ; International Journal of Sociotechnology and Knowledge Development (IJSKD) Volume 4 ; 4 >
      au < manifest ; 2013 ; International Journal of Sociotechnology and Knowledge Development (IJSKD) Volume 5 ; 5 >
-     au < manifest ; 2014 ; International Journal of Sociotechnology and Knowledge Development (IJSKD) Volume 6 ; 6 >
-     au < expected ; 2015 ; International Journal of Sociotechnology and Knowledge Development (IJSKD) Volume 7 ; 7 >
+     au < released ; 2014 ; International Journal of Sociotechnology and Knowledge Development (IJSKD) Volume 6 ; 6 >
+     au < manifest ; 2015 ; International Journal of Sociotechnology and Knowledge Development (IJSKD) Volume 7 ; 7 >
 
   }
 
@@ -2326,7 +2326,7 @@
     au < released ; 2012 ; International Journal of Software Science and Computational Intelligence (IJSSCI) Volume 4 ; 4 >
     au < manifest ; 2013 ; International Journal of Software Science and Computational Intelligence (IJSSCI) Volume 5 ; 5 >
     au < manifest ; 2014 ; International Journal of Software Science and Computational Intelligence (IJSSCI) Volume 6 ; 6 >
-    au < expected ; 2015 ; International Journal of Software Science and Computational Intelligence (IJSSCI) Volume 7 ; 7 >
+    au < manifest ; 2015 ; International Journal of Software Science and Computational Intelligence (IJSSCI) Volume 7 ; 7 >
 
     }
 
@@ -2381,7 +2381,7 @@
     au < released ; 2012 ; International Journal of Strategic Information Technology and Applications (IJSITA) Volume 3 ; 3 >
     au < manifest ; 2013 ; International Journal of Strategic Information Technology and Applications (IJSITA) Volume 4 ; 4 >
     au < manifest ; 2014 ; International Journal of Strategic Information Technology and Applications (IJSITA) Volume 5 ; 5 >
-    au < expected ; 2015 ; International Journal of Strategic Information Technology and Applications (IJSITA) Volume 6 ; 6 >
+    au < manifest ; 2015 ; International Journal of Strategic Information Technology and Applications (IJSITA) Volume 6 ; 6 >
 
   }
 
@@ -2397,7 +2397,7 @@
 
     au < manifest ; 2013 ; International Journal of Surface Engineering and Interdisciplinary Materials Science (IJSEIMS) Volume 1 ; 1 >
     au < manifest ; 2014 ; International Journal of Surface Engineering and Interdisciplinary Materials Science (IJSEIMS) Volume 2 ; 2 >
-    au < expected ; 2015 ; International Journal of Surface Engineering and Interdisciplinary Materials Science (IJSEIMS) Volume 3 ; 3 >
+    au < manifest ; 2015 ; International Journal of Surface Engineering and Interdisciplinary Materials Science (IJSEIMS) Volume 3 ; 3 >
 
   }
 
@@ -2414,7 +2414,7 @@
     au < released ; 2012 ; International Journal of Sustainable Economies Management (IJSEM) Volume 1 ; 1 >
     au < manifest ; 2013 ; International Journal of Sustainable Economies Management (IJSEM) Volume 2 ; 2 >
     au < manifest ; 2014 ; International Journal of Sustainable Economies Management (IJSEM) Volume 3 ; 3 >
-    au < expected ; 2015 ; International Journal of Sustainable Economies Management (IJSEM) Volume 4 ; 4 >
+    au < manifest ; 2015 ; International Journal of Sustainable Economies Management (IJSEM) Volume 4 ; 4 >
 
   }
 
@@ -2452,7 +2452,7 @@
     au < released ; 2012 ; International Journal of Synthetic Emotions (IJSE) Volume 3 ; 3 >
     au < manifest ; 2013 ; International Journal of Synthetic Emotions (IJSE) Volume 4 ; 4 >
     au < manifest ; 2014 ; International Journal of Synthetic Emotions (IJSE) Volume 5 ; 5 >
-    au < expected ; 2015 ; International Journal of Synthetic Emotions (IJSE) Volume 6 ; 6 >
+    au < manifest ; 2015 ; International Journal of Synthetic Emotions (IJSE) Volume 6 ; 6 >
 
   }
 
@@ -2540,7 +2540,7 @@
     au < released ; 2012 ; International Journal of Technology and Educational Marketing (IJTEM) Volume 2 ; 2 >
     au < manifest ; 2013 ; International Journal of Technology and Educational Marketing (IJTEM) Volume 3 ; 3 >
     au < manifest ; 2014 ; International Journal of Technology and Educational Marketing (IJTEM) Volume 4 ; 4 >
-    au < expected ; 2015 ; International Journal of Technology and Educational Marketing (IJTEM) Volume 5 ; 5 >
+    au < manifest ; 2015 ; International Journal of Technology and Educational Marketing (IJTEM) Volume 5 ; 5 >
 
   }
 
@@ -2601,7 +2601,7 @@
     au < released ; 2012 ; International Journal of User-Driven Healthcare (IJUDH) Volume 2 ; 2 >
     au < manifest ; 2013 ; International Journal of User-Driven Healthcare (IJUDH) Volume 3 ; 3 >
     au < manifest ; 2014 ; International Journal of User-Driven Healthcare (IJUDH) Volume 4 ; 4 >
-    au < expected ; 2015 ; International Journal of User-Driven Healthcare (IJUDH) Volume 5 ; 5 >
+    au < manifest ; 2015 ; International Journal of User-Driven Healthcare (IJUDH) Volume 5 ; 5 >
 
   }
 
@@ -2640,7 +2640,7 @@
     au < released ; 2012 ; International Journal of Virtual Communities and Social Networking (IJVCSN) Volume 4 ; 4 >
     au < manifest ; 2013 ; International Journal of Virtual Communities and Social Networking (IJVCSN) Volume 5 ; 5 >
     au < manifest ; 2014 ; International Journal of Virtual Communities and Social Networking (IJVCSN) Volume 6 ; 6 >
-    au < expected ; 2015 ; International Journal of Virtual Communities and Social Networking (IJVCSN) Volume 7 ; 7 >
+    au < manifest ; 2015 ; International Journal of Virtual Communities and Social Networking (IJVCSN) Volume 7 ; 7 >
 
   }
 
@@ -2749,7 +2749,7 @@
     au < released ; 2012 ; International Journal on Semantic Web and Information Systems (IJSWIS) Volume 8 ; 8 >
     au < manifest ; 2013 ; International Journal on Semantic Web and Information Systems (IJSWIS) Volume 9 ; 9 >
     au < manifest ; 2014 ; International Journal on Semantic Web and Information Systems (IJSWIS) Volume 10 ; 10 >
-    au < expected ; 2015 ; International Journal on Semantic Web and Information Systems (IJSWIS) Volume 11 ; 11 >
+    au < manifest ; 2015 ; International Journal on Semantic Web and Information Systems (IJSWIS) Volume 11 ; 11 >
 
   }
 
@@ -2779,7 +2779,7 @@
     au < released ; 2012 ; Journal of Cases on Information Technology (JCIT) Volume 14 ; 14 >
     au < manifest ; 2013 ; Journal of Cases on Information Technology (JCIT) Volume 15 ; 15 >
     au < manifest ; 2014 ; Journal of Cases on Information Technology (JCIT) Volume 16 ; 16 >
-    au < expected ; 2015 ; Journal of Cases on Information Technology (JCIT) Volume 17 ; 17 >
+    au < manifest ; 2015 ; Journal of Cases on Information Technology (JCIT) Volume 17 ; 17 >
 
   }
 
@@ -2818,7 +2818,7 @@
     au < released ; 2012 ; Journal of Database Management (JDM) Volume 23 ; 23 >
     au < manifest ; 2013 ; Journal of Database Management (JDM) Volume 24 ; 24 >
     au < manifest ; 2014 ; Journal of Database Management (JDM) Volume 25 ; 25 >
-    au < expected ; 2015 ; Journal of Database Management (JDM) Volume 26 ; 26 >
+    au < manifest ; 2015 ; Journal of Database Management (JDM) Volume 26 ; 26 >
 
   }
 
@@ -2844,7 +2844,7 @@
     au < released ; 2012 ; Journal of Electronic Commerce in Organizations (JECO) Volume 10 ; 10 >
     au < manifest ; 2013 ; Journal of Electronic Commerce in Organizations (JECO) Volume 11 ; 11 >
     au < manifest ; 2014 ; Journal of Electronic Commerce in Organizations (JECO) Volume 12 ; 12 >
-    au < expected ; 2015 ; Journal of Electronic Commerce in Organizations (JECO) Volume 13 ; 13 >
+    au < manifest ; 2015 ; Journal of Electronic Commerce in Organizations (JECO) Volume 13 ; 13 >
 
   }
 

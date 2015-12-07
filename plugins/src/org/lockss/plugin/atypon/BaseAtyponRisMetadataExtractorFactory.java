@@ -47,7 +47,7 @@ import org.lockss.util.Logger;
  *  Y1 usually is the same as DA, but not always, use DA if it's there
  *  DO NOT pick up the "UR" because it often points to dx.doi.org stable URL which 
  *  will not exist in the AU.  We must manually set the access_url
-TY  - JOUR
+TY  - JOUR/BOOK/CHAP/ECHAP/EBOOK/EDBOOK
 T1  - <article title>
 AU  - <author>
 AU  - <other author>
@@ -64,7 +64,7 @@ EP  - <end page>
 VL  - <volume>
 IS  - <issue>
 PB  - <publisher but possibly imprint>
-SN  - <issn>
+SN  - <issn> or <isbn>
 M3  - doi: 10.1137/100798910
 UR  - http://dx.doi.org/10.1137/100798910
 Y2  - <later date - meaning?>
@@ -96,7 +96,7 @@ implements FileMetadataExtractorFactory {
     public void extract(MetadataTarget target, CachedUrl cu, FileMetadataExtractor.Emitter emitter) 
         throws IOException, PluginException {
       ArticleMetadata am = extract(target, cu); 
-      
+
       /* 
        * if, due to overcrawl, we got to a page that didn't have anything
        * valid, eg "this page not found" html page
@@ -110,27 +110,50 @@ implements FileMetadataExtractorFactory {
       /*
        * RIS data can be variable.  We don't have any way to add priority to
        * the cooking of data, so fallback to alternate values manually
+       *
+       * There are differences between books and journals, so fork for titles
+       * and metadata check 
        */
-      if (am.get(MetadataField.FIELD_PUBLICATION_TITLE) == null) {
-        if (am.getRaw("T2") != null) {
-          am.put(MetadataField.FIELD_PUBLICATION_TITLE, am.getRaw("T2"));
-        } else if (am.getRaw("JO") != null) {
-          am.put(MetadataField.FIELD_PUBLICATION_TITLE, am.getRaw("JO")); // might be unabbreviated version
-        }
-      } 
       if (am.get(MetadataField.FIELD_DATE) == null) {
         if (am.getRaw("Y1") != null) { // if DA wasn't there, use Y1
           am.put(MetadataField.FIELD_DATE, am.getRaw("Y1"));
         }
-      }
-           
-      // Only emit if this item is likely to be from this AU
-      // protect against counting overcrawled articles
-      ArchivalUnit au = cu.getArchivalUnit();
-      if (!BaseAtyponMetadataUtil.metadataMatchesTdb(au, am)) {
-        return;
-      }
+      }  
       
+      
+      /*
+       * Determine if this is a book item or a journal item.
+       * set the appropriate article type once the daemon passes along the TY
+       */
+      String ris_type = am.getRaw("TY");
+      if (ris_type == null) {
+        //pre 1.69, do an alternate check because TY wasn't passed through
+        ris_type = "JOUR"; //set a default
+        if (am.get(MetadataField.FIELD_ISBN) != null) {
+          // it is a bad value, but it was recognized as an isbn because of TY type
+          ris_type = "BOOK"; //it could be a chapter but until TY is passed through...
+        }
+      } 
+
+      // Modify or try alternate RIS tag values based after cooking
+      postCookProcess(cu,am,ris_type);
+      
+      
+      // Only emit if this item is likely to be from this AU
+      // protect against counting overcrawled articles by checking against
+      // values from the TDB file - differentiate between book items and journal itesm
+      ArchivalUnit au = cu.getArchivalUnit();
+      if ( ris_type.contains("BOOK") || ris_type.contains("CHAP") ) {
+        if (!BaseAtyponMetadataUtil.metadataMatchesBookTdb(au, am)) {
+          return;
+        }
+      } else {
+        // JOURNAL default is to assume it's a journal for backwards compatibility
+        if (!BaseAtyponMetadataUtil.metadataMatchesTdb(au, am)) {
+          return;
+        }
+      }
+
       /*
        * Fill in DOI, publisher, other information available from
        * the URL or TDB 
@@ -138,6 +161,76 @@ implements FileMetadataExtractorFactory {
        */
       BaseAtyponMetadataUtil.completeMetadata(cu, am);
       emitter.emitMetadata(cu, am);
+    }
+    
+    /*
+     * isolate the modifications done on the AM after the initial extraction
+     * in order to allow child plugins to do override this and do 
+     * additional work before calling the pre-emit checking...
+     * ArticleMetadata - passed in information from extract/cook
+     * ris_type - the TY value or its inferred type (basically, book or journal)
+     */
+    protected void postCookProcess(CachedUrl cu, ArticleMetadata am, String ris_type) {
+      /*
+       * RIS data can be variable.  We don't have any way to add priority to
+       * the cooking of data, so fallback to alternate values manually
+       */
+      if (am.get(MetadataField.FIELD_DATE) == null) {
+        if (am.getRaw("Y1") != null) { // if DA wasn't there, use Y1
+          am.put(MetadataField.FIELD_DATE, am.getRaw("Y1"));
+        }
+      }      
+
+      /*
+       * There are differences between books and journals, so fork for titles
+       * and metadata check
+       */ 
+      if ( ris_type.contains("BOOK") || ris_type.contains("CHAP") ) {
+        //BOOK in some form
+        // T1 is the primary title - of the chapter for a book chapter, or book for a complete book
+        // T2 is the next title up - of the book for a chapter, of the series for a book
+        // T3 is the uppermost - of the series for a chapter
+        //sometimes they use TI instead of T1... 
+        if (am.get(MetadataField.FIELD_ARTICLE_TITLE) == null) {
+          if (am.getRaw("TI") != null) { // if T1 wasn't there, use TI
+            am.put(MetadataField.FIELD_ARTICLE_TITLE, am.getRaw("TI"));
+          }
+        }
+
+        if (ris_type.contains("CHAP")) {
+          // just one chapter - set the article type correctly
+          am.put(MetadataField.FIELD_ARTICLE_TYPE, MetadataField.ARTICLE_TYPE_BOOKCHAPTER);
+          if ((am.get(MetadataField.FIELD_PUBLICATION_TITLE) == null) && (am.getRaw("T2") != null)) {
+            // the publication and the article titles are just the name of the book
+            am.put(MetadataField.FIELD_PUBLICATION_TITLE, am.getRaw("T2"));
+          }
+          if ((am.get(MetadataField.FIELD_SERIES_TITLE) == null) && (am.getRaw("T3") != null)) {
+            // the publication and the article titles are just the name of the book
+            am.put(MetadataField.FIELD_SERIES_TITLE, am.getRaw("T3"));
+          }
+        } else {
+          // We're a full book volume - articletitle = publicationtitle
+          am.put(MetadataField.FIELD_ARTICLE_TYPE, MetadataField.ARTICLE_TYPE_BOOKVOLUME);
+          if (am.get(MetadataField.FIELD_PUBLICATION_TITLE) == null) {
+            // the publication and the article titles are just the name of the book
+            am.put(MetadataField.FIELD_PUBLICATION_TITLE, am.get(MetadataField.FIELD_ARTICLE_TITLE));
+          }
+          // series title can be from T2
+          if ((am.get(MetadataField.FIELD_SERIES_TITLE) == null) && (am.getRaw("T2") != null)) {
+            // the publication and the article titles are just the name of the book
+            am.put(MetadataField.FIELD_SERIES_TITLE, am.getRaw("T2"));
+          }
+        }
+      } else {
+        // JOURNAL default is to assume it's a journal for backwards compatibility
+        if (am.get(MetadataField.FIELD_PUBLICATION_TITLE) == null) {
+          if (am.getRaw("T2") != null) {
+            am.put(MetadataField.FIELD_PUBLICATION_TITLE, am.getRaw("T2"));
+          } else if (am.getRaw("JO") != null) {
+            am.put(MetadataField.FIELD_PUBLICATION_TITLE, am.getRaw("JO")); // might be unabbreviated version
+          }
+        } 
+      }
     }
 
   }

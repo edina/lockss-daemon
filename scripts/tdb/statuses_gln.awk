@@ -7,7 +7,7 @@ BEGIN {
 }
 
 {
-  # add a loop to add line only if either status is _not_ manifest or ending year is gt or eq to contract year
+  # add a loop to add line only if either [status is _not_ manifest] OR [journal_year (or journal end year) is gt or eq to 2005 && journal year (or journal end year) is lt or eq to the current year we are testing]
   current_year = 2014
   end_year = 0
   incontract = 0
@@ -30,13 +30,9 @@ BEGIN {
   #    n[pn] = $2
       r[pn] = $3
       if (r[pn] == "") {
-        if ((substr(p[pn],1,2) <= "American R")) {
-          r[pn] = "4"
-        } else if ((substr(p[pn],1,2) >= "American S") && (substr(p[pn],1,2) <= "Bz")) {
-          r[pn] = "4"
-        } else if ((substr(p[pn],1,2) >= "CA") && (substr(p[pn],1,2) <= "Rz")) {
+        if ((substr(p[pn],1,2) <= "Mz")) {
           r[pn] = "5"
-        } else if (substr(p[pn],1,2) >= "SA") {
+        } else if (substr(p[pn],1,2) >= "NA") {
           r[pn] = "8"
         }
       }
@@ -54,27 +50,29 @@ END {
   s[1] = "exists"
   s[2] = "manifest"
   s[3] = "wanted"
-  s[4] = "crawling"
-  s[5] = "testing"
-  s[6] = "notReady"
+  s[4] = "testing"
+  s[5] = "notReady"
+  s[6] = "ready"
   s[7] = "released"
   s[8] = "down"
   s[9] = "superseded"
-  s[10] = "zapped"
-  sn = 11
+  s[10] = "doNotProcess"
+  s[11] = "doesNotExist"
+  sn = 12
   
   sc[0] = "expe"
   sc[1] = "exis"
   sc[2] = "mani"
   sc[3] = "want"
-  sc[4] = "craw"
-  sc[5] = "test"
-  sc[6] = "notR"
+  sc[4] = "test"
+  sc[5] = "notR"
+  sc[6] = "read"
   sc[7] = "rele"
   sc[8] = "down"
   sc[9] = "supe"
-  sc[10] = "zapp"
-  scn = 11
+  sc[10] = "doNP"
+  sc[11] = "dNoE"
+  scn = 12
 
   #print out header
   printf "Publisher\tPlugin\tT\tTotal"

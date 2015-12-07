@@ -35,9 +35,8 @@ package org.lockss.plugin.base;
 import java.io.*;
 import java.util.*;
 import java.net.*;
-import java.security.MessageDigest;
 import de.schlichtherle.truezip.file.*;
-import de.schlichtherle.truezip.fs.*;
+//import de.schlichtherle.truezip.fs.*;
 
 import org.lockss.app.*;
 import org.lockss.config.*;
@@ -46,7 +45,6 @@ import org.lockss.plugin.*;
 import org.lockss.truezip.*;
 import org.lockss.repository.*;
 import org.lockss.util.*;
-import org.lockss.util.urlconn.*;
 import org.lockss.rewriter.*;
 import org.lockss.extractor.*;
 
@@ -79,6 +77,7 @@ public class BaseCachedUrl implements CachedUrl {
   static final boolean DEFAULT_INCLUDED_ONLY = true;
 
   public static final String DEFAULT_METADATA_CONTENT_TYPE = "text/html";
+
 
   public BaseCachedUrl(ArchivalUnit owner, String url) {
     this.au = owner;
@@ -255,9 +254,14 @@ public class BaseCachedUrl implements CachedUrl {
 
   public Reader openForReading() {
     try {
-      return
-	new BufferedReader(new InputStreamReader(getUnfilteredInputStream(),
-						 getEncoding()));
+      if (CharsetUtil.inferCharset()) {
+        return CharsetUtil.getReader(getUnfilteredInputStream(),
+                                     HeaderUtil.getCharsetFromContentType(getContentType()));
+      }
+      else {
+        return new BufferedReader( new InputStreamReader(getUnfilteredInputStream(),
+                                                         getEncoding()));
+      }
     } catch (IOException e) {
       // XXX Wrong Exception.  Should this method be declared to throw
       // UnsupportedEncodingException?

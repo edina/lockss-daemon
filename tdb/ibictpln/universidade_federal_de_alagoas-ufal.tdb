@@ -95,6 +95,8 @@
       au < exists ; 2011 ; 21 ; Revista Ciência Agrícola Volume 2011 ; 2011 ; >
       au < released ; 2012 ; 22 ; Revista Ciência Agrícola Volume 2012 ; 2012 ; >
       au < notReady ; 2013 ; 23 ; Revista Ciência Agrícola Volume 2013 ; 2013 ; No files containing substantial content collected >
+      au < ready ; 2014 ; 24 ; Revista Ciência Agrícola Volume 2014 ; 2014 ; >
+      au < expected ; 2015 ; 25 ; Revista Ciência Agrícola Volume 2015 ; 2015 ; >
 
   }
 
@@ -112,7 +114,8 @@
       au < released ; 2011 ; 1 ; Revista Iberoamericana de Turismo-RITUR Volume 2011 ; 2011 ; >
       au < released ; 2012 ; 2 ; Revista Iberoamericana de Turismo-RITUR Volume 2012 ; 2012 ; >
       au < released ; 2013 ; 3 ; Revista Iberoamericana de Turismo-RITUR Volume 2013 ; 2013 ; >
-      au < manifest ; 2014 ; 4 ; Revista Iberoamericana de Turismo-RITUR Volume 2014 ; 2014 ; >
+      au < released ; 2014 ; 4 ; Revista Iberoamericana de Turismo-RITUR Volume 2014 ; 2014 ; >
+      au < manifest ; 2015 ; 5 ; Revista Iberoamericana de Turismo-RITUR Volume 2015 ; 2015 ; >
 
   }
 
@@ -132,6 +135,22 @@
       au < exists ; 2012 ; 3 ; Revista Eletrônica do Mestrado em Direito Volume 2012 ; 2012 ; >
       au < exists ; 2013 ; 4 ; Revista Eletrônica do Mestrado em Direito Volume 2013 ; 2013 ; >
       au < expected ; 2014 ; 5 ; Revista Eletrônica do Mestrado em Direito Volume 2014 ; 2014 ; >
+
+  }
+
+  {
+
+      title <
+        name =  Ciência da Informação em Revista ;
+        eissn = 2358-0763
+      >
+
+      comment[publisher] = Universidade Federal de Alagoas-UFAL
+      param[base_url] = http://www.seer.ufal.br/
+      param[journal_id] = cir
+
+      au < ready ; 2014 ; 1 ;  Ciência da Informação em Revista Volume 2014 ; 2014 ; >
+      au < manifest ; 2015 ; 2 ;  Ciência da Informação em Revista Volume 2015 ; 2015 ; >
 
   }
 

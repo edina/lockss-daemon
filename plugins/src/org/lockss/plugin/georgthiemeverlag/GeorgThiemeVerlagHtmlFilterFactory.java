@@ -3,7 +3,7 @@
  */
 /*
 
-Copyright (c) 2000-2014 Board of Trustees of Leland Stanford Jr. University,
+Copyright (c) 2000-2015 Board of Trustees of Leland Stanford Jr. University,
 all rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -32,6 +32,7 @@ in this Software without prior written authorization from Stanford University.
 package org.lockss.plugin.georgthiemeverlag;
 
 import java.io.*;
+import java.util.Vector;
 
 import org.htmlparser.*;
 import org.htmlparser.filters.*;
@@ -59,18 +60,19 @@ public class GeorgThiemeVerlagHtmlFilterFactory implements FilterFactory {
     NodeFilter[] filters = new NodeFilter[] {
         // Aggressive filtering of non-content tags
         // Contains scripts and tags that change values, do not contain content
-        // XXX may want to 'normalize' the head tag contents (extract meta tags in a fixed order
-        new TagNameFilter("head"),
-        new TagNameFilter("script"),
-        // Remove header/footer items, requires_daemon_version 1.64.0
-        new TagNameFilter("header"),
-        new TagNameFilter("footer"),
+        // head & scipt tags contents might change, aggressive filtering
+        HtmlNodeFilters.tag("head"),
+        HtmlNodeFilters.tag("script"),
+        // Remove header/footer items
+        HtmlNodeFilters.tag("header"),
+        HtmlNodeFilters.tag("footer"),
         // remove ALL comments
         HtmlNodeFilters.comment(),
-        // Contains ads that change
-        HtmlNodeFilters.tagWithAttributeRegex("div", "id", "adSidebar[^\"]*"),
+        // Contains ads that change, not content
+        HtmlNodeFilters.tagWithAttributeRegex("div", "id", "adSidebar"),
         // Contains navigation items that are not content
         HtmlNodeFilters.tagWithAttribute("div", "id", "navPanel"),
+        HtmlNodeFilters.tagWithAttribute("ul", "id", "overviewNavigation"),
         // Contains functional links, not content
         HtmlNodeFilters.tagWithAttribute("div", "class", "pageFunctions"),
         HtmlNodeFilters.tagWithAttribute("div", "class", "articleFunctions"),
@@ -78,6 +80,10 @@ public class GeorgThiemeVerlagHtmlFilterFactory implements FilterFactory {
         // Contains non-functional anchor, not content
         HtmlNodeFilters.tagWithAttribute("ul", "class", "articleTocList"),
         HtmlNodeFilters.tagWithAttribute("a", "name"),
+        // contains information, not content
+        HtmlNodeFilters.tagWithAttribute("div", "id", "access-profile-box"),
+        // Debug ids change
+        HtmlNodeFilters.tagWithAttributeRegex("img", "src", "_debugResources="),
     };
     
     
@@ -89,12 +95,19 @@ public class GeorgThiemeVerlagHtmlFilterFactory implements FilterFactory {
           nodeList.visitAllNodesWith(new NodeVisitor() {
             @Override
             public void visitTag(Tag tag) {
+              String tagName = tag.getTagName().toLowerCase();
               try {
-                if ("a".equalsIgnoreCase(tag.getTagName())) {
-                  String href = tag.getAttribute("href");
-                  if ((href != null) && (href.charAt(0) == '#')) {
-                    tag.setAttribute("href", "#");
+                if ("a".equals(tagName) ||
+                    "div".equals(tagName) ||
+                    "section".equals(tagName)) {
+                  Attribute a = tag.getAttributeEx(tagName);
+                  Vector<Attribute> v = new Vector<Attribute>();
+                  v.add(a);
+                  if (tag.isEmptyXmlTag()) {
+                    Attribute end = tag.getAttributeEx("/");
+                    v.add(end);
                   }
+                  tag.setAttributesEx(v);
                 }
                 super.visitTag(tag);
               }
@@ -111,13 +124,9 @@ public class GeorgThiemeVerlagHtmlFilterFactory implements FilterFactory {
       }
     };
     
-    // registerTag header/footer requires_daemon_version 1.64.0
     HtmlFilterInputStream filtered = new HtmlFilterInputStream(in, encoding,
         new HtmlCompoundTransform(HtmlNodeFilterTransform.exclude(
-            new OrFilter(filters)),xform))
-    .registerTag(new HtmlTags.Header())
-    .registerTag(new HtmlTags.Footer());
-    
+            new OrFilter(filters)),xform));
     Reader filteredReader = FilterUtil.getReader(filtered, encoding);
     return new ReaderInputStream(new WhiteSpaceFilter(filteredReader));
   }

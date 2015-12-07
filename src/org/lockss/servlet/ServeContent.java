@@ -46,6 +46,7 @@ import org.apache.commons.httpclient.util.DateParseException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.lockss.alert.Alert;
 import org.lockss.app.LockssDaemon;
 import org.lockss.config.*;
@@ -68,12 +69,27 @@ import org.lockss.util.urlconn.*;
 import org.mortbay.html.*;
 import org.mortbay.http.*;
 
-/** ServeContent servlet displays cached content with links
- *  rewritten.
+/** ServeContent servlet displays cached content with links rewritten.
+ */
+
+/* PathInfo option not fully implemented.
+
+ * Links can be rewritten (i.e., original URLs can be embedded in
+ * ServeContent URLs) in two ways:<ul>
+ * 
+ * <li>http://.../ServeContent?url=<i>url-encoded-original-url</i></li>
+ * <li>http://.../ServeContent/<i>original-url</i></li>
+ * </ul>
+ *
+ * The first is always used when additional arguments (<i>eg</i> auid,
+ * version) must be included.  The second (enabled by setting {@value
+ * PARAM_REWRITE_STYLE} to <tt>PathInfo</tt>) is needed for sites where
+ * rewritten URLs on the page are examined by code on the page (<i>eg</i>
+ * PDF.js, which looks for a "file" query arg in the iframe's URL).
  */
 @SuppressWarnings("serial")
 public class ServeContent extends LockssServlet {
-  
+
   private static final Logger log = Logger.getLogger(ServeContent.class);
 
   /** Prefix for this server's config tree */
@@ -104,7 +120,7 @@ public class ServeContent extends LockssServlet {
   public static final String PARAM_MISSING_FILE_ACTION =
       PREFIX + "missingFileAction";
   public static final MissingFileAction DEFAULT_MISSING_FILE_ACTION =
-      MissingFileAction.HostAuIndex;;
+      MissingFileAction.HostAuIndex;
 
   /** The log level at which to log all content server accesses.
    * To normally log all content accesses (proxy or ServeContent), set to
@@ -139,6 +155,28 @@ public class ServeContent extends LockssServlet {
     /** Respond with a redirect to the publisher. */
     AlwaysRedirect,
   }
+
+  /** Determines how original URLs are represented in ServeContent URLs.
+   */
+  public static enum RewriteStyle {
+    /** Encode the origianl URL as a query arg in the ServeContent URL */
+    QueryArg,
+    /** Append the origianl URL to the ServeContent URL as extra path info. */
+    PathInfo,
+  }
+
+  /** Determines how original URLs are represented in ServeContent URLs.
+   * Can be set to one of:
+   *  <ul>
+   *   <li><tt>QueryArg</tt>: The origianl URL is encoded as a query arg
+   *   in the ServeContent URL.</li>
+   *   <li><tt>PathInfo</tt>: The origianl URL is appended to the
+   *   ServeContent URL as extra path info.
+   */
+  public static final String PARAM_REWRITE_STYLE =
+      PREFIX + "rewriteStyle";
+  public static final RewriteStyle DEFAULT_REWRITE_STYLE =
+      RewriteStyle.QueryArg;
 
   /** If true, rewritten links will be absolute
    * (http://host:port/ServeContent?url=...).  If false, relative
@@ -209,6 +247,7 @@ public class ServeContent extends LockssServlet {
   private static MissingFileAction missingFileAction =
       DEFAULT_MISSING_FILE_ACTION;
   private static boolean absoluteLinks = DEFAULT_ABSOLUTE_LINKS;
+  private static RewriteStyle rewriteStyle = DEFAULT_REWRITE_STYLE;
   private static boolean rewriteMementoResponses = DEFAULT_REWRITE_MEMENTO_RESPONSES;
   private static boolean normalizeUrl = DEFAULT_NORMALIZE_URL_ARG;
   private static boolean minimallyEncodeUrl = DEFAULT_MINIMALLY_ENCODE_URLS;
@@ -290,6 +329,9 @@ public class ServeContent extends LockssServlet {
           DEFAULT_INCLUDE_INTERNAL_AUS);
       absoluteLinks = config.getBoolean(PARAM_ABSOLUTE_LINKS,
           DEFAULT_ABSOLUTE_LINKS);
+      rewriteStyle = (RewriteStyle)config.getEnum(RewriteStyle.class,
+						  PARAM_REWRITE_STYLE,
+						  DEFAULT_REWRITE_STYLE);
       normalizeUrl = config.getBoolean(PARAM_NORMALIZE_URL_ARG,
           DEFAULT_NORMALIZE_URL_ARG);
       minimallyEncodeUrl = config.getBoolean(PARAM_MINIMALLY_ENCODE_URLS,
@@ -394,8 +436,20 @@ public class ServeContent extends LockssServlet {
     enabledPluginsOnly =
         !"no".equalsIgnoreCase(getParameter("filterPlugins"));
 
-    url = getParameter("url");
-    String auid = getParameter("auid");
+    String auid = null;
+    String pathInfo = req.getPathInfo();
+
+    if (pathInfo != null && pathInfo.length() >= 1) {
+      String query = req.getQueryString();
+      if (query != null) {
+	url = pathInfo.substring(1) + "?" + query;
+      } else {
+	url = pathInfo.substring(1);
+      }
+    } else {
+      url = getParameter("url");
+      auid = getParameter("auid");
+    }
     versionStr = getParameter("version");
 
     au = explicitAu = null;		// redundant, just making sure
@@ -421,6 +475,7 @@ public class ServeContent extends LockssServlet {
       url = StringEscapeUtils.unescapeHtml4(url);
       requestType = AccessLogType.Url;
       //this is a partial replicate of proxy_handler post logic here
+      // TODO check mime type and use that to determine what should be sent ctg
       if (HttpRequest.__POST.equals(req.getMethod()) && processForms) {
         log.debug2("POST request found!");
         FormUrlHelper helper = new FormUrlHelper(url.toString());
@@ -504,11 +559,11 @@ public class ServeContent extends LockssServlet {
         handleMultiOpenUrlInfo(resolved);
         return;
       }
-      
+
       // if there is only one result, present it
       url = resolved.getResolvedUrl();
       if (   (url != null)
-          || (resolved.getResolvedTo() != ResolvedTo.NONE)) { 
+          || (resolved.getResolvedTo() != ResolvedTo.NONE)) {
         // record type of access for logging
         accessLogInfo = resolved.getResolvedTo().toString();
         handleOpenUrlInfo(resolved);
@@ -718,15 +773,14 @@ public class ServeContent extends LockssServlet {
    * for level returned by OpenURL resolver and offers a link to
    * the URL at the publisher site.
    *
-   * @param info the OpenUrlInfo from the OpenUrl resolver
-   * @param pstate the pub state
+   * @param multiInfo the OpenUrlInfo from the OpenUrl resolver
    * @throws IOException if an IO error occurs
    */
   protected void handleMultiOpenUrlInfo(OpenUrlInfo multiInfo)
       throws IOException {
     Block detailBlock = new Block(Block.Center);
     Table headerTable = new Table(0,"");
-    headerTable.addHeading("Found Matching Content from Multiple Sources", 
+    headerTable.addHeading("Found Matching Content from Multiple Sources",
                            "colspan=3");
     detailBlock.add(headerTable);
 
@@ -734,7 +788,7 @@ public class ServeContent extends LockssServlet {
     detailTable.addHeading("Publisher", "style=\"text-align:left\"");
     detailTable.addHeading("Title", "style=\"text-align:left\"");
     detailTable.addHeading("OpenURL", "style=\"text-align:left\"");
-    
+
     // display publisher, title, and link for each info result
     for (OpenUrlInfo info : multiInfo) {
       BibliographicItem bibItem = info.getBibliographicItem();
@@ -742,8 +796,8 @@ public class ServeContent extends LockssServlet {
       if (openUrlQuery != null) {
         detailTable.newRow();
         detailTable.newCell();
-        String publisherName = (bibItem == null) 
-                               ? null : bibItem.getPublisherName(); 
+        String publisherName = (bibItem == null)
+                               ? null : bibItem.getPublisherName();
         if (publisherName != null) detailTable.add(publisherName);
         detailTable.newCell();
         String title = (bibItem == null)
@@ -751,19 +805,19 @@ public class ServeContent extends LockssServlet {
         if (title != null) detailTable.add(title);
         detailTable.newCell();
         detailTable.add(srvLink(myServletDescr(), openUrlQuery, openUrlQuery));
-      }      
+      }
     }
-    
+
     detailBlock.add(detailTable);
-    
+
     Page page = newPage();
     page.add(detailBlock);
     endPage(page);
   }
 
   /**
-   * Handle request for the page specified OpenUrlInfo 
-   * that is returned from OpenUrlResolver. 
+   * Handle request for the page specified OpenUrlInfo
+   * that is returned from OpenUrlResolver.
    *
    * @param info the OpenUrlInfo from the OpenUrl resolver
    * @throws IOException if an IO error happens
@@ -771,7 +825,7 @@ public class ServeContent extends LockssServlet {
   protected void handleOpenUrlInfo(OpenUrlInfo info) throws IOException {
     log.debug2("resolvedTo: " + info.getResolvedTo() + " url: " + url);
     try {
-      // If we resolved to a URL, get the CachedUrl 
+      // If we resolved to a URL, get the CachedUrl
       if (url != null) {
         if (au != null) {
           // AU specified explicitly
@@ -809,7 +863,7 @@ public class ServeContent extends LockssServlet {
       handleMissingOpenUrlRequest(info, PubState.Unknown);
 
     } catch (IOException e) {
-      log.warning("Handling URL: " 
+      log.warning("Handling URL: "
                   + ((url == null) ? "url" : url) + " throws ", e);
       throw e;
     } finally {
@@ -1037,7 +1091,7 @@ public class ServeContent extends LockssServlet {
    * @param conn the connection
    * @return the input stream
    * @throws IOException if error getting input stream
-   * @throws CacheException.PermissionException if the connection is to a 
+   * @throws CacheException.PermissionException if the connection is to a
    * login page or there was an error checking for a login page
    */
   private InputStream getInputStream(LockssUrlConnection conn)
@@ -1046,7 +1100,7 @@ public class ServeContent extends LockssServlet {
     InputStream input = conn.getResponseInputStream();
 
     // only check for HTML login pages to avoid doing unnecessary
-    // work for other document types; publishers typically return 
+    // work for other document types; publishers typically return
     // a 200 response code and an HTML page with a login form
     String ctype = conn.getResponseContentType();
     String mimeType = HeaderUtil.getMimeTypeFromContentType(ctype);
@@ -1078,7 +1132,7 @@ public class ServeContent extends LockssServlet {
    * @param headers a set of header properties
    * @return an input stream positioned at the same position as the original
    *  one if the original stream is not a login page
-   * @throws CacheException.PermissionException if the connection is to a 
+   * @throws CacheException.PermissionException if the connection is to a
    *  login page or the LoginPageChecker for the plugin reported an error
    * @throws IOException if IO error while checking the stream
    */
@@ -1091,10 +1145,10 @@ public class ServeContent extends LockssServlet {
 
       // buffer html page stream to allow login page checker to read it
       int limit = CurrentConfig.getIntParam(
-          BaseUrlFetcher.PARAM_LOGIN_CHECKER_MARK_LIMIT,
-          BaseUrlFetcher.DEFAULT_LOGIN_CHECKER_MARK_LIMIT);
+                                             BaseUrlFetcher.PARAM_LOGIN_CHECKER_MARK_LIMIT,
+                                             BaseUrlFetcher.DEFAULT_LOGIN_CHECKER_MARK_LIMIT);
       DeferredTempFileOutputStream dos =
-          new DeferredTempFileOutputStream(limit);
+        new DeferredTempFileOutputStream(limit);
       try {
         StreamUtil.copy(input, dos);
       } finally {
@@ -1102,32 +1156,31 @@ public class ServeContent extends LockssServlet {
         IOUtil.safeClose(dos);
       }
       try {
-	input = dos.getInputStream();
+        input = dos.getInputStream();
       } catch (IOException e) {
-	dos.deleteTempFile();
-	throw e;
+        dos.deleteTempFile();
+        throw e;
       }
-
       // create reader for input stream
       String ctype = headers.getProperty("Content-Type");
-      String charset = HeaderUtil.getCharsetOrDefaultFromContentType(ctype);
 
+      String charset = CharsetUtil.guessCharsetFromStream(input,ctype);
       try {
         Reader reader = new InputStreamReader(input, charset);
 
         if (checker.isLoginPage(headers, reader)) {
           IOUtil.safeClose(input);
           input = null;
-	  dos.deleteTempFile();
+          dos.deleteTempFile();
           throw new CacheException.PermissionException("Found a login page");
         }
       } catch (PluginException e) {
         CacheException.PermissionException ex =
-            new CacheException.PermissionException("Error checking login page");
+          new CacheException.PermissionException("Error checking login page");
         ex.initCause(e);
         IOUtil.safeClose(input);
         input = null;
-	dos.deleteTempFile();
+        dos.deleteTempFile();
         throw ex;
       } finally {
         if (input == null) {
@@ -1135,8 +1188,8 @@ public class ServeContent extends LockssServlet {
           // stream open on it
           dos.deleteTempFile();
         } else {
-	  IOUtil.safeClose(input);
-	  return dos.getDeleteOnCloseInputStream();
+          IOUtil.safeClose(input);
+          return dos.getDeleteOnCloseInputStream();
         }
       }
     }
@@ -1218,7 +1271,9 @@ public class ServeContent extends LockssServlet {
     }
 
     String charset = HeaderUtil.getCharsetOrDefaultFromContentType(ctype);
-    handleRewriteInputStream(respStrm, mimeType, charset,
+    BufferedInputStream bufRespStrm = new BufferedInputStream(respStrm);
+    charset = CharsetUtil.guessCharsetFromStream(bufRespStrm,charset);
+    handleRewriteInputStream(bufRespStrm, mimeType, charset,
         responseContentLength);
   }
 
@@ -1300,28 +1355,12 @@ public class ServeContent extends LockssServlet {
       conn.setRequestProperty(HttpFields.__IfModifiedSince, ifModified);
     }
 
-    // If the Referer: is a ServeContent URL then the real referring page
-    // is in the url query arg.
     if (referer != null) {
-      try {
-        URI refUri = new URI(referer);
-        if (refUri.getPath().endsWith(myServletDescr().getPath())) {
-          String rawquery = refUri.getRawQuery();
-          if (log.isDebug3()) log.debug3("rawquery: " + rawquery);
-          if (!StringUtil.isNullString(rawquery))  {
-            Matcher m1 = URL_ARG_PAT.matcher(rawquery);
-            if (m1.find()) {
-              referer = UrlUtil.decodeUrl(m1.group(1));
-            }
-          }
-        }
-      } catch (URISyntaxException e) {
-        log.siteWarning("Can't perse Referer:, ignoring: " + referer);
-      }
-
+      referer = getRealReferer(referer);
       log.debug2("Sending referer: " + referer);
       conn.setRequestProperty(HttpFields.__Referer, referer);
     }
+
     // send address of original requester
     conn.addRequestProperty(HttpFields.__XForwardedFor,
         req.getRemoteAddr());
@@ -1336,6 +1375,38 @@ public class ServeContent extends LockssServlet {
     }
 
     return conn;
+  }
+
+  String getRealReferer(String referer) {
+    // If the Referer: is a ServeContent URL then the real referring page
+    // is in the url query arg.
+    if (referer != null) {
+      try {
+        URI refUri = new URI(referer);
+	String refPath = refUri.getPath();
+	String servletPath = myServletDescr().getPath();
+        if (refPath.endsWith(servletPath)) {
+          String rawquery = refUri.getRawQuery();
+          if (log.isDebug3()) log.debug3("rawquery: " + rawquery);
+          if (!StringUtil.isNullString(rawquery))  {
+            Matcher m1 = URL_ARG_PAT.matcher(rawquery);
+            if (m1.find()) {
+              referer = UrlUtil.decodeUrl(m1.group(1));
+            }
+          }
+        } else if (refPath.startsWith("/" + servletPath + "/")) {
+	  referer = refPath.substring(servletPath.length() + 2);
+          String rawquery = refUri.getRawQuery();
+          if (!StringUtil.isNullString(rawquery))  {
+	    referer = referer + "?" + rawquery;
+	  }
+	}
+      } catch (URISyntaxException e) {
+        log.siteWarning("Can't perse Referer:, ignoring: " + referer);
+      }
+
+    }
+    return referer;
   }
 
   LinkRewriterFactory getLinkRewriterFactory(String mimeType) {
@@ -1378,16 +1449,7 @@ public class ServeContent extends LockssServlet {
                   original,
                   charset,
                   url,
-                  new ServletUtil.LinkTransform() {
-                    public String rewrite(String url) {
-                      if (absoluteLinks) {
-                        return srvAbsURL(myServletDescr(),
-                            "url=" + url);
-                      } else {
-                        return srvURL(myServletDescr(),
-                            "url=" + url);
-                      }
-                    }});
+		  makeLinkTransform());
         } catch (PluginException e) {
           log.error("Can't create link rewriter, not rewriting", e);
         }
@@ -1421,6 +1483,35 @@ public class ServeContent extends LockssServlet {
       IOUtil.safeClose(rewritten);
     }
   }
+
+  ServletUtil.LinkTransform makeLinkTransform() {
+    switch (rewriteStyle) {
+    case QueryArg:
+    default:
+      return new ServletUtil.LinkTransform() {
+	public String rewrite(String url) {
+	  if (absoluteLinks) {
+	    return srvAbsURL(myServletDescr(),
+			     "url=" + url);
+	  } else {
+	    return srvURL(myServletDescr(),
+			  "url=" + url);
+	  }
+	}
+      };
+    case PathInfo:
+      return new ServletUtil.LinkTransform() {
+	public String rewrite(String url) {
+	  if (absoluteLinks) {
+	    return srvAbsURL(myServletDescr()) + "/" + url;
+	  } else {
+	    return srvURL(myServletDescr()) + "/" + url;
+	  }
+	}
+      };
+    }
+  }
+      
 
   private void setContentLength(long length) {
     if (length >= 0) {
@@ -1811,7 +1902,7 @@ public class ServeContent extends LockssServlet {
   }
 
   /**
-   * Add link to publisher url and additional info 
+   * Add link to publisher url and additional info
    * to the table if the AU for the URL is not down.
    *
    * @param table the Table
@@ -1843,7 +1934,7 @@ public class ServeContent extends LockssServlet {
    */
   protected Collection<ArchivalUnit> getCandidateAus(
       BibliographicItem bibliographicItem) {
-    Collection<ArchivalUnit> candidateAus = 
+    Collection<ArchivalUnit> candidateAus =
       new TreeSet<ArchivalUnit>(new AuOrderComparator());
 
     Tdb tdb = ConfigManager.getCurrentConfig().getTdb();

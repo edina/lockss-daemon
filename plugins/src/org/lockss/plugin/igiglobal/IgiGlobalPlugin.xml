@@ -9,11 +9,11 @@
   </entry>
   <entry>
     <string>plugin_name</string>
-    <string>IGI Global Plugin</string>
+    <string>IGI Global Journals Plugin</string>
   </entry>
   <entry>
     <string>plugin_version</string>
-    <string>19</string>
+    <string>22</string>
   </entry>
   <entry>
     <string>plugin_feature_version_map</string>
@@ -24,7 +24,7 @@
       </entry>
       <entry>
         <string>Poll</string>
-        <string>9</string>
+        <string>12</string>
       </entry>
       <entry>
         <string>Substance</string>
@@ -38,7 +38,7 @@
   </entry>
   <entry>
     <string>au_name</string>
-    <string>"IGI Global Plugin, Base URL %s, Journal ISSN %s, Volume %s", base_url, journal_issn, volume</string>
+    <string>"IGI Global Journals Plugin, Base URL %s, Journal ISSN %s, Volume %s", base_url, journal_issn, volume</string>
   </entry>
   <entry>
     <string>au_start_url</string>
@@ -150,5 +150,13 @@
   <entry>
     <string>plugin_fetch_rate_limiter_source</string>
     <string>key:IGI Global</string>
+  </entry>
+  <entry>
+    <string>au_repair_from_peer_if_missing_url_pattern</string>
+    <string>[^/]+/(images|sourcecontent)/.*[.](bmp|gif|ico|jpe?g|png|tif?f)$</string>
+  </entry>
+  <entry>
+    <string>au_exclude_urls_from_polls_pattern</string>
+    <string>[.](css|js)$</string>
   </entry>
 </map>

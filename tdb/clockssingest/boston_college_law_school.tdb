@@ -39,7 +39,7 @@
     au < finished ; crawling ; 1988-1989 ; Boston College Environmental Affairs Law Review Volume 16 ; 16 >
     au < finished ; crawling ; 1989-1990 ; Boston College Environmental Affairs Law Review Volume 17 ; 17 >
     au < finished ; crawling ; 1990-1991 ; Boston College Environmental Affairs Law Review Volume 18 ; 18 >
-    au < finished ; crawling ; 1991-1992 ; Boston College Environmental Affairs Law Review Volume 19 ; 19 >
+    au < finished ; finished ; 1991-1992 ; Boston College Environmental Affairs Law Review Volume 19 ; 19 >
     au < finished ; crawling ; 1993 ; Boston College Environmental Affairs Law Review Volume 20 ; 20 >
     au < finished ; crawling ; 1993-1994 ; Boston College Environmental Affairs Law Review Volume 21 ; 21 >
     au < finished ; crawling ; 1994-1995 ; Boston College Environmental Affairs Law Review Volume 22 ; 22 >
@@ -60,9 +60,9 @@
     au < finished ; crawling ; 2010 ; Boston College Environmental Affairs Law Review Volume 37 ; 37 >
     au < finished ; crawling ; 2011 ; Boston College Environmental Affairs Law Review Volume 38 ; 38 >
     au < finished ; crawling ; 2012 ; Boston College Environmental Affairs Law Review Volume 39 ; 39 >
-    au < crawling ; exists ; 2013 ; Boston College Environmental Affairs Law Review Volume 40 ; 40 >
-    au < crawling ; exists ; 2014 ; Boston College Environmental Affairs Law Review Volume 41 ; 41 >
-    au < manifest ; exists ; 2015 ; Boston College Environmental Affairs Law Review Volume 42 ; 42 >
+    au < finished ; crawling ; 2013 ; Boston College Environmental Affairs Law Review Volume 40 ; 40 >
+    au < finished ; finished ; 2014 ; Boston College Environmental Affairs Law Review Volume 41 ; 41 >
+    au < crawling ; exists ; 2015 ; Boston College Environmental Affairs Law Review Volume 42 ; 42 >
   }
 
   {
@@ -110,9 +110,9 @@
     au < finished ; crawling ; 2010 ; Boston College International and Comparative Law Review Volume 33 ; 33 >
     au < finished ; crawling ; 2011 ; Boston College International and Comparative Law Review Volume 34 ; 34 >
     au < finished ; crawling ; 2012 ; Boston College International and Comparative Law Review Volume 35 ; 35 >
-    au < crawling ; exists ; 2013 ; Boston College International and Comparative Law Review Volume 36 ; 36 >
-    au < crawling ; exists ; 2014 ; Boston College International and Comparative Law Review Volume 37 ; 37 >
-    au < manifest ; exists ; 2015 ; Boston College International and Comparative Law Review Volume 38 ; 38 >
+    au < finished ; finished ; 2013 ; Boston College International and Comparative Law Review Volume 36 ; 36 >
+    au < finished ; finished ; 2014 ; Boston College International and Comparative Law Review Volume 37 ; 37 >
+    au < crawling ; exists ; 2015 ; Boston College International and Comparative Law Review Volume 38 ; 38 >
 
   }
 
@@ -130,7 +130,7 @@
     au < finished ; crawling ; 1961-1962 ; Boston College Law Review Volume 3 ; 3 >
     au < finished ; crawling ; 1962-1963 ; Boston College Law Review Volume 4 ; 4 >
     au < finished ; crawling ; 1963-1964 ; Boston College Law Review Volume 5 ; 5 >
-    au < finished ; crawling ; 1964-1965 ; Boston College Law Review Volume 6 ; 6 >
+    au < finished ; finished ; 1964-1965 ; Boston College Law Review Volume 6 ; 6 >
     au < finished ; crawling ; 1965-1966 ; Boston College Law Review Volume 7 ; 7 >
     au < finished ; crawling ; 1966-1967 ; Boston College Law Review Volume 8 ; 8 >
     au < finished ; crawling ; 1967-1968 ; Boston College Law Review Volume 9 ; 9 >
@@ -150,14 +150,14 @@
     au < finished ; frozen ; 1981-1982 ; Boston College Law Review Volume 23 ; 23 >
     au < finished ; crawling ; 1982-1983 ; Boston College Law Review Volume 24 ; 24 >
     au < finished ; crawling ; 1983-1984 ; Boston College Law Review Volume 25 ; 25 >
-    au < finished ; crawling ; 1984-1985 ; Boston College Law Review Volume 26 ; 26 >
+    au < finished ; finished ; 1984-1985 ; Boston College Law Review Volume 26 ; 26 >
     au < finished ; crawling ; 1985-1986 ; Boston College Law Review Volume 27 ; 27 >
     au < finished ; crawling ; 1986-1987 ; Boston College Law Review Volume 28 ; 28 >
     au < finished ; crawling ; 1987-1988 ; Boston College Law Review Volume 29 ; 29 >
     au < finished ; crawling ; 1988-1989 ; Boston College Law Review Volume 30 ; 30 >
     au < finished ; crawling ; 1989-1990 ; Boston College Law Review Volume 31 ; 31 >
     au < finished ; crawling ; 1990-1991 ; Boston College Law Review Volume 32 ; 32 >
-    au < finished ; crawling ; 1991-1992 ; Boston College Law Review Volume 33 ; 33 >
+    au < finished ; finished ; 1991-1992 ; Boston College Law Review Volume 33 ; 33 >
     au < finished ; crawling ; 1992-1993 ; Boston College Law Review Volume 34 ; 34 >
     au < finished ; crawling ; 1993-1994 ; Boston College Law Review Volume 35 ; 35 >
     au < finished ; frozen ; 1994-1995 ; Boston College Law Review Volume 36 ; 36 >
@@ -179,8 +179,8 @@
     au < finished ; frozen ; 2011 ; Boston College Law Review Volume 52 ; 52 >
     au < finished ; crawling ; 2012 ; Boston College Law Review Volume 53 ; 53 >
     au < crawling ; exists ; 2013 ; Boston College Law Review Volume 54 ; 54 >
-    au < crawling ; exists ; 2014 ; Boston College Law Review Volume 55 ; 55 >
-    au < manifest ; exists ; 2015 ; Boston College Law Review Volume 56 ; 56 >
+    au < finished ; finished ; 2014 ; Boston College Law Review Volume 55 ; 55 >
+    au < crawling ; exists ; 2015 ; Boston College Law Review Volume 56 ; 56 >
 
   }
   
@@ -195,9 +195,9 @@
     param[journal_abbr] = jlsj
     
     au < finished ; frozen ; 2012 ; Boston College Journal of Law & Social Justice Volume 32 ; 32 >
-    au < crawling ; exists ; 2013 ; Boston College Journal of Law & Social Justice Volume 33 ; 33 >
-    au < crawling ; exists ; 2014 ; Boston College Journal of Law & Social Justice Volume 34 ; 34 >
-    au < manifest ; exists ; 2015 ; Boston College Journal of Law & Social Justice Volume 35 ; 35 >
+    au < finished ; finished ; 2013 ; Boston College Journal of Law & Social Justice Volume 33 ; 33 >
+    au < finished ; finished ; 2014 ; Boston College Journal of Law & Social Justice Volume 34 ; 34 >
+    au < crawling ; exists ; 2015 ; Boston College Journal of Law & Social Justice Volume 35 ; 35 >
 
   }
   

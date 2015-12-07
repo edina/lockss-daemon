@@ -19,7 +19,7 @@
   </entry>
   <entry>
     <string>plugin_version</string>
-    <string>36</string>
+    <string>44</string>
   </entry>
   <entry>
     <string>plugin_publishing_platform</string>
@@ -36,7 +36,7 @@
       </entry>
       <entry>
         <string>Poll</string>
-        <string>24</string>
+        <string>28</string>
       </entry>
       <entry>
         <string>Substance</string>
@@ -109,7 +109,7 @@
     <list>
       <string>2,"^%simgJawr/[^/]+/templates/jsp/_style2/_tandf/images/favicon\.png$", base_url</string>
       <string>2,"^%sdoi/.*/googleAnalyticsPlugin\.js$", base_url</string>
-      <string>1,"^https?://%s[^?]*\.(bmp|css|eot|gif|ico|jpe?g|js|png|svg|tif?f|ttf|woff)(_v[0-9]+)?$", base_url_host</string>
+      <string>1,"^https?://%s/[^?]*\.(bmp|css|eot|gif|ico|jpe?g|js|png|svg|tif?f|ttf|woff)(_v[0-9]+)?$", url_host(base_url)</string>
       <string>1,"^https?://(cdn\.nejm\.org)/."</string>
       <string>1,"^%sna101/home/literatum/publisher/[^/]+/journals/[^/]+/%s/", base_url, journal_id</string>   
       <string>1,"^%stoc/%s(\.[0-9]+)?/%s($|/)", base_url, journal_id, volume_name</string>
@@ -167,6 +167,15 @@
     <string>au_def_pause_time</string>
     <long>3000</long>
   </entry>
+<!-- Each Atypon publisher will be limited to one crawl based on its unique base_host -->
+<!-- That is, even if there is both a books and journals plugin, if they crawl from the 
+     same base_url, they crawl 1 at a time. If this is NOT correct for a specific child
+     they can override this
+-->     
+  <entry>
+    <string>plugin_fetch_rate_limiter_source</string>
+    <string>host:base_url</string>
+  </entry>  
   <entry>
 <!--  this is actually used to look for redirection  -->  
     <string>plugin_substance_predicate_factory</string>
@@ -260,18 +269,18 @@
     <string>"cdn\.nejm\.org"</string>
   </entry>  
   <!-- if use a global host AND that url differs from (eg) ip to ip, may need to 
-       use these patterns to either repair/exclude files from polling
+       use these patterns to either repair/exclude files from polling -->
   <entry>
     <string>au_repair_from_peer_if_missing_url_pattern</string>
-    <string></string>
+    <string>"(%stemplates/jsp/|\/(img|css|js)\/.+\.(gif|js|css|png|jpg)$)", base_url </string>
   </entry>
-  -->
+ <!--  -->
   <!-- these files may differ with differing versions (eg 6.0 vs 6.1), so
         let's not hash them
   -->
   <entry>
     <string>au_exclude_urls_from_polls_pattern</string>
-    <string>cdn\.nejm\.org\/6\.[\d]\/(img|css|js)\/.+\.(gif|js|css|png|jpg)$</string>
+    <string>\/(img|css|js)\/.+\.(gif|js|css|png|jpg)$</string>
   </entry>
   <!-- GLN children require a plugin_au_config_user_msg, which is a printf -->
   <!-- Here is a default version, but plugins may need to customize -->

@@ -4,7 +4,7 @@
 
 /*
 
- Copyright (c) 2000-2014 Board of Trustees of Leland Stanford Jr. University,
+ Copyright (c) 2000-2015 Board of Trustees of Leland Stanford Jr. University,
  all rights reserved.
 
  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -38,7 +38,6 @@ import org.lockss.config.TdbAu;
 import org.lockss.daemon.*;
 
 import org.lockss.extractor.*;
-import org.lockss.extractor.FileMetadataExtractor.Emitter;
 import org.lockss.plugin.CachedUrl;
 import org.lockss.util.Logger;
 
@@ -103,18 +102,22 @@ public class PionRisMetadataExtractorFactory
           // http://www.envplan.com/abstract.cgi?id=a42117
           // -> doi=10.1068/a42117
           String accessUrl = md.get(MetadataField.FIELD_ACCESS_URL);
-          if (accessUrl != null) {
-            int i = accessUrl.indexOf("id=");
-            if (i > 0) {
-              String doi = "10.1068/" +accessUrl.substring(i+3);
-              md.put(MetadataField.FIELD_DOI, doi);
-            }
+          if ((accessUrl == null) || !accessUrl.startsWith("http")) {
+            accessUrl = cu.getUrl();
+          }
+          int i = accessUrl.indexOf("id=");
+          if (i > 0) {
+            String doi = "10.1068/" +accessUrl.substring(i+3);
+            md.put(MetadataField.FIELD_DOI, doi);
+          }
+          else {
+            log.debug("accessUrl did not have id= " + accessUrl);
           }
         }
         completeMetadata(cu, md);
         emitter.emitMetadata(cu, md);
       }
-    }       
+    }
   };
   
   public static void completeMetadata(CachedUrl cu, ArticleMetadata am) {

@@ -27,8 +27,8 @@
       au < manifest ; 1943-1944 ; College & Research Libraries Volume 5 ; 5 >
       au < manifest ; 1944-1945 ; College & Research Libraries Volume 6 ; 6 >
       au < manifest ; 1946 ; College & Research Libraries Volume 7 ; 7 >
-      au < ready ; 1947 ; College & Research Libraries Volume 8 ; 8 >
-      au < ready ; 1948 ; College & Research Libraries Volume 9 ; 9 >
+      au < released ; 1947 ; College & Research Libraries Volume 8 ; 8 >
+      au < released ; 1948 ; College & Research Libraries Volume 9 ; 9 >
       au < manifest ; 1949 ; College & Research Libraries Volume 10 ; 10 >
       au < manifest ; 1950 ; College & Research Libraries Volume 11 ; 11 >
       au < manifest ; 1951 ; College & Research Libraries Volume 12 ; 12 >
@@ -94,7 +94,7 @@
       au < released ; 2011 ; College & Research Libraries Volume 72 ; 72 >
       au < released ; 2012 ; College & Research Libraries Volume 73 ; 73 >
       au < released ; 2013 ; College & Research Libraries Volume 74 ; 74 >
-      au < ready ; 2014 ; College & Research Libraries Volume 75 ; 75 >
+      au < released ; 2014 ; College & Research Libraries Volume 75 ; 75 >
       au < manifest ; 2015 ; College & Research Libraries Volume 76 ; 76 >
 
     }
@@ -125,7 +125,7 @@
       au < released ; 2011 ; College & Research Libraries News Volume 72 ; 72 >
       au < released ; 2012 ; College & Research Libraries News Volume 73 ; 73 >
       au < released ; 2013 ; College & Research Libraries News Volume 74 ; 74 >
-      au < ready ; 2014 ; College & Research Libraries News Volume 75 ; 75 >
+      au < released ; 2014 ; College & Research Libraries News Volume 75 ; 75 >
       au < manifest ; 2015 ; College & Research Libraries News Volume 76 ; 76 >
 
     }
@@ -160,7 +160,8 @@
       au < released ; 2011 ; RBM: A Journal of Rare Books, Manuscripts, and Cultural Heritage Volume 12 ; 12 >
       au < released ; 2012 ; RBM: A Journal of Rare Books, Manuscripts, and Cultural Heritage Volume 13 ; 13 >
       au < released ; 2013 ; RBM: A Journal of Rare Books, Manuscripts, and Cultural Heritage Volume 14 ; 14 >
-      au < ready ; 2014 ; RBM: A Journal of Rare Books, Manuscripts, and Cultural Heritage Volume 15 ; 15 >
+      au < released ; 2014 ; RBM: A Journal of Rare Books, Manuscripts, and Cultural Heritage Volume 15 ; 15 >
+      au < manifest ; 2015 ; RBM: A Journal of Rare Books, Manuscripts, and Cultural Heritage Volume 16 ; 16 >
 
     }
 

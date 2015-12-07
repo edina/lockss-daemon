@@ -20,16 +20,18 @@ import org.lockss.plugin.ArchivalUnit;
 import org.lockss.plugin.ArchivalUnit.ConfigurationException;
 import org.lockss.util.Interval;
 import org.lockss.util.ListUtil;
+import org.lockss.util.Logger;
 
 import com.lyncode.xoai.services.api.MetadataSearch;
 
 
 public class DSpaceCrawlSeed extends RecordFilteringOaiPmhCrawlSeed {
-  public String DEFAULT_DATE_TAG = "dc.date.issued.none";
+  public String DEFAULT_DATE_TAG = "dc.date";
   protected Collection<String> startUrls;
   protected int year;
-  protected Pattern yearPattern = Pattern.compile("([0-9]{4})");
-  
+  protected Pattern yearPattern = Pattern.compile("^([0-9]{4})(-[0-9]{2})?$");
+  private static Logger logger =
+	      Logger.getLogger(DSpaceCrawlSeed.class);
 
   public DSpaceCrawlSeed(CrawlerFacade cf) {
     super(cf);
@@ -64,10 +66,10 @@ public class DSpaceCrawlSeed extends RecordFilteringOaiPmhCrawlSeed {
       try {
         year = Integer.parseInt(rule);
       } catch(NumberFormatException ex) {
-        throw new ConfigurationException("Must OAI date must be a 4 digit year");
+        throw new ConfigurationException("OAI date must be a 4 digit year");
       }
     } else {
-      throw new ConfigurationException("Must OAI date must be a 4 digit year");
+      throw new ConfigurationException("OAI date must be a 4 digit year");
     }
     
   }
@@ -75,7 +77,6 @@ public class DSpaceCrawlSeed extends RecordFilteringOaiPmhCrawlSeed {
   @Override
   protected boolean checkMetaRules(MetadataSearch<String> metaSearch) {
     List<String> matchingTags;
-    DateFormat df = new SimpleDateFormat(DATETIME_FORMAT);
     matchingTags = metaSearch.findAll(DEFAULT_DATE_TAG);
     if(matchingTags!= null && !matchingTags.isEmpty()) {
       for(String value : matchingTags) {
@@ -83,7 +84,7 @@ public class DSpaceCrawlSeed extends RecordFilteringOaiPmhCrawlSeed {
           String subYear;
           Matcher yearMatch = yearPattern.matcher(value);
           if(yearMatch.find()) {
-            subYear = yearMatch.group();
+            subYear = yearMatch.group(1);
             if(year == Integer.parseInt(subYear)) {
               return true;
             }

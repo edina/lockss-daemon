@@ -222,7 +222,7 @@
     >
     
     param[base_url] = http://www.mjhid.org/
-    param[journal_id] = ?
+    param[journal_id] = mjhid
 
     au < exists ; 2009 ; Mediterranean Journal of Hematology and Infectious Diseases Volume 1 ; 1 ; 2009 >
     au < exists ; 2010 ; Mediterranean Journal of Hematology and Infectious Diseases Volume 2 ; 2 ; 2010 >
@@ -275,11 +275,11 @@
     >
     
     param[base_url] = http://www.syllabusjournal.org/
-    param[journal_id] = ?
+    param[journal_id] = syllabus
 
-    au < exists ; 2012 ; Syllabus Volume 1 ; 1 ; 2012 >
-    au < exists ; 2013 ; Syllabus Volume 2 ; 2 ; 2013 >
-    au < expected ; 2014 ; Syllabus Volume 3 ; 3 ; 2014 >
+    au < manifest ; 2012 ; Syllabus Volume 1 ; 1 ; 2012 >
+    au < manifest ; 2013 ; Syllabus Volume 2 ; 2 ; 2013 >
+    au < manifest ; 2014 ; Syllabus Volume 3 ; 3 ; 2014 >
     
   }
   

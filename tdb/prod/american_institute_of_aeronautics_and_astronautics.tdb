@@ -1,13 +1,12 @@
 {
 
   publisher <
-    name = American Institute of Aeronautics and Astronautics ;
-    info[tester] = 4
+    name = American Institute of Aeronautics and Astronautics
   >
 
   plugin = org.lockss.plugin.atypon.aiaa.AIAAPlugin
   param[base_url] = http://arc.aiaa.org/
-  implicit < status ; year; name ; param[volume_name] >
+  implicit < status ; year ; name ; param[volume_name] >
   
   comment[manifest] = manifest for Journal of Aircraft v.49 is http://arc.aiaa.org/lockss/ja/49
   comment[doNotProcess1] = ARS Journal, 1959-1962, param[journal_id] = arsj
@@ -80,6 +79,7 @@
     au < released ; 2012 ; AIAA Journal Volume 50 ; 50 >
     au < released ; 2013 ; AIAA Journal Volume 51 ; 51 >
     au < manifest ; 2014 ; AIAA Journal Volume 52 ; 52 >
+    au < manifest ; 2015 ; AIAA Journal Volume 53 ; 53 >
 
   } 
 
@@ -91,6 +91,7 @@
       issnl = 1542-9423
     >
     param[journal_id] = jacic
+    comment[continued_by] = 2327-3097
 
     au < manifest ; 2004 ; Journal of Aerospace Computing, Information, and Communication Volume 1 ; 1 >
     au < released ; 2005 ; Journal of Aerospace Computing, Information, and Communication Volume 2 ; 2 >
@@ -101,8 +102,22 @@
     au < released ; 2010 ; Journal of Aerospace Computing, Information, and Communication Volume 7 ; 7 >
     au < released ; 2011 ; Journal of Aerospace Computing, Information, and Communication Volume 8 ; 8 >
     au < released ; 2012 ; Journal of Aerospace Computing, Information, and Communication Volume 9 ; 9 >
-    au < expected ; 2013 ; Journal of Aerospace Computing, Information, and Communication Volume 10 ; 10 >
-    au < expected ; 2014 ; Journal of Aerospace Computing, Information, and Communication Volume 11 ; 11 >
+
+  }
+
+  {
+
+    title <
+      name = Journal of Aerospace Information Systems ;
+      eissn = 2327-3097 ;
+      eissnl = 2327-3097
+    >
+    param[journal_id] = jais
+    comment[continued_from] = 1542-9423
+
+    au < manifest ; 2013 ; Journal of Aerospace Computing, Information, and Communication Volume 10 ; 10 >
+    au < manifest ; 2014 ; Journal of Aerospace Computing, Information, and Communication Volume 11 ; 11 >
+    au < manifest ; 2015 ; Journal of Aerospace Computing, Information, and Communication Volume 12 ; 12 >
 
   }
 
@@ -167,7 +182,8 @@
     au < released ; 2011 ; Journal of Aircraft Volume 48 ; 48 >
     au < released ; 2012 ; Journal of Aircraft Volume 49 ; 49 >
     au < released ; 2013 ; Journal of Aircraft Volume 50 ; 50 >
-    au < manifest ; 2014 ; Journal of Aircraft Volume 51 ; 51 >
+    au < ready ; 2014 ; Journal of Aircraft Volume 51 ; 51 >
+    au < manifest ; 2015 ; Journal of Aircraft Volume 52 ; 52 >
 
   }
 
@@ -238,6 +254,7 @@
     au < released ; 2012 ; Journal of Guidance, Control, and Dynamics Volume 35 ; 35 >
     au < released ; 2013 ; Journal of Guidance, Control, and Dynamics Volume 36 ; 36 >
     au < manifest ; 2014 ; Journal of Guidance, Control, and Dynamics Volume 37 ; 37 >
+    au < manifest ; 2015 ; Journal of Guidance, Control, and Dynamics Volume 38 ; 38 >
 
   }
 
@@ -309,6 +326,7 @@
     au < released ; 2012 ; Journal of Propulsion and Power Volume 28 ; 28 >
     au < released ; 2013 ; Journal of Propulsion and Power Volume 29 ; 29 >
     au < manifest ; 2014 ; Journal of Propulsion and Power Volume 30 ; 30 >
+    au < manifest ; 2015 ; Journal of Propulsion and Power Volume 31 ; 31 >
 
   }
 
@@ -373,6 +391,7 @@
     au < released ; 2012 ; Journal of Spacecraft and Rockets Volume 49 ; 49 >
     au < released ; 2013 ; Journal of Spacecraft and Rockets Volume 50 ; 50 >
     au < manifest ; 2014 ; Journal of Spacecraft and Rockets Volume 51 ; 51 >
+    au < manifest ; 2015 ; Journal of Spacecraft and Rockets Volume 52 ; 52 >
 
   }
 
@@ -414,6 +433,7 @@
     au < released ; 2012 ; Journal of Thermophysics and Heat Transfer Volume 26 ; 26 >
     au < released ; 2013 ; Journal of Thermophysics and Heat Transfer Volume 27 ; 27 >
     au < manifest ; 2014 ; Journal of Thermophysics and Heat Transfer Volume 28 ; 28 >
+    au < manifest ; 2015 ; Journal of Thermophysics and Heat Transfer Volume 29 ; 29 >
 
   } 
   

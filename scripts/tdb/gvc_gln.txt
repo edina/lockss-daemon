@@ -80,6 +80,10 @@ base_url~http%3A%2F%2Fwww%2Eeuppublishing%2Ecom%2F&journal_id~saj&volume_name~21
 ##############Endocrine Society
 Endocrine Society,Recent Progress in Hormone Research
 base_url~http%3A%2F%2Frphr%2Eendojournals%2Eorg%2F&volume_name~
+base_url~http%3A%2F%2Fendo%2Eendojournals%2Eorg%2F&volume_name~
+base_url~http%3A%2F%2Fjcem%2Eendojournals%2Eorg%2F&volume_name~
+base_url~http%3A%2F%2Fmend%2Eendojournals%2Eorg%2F&volume_name~
+base_url~http%3A%2F%2Fedrv%2Eendojournals%2Eorg%2F&volume_name~
 ##############Hindawi
 Hindawi Publishing Corporation,Advances in Difference Equations,1687-1839,1687-1847
 Hindawi Publishing Corporation,Advances in Nonlinear Optics,1687-7276,1687-7284
@@ -132,13 +136,16 @@ Hindawi Publishing Corporation,Research Letters in Signal Processing,1687-6911,1
 Hindawi Publishing Corporation,Sequencing,2090-0325,2090-0333
 Hindawi Publishing Corporation,"Texture, Stress, and Microstructure",1687-5397,1687-5400
 Hindawi Publishing Corporation,X-Ray Optics and Instrumentation,1687-7632,1687-7640
-base_url~http%3A%2F%2Fwww%2Ehindawi%2Ecom%2F&download_url~http%3A%2F%2Fdownloads%2Ehindawi%2Ecom%2F&journal_id~ade&volume_name~
-base_url~http%3A%2F%2Fwww%2Ehindawi%2Ecom%2F&download_url~http%3A%2F%2Fdownloads%2Ehindawi%2Ecom%2F&journal_id~ane&volume_name~
-base_url~http%3A%2F%2Fwww%2Ehindawi%2Ecom%2F&download_url~http%3A%2F%2Fdownloads%2Ehindawi%2Ecom%2F&journal_id~ano&volume_name~
-base_url~http%3A%2F%2Fwww%2Ehindawi%2Ecom%2F&download_url~http%3A%2F%2Fdownloads%2Ehindawi%2Ecom%2F&journal_id~aop&volume_name~
-base_url~http%3A%2F%2Fwww%2Ehindawi%2Ecom%2F&download_url~http%3A%2F%2Fdownloads%2Ehindawi%2Ecom%2F&journal_id~apec&volume_name~
-base_url~http%3A%2F%2Fwww%2Ehindawi%2Ecom%2F&download_url~http%3A%2F%2Fdownloads%2Ehindawi%2Ecom%2F&journal_id~arth&volume_name~
-base_url~http%3A%2F%2Fwww%2Ehindawi%2Ecom%2F&download_url~http%3A%2F%2Fdownloads%2Ehindawi%2Ecom%2F&journal_id~asmp&volume_name~
+###base_url~http%3A%2F%2Fwww%2Ehindawi%2Ecom%2F&download_url~http%3A%2F%2Fdownloads%2Ehindawi%2Ecom%2F&journal_id~ade&volume_name~
+###base_url~http%3A%2F%2Fwww%2Ehindawi%2Ecom%2F&download_url~http%3A%2F%2Fdownloads%2Ehindawi%2Ecom%2F&journal_id~ane&volume_name~
+###base_url~http%3A%2F%2Fwww%2Ehindawi%2Ecom%2F&download_url~http%3A%2F%2Fdownloads%2Ehindawi%2Ecom%2F&journal_id~ano&volume_name~
+###base_url~http%3A%2F%2Fwww%2Ehindawi%2Ecom%2F&download_url~http%3A%2F%2Fdownloads%2Ehindawi%2Ecom%2F&journal_id~aop&volume_name~
+###base_url~http%3A%2F%2Fwww%2Ehindawi%2Ecom%2F&download_url~http%3A%2F%2Fdownloads%2Ehindawi%2Ecom%2F&journal_id~apec&volume_name~
+###base_url~http%3A%2F%2Fwww%2Ehindawi%2Ecom%2F&download_url~http%3A%2F%2Fdownloads%2Ehindawi%2Ecom%2F&journal_id~arth&volume_name~
+###base_url~http%3A%2F%2Fwww%2Ehindawi%2Ecom%2F&download_url~http%3A%2F%2Fdownloads%2Ehindawi%2Ecom%2F&journal_id~asmp&volume_name~
+#################Libertas Academica
+base_url~http%3A%2F%2Fwww%2Ela-press%2Ecom%2F&journal_id~173&year~2010
+base_url~http%3A%2F%2Fwww%2Ela-press%2Ecom%2F&journal_id~173&year~2011
 ##############Manchester University Press
 api_url~http%3A%2F%2Fapi%2Eingentaconnect%2Ecom%2F&base_url~http%3A%2F%2Fwww%2Eingentaconnect%2Ecom%2F&graphics_url~http%3A%2F%2Fgraphics%2Eingentaconnect%2Ecom%2F&journal_id~tsc&journal_issn~0268-117X&publisher_id~manup&volume_name~20,The Seventeenth Century Volume 20
 api_url~http%3A%2F%2Fapi%2Eingentaconnect%2Ecom%2F&base_url~http%3A%2F%2Fwww%2Eingentaconnect%2Ecom%2F&graphics_url~http%3A%2F%2Fgraphics%2Eingentaconnect%2Ecom%2F&journal_id~tsc&journal_issn~0268-117X&publisher_id~manup&volume_name~21,The Seventeenth Century Volume 21
@@ -177,16 +184,21 @@ Pennsylvania State University Press,Critical Philosophy of Race,2165-8684,2165-8
 Pennsylvania State University Press,Journal of Africana Religions,2165-5405,2165-5413
 Pennsylvania State University Press,Journal of Eastern Mediterranean Archaeology and Heritage Studies,2166-3548,2166-3556
 Pennsylvania State University Press,"Reception: Texts, Readers, Audiences, History",2168-0604,2155-7888
-base_url~http%3A%2F%2Fwww%2Ejstor%2Eorg%2F&base_url2~https%3A%2F%2Fwww%2Ejstor%2Eorg%2F&journal_id~edgallpoerev&volume_name~1,The Edgar Allen Poe Review Volume 1 
-base_url~http%3A%2F%2Fwww%2Ejstor%2Eorg%2F&base_url2~https%3A%2F%2Fwww%2Ejstor%2Eorg%2F&journal_id~edgallpoerev&volume_name~2,The Edgar Allen Poe Review Volume 2 
-base_url~http%3A%2F%2Fwww%2Ejstor%2Eorg%2F&base_url2~https%3A%2F%2Fwww%2Ejstor%2Eorg%2F&journal_id~edgallpoerev&volume_name~3,The Edgar Allen Poe Review Volume 3 
-base_url~http%3A%2F%2Fwww%2Ejstor%2Eorg%2F&base_url2~https%3A%2F%2Fwww%2Ejstor%2Eorg%2F&journal_id~edgallpoerev&volume_name~4,The Edgar Allen Poe Review Volume 4 
-base_url~http%3A%2F%2Fwww%2Ejstor%2Eorg%2F&base_url2~https%3A%2F%2Fwww%2Ejstor%2Eorg%2F&journal_id~edgallpoerev&volume_name~5,The Edgar Allen Poe Review Volume 5 
-base_url~http%3A%2F%2Fwww%2Ejstor%2Eorg%2F&base_url2~https%3A%2F%2Fwww%2Ejstor%2Eorg%2F&journal_id~edgallpoerev&volume_name~6,The Edgar Allen Poe Review Volume 6 
-base_url~http%3A%2F%2Fwww%2Ejstor%2Eorg%2F&base_url2~https%3A%2F%2Fwww%2Ejstor%2Eorg%2F&journal_id~edgallpoerev&volume_name~7,The Edgar Allen Poe Review Volume 7 
-base_url~http%3A%2F%2Fwww%2Ejstor%2Eorg%2F&base_url2~https%3A%2F%2Fwww%2Ejstor%2Eorg%2F&journal_id~edgallpoerev&volume_name~8,The Edgar Allen Poe Review Volume 8 
-base_url~http%3A%2F%2Fwww%2Ejstor%2Eorg%2F&base_url2~https%3A%2F%2Fwww%2Ejstor%2Eorg%2F&journal_id~edgallpoerev&volume_name~9,The Edgar Allen Poe Review Volume 9 
-base_url~http%3A%2F%2Fwww%2Ejstor%2Eorg%2F&base_url2~https%3A%2F%2Fwww%2Ejstor%2Eorg%2F&journal_id~edgallpoerev&volume_name~10,The Edgar Allen Poe Review Volume 10
+Penn State University Press,Bulletin (Shaw Society of America),2156-8928,
+Penn State University Press,Resources for American Literary Study,1529-1502,0048-7384
+Penn State University Press,Studies in American Humor,0095-280X,2333-9934
+Penn State University Press,The Newsletter of PEGS,2157-2968,
+Penn State University Press,The Shaw Review,0037-3354,
+####base_url~http%3A%2F%2Fwww%2Ejstor%2Eorg%2F&base_url2~https%3A%2F%2Fwww%2Ejstor%2Eorg%2F&journal_id~edgallpoerev&volume_name~1,The Edgar Allen Poe Review Volume 1 
+####base_url~http%3A%2F%2Fwww%2Ejstor%2Eorg%2F&base_url2~https%3A%2F%2Fwww%2Ejstor%2Eorg%2F&journal_id~edgallpoerev&volume_name~2,The Edgar Allen Poe Review Volume 2 
+####base_url~http%3A%2F%2Fwww%2Ejstor%2Eorg%2F&base_url2~https%3A%2F%2Fwww%2Ejstor%2Eorg%2F&journal_id~edgallpoerev&volume_name~3,The Edgar Allen Poe Review Volume 3 
+####base_url~http%3A%2F%2Fwww%2Ejstor%2Eorg%2F&base_url2~https%3A%2F%2Fwww%2Ejstor%2Eorg%2F&journal_id~edgallpoerev&volume_name~4,The Edgar Allen Poe Review Volume 4 
+####base_url~http%3A%2F%2Fwww%2Ejstor%2Eorg%2F&base_url2~https%3A%2F%2Fwww%2Ejstor%2Eorg%2F&journal_id~edgallpoerev&volume_name~5,The Edgar Allen Poe Review Volume 5 
+####base_url~http%3A%2F%2Fwww%2Ejstor%2Eorg%2F&base_url2~https%3A%2F%2Fwww%2Ejstor%2Eorg%2F&journal_id~edgallpoerev&volume_name~6,The Edgar Allen Poe Review Volume 6 
+####base_url~http%3A%2F%2Fwww%2Ejstor%2Eorg%2F&base_url2~https%3A%2F%2Fwww%2Ejstor%2Eorg%2F&journal_id~edgallpoerev&volume_name~7,The Edgar Allen Poe Review Volume 7 
+####base_url~http%3A%2F%2Fwww%2Ejstor%2Eorg%2F&base_url2~https%3A%2F%2Fwww%2Ejstor%2Eorg%2F&journal_id~edgallpoerev&volume_name~8,The Edgar Allen Poe Review Volume 8 
+####base_url~http%3A%2F%2Fwww%2Ejstor%2Eorg%2F&base_url2~https%3A%2F%2Fwww%2Ejstor%2Eorg%2F&journal_id~edgallpoerev&volume_name~9,The Edgar Allen Poe Review Volume 9 
+####base_url~http%3A%2F%2Fwww%2Ejstor%2Eorg%2F&base_url2~https%3A%2F%2Fwww%2Ejstor%2Eorg%2F&journal_id~edgallpoerev&volume_name~10,The Edgar Allen Poe Review Volume 10
 base_url~http%3A%2F%2Fwww%2Ejstor%2Eorg%2F&base_url2~https%3A%2F%2Fwww%2Ejstor%2Eorg%2F&journal_id~marktwaij&volume_name~1,The Mark Twain Annual Volume 1
 base_url~http%3A%2F%2Fwww%2Ejstor%2Eorg%2F&base_url2~https%3A%2F%2Fwww%2Ejstor%2Eorg%2F&journal_id~marktwaij&volume_name~2,The Mark Twain Annual Volume 2
 base_url~http%3A%2F%2Fwww%2Ejstor%2Eorg%2F&base_url2~https%3A%2F%2Fwww%2Ejstor%2Eorg%2F&journal_id~marktwaij&volume_name~3,The Mark Twain Annual Volume 3
@@ -252,6 +264,12 @@ base_url~http%3A%2F%2Fsmj%2Ersmjournals%2Ecom%2F&volume_name~
 base_url~http%3A%2F%2Ftd%2Ersmjournals%2Ecom%2F&volume_name~
 base_url~http%3A%2F%2Fult%2Ersmjournals%2Ecom%2F&volume_name~
 base_url~http%3A%2F%2Fvascular%2Ersmjournals%2Ecom%2F&volume_name~
+##############Universitatea Babeş-Bolyai, Cluj-Napoca
+base_url~http%3A%2F%2Fscholarcommons%2Eusf%2Eedu%2F&journal_abbr~geologia&volume~52
+base_url~http%3A%2F%2Fscholarcommons%2Eusf%2Eedu%2F&journal_abbr~geologia&volume~53
+base_url~http%3A%2F%2Fscholarcommons%2Eusf%2Eedu%2F&journal_abbr~geologia&volume~54
+base_url~http%3A%2F%2Fscholarcommons%2Eusf%2Eedu%2F&journal_abbr~geologia&volume~55
+base_url~http%3A%2F%2Fscholarcommons%2Eusf%2Eedu%2F&journal_abbr~geologia&volume~56
 ##############University of Iowa
 University of Iowa,Electronic Journal of Africana Bibliography
 base_url~http%3A%2F%2Fir%2Euiowa%2Eedu%2F&journal_abbr~ejab&volume~
@@ -266,3 +284,12 @@ base_url~http%3A%2F%2Fir%2Euiowa%2Eedu%2F&journal_abbr~mff&volume~
 University of Iowa,Proceedings in Obstetrics and Gynecology
 base_url~http%3A%2F%2Fir%2Euiowa%2Eedu%2F&journal_abbr~pog&volume~
 University of Iowa,Syllecta Classica
+University of Iowa,Annals at Iowa
+University of Iowa,Books at Iowa
+University of Iowa,B Sides
+University of Iowa,Dada/Surrealism
+University of Iowa,Iowa Geological Survey Annual Report
+University of Iowa,Iowa Historical Review
+University of Iowa,Marilyn Zurmuehlen Working Papers in Art Education
+##############Western Michigan U
+Western Michigan University,Comparative Drama

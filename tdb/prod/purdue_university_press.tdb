@@ -6,6 +6,44 @@
   >
 
   {
+
+    title < 
+      name = Against the Grain ;
+      issn = 1043-2094 
+    >
+    
+    plugin = org.lockss.plugin.bepress.BePressPlugin
+    param[base_url] = http://docs.lib.purdue.edu/
+    param[journal_abbr] = atg
+    implicit < status ; year ; name ; param[volume] >
+
+    au < manifest ; 1989 ; Against the Grain Volume 1 ; 1 >
+    au < manifest ; 1990 ; Against the Grain Volume 2 ; 2 >
+    au < manifest ; 1991 ; Against the Grain Volume 3 ; 3 >
+    au < manifest ; 1992 ; Against the Grain Volume 4 ; 4 >
+    au < manifest ; 1993 ; Against the Grain Volume 5 ; 5 >
+    au < manifest ; 1994 ; Against the Grain Volume 6 ; 6 >
+    au < manifest ; 1995 ; Against the Grain Volume 7 ; 7 >
+    au < manifest ; 1996 ; Against the Grain Volume 8 ; 8 >
+    au < manifest ; 1997 ; Against the Grain Volume 9 ; 9 >
+    au < manifest ; 1998 ; Against the Grain Volume 10 ; 10 >
+    au < manifest ; 1999 ; Against the Grain Volume 11 ; 11 >
+    au < ready ; 2000 ; Against the Grain Volume 12 ; 12 >
+    au < ready ; 2001 ; Against the Grain Volume 13 ; 13 >
+    au < ready ; 2002 ; Against the Grain Volume 14 ; 14 >
+    au < ready ; 2003 ; Against the Grain Volume 15 ; 15 >
+    au < ready ; 2004 ; Against the Grain Volume 16 ; 16 >
+    au < ready ; 2005 ; Against the Grain Volume 17 ; 17 >
+    au < ready ; 2006 ; Against the Grain Volume 18 ; 18 >
+    au < ready ; 2007 ; Against the Grain Volume 19 ; 19 >
+    au < ready ; 2008 ; Against the Grain Volume 20 ; 20 >
+    au < ready ; 2009 ; Against the Grain Volume 21 ; 21 >
+    au < ready ; 2010 ; Against the Grain Volume 22 ; 22 >
+    au < released ; 2011 ; Against the Grain Volume 23 ; 23 >
+
+  }
+  
+  {
   
     title <
       name = CLCWeb: Comparative Literature and Culture ;
@@ -54,8 +92,8 @@
       au < released ; 2011 ; CLCWeb: Comparative Literature and Culture Volume 13 ; 13 >
       au < released ; 2012 ; CLCWeb: Comparative Literature and Culture Volume 14 ; 14 >
       au < released ; 2013 ; CLCWeb: Comparative Literature and Culture Volume 15 ; 15 >
-      au < ready ; 2014 ; CLCWeb: Comparative Literature and Culture Volume 16 ; 16 >
-      au < expected ; 2015 ; CLCWeb: Comparative Literature and Culture Volume 17 ; 17 >
+      au < released ; 2014 ; CLCWeb: Comparative Literature and Culture Volume 16 ; 16 >
+      au < ready ; 2015 ; CLCWeb: Comparative Literature and Culture Volume 17 ; 17 >
 
     }
 
@@ -91,7 +129,6 @@
     >
 
     plugin = org.lockss.plugin.projmuse.ProjectMusePlugin
-    param[base_url] = http://muse.jhu.edu/
     param[journal_dir] = education_and_culture
     implicit < status ; year ; name ; param[volume] >
 
@@ -99,17 +136,37 @@
     
     # v21: malformed manifest page. No content.
 
-    au < doNotProcess ; 2005 ; Education and Culture Volume 21 ; 21 >
-    au < released ; 2006 ; Education and Culture Volume 22 ; 22 >
-    au < released ; 2007 ; Education and Culture Volume 23 ; 23 >
-    au < released ; 2008 ; Education and Culture Volume 24 ; 24 >
-    au < released ; 2009 ; Education and Culture Volume 25 ; 25 >
-    au < released ; 2010 ; Education and Culture Volume 26 ; 26 >
-    au < released ; 2011 ; Education and Culture Volume 27 ; 27 >
-    au < released ; 2012 ; Education and Culture Volume 28 ; 28 >
-    au < released ; 2013 ; Education and Culture Volume 29 ; 29 >
-    au < manifest ; 2014 ; Education and Culture Volume 30 ; 30 >
-    au < manifest ; 2015 ; Education and Culture Volume 31 ; 31 >
+    {
+
+      param[base_url] = https://muse.jhu.edu/
+
+      au < doNotProcess ; 2005 ; Education and Culture Volume 21 ; 21 >
+
+    }
+
+    {
+
+      param[base_url] = http://muse.jhu.edu/
+
+      au < released ; 2006 ; Education and Culture Volume 22 ; 22 >
+      au < released ; 2007 ; Education and Culture Volume 23 ; 23 >
+      au < released ; 2008 ; Education and Culture Volume 24 ; 24 >
+      au < released ; 2009 ; Education and Culture Volume 25 ; 25 >
+      au < released ; 2010 ; Education and Culture Volume 26 ; 26 >
+      au < released ; 2011 ; Education and Culture Volume 27 ; 27 >
+      au < released ; 2012 ; Education and Culture Volume 28 ; 28 >
+      au < released ; 2013 ; Education and Culture Volume 29 ; 29 >
+
+    }
+
+    {
+
+      param[base_url] = https://muse.jhu.edu/
+
+      au < released ; 2014 ; Education and Culture Volume 30 ; 30 >
+      au < released ; 2015 ; Education and Culture Volume 31 ; 31 >
+
+    }
 
   }
 
@@ -159,23 +216,35 @@
     >
 
     plugin = org.lockss.plugin.projmuse.ProjectMusePlugin
-    param[base_url] = http://muse.jhu.edu/
     param[journal_dir] = philip_roth_studies
     implicit < status ; year ; name ; param[volume] >
 
     attr[journal_id] = prs
     
-    au < released ; 2005 ; Philip Roth Studies Volume 1 ; 1 >
-    au < released ; 2006 ; Philip Roth Studies Volume 2 ; 2 >
-    au < released ; 2007 ; Philip Roth Studies Volume 3 ; 3 >
-    au < released ; 2008 ; Philip Roth Studies Volume 4 ; 4 >
-    au < released ; 2009 ; Philip Roth Studies Volume 5 ; 5 >
-    au < released ; 2010 ; Philip Roth Studies Volume 6 ; 6 >
-    au < released ; 2011 ; Philip Roth Studies Volume 7 ; 7 >
-    au < released ; 2012 ; Philip Roth Studies Volume 8 ; 8 >
-    au < released ; 2013 ; Philip Roth Studies Volume 9 ; 9 >
-    au < manifest ; 2014 ; Philip Roth Studies Volume 10 ; 10 >
-    au < manifest ; 2015 ; Philip Roth Studies Volume 11 ; 11 >
+    {
+
+      param[base_url] = http://muse.jhu.edu/
+
+      au < released ; 2005 ; Philip Roth Studies Volume 1 ; 1 >
+      au < released ; 2006 ; Philip Roth Studies Volume 2 ; 2 >
+      au < released ; 2007 ; Philip Roth Studies Volume 3 ; 3 >
+      au < released ; 2008 ; Philip Roth Studies Volume 4 ; 4 >
+      au < released ; 2009 ; Philip Roth Studies Volume 5 ; 5 >
+      au < released ; 2010 ; Philip Roth Studies Volume 6 ; 6 >
+      au < released ; 2011 ; Philip Roth Studies Volume 7 ; 7 >
+      au < released ; 2012 ; Philip Roth Studies Volume 8 ; 8 >
+      au < released ; 2013 ; Philip Roth Studies Volume 9 ; 9 >
+
+    }
+
+    {
+
+      param[base_url] = https://muse.jhu.edu/
+
+      au < released ; 2014 ; Philip Roth Studies Volume 10 ; 10 >
+      au < released ; 2015 ; Philip Roth Studies Volume 11 ; 11 >
+
+    }
 
   }
 
@@ -189,27 +258,40 @@
     >
 
     plugin = org.lockss.plugin.projmuse.ProjectMusePlugin
-    param[base_url] = http://muse.jhu.edu/
     param[journal_dir] = shofar
     implicit < status ; year ; name ; param[volume] >
 
     attr[journal_id] = sho
 
-    au < released ; 2001 ; Shofar: An Interdisciplinary Journal of Jewish Studies Volume 19 ; 19 >
-    au < released ; 2001-2002 ; Shofar: An Interdisciplinary Journal of Jewish Studies Volume 20 ; 20 >
-    au < released ; 2002-2003 ; Shofar: An Interdisciplinary Journal of Jewish Studies Volume 21 ; 21 >
-    au < released ; 2003-2004 ; Shofar: An Interdisciplinary Journal of Jewish Studies Volume 22 ; 22 >
-    au < released ; 2004-2005 ; Shofar: An Interdisciplinary Journal of Jewish Studies Volume 23 ; 23 >
-    au < released ; 2005-2006 ; Shofar: An Interdisciplinary Journal of Jewish Studies Volume 24 ; 24 >
-    au < released ; 2006-2007 ; Shofar: An Interdisciplinary Journal of Jewish Studies Volume 25 ; 25 >
-    au < released ; 2007-2008 ; Shofar: An Interdisciplinary Journal of Jewish Studies Volume 26 ; 26 >
-    au < released ; 2008-2009 ; Shofar: An Interdisciplinary Journal of Jewish Studies Volume 27 ; 27 >
-    au < released ; 2009-2010 ; Shofar: An Interdisciplinary Journal of Jewish Studies Volume 28 ; 28 >
-    au < released ; 2010-2011 ; Shofar: An Interdisciplinary Journal of Jewish Studies Volume 29 ; 29 >
-    au < released ; 2011-2012 ; Shofar: An Interdisciplinary Journal of Jewish Studies Volume 30 ; 30 >
-    au < released ; 2013-2014 ; Shofar: An Interdisciplinary Journal of Jewish Studies Volume 31 ; 31 >
-    au < manifest ; 2014-2015 ; Shofar: An Interdisciplinary Journal of Jewish Studies Volume 32 ; 32 >
-    au < manifest ; 2015-2016 ; Shofar: An Interdisciplinary Journal of Jewish Studies Volume 33 ; 33 >
+    {
+
+      param[base_url] = http://muse.jhu.edu/
+
+      au < released ; 2001 ; Shofar: An Interdisciplinary Journal of Jewish Studies Volume 19 ; 19 >
+      au < released ; 2001-2002 ; Shofar: An Interdisciplinary Journal of Jewish Studies Volume 20 ; 20 >
+      au < released ; 2002-2003 ; Shofar: An Interdisciplinary Journal of Jewish Studies Volume 21 ; 21 >
+      au < released ; 2003-2004 ; Shofar: An Interdisciplinary Journal of Jewish Studies Volume 22 ; 22 >
+      au < released ; 2004-2005 ; Shofar: An Interdisciplinary Journal of Jewish Studies Volume 23 ; 23 >
+      au < released ; 2005-2006 ; Shofar: An Interdisciplinary Journal of Jewish Studies Volume 24 ; 24 >
+      au < released ; 2006-2007 ; Shofar: An Interdisciplinary Journal of Jewish Studies Volume 25 ; 25 >
+      au < released ; 2007-2008 ; Shofar: An Interdisciplinary Journal of Jewish Studies Volume 26 ; 26 >
+      au < released ; 2008-2009 ; Shofar: An Interdisciplinary Journal of Jewish Studies Volume 27 ; 27 >
+      au < released ; 2009-2010 ; Shofar: An Interdisciplinary Journal of Jewish Studies Volume 28 ; 28 >
+      au < released ; 2010-2011 ; Shofar: An Interdisciplinary Journal of Jewish Studies Volume 29 ; 29 >
+      au < released ; 2011-2012 ; Shofar: An Interdisciplinary Journal of Jewish Studies Volume 30 ; 30 >
+      au < released ; 2012-2013 ; Shofar: An Interdisciplinary Journal of Jewish Studies Volume 31 ; 31 >
+
+    }
+
+    {
+
+      param[base_url] = https://muse.jhu.edu/
+
+      au < released ; 2013-2014 ; Shofar: An Interdisciplinary Journal of Jewish Studies Volume 32 ; 32 >
+      au < testing ; 2014 ; Shofar: An Interdisciplinary Journal of Jewish Studies Volume 33 ; 33 >
+      au < exists ; 2015-2016 ; Shofar: An Interdisciplinary Journal of Jewish Studies Volume 34 ; 34 >
+
+    }
 
   }
 

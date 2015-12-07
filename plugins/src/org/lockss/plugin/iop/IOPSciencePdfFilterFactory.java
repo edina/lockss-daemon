@@ -47,31 +47,23 @@ import org.lockss.plugin.*;
  */
 public class IOPSciencePdfFilterFactory extends ExtractingPdfFilterFactory {
 
-  protected static class RecognizeFirstPageWorker extends PdfTokenStreamWorker {
-    
-    protected boolean result;
+  protected static class RecognizeFirstPageWorker extends PdfTokenStreamStateMachine {
     
     @Override
-    public void setUp() throws PdfException {
-      super.setUp();
-      this.result = false;
-    }
-    
-    @Override
-    public void operatorCallback() throws PdfException {
-      if (isShowTextStartsWith("This article has been downloaded from IOPscience. Please scroll down to see the full text article.")) {
+    public void state0() throws PdfException {
+      if (isShowTextContains(" has been downloaded from IOPscience. Please scroll down to see the full text")) {
         result = true;
         stop();
       }
     }
-    
   }
   
   @Override
   public void transform(ArchivalUnit au, PdfDocument pdfDocument) throws PdfException {
+    
     RecognizeFirstPageWorker worker = new RecognizeFirstPageWorker();
     worker.process(pdfDocument.getPage(0).getPageTokenStream());
-    if (worker.result) {
+    if (worker.getResult()) {
       pdfDocument.removePage(0);
     }
   }

@@ -4,7 +4,7 @@
 
 /*
 
- Copyright (c) 2013-2014 Board of Trustees of Leland Stanford Jr. University,
+ Copyright (c) 2013-2015 Board of Trustees of Leland Stanford Jr. University,
  all rights reserved.
 
  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -46,7 +46,7 @@ import org.lockss.util.MetadataUtil;
 public class SerialPublication {
   private static final Logger log = Logger.getLogger(SerialPublication.class);
 
-  private Integer publicationNumber;
+  private Long publicationNumber;
   private String publicationName;
   private String providerLid;
   private String providerName;
@@ -56,12 +56,13 @@ public class SerialPublication {
   private Set<String> proprietaryIds;
   private TdbTitle tdbTitle;
   private String uniqueName;
+  private int auCount = -1;
 
-  public Integer getPublicationNumber() {
+  public Long getPublicationNumber() {
     return publicationNumber;
   }
 
-  public void setPublicationNumber(Integer publicationNumber) {
+  public void setPublicationNumber(Long publicationNumber) {
     this.publicationNumber = publicationNumber;
   }
 
@@ -240,10 +241,26 @@ public class SerialPublication {
     this.uniqueName = uniqueName;
   }
 
+  public int getAuCount() {
+    if (auCount < 0 && tdbTitle == null) {
+      getTdbTitle();
+
+      if (tdbTitle != null) {
+	auCount = tdbTitle.getTdbAuCount();
+      }
+    }
+
+    return auCount;
+  }
+
+  public void setAuCount(int auCount) {
+    this.auCount = auCount;
+  }
+
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder(
-	"SerialPublication [publicationNumber=").append(publicationNumber)
+	"[SerialPublication publicationNumber=").append(publicationNumber)
 	.append(", publicationName='").append(publicationName)
 	.append("', providerLid='").append(providerLid)
 	.append("', providerName='").append(providerName)
@@ -251,7 +268,8 @@ public class SerialPublication {
 	.append("', pIssn='").append(pIssn)
 	.append("', eIssn='").append(eIssn)
 	.append("', proprietaryIds='").append(proprietaryIds)
-	.append("', uniqueName='").append(uniqueName);
+	.append("', uniqueName='").append(uniqueName)
+	.append("', auCount=").append(auCount);
 
     if (tdbTitle != null) {
       sb.append("', ").append(tdbTitle.toString()).append("]");

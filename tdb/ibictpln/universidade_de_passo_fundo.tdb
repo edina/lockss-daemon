@@ -14,20 +14,21 @@
       >
 
       comment[publisher] = Universidade de Passo Fundo
-      param[base_url] = http://www.upf.br/
+      param[base_url] = http://www.upf.br/seer/
       param[journal_id] = rbceh
 
-      au < exists ; 2004 ; 1 ; Revista Brasileira de Ciências do Envelhecimento Humano Volume 2004 ; 2004 >
-      au < exists ; 2005 ; 2 ; Revista Brasileira de Ciências do Envelhecimento Humano Volume 2005 ; 2005 >
-      au < exists ; 2006 ; 3 ; Revista Brasileira de Ciências do Envelhecimento Humano Volume 2006 ; 2006 >
-      au < exists ; 2007 ; 4 ; Revista Brasileira de Ciências do Envelhecimento Humano Volume 2007 ; 2007 >
-      au < exists ; 2008 ; 5 ; Revista Brasileira de Ciências do Envelhecimento Humano Volume 2008 ; 2008 >
-      au < exists ; 2009 ; 6 ; Revista Brasileira de Ciências do Envelhecimento Humano Volume 2009 ; 2009 >
-      au < exists ; 2010 ; 7 ; Revista Brasileira de Ciências do Envelhecimento Humano Volume 2010 ; 2010 >
-      au < exists ; 2011 ; 8 ; Revista Brasileira de Ciências do Envelhecimento Humano Volume 2011 ; 2011 >
-      au < exists ; 2012 ; 9 ; Revista Brasileira de Ciências do Envelhecimento Humano Volume 2012 ; 2012 >
-      au < expected ; 2013 ; 10 ; Revista Brasileira de Ciências do Envelhecimento Humano Volume 2013 ; 2013 >
-      au < expected ; 2014 ; 11 ; Revista Brasileira de Ciências do Envelhecimento Humano Volume 2014 ; 2014 >
+      au < released ; 2004 ; 1 ; Revista Brasileira de Ciências do Envelhecimento Humano Volume 2004 ; 2004 >
+      au < released ; 2005 ; 2 ; Revista Brasileira de Ciências do Envelhecimento Humano Volume 2005 ; 2005 >
+      au < released ; 2006 ; 3 ; Revista Brasileira de Ciências do Envelhecimento Humano Volume 2006 ; 2006 >
+      au < released ; 2007 ; 4 ; Revista Brasileira de Ciências do Envelhecimento Humano Volume 2007 ; 2007 >
+      au < released ; 2008 ; 5 ; Revista Brasileira de Ciências do Envelhecimento Humano Volume 2008 ; 2008 >
+      au < released ; 2009 ; 6 ; Revista Brasileira de Ciências do Envelhecimento Humano Volume 2009 ; 2009 >
+      au < released ; 2010 ; 7 ; Revista Brasileira de Ciências do Envelhecimento Humano Volume 2010 ; 2010 >
+      au < released ; 2011 ; 8 ; Revista Brasileira de Ciências do Envelhecimento Humano Volume 2011 ; 2011 >
+      au < released ; 2012 ; 9 ; Revista Brasileira de Ciências do Envelhecimento Humano Volume 2012 ; 2012 >
+      au < released ; 2013 ; 10 ; Revista Brasileira de Ciências do Envelhecimento Humano Volume 2013 ; 2013 >
+      au < released ; 2014 ; 11 ; Revista Brasileira de Ciências do Envelhecimento Humano Volume 2014 ; 2014 >
+      au < manifest ; 2015 ; 12 ; Revista Brasileira de Ciências do Envelhecimento Humano Volume 2015 ; 2015 >
 
   }
 
@@ -39,15 +40,16 @@
       >
 
       comment[publisher] = Universidade de Passo Fundo
-      param[base_url] = http://www.upf.br/
+      param[base_url] = http://www.upf.br/seer/
       param[journal_id] = rbca
 
-      au < exists ; 2009 ; 1 ; Revista Brasileira de Computação Aplicada-RBCA Volume 2009 ; 2009 >
-      au < exists ; 2010 ; 2 ; Revista Brasileira de Computação Aplicada-RBCA Volume 2010 ; 2010 >
-      au < exists ; 2011 ; 3 ; Revista Brasileira de Computação Aplicada-RBCA Volume 2011 ; 2011 >
-      au < exists ; 2012 ; 4 ; Revista Brasileira de Computação Aplicada-RBCA Volume 2012 ; 2012 >
-      au < expected ; 2013 ; 5 ; Revista Brasileira de Computação Aplicada-RBCA Volume 2013 ; 2013 >
-      au < expected ; 2014 ; 6 ; Revista Brasileira de Computação Aplicada-RBCA Volume 2014 ; 2014 >
+      au < released ; 2009 ; 1 ; Revista Brasileira de Computação Aplicada-RBCA Volume 2009 ; 2009 >
+      au < released ; 2010 ; 2 ; Revista Brasileira de Computação Aplicada-RBCA Volume 2010 ; 2010 >
+      au < released ; 2011 ; 3 ; Revista Brasileira de Computação Aplicada-RBCA Volume 2011 ; 2011 >
+      au < released ; 2012 ; 4 ; Revista Brasileira de Computação Aplicada-RBCA Volume 2012 ; 2012 >
+      au < released ; 2013 ; 5 ; Revista Brasileira de Computação Aplicada-RBCA Volume 2013 ; 2013 >
+      au < released ; 2014 ; 6 ; Revista Brasileira de Computação Aplicada-RBCA Volume 2014 ; 2014 >
+      au < manifest ; 2015 ; 7 ; Revista Brasileira de Computação Aplicada-RBCA Volume 2015 ; 2015 >
 
   }
 
@@ -59,7 +61,7 @@
       >
 
       comment[publisher] = Universidade de Passo Fundo
-      param[base_url] = http://www.upf.br/
+      param[base_url] = http://www.upf.br/seer/
       param[journal_id] = rfo
 
       au < exists ; 1996 ; 1 ; Revista da Faculdade de Odontologia-UPF Volume 1996 ; 1996 >
@@ -92,15 +94,16 @@
       >
 
       comment[publisher] = Universidade de Passo Fundo
-      param[base_url] = http://www.upf.br/
+      param[base_url] = http://www.upf.br/seer/
       param[journal_id] = ciatec
 
-      au < exists ; 2009 ; 1 ; Revista de Ciências Exatas Aplicadas e Tecnológicas-CIATEC-UPF Volume 2009 ; 2009 >
-      au < exists ; 2010 ; 2 ; Revista de Ciências Exatas Aplicadas e Tecnológicas-CIATEC-UPF Volume 2010 ; 2010 >
-      au < exists ; 2011 ; 3 ; Revista de Ciências Exatas Aplicadas e Tecnológicas-CIATEC-UPF Volume 2011 ; 2011 >
-      au < exists ; 2012 ; 4 ; Revista de Ciências Exatas Aplicadas e Tecnológicas-CIATEC-UPF Volume 2012 ; 2012 >
-      au < expected ; 2013 ; 5 ; Revista de Ciências Exatas Aplicadas e Tecnológicas-CIATEC-UPF Volume 2013 ; 2013 >
-      au < expected ; 2014 ; 6 ; Revista de Ciências Exatas Aplicadas e Tecnológicas-CIATEC-UPF Volume 2014 ; 2014 >
+      au < released ; 2009 ; 1 ; Revista de Ciências Exatas Aplicadas e Tecnológicas-CIATEC-UPF Volume 2009 ; 2009 >
+      au < released ; 2010 ; 2 ; Revista de Ciências Exatas Aplicadas e Tecnológicas-CIATEC-UPF Volume 2010 ; 2010 >
+      au < released ; 2011 ; 3 ; Revista de Ciências Exatas Aplicadas e Tecnológicas-CIATEC-UPF Volume 2011 ; 2011 >
+      au < released ; 2012 ; 4 ; Revista de Ciências Exatas Aplicadas e Tecnológicas-CIATEC-UPF Volume 2012 ; 2012 >
+      au < released ; 2013 ; 5 ; Revista de Ciências Exatas Aplicadas e Tecnológicas-CIATEC-UPF Volume 2013 ; 2013 >
+      au < released ; 2014 ; 6 ; Revista de Ciências Exatas Aplicadas e Tecnológicas-CIATEC-UPF Volume 2014 ; 2014 >
+      au < manifest ; 2015 ; 7 ; Revista de Ciências Exatas Aplicadas e Tecnológicas-CIATEC-UPF Volume 2015 ; 2015 >
 
   }
 
@@ -113,7 +116,7 @@
       >
 
       comment[publisher] = Universidade de Passo Fundo
-      param[base_url] = http://www.upf.br/
+      param[base_url] = http://www.upf.br/seer/
       param[journal_id] = rd
 
       au < exists ; 2005 ; 1 ; Revista Desenredo Volume 2005 ; 2005 >
@@ -137,15 +140,16 @@
       >
 
       comment[publisher] = Universidade de Passo Fundo
-      param[base_url] = http://www.upf.br/
+      param[base_url] = http://www.upf.br/seer/
       param[journal_id] = rep
 
-      au < exists ; 2009 ; 1 ; Revista Espaço Pedagógico Volume 2009 ; 2009 >
-      au < exists ; 2010 ; 2 ; Revista Espaço Pedagógico Volume 2010 ; 2010 >
-      au < exists ; 2011 ; 3 ; Revista Espaço Pedagógico Volume 2011 ; 2011 >
-      au < exists ; 2012 ; 4 ; Revista Espaço Pedagógico Volume 2012 ; 2012 >
-      au < expected ; 2013 ; 5 ; Revista Espaço Pedagógico Volume 2013 ; 2013 >
-      au < expected ; 2014 ; 6 ; Revista Espaço Pedagógico Volume 2014 ; 2014 >
+      au < released ; 2009 ; 1 ; Revista Espaço Pedagógico Volume 2009 ; 2009 >
+      au < released ; 2010 ; 2 ; Revista Espaço Pedagógico Volume 2010 ; 2010 >
+      au < released ; 2011 ; 3 ; Revista Espaço Pedagógico Volume 2011 ; 2011 >
+      au < released ; 2012 ; 4 ; Revista Espaço Pedagógico Volume 2012 ; 2012 >
+      au < released ; 2013 ; 5 ; Revista Espaço Pedagógico Volume 2013 ; 2013 >
+      au < released ; 2014 ; 6 ; Revista Espaço Pedagógico Volume 2014 ; 2014 >
+      au < manifest ; 2015 ; 7 ; Revista Espaço Pedagógico Volume 2015 ; 2015 >
 
   }
 
@@ -158,7 +162,7 @@
       >
 
       comment[publisher] = Universidade de Passo Fundo
-      param[base_url] = http://www.upf.br/
+      param[base_url] = http://www.upf.br/seer/
       param[journal_id] = rhdt
 
       au < exists ; 2007 ; 1 ; Revista História: Debates e Tendências Volume 2007 ; 2007 >
@@ -180,18 +184,19 @@
       >
 
       comment[publisher] = Universidade de Passo Fundo
-      param[base_url] = http://www.upf.br/
+      param[base_url] = http://www.upf.br/seer/
       param[journal_id] = rjd
 
-      au < exists ; 2006 ; 1 ; Revista Justiça do Direito Volume 2006 ; 2006 >
-      au < exists ; 2007 ; 2 ; Revista Justiça do Direito Volume 2007 ; 2007 >
-      au < exists ; 2008 ; 3 ; Revista Justiça do Direito Volume 2008 ; 2008 >
-      au < exists ; 2009 ; 4 ; Revista Justiça do Direito Volume 2009 ; 2009 >
-      au < exists ; 2010 ; 5 ; Revista Justiça do Direito Volume 2010 ; 2010 >
-      au < exists ; 2011 ; 6 ; Revista Justiça do Direito Volume 2011 ; 2011 >
-      au < expected ; 2012 ; 7 ; Revista Justiça do Direito Volume 2012 ; 2012 >
-      au < expected ; 2013 ; 8 ; Revista Justiça do Direito Volume 2013 ; 2013 >
-      au < expected ; 2014 ; 9 ; Revista Justiça do Direito Volume 2014 ; 2014 >
+      au < released ; 2006 ; 1 ; Revista Justiça do Direito Volume 2006 ; 2006 >
+      au < released ; 2007 ; 2 ; Revista Justiça do Direito Volume 2007 ; 2007 >
+      au < released ; 2008 ; 3 ; Revista Justiça do Direito Volume 2008 ; 2008 >
+      au < released ; 2009 ; 4 ; Revista Justiça do Direito Volume 2009 ; 2009 >
+      au < released ; 2010 ; 5 ; Revista Justiça do Direito Volume 2010 ; 2010 >
+      au < released ; 2011 ; 6 ; Revista Justiça do Direito Volume 2011 ; 2011 >
+      au < released ; 2012 ; 7 ; Revista Justiça do Direito Volume 2012 ; 2012 >
+      au < released ; 2013 ; 8 ; Revista Justiça do Direito Volume 2013 ; 2013 >
+      au < released ; 2014 ; 9 ; Revista Justiça do Direito Volume 2014 ; 2014 >
+      au < manifest ; 2015 ; 10 ; Revista Justiça do Direito Volume 2015 ; 2015 >
 
   }
 
@@ -204,20 +209,20 @@
       >
 
       comment[publisher] = Universidade de Passo Fundo
-      param[base_url] = http://www.upf.br/
+      param[base_url] = http://www.upf.br/seer/
       param[journal_id] = rsaee
 
-      au < exists ; 2004 ; 1 ; Revista Sul-Americana de Engenharia Estrutural Volume 2004 ; 2004 >
-      au < exists ; 2005 ; 2 ; Revista Sul-Americana de Engenharia Estrutural Volume 2005 ; 2005 >
-      au < exists ; 2006 ; 3 ; Revista Sul-Americana de Engenharia Estrutural Volume 2006 ; 2006 >
-      au < exists ; 2007 ; 4 ; Revista Sul-Americana de Engenharia Estrutural Volume 2007 ; 2007 >
-      au < exists ; 2008 ; 5 ; Revista Sul-Americana de Engenharia Estrutural Volume 2008 ; 2008 >
-      au < exists ; 2009 ; 6 ; Revista Sul-Americana de Engenharia Estrutural Volume 2009 ; 2009 >
-      au < exists ; 2010 ; 7 ; Revista Sul-Americana de Engenharia Estrutural Volume 2010 ; 2010 >
-      au < exists ; 2011 ; 8 ; Revista Sul-Americana de Engenharia Estrutural Volume 2011 ; 2011 >
-      au < exists ; 2012 ; 9 ; Revista Sul-Americana de Engenharia Estrutural Volume 2012 ; 2012 >
-      au < expected ; 2013 ; 10 ; Revista Sul-Americana de Engenharia Estrutural Volume 2013 ; 2013 >
-      au < expected ; 2014 ; 11 ; Revista Sul-Americana de Engenharia Estrutural Volume 2014 ; 2014 >
+      au < released ; 2004 ; 1 ; Revista Sul-Americana de Engenharia Estrutural Volume 2004 ; 2004 >
+      au < released ; 2005 ; 2 ; Revista Sul-Americana de Engenharia Estrutural Volume 2005 ; 2005 >
+      au < released ; 2006 ; 3 ; Revista Sul-Americana de Engenharia Estrutural Volume 2006 ; 2006 >
+      au < released ; 2007 ; 4 ; Revista Sul-Americana de Engenharia Estrutural Volume 2007 ; 2007 >
+      au < released ; 2008 ; 5 ; Revista Sul-Americana de Engenharia Estrutural Volume 2008 ; 2008 >
+      au < released ; 2009 ; 6 ; Revista Sul-Americana de Engenharia Estrutural Volume 2009 ; 2009 >
+      au < released ; 2010 ; 7 ; Revista Sul-Americana de Engenharia Estrutural Volume 2010 ; 2010 >
+      au < released ; 2011 ; 8 ; Revista Sul-Americana de Engenharia Estrutural Volume 2011 ; 2011 >
+      au < released ; 2012 ; 9 ; Revista Sul-Americana de Engenharia Estrutural Volume 2012 ; 2012 >
+      au < released ; 2013 ; 10 ; Revista Sul-Americana de Engenharia Estrutural Volume 2013 ; 2013 >
+      au < released ; 2014 ; 11 ; Revista Sul-Americana de Engenharia Estrutural Volume 2014 ; 2014 >
 
   }
 
@@ -229,7 +234,7 @@
       >
 
       comment[publisher] = Universidade de Passo Fundo
-      param[base_url] = http://www.upf.br/
+      param[base_url] = http://www.upf.br/seer/
       param[journal_id] = ser
 
       au < exists ; 2005 ; 1 ; Secretariado Executivo em Revist@ Volume 2005 ; 2005 >
