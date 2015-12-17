@@ -382,7 +382,7 @@ public class SafeNetServeContent extends LockssServlet {
   }
 
   void logAccess(String url, String msg) {
-    String logmsg = "Content access from " + req.getRemoteAddr() + ": " +
+    String logmsg = "Content access from " + req.getRemoteAddr() + "UA: \"" + req.getHeader("User-Agent") + "\": " +
       url + ": " + msg;
     if (paramAccessLogLevel >= 0) {
       log.log(paramAccessLogLevel, logmsg);
