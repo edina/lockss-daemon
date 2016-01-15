@@ -33,8 +33,10 @@ public class EdiauthLogin extends LockssServlet {
 
   /** Ediauth configuration **/
   public static final String PARAM_EDIAUTH_IP = PREFIX + "ediauthUrl";
+  public static final String PARAM_EDIAUTH_REDIRECT_URL = PREFIX + "returnURL";
   
   private static String ediauthIP;
+  private static String ediauthReturnURL;
 
   public void init(ServletConfig config) throws ServletException {
     super.init(config);
@@ -46,6 +48,7 @@ public class EdiauthLogin extends LockssServlet {
                         Configuration.Differences diffs) {
     if (diffs.contains(PREFIX)) {
       ediauthIP = config.get(PARAM_EDIAUTH_IP);
+      ediauthReturnURL = config.get(PARAM_EDIAUTH_REDIRECT_URL);
     }
   }
 
@@ -137,7 +140,7 @@ public class EdiauthLogin extends LockssServlet {
             response_str = eaContext + separator + "ediauthToken=" + token;
           } else {
             // Just redirect user to home page
-            String serverURL = "http://localhost:8082/SafeNetServeContent";
+            String serverURL = (ediauthReturnURL == null) ? "http://localhost:8082/SafeNetServeContent" : ediauthReturnURL;
             response_str = serverURL + "?ediauthToken=" + token;
           }
 
