@@ -373,6 +373,9 @@ public class ServletUtil {
     if (diffs.contains(SafeNetServeContent.PREFIX)) {
       SafeNetServeContent.setConfig(config, oldConfig, diffs);
     }
+    if (diffs.contains(EdiauthLogin.PREFIX)) {
+      EdiauthLogin.setConfig(config, oldConfig, diffs);
+    }
     if (diffs.contains(ServeContent.PREFIX)) {
       ServeContent.setConfig(config, oldConfig, diffs);
     }
