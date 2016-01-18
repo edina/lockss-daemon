@@ -141,6 +141,7 @@ public class EdiauthLogin extends LockssServlet {
           } else {
             // Just redirect user to home page
             String serverURL = (ediauthReturnURL == null) ? "http://localhost:8082/SafeNetServeContent" : ediauthReturnURL;
+            log.debug("ediauth redirect URL: " + serverURL);
             response_str = serverURL + "?ediauthToken=" + token;
           }
 
