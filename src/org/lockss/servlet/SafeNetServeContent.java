@@ -1049,7 +1049,8 @@ public class SafeNetServeContent extends LockssServlet {
     if (proxyMgr.isCounterCountable(req.getHeader(HttpFields.__UserAgent))) {
       CounterReportsRequestRecorder.getInstance().recordRequest(url,
 								contacted,
-								publisherCode);
+								publisherCode,
+                                null);
     }
   }
 
