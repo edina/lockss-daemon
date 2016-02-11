@@ -146,6 +146,7 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
     sRunner.setServletContextAttribute(ServletManager.CONTEXT_ATTR_SERVLET_MGR, new ContentServletManager());
     sRunner.registerServlet("/SafeNetServeContent", MockSafeNetServeContent.class.getName() );
     sRunner.registerServlet("/test_journal/", RedirectServlet.class.getName());
+    sClient.getSession(true).setAttribute("scope", "ed.ac.uk");
   }
 
   public void testIndex() throws Exception {
