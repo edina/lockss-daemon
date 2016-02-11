@@ -89,8 +89,6 @@ public abstract class UserAccount implements LockssSerializable, Comparable {
   protected transient Credential credential = null;
   protected transient boolean isChanged = false;
   protected transient StringBuilder eventsToReport;
-  
-  private String institutionScope;
 
   public UserAccount(String name) {
     this.userName = name;
@@ -745,15 +743,7 @@ public abstract class UserAccount implements LockssSerializable, Comparable {
     return getName().compareTo(other.getName());
   }
 
-  public String getInstitutionScope() {
-    return institutionScope;
-}
-
-public void setInstitutionScope(String institutionScope) {
-    this.institutionScope = institutionScope;
-}
-
-public class NullCredential extends Credential {
+  public class NullCredential extends Credential {
     public boolean check(Object credentials) {
       return false;
     }

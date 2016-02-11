@@ -402,25 +402,25 @@ public class SafeNetServeContent extends LockssServlet {
    */
   public void lockssHandleRequest() throws IOException {
     
-    // Redirect user to ediauth login page if doesn't have a institution allocated
-    UserAccount user = getUserAccount();
-    if( user.getInstitutionScope() == null ){
-      String token = req.getParameter("ediauthToken");
-      if(token != null){
-        // Reassign userAccount
-        String userInstScope = this.getAccountManager().getFromMapToken(token);
-        
-        // UserAccount user = getUserAccount();
-        log.debug("Assigning inst. scope to user:"+userInstScope);
-        user.setInstitutionScope(userInstScope);
-      } else {
-        log.debug("Redirecting user to ediauth...");
-        resp.sendRedirect(ediauthUrl);
-        return;
-      }
-    } else {
-      log.debug("User already have inst. allocated!");
-    }
+      
+	  // Redirect user to ediauth login page if doesn't have a institution allocated
+	  if( this.getSession().getAttribute("scope") == null ){
+	    String token = req.getParameter("ediauthToken");
+	    if(token != null){
+	      // Reassign userAccount
+	      String userInstScope = this.getAccountManager().getFromMapToken(token);
+	      
+	      // UserAccount user = getUserAccount();
+	      log.debug("Assigning inst. scope to user:"+userInstScope);
+	      this.getSession().setAttribute("scope", userInstScope);
+	    } else {
+	      log.debug("Redirecting user to ediauth: "+ediauthUrl);
+	      resp.sendRedirect(ediauthUrl);
+	      return;
+	    }
+	  } else {
+	    log.debug("User already have inst. allocated!");
+	  }
       
     if (!pluginMgr.areAusStarted()) {
       displayNotStarted();
@@ -2102,8 +2102,7 @@ public class SafeNetServeContent extends LockssServlet {
     }
     Page page = newPage();
     
-    UserAccount user = getUserAccount();
-    String scope = user.getInstitutionScope();
+    String scope = (String)this.getSession().getAttribute("scope");
     if(scope != null) {
       page.add("User inst: " + scope);
     } else {
@@ -2206,7 +2205,7 @@ public class SafeNetServeContent extends LockssServlet {
   void updateInstitution() throws IOException {
       //This is currently called in lockssHandleRequest, it needs to be called from wherever we do the SAML authentication
 //      institutionScope = "ed.ac.uk";
-      String scope = getUserAccount().getInstitutionScope();
+      String scope = (String)this.getSession().getAttribute("scope");
       institution = entitlementRegistry.getInstitution(scope);
   }
 
