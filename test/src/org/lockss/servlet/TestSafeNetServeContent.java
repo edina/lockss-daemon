@@ -277,6 +277,7 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
     SafeNetServeContent snsc = (SafeNetServeContent) ic.getServlet();
 
     WebResponse resp1 = sClient.getResponse(request);
+    System.out.println(resp1.getText());
     assertEquals(403, resp1.getResponseCode());
     assertTrue(resp1.getText().contains("<p>You are not authorised to access the requested URL on this LOCKSS box. Select link<sup><font size=-1><a href=#foottag1>1</a></font></sup> to view it at the publisher:</p><a href=\"http://dev-safenet.edina.ac.uk/test_journal/\">http://dev-safenet.edina.ac.uk/test_journal/</a>"));
   }
@@ -401,11 +402,11 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
     private SafeNetServeContent delegate = Mockito.mock(SafeNetServeContent.class);
 
     public void expectRequest(String url, LockssUrlConnection connection) throws IOException {
-      Mockito.when(delegate.openConnection(Mockito.eq(url), Mockito.any(LockssUrlConnectionPool.class))).thenReturn(connection);
+      Mockito.when(delegate.doOpenConnection(Mockito.eq(url), Mockito.any(LockssUrlConnectionPool.class))).thenReturn(connection);
     }
 
-    protected LockssUrlConnection openConnection(String url, LockssUrlConnectionPool pool) throws IOException {
-      return delegate.openConnection(url, pool);
+    protected LockssUrlConnection doOpenConnection(String url, LockssUrlConnectionPool pool) throws IOException {
+      return delegate.doOpenConnection(url, pool);
     }
   }
 }
