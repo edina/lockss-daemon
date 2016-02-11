@@ -242,7 +242,6 @@ public class SafeNetServeContent extends LockssServlet {
   private AccessLogType requestType = AccessLogType.None;
   private PublisherWorkflow workflow;
   private String institution;
-  private String institutionScope;
 
   private PluginManager pluginMgr;
   private ProxyManager proxyMgr;
@@ -1414,7 +1413,7 @@ public class SafeNetServeContent extends LockssServlet {
     // send address of original requester
     conn.addRequestProperty(HttpFields.__XForwardedFor,
         req.getRemoteAddr());
-    conn.addRequestProperty(INSTITUTION_HEADER, institutionScope);
+    conn.addRequestProperty(INSTITUTION_HEADER, (String) getSession().getAttribute("scope"));
     conn.addRequestProperty(HttpFields.__Via,
         proxyMgr.makeVia(getMachineName(),
             reqURL.getPort()));
@@ -2204,7 +2203,6 @@ public class SafeNetServeContent extends LockssServlet {
 
   void updateInstitution() throws IOException {
       //This is currently called in lockssHandleRequest, it needs to be called from wherever we do the SAML authentication
-//      institutionScope = "ed.ac.uk";
       String scope = (String)this.getSession().getAttribute("scope");
       institution = entitlementRegistry.getInstitution(scope);
   }
