@@ -39,34 +39,18 @@ import java.util.List;
 import java.util.regex.*;
 
 import javax.servlet.*;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.collections.*;
-import org.apache.commons.httpclient.util.DateParseException;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.output.ByteArrayOutputStream;
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.lockss.account.UserAccount;
-import org.lockss.alert.Alert;
 import org.lockss.app.LockssDaemon;
 import org.lockss.config.*;
 import org.lockss.daemon.*;
-import org.lockss.daemon.OpenUrlResolver.OpenUrlInfo;
-import org.lockss.daemon.OpenUrlResolver.OpenUrlInfo.ResolvedTo;
-import org.lockss.exporter.biblio.BibliographicItem;
 import org.lockss.exporter.counter.*;
-import org.lockss.exporter.counter.CounterReportsRequestRecorder.PublisherContacted;
 import org.lockss.plugin.*;
-import org.lockss.plugin.AuUtil.AuProxyInfo;
 import org.lockss.plugin.PluginManager.CuContentReq;
-import org.lockss.plugin.base.BaseUrlFetcher;
-import org.lockss.proxy.ProxyManager;
-import org.lockss.rewriter.LinkRewriterFactory;
 import org.lockss.safenet.EntitlementRegistryClient;
 import org.lockss.safenet.PublisherWorkflow;
-import org.lockss.state.AuState;
 import org.lockss.util.*;
-import org.lockss.util.CloseCallbackInputStream.DeleteFileOnCloseInputStream;
 import org.lockss.util.urlconn.*;
 import org.mortbay.html.*;
 import org.mortbay.http.*;
@@ -192,12 +176,6 @@ public class SafeNetServeContent extends ServeContent {
    * @throws IOException for IO errors
    */
   protected void handleAuRequest() throws IOException {
-    String host = UrlUtil.getHost(url);
-    boolean isInCache = isInCache();
-    boolean isHostDown = proxyMgr.isHostDown(host);
-    PublisherContacted pubContacted =
-	CounterReportsRequestRecorder.PublisherContacted.FALSE;
-
     try {
       if (!isUserEntitled(au)) {
         handleUnauthorisedUrlRequest(url);
@@ -222,115 +200,7 @@ public class SafeNetServeContent extends ServeContent {
       return;
     }
 
-    if (isNeverProxyForAu(au) || isMementoRequest()) {
-      if (isInCache) {
-        serveFromCache();
-        logAccess("200 from cache");
-        // Record the necessary information required for COUNTER reports.
-	recordRequest(url, pubContacted, 200);
-      } else {
-	/*
-	 * We don't want to redirect to the publisher, so pass KnownDown below
-	 * in order to ensure that. It's true that we might be lying, because
-	 * the publisher might be up.
-	 */
-        handleMissingUrlRequest(url, PubState.KnownDown);
-      }
-      return;
-    }
-
-    LockssUrlConnectionPool connPool = proxyMgr.getNormalConnectionPool();
-
-    if (!isInCache && isHostDown) {
-      switch (proxyMgr.getHostDownAction()) {
-        case ProxyManager.HOST_DOWN_NO_CACHE_ACTION_504:
-          handleMissingUrlRequest(url, PubState.RecentlyDown);
-          return;
-        case ProxyManager.HOST_DOWN_NO_CACHE_ACTION_QUICK:
-          connPool = proxyMgr.getQuickConnectionPool();
-          break;
-        default:
-        case ProxyManager.HOST_DOWN_NO_CACHE_ACTION_NORMAL:
-          connPool = proxyMgr.getNormalConnectionPool();
-          break;
-      }
-    }
-
-    // Send request to publisher
-    LockssUrlConnection conn = null;
-    PubState pstate = PubState.Unknown;
-    try {
-      conn = openLockssUrlConnection(connPool);
-
-      // set proxy for connection if specified
-      AuProxyInfo info = AuUtil.getAuProxyInfo(au);
-      String proxyHost = info.getHost();
-      int proxyPort = info.getPort();
-      if (!StringUtil.isNullString(proxyHost) && (proxyPort > 0)) {
-        try {
-          conn.setProxy(info.getHost(), info.getPort());
-        } catch (UnsupportedOperationException ex) {
-          log.warning(  "Unsupported connection request proxy: "
-                        + proxyHost + ":" + proxyPort);
-        }
-      }
-      conn.execute();
-      pubContacted = CounterReportsRequestRecorder.PublisherContacted.TRUE;
-    } catch (IOException ex) {
-      if (log.isDebug3()) log.debug3("conn.execute", ex);
-
-      // mark host down if connection timed out
-      if (ex instanceof LockssUrlConnection.ConnectionTimeoutException) {
-        proxyMgr.setHostDown(host, isInCache);
-      } else {
-	pubContacted = CounterReportsRequestRecorder.PublisherContacted.TRUE;
-      }
-      pstate = PubState.KnownDown;
-
-      // tear down connection
-      IOUtil.safeRelease(conn);
-      conn = null;
-    }
-
-    int response = 0;
-    try {
-      if (conn != null) {
-	response = conn.getResponseCode();
-        if (log.isDebug2())
-          log.debug2("response: " + response + " " + conn.getResponseMessage());
-        if (response == HttpResponse.__200_OK) {
-          // If publisher responds with content, serve it to user
-          // XXX Should check for a login page here
-          try {
-            serveFromPublisher(conn);
-            logAccess(present(isInCache, "200 from publisher"));
-            // Record the necessary information required for COUNTER reports.
-	    recordRequest(url, pubContacted, response);
-            return;
-          } catch (CacheException.PermissionException ex) {
-            logAccess("login exception: " + ex.getMessage());
-            pstate = PubState.NoContent;
-          }
-        } else {
-          pstate = PubState.NoContent;
-        }
-      }
-    } finally {
-      // ensure connection is closed
-      IOUtil.safeRelease(conn);
-    }
-
-    // Either failed to open connection or got non-200 response.
-    if (isInCache) {
-      serveFromCache();
-      logAccess("present, 200 from cache");
-      // Record the necessary information required for COUNTER reports.
-      recordRequest(url, pubContacted, response);
-    } else {
-      log.debug2("No content for: " + url);
-      // return 404 with index
-      handleMissingUrlRequest(url, pstate);
-    }
+    super.handleAuRequest();
   }
 
   protected LockssUrlConnection doOpenConnection(String url, LockssUrlConnectionPool pool) throws IOException {
@@ -340,21 +210,7 @@ public class SafeNetServeContent extends ServeContent {
   protected LockssUrlConnection openConnection(String url, LockssUrlConnectionPool pool) throws IOException {
     LockssUrlConnection conn = doOpenConnection(url, pool);
     conn.addRequestProperty(INSTITUTION_HEADER, (String) getSession().getAttribute("scope"));
-    conn.addRequestProperty(HttpFields.__Via,
-        proxyMgr.makeVia(getMachineName(),
-            reqURL.getPort()));
-
-    String cookiePolicy = proxyMgr.getCookiePolicy();
-    if (cookiePolicy != null &&
-        !cookiePolicy.equalsIgnoreCase(ProxyManager.COOKIE_POLICY_DEFAULT)) {
-      conn.setCookiePolicy(cookiePolicy);
-    }
-
     return conn;
-  }
-
-  protected LockssUrlConnection openConnection(String url, LockssUrlConnectionPool pool) throws IOException {
-    return UrlUtil.openConnection(url, pool);
   }
 
   protected void handleEntitlementRegistryErrorUrlRequest(String missingUrl)
@@ -365,137 +221,6 @@ public class SafeNetServeContent extends ServeContent {
   protected void handleUnauthorisedUrlRequest(String missingUrl)
       throws IOException {
     handleUrlRequestError(missingUrl, PubState.KnownDown, "You are not authorised to access the requested URL on this LOCKSS box. ", HttpResponse.__403_Forbidden, "unauthorised");
-  }
-
-  protected void handleMissingUrlRequest(String missingUrl, PubState pstate)
-      throws IOException {
-    handleUrlRequestError(missingUrl, pstate, "The requested URL is not preserved on this LOCKSS box. ", HttpResponse.__404_Not_Found, "not present");
-  }
-
-  protected void handleUrlRequestError(String missingUrl, PubState pstate, String errorMessage, int responseCode, String logMessage)
-      throws IOException {
-    String missing =
-        missingUrl + ((au != null) ? " in AU: " + au.getName() : "");
-
-    Block block = new Block(Block.Center);
-    // display publisher page
-    block.add("<p>");
-    block.add(errorMessage);
-    block.add("Select link");
-    block.add(addFootnote(
-        "Selecting publisher link takes you away from this LOCKSS box."));
-    block.add(" to view it at the publisher:</p>");
-    block.add("<a href=\"" + missingUrl + "\">" + missingUrl + "</a><br/><br/>");
-
-    switch (getMissingFileAction(pstate)) {
-      case Error_404:
-        resp.sendError(responseCode,
-            missing + " is not preserved on this LOCKSS box");
-        logAccess(logMessage + ", " + responseCode);
-        break;
-      case Redirect:
-      case AlwaysRedirect:
-        redirectToUrl();
-        break;
-      case HostAuIndex:
-        Collection<ArchivalUnit> candidateAus = Collections.emptyList();
-        try {
-            candidateAus = pluginMgr.getCandidateAus(missingUrl);
-        } catch (MalformedURLException ex) {
-          // ignore error, serve file
-          log.warning("Handling URL: " + url + " throws ", ex);
-        }
-        if (candidateAus != null && !candidateAus.isEmpty()) {
-          displayIndexPage(candidateAus,
-              responseCode,
-              block,
-              candidates404Msg);
-          logAccess(logMessage + ", " + responseCode + " with index");
-        } else {
-          displayIndexPage(Collections.<ArchivalUnit>emptyList(),
-              responseCode,
-              block,
-              null);
-          logAccess(logMessage + ", " + responseCode);
-        }
-        break;
-      case AuIndex:
-        displayIndexPage(pluginMgr.getAllAus(),
-            responseCode,
-            block,
-            null);
-        logAccess(logMessage + ", " + responseCode + " with index");
-        break;
-    }
-  }
-
-  void displayIndexPage(Collection<ArchivalUnit> auList,
-                        int result,
-                        Element headerElement,
-                        String headerText)
-      throws IOException {
-    Predicate pred;
-    boolean offerUnfilteredList = false;
-    if (enabledPluginsOnly) {
-      pred = PredicateUtils.andPredicate(enabledAusPred, allAusPred);
-      offerUnfilteredList = areAnyExcluded(auList, enabledAusPred);
-    } else {
-      pred = allAusPred;
-    }
-    Page page = newPage();
-    
-    String scope = (String)this.getSession().getAttribute("scope");
-    if(scope != null) {
-      page.add("User inst: " + scope);
-    } else {
-      page.add("User inst: unknown");
-    }
-
-    if (headerElement != null) {
-      page.add(headerElement);
-    }
-
-    Block centeredBlock = new Block(Block.Center);
-
-    if (areAllExcluded(auList, pred) && !offerUnfilteredList) {
-      ServletUtil.layoutExplanationBlock(centeredBlock,
-          "No matching content has been preserved on this LOCKSS box");
-    } else {
-      // Layout manifest index w/ URLs pointing to this servlet
-      Element ele =
-          ServletUtil.manifestIndex(pluginMgr,
-              auList,
-              pred,
-              headerText,
-              new ServletUtil.ManifestUrlTransform() {
-                public Object transformUrl(String url,
-                                           ArchivalUnit au){
-                  Properties query =
-                      PropUtil.fromArgs("url", url);
-                  if (au != null) {
-                    query.put("auid", au.getAuId());
-                  }
-                  return srvLink(myServletDescr(),
-                      url, query);
-                }},
-              true);
-      centeredBlock.add(ele);
-      if (offerUnfilteredList) {
-        centeredBlock.add("<br>");
-        centeredBlock.add("Other possibly relevant content has not yet been "
-                          + "certified for use with SafeNetServeContent and may not "
-                          + "display correctly.  Click ");
-        Properties args = getParamsAsProps();
-        args.put("filterPlugins", "no");
-        centeredBlock.add(srvLink(myServletDescr(), "here", args));
-        centeredBlock.add(" to see the complete list.");
-      }
-    }
-    page.add(centeredBlock);
-    if (result > 0) {
-      resp.setStatus(result);
-    }
-    endPage(page);
   }
 
 
@@ -526,7 +251,6 @@ public class SafeNetServeContent extends ServeContent {
       String start = tdbAu.getStartYear() + "0101";
       String end = tdbAu.getEndYear() + "1231";
 
-//      return PublisherWorkflow.PRIMARY_SAFENET;
       String publisher = entitlementRegistry.getPublisher(issn, start, end);
       if(StringUtil.isNullString(publisher)) {
         throw new IllegalArgumentException("No publisher found");
