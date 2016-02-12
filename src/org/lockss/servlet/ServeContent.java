@@ -1322,7 +1322,7 @@ public class ServeContent extends LockssServlet {
     String ifModified = null;
     String referer = null;
 
-    LockssUrlConnection conn = UrlUtil.openConnection(url, pool);
+    LockssUrlConnection conn = openConnection(url, pool);
 
     // check connection header
     String connectionHdr = req.getHeader(HttpFields.__Connection);
@@ -1450,6 +1450,10 @@ public class ServeContent extends LockssServlet {
       log.error("Error getting LinkRewriterFactory: " + e);
     }
     return null;
+  }
+
+  protected LockssUrlConnection openConnection(String url, LockssUrlConnectionPool pool) throws IOException {
+    return UrlUtil.openConnection(url, pool);
   }
 
   protected void handleRewriteInputStream(InputStream original,
@@ -2025,12 +2029,18 @@ public class ServeContent extends LockssServlet {
 
   protected void handleMissingUrlRequest(String missingUrl, PubState pstate)
       throws IOException {
+    handleUrlRequestError(missingUrl, pstate, "The requested URL is not preserved on this LOCKSS box. ", HttpResponse.__404_Not_Found, "not present");
+  }
+
+  protected void handleUrlRequestError(String missingUrl, PubState pstate, String errorMessage, int responseCode, String logMessage)
+      throws IOException {
     String missing =
         missingUrl + ((au != null) ? " in AU: " + au.getName() : "");
 
     Block block = new Block(Block.Center);
     // display publisher page
-    block.add("<p>The requested URL is not preserved on this LOCKSS box. ");
+    block.add("<p>");
+    block.add(errorMessage);
     block.add("Select link");
     block.add(addFootnote(
         "Selecting publisher link takes you away from this LOCKSS box."));
@@ -2039,9 +2049,9 @@ public class ServeContent extends LockssServlet {
 
     switch (getMissingFileAction(pstate)) {
       case Error_404:
-        resp.sendError(HttpServletResponse.SC_NOT_FOUND,
+        resp.sendError(responseCode,
             missing + " is not preserved on this LOCKSS box");
-        logAccess("not present, 404");
+        logAccess(logMessage + ", " + responseCode);
         break;
       case Redirect:
       case AlwaysRedirect:
@@ -2057,24 +2067,24 @@ public class ServeContent extends LockssServlet {
         }
         if (candidateAus != null && !candidateAus.isEmpty()) {
           displayIndexPage(candidateAus,
-              HttpResponse.__404_Not_Found,
+              responseCode,
               block,
               candidates404Msg);
-          logAccess("not present, 404 with index");
+          logAccess(logMessage + ", " + responseCode + " with index");
         } else {
           displayIndexPage(Collections.<ArchivalUnit>emptyList(),
-              HttpResponse.__404_Not_Found,
+              responseCode,
               block,
               null);
-          logAccess("not present, 404");
+          logAccess(logMessage + ", " + responseCode);
         }
         break;
       case AuIndex:
         displayIndexPage(pluginMgr.getAllAus(),
-            HttpResponse.__404_Not_Found,
+            responseCode,
             block,
             null);
-        logAccess("not present, 404 with index");
+        logAccess(logMessage + ", " + responseCode + " with index");
         break;
     }
   }
