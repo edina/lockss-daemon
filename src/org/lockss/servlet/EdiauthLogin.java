@@ -14,7 +14,6 @@ import java.util.List;
 
 import org.lockss.account.*;
 import org.lockss.config.Configuration;
-import org.lockss.servlet.SafeNetServeContent.MissingFileAction;
 
 /**
  * Handle Ediauth authentication
