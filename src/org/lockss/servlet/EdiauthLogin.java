@@ -33,9 +33,13 @@ public class EdiauthLogin extends LockssServlet {
   /** Ediauth configuration **/
   public static final String PARAM_EDIAUTH_IP = PREFIX + "ediauthUrl";
   public static final String PARAM_EDIAUTH_REDIRECT_URL = PREFIX + "returnURL";
+  /* List of IdPs that are allowed to access the service without presenting a shibbAccountable parameter
+   * This should only be set for testing purposes */
+  public static final String PARAM_EDIAUTH_ALLOWED_NON_ACCOUNTABLE_IDPS = PREFIX + "allowedNonAccountableIdPs";
   
   private static String ediauthIP;
   private static String ediauthReturnURL;
+  private static List<String> allowedNonAccountableIdPs;
 
   public void init(ServletConfig config) throws ServletException {
     super.init(config);
@@ -48,6 +52,7 @@ public class EdiauthLogin extends LockssServlet {
     if (diffs.contains(PREFIX)) {
       ediauthIP = config.get(PARAM_EDIAUTH_IP);
       ediauthReturnURL = config.get(PARAM_EDIAUTH_REDIRECT_URL);
+      allowedNonAccountableIdPs = config.getList(PARAM_EDIAUTH_ALLOWED_NON_ACCOUNTABLE_IDPS);
     }
   }
 
@@ -106,6 +111,12 @@ public class EdiauthLogin extends LockssServlet {
          * rules-of-membership.pdf
          */
         boolean accountable = "1".equals(map.get("shibbAccountable"));
+        if (!accountable) {
+            String idp = map.get("shibbIdP");
+            if (idp != null) {
+                accountable = allowedNonAccountableIdPs.contains(idp);
+            }
+        }
         boolean requireAccountable = true; // this is up to you.
 
         /*
