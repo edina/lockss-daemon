@@ -105,7 +105,7 @@ public class EdiauthLogin extends LockssServlet {
          * http://www.ukfederation.org.uk/library/uploads/Documents/
          * rules-of-membership.pdf
          */
-        boolean accountable = Integer.valueOf(map.get("shibbAccountable")) == 1;
+        boolean accountable = "1".equals(map.get("shibbAccountable"));
         boolean requireAccountable = true; // this is up to you.
 
         /*
