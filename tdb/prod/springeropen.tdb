@@ -12,15 +12,15 @@
   
         title <
           name = Advanced Modeling and Simulation in Engineering Sciences ;
-          issn = 2213-7467 
+          eissn = 2213-7467 
         >
   
         param[base_url] = http://www.amses-journal.com/
         param[journal_issn] = 2213-7467 
-        comment[platform] = BioMedCentralPlugin
+        comment[platform] = move to SpringerOpen
   
-        au < manifest ; 2014 ; Advanced Modeling and Simulation in Engineering Sciences Volume 1 ; 1 >
-        au < manifest ; 2015 ; Advanced Modeling and Simulation in Engineering Sciences Volume 2 ; 2 >
+        au < doNotProcess ; 2014 ; Advanced Modeling and Simulation in Engineering Sciences Volume 1 ; 1 >
+        au < doNotProcess ; 2015 ; Advanced Modeling and Simulation in Engineering Sciences Volume 2 ; 2 >
   
     }
   
@@ -34,14 +34,15 @@
   
         param[base_url] = http://www.advancesindifferenceequations.com/
         param[journal_issn] = 1687-1839 
-        comment[platform] = BioMedCentralPlugin
+        comment[platform] = move to SpringerOpen
   
-        au < manifest ; 2010 ; Advances in Difference Equations Volume 2010 ; 2010 >
-        au < manifest ; 2011 ; Advances in Difference Equations Volume 2011 ; 2011 >
-        au < manifest ; 2012 ; Advances in Difference Equations Volume 2012 ; 2012 >
-        au < manifest ; 2013 ; Advances in Difference Equations Volume 2013 ; 2013 >
-        au < manifest ; 2014 ; Advances in Difference Equations Volume 2014 ; 2014 >
-        au < manifest ; 2015 ; Advances in Difference Equations Volume 2015 ; 2015 >
+        au < doNotProcess ; 2010 ; Advances in Difference Equations Volume 2010 ; 2010 >
+        au < doNotProcess ; 2011 ; Advances in Difference Equations Volume 2011 ; 2011 >
+        au < doNotProcess ; 2012 ; Advances in Difference Equations Volume 2012 ; 2012 >
+        au < doNotProcess ; 2013 ; Advances in Difference Equations Volume 2013 ; 2013 >
+        au < doNotProcess ; 2014 ; Advances in Difference Equations Volume 2014 ; 2014 >
+        au < doNotProcess ; 2015 ; Advances in Difference Equations Volume 2015 ; 2015 >
+        au < doNotProcess ; 2016 ; Advances in Difference Equations Volume 2016 ; 2016 >
   
     }
   
@@ -49,16 +50,17 @@
   
         title <
           name = Agricultural and Food Economics ;
-          issn = 2193-7532 
+          eissn = 2193-7532 
         >
   
         param[base_url] = http://www.agrifoodecon.com/
         param[journal_issn] = 2193-7532 
-        comment[platform] = BioMedCentralPlugin
+        comment[platform] = move to SpringerOpen
   
-        au < manifest ; 2013 ; Agricultural and Food Economics Volume 1 ; 1 >
-        au < manifest ; 2014 ; Agricultural and Food Economics Volume 2 ; 2 >
-        au < manifest ; 2015 ; Agricultural and Food Economics Volume 3 ; 3 >
+        au < doNotProcess ; 2013 ; Agricultural and Food Economics Volume 1 ; 1 >
+        au < doNotProcess ; 2014 ; Agricultural and Food Economics Volume 2 ; 2 >
+        au < doNotProcess ; 2015 ; Agricultural and Food Economics Volume 3 ; 3 >
+        au < doNotProcess ; 2016 ; Agricultural and Food Economics Volume 4 ; 4 >
   
     }
   
@@ -71,13 +73,13 @@
   
         param[base_url] = http://www.amb-express.com/
         param[journal_issn] = 2191-0855 
-        comment[platform] = BioMedCentralPlugin
+        comment[platform] = move to SpringerOpen
   
-        au < manifest ; 2011 ; AMB Express Volume 1 ; 1 >
-        au < manifest ; 2012 ; AMB Express Volume 2 ; 2 >
-        au < manifest ; 2013 ; AMB Express Volume 3 ; 3 >
-        au < manifest ; 2014 ; AMB Express Volume 4 ; 4 >
-        au < manifest ; 2015 ; AMB Express Volume 5 ; 5 >
+        au < doNotProcess ; 2011 ; AMB Express Volume 1 ; 1 >
+        au < doNotProcess ; 2012 ; AMB Express Volume 2 ; 2 >
+        au < doNotProcess ; 2013 ; AMB Express Volume 3 ; 3 >
+        au < doNotProcess ; 2014 ; AMB Express Volume 4 ; 4 >
+        au < doNotProcess ; 2015 ; AMB Express Volume 5 ; 5 >
   
     }
   
@@ -88,16 +90,18 @@
           eissn = 2110-5820 
         >
   
+      {
         param[base_url] = http://www.annalsofintensivecare.com/
         param[journal_issn] = 2110-5820 
-        comment[platform] = BioMedCentralPlugin
+        comment[platform] = move to SpringerOpen
   
-        au < manifest ; 2011 ; Annals of Intensive Care Volume 1 ; 1 >
-        au < manifest ; 2012 ; Annals of Intensive Care Volume 2 ; 2 >
-        au < manifest ; 2013 ; Annals of Intensive Care Volume 3 ; 3 >
+        au < doNotProcess ; 2011 ; Annals of Intensive Care Volume 1 ; 1 >
+        au < doNotProcess ; 2012 ; Annals of Intensive Care Volume 2 ; 2 >
+        au < doNotProcess ; 2013 ; Annals of Intensive Care Volume 3 ; 3 >
         au < down ; 2014 ; Annals of Intensive Care Volume 4 ; 4 >
-        au < manifest ; 2015 ; Annals of Intensive Care Volume 5 ; 5 >
-  
+        au < doNotProcess ; 2015 ; Annals of Intensive Care Volume 5 ; 5 >
+      }
+
     }
 
     {
@@ -109,11 +113,11 @@
 
         param[base_url] = http://www.appliedadhesionscience.com/
         param[journal_issn] = 2196-4351 
-        comment[platform] = BioMedCentralPlugin
+        comment[platform] = move to SpringerOpen
 
-        au < manifest ; 2013 ; Applied Adhesion Science Volume 1 ; 1 >
+        au < doNotProcess ; 2013 ; Applied Adhesion Science Volume 1 ; 1 >
         au < down ; 2014 ; Applied Adhesion Science Volume 2 ; 2 >
-        au < manifest ; 2015 ; Applied Adhesion Science Volume 3 ; 3 >
+        au < doNotProcess ; 2015 ; Applied Adhesion Science Volume 3 ; 3 >
 
     }
 
@@ -126,10 +130,10 @@
 
         param[base_url] = http://www.applied-informatics-j.com/
         param[journal_issn] = 2196-0089 
-        comment[platform] = BioMedCentralPlugin
+        comment[platform] = move to SpringerOpen
 
         au < down ; 2014 ; Applied Informatics Volume 1 ; 1 >
-        au < manifest ; 2015 ; Applied Informatics Volume 2 ; 2 >
+        au < doNotProcess ; 2015 ; Applied Informatics Volume 2 ; 2 >
 
     }
 
@@ -142,10 +146,10 @@
   
         param[base_url] = http://www.apjcen.com/
         param[journal_issn] = 2196-1166
-        comment[platform] = BioMedCentralPlugin
+        comment[platform] = move to SpringerOpen
   
-        au < manifest ; 2014 ; Asia Pacific Journal on Computational Engineering Volume 1 ; 1 >
-        au < manifest ; 2015 ; Asia Pacific Journal on Computational Engineering Volume 2 ; 2 >
+        au < doNotProcess ; 2014 ; Asia Pacific Journal on Computational Engineering Volume 1 ; 1 >
+        au < doNotProcess ; 2015 ; Asia Pacific Journal on Computational Engineering Volume 2 ; 2 >
   
     }
 
@@ -153,16 +157,18 @@
   
         title <
           name = Asian Journal of Gambling Issues and Public Health ;
-          issn = 2195-3007 
+          eissn = 2195-3007 
         >
   
         param[base_url] = http://www.ajgiph.com/
         param[journal_issn] = 2195-3007 
-        comment[platform] = BioMedCentralPlugin
+        comment[platform] = move to SpringerOpen
   
-        au < manifest ; 2013 ; Asian Journal of Gambling Issues and Public Health Volume 3 ; 3 >
-        au < manifest ; 2014 ; Asian Journal of Gambling Issues and Public Health Volume 4 ; 4 >
-        au < manifest ; 2015 ; Asian Journal of Gambling Issues and Public Health Volume 5 ; 5 >
+        au < doNotProcess ; 2010 ; Asian Journal of Gambling Issues and Public Health Volume 1 ; 1 >
+        au < doNotProcess ; 2011 ; Asian Journal of Gambling Issues and Public Health Volume 2 ; 2 >
+        au < doNotProcess ; 2013 ; Asian Journal of Gambling Issues and Public Health Volume 3 ; 3 >
+        au < doNotProcess ; 2014 ; Asian Journal of Gambling Issues and Public Health Volume 4 ; 4 >
+        au < doNotProcess ; 2015 ; Asian Journal of Gambling Issues and Public Health Volume 5 ; 5 >
   
     }
   
@@ -179,6 +185,7 @@
   
         au < manifest ; 2014 ; Bioresources and Bioprocessing Volume 1 ; 1 >
         au < manifest ; 2015 ; Bioresources and Bioprocessing Volume 2 ; 2 >
+        au < exists ; 2016 ; Bioresources and Bioprocessing Volume 3 ; 3 >
   
     }
     {
@@ -195,6 +202,7 @@
         au < manifest ; 2013 ; Botanical Studies Volume 54 ; 54 >
         au < manifest ; 2014 ; Botanical Studies Volume 55 ; 55 >
         au < manifest ; 2015 ; Botanical Studies Volume 56 ; 56 >
+        au < exists ; 2016 ; Botanical Studies Volume 57 ; 57 >
   
     }
   
@@ -222,6 +230,7 @@
         au < manifest ; 2013 ; Boundary Value Problems Volume 2013 ; 2013 >
         au < manifest ; 2014 ; Boundary Value Problems Volume 2014 ; 2014 >
         au < manifest ; 2015 ; Boundary Value Problems Volume 2015 ; 2015 >
+        au < exists ; 2016 ; Boundary Value Problems Volume 2016 ; 2016 >
   
     }
 
@@ -229,15 +238,15 @@
   
         title <
           name = Brazilian Journal of Science and Technology ;
-          issn = 2196-288X 
+          eissn = 2196-288X 
         >
   
         param[base_url] = http://www.bjst-journal.com/
         param[journal_issn] = 2196-288X 
-        comment[platform] = BioMedCentralPlugin
+        comment[platform] = move to SpringerOpen
 
-        au < manifest ; 2014 ; Brazilian Journal of Science and Technology Volume 1 ; 1 >
-        au < manifest ; 2015 ; Brazilian Journal of Science and Technology Volume 2 ; 2 >
+        au < doNotProcess ; 2014 ; Brazilian Journal of Science and Technology Volume 1 ; 1 >
+        au < doNotProcess ; 2015 ; Brazilian Journal of Science and Technology Volume 2 ; 2 >
 
     }
 
@@ -254,6 +263,7 @@
 
         au < manifest  ; 2014 ; Chemical and Biological Technologies in Agriculture Volume 1 ; 1 >
         au < manifest  ; 2015 ; Chemical and Biological Technologies in Agriculture Volume 2 ; 2 >
+        au < exists  ; 2016 ; Chemical and Biological Technologies in Agriculture Volume 3 ; 3 >
 
     }
 
@@ -261,15 +271,15 @@
   
         title <
           name = City, Territory and Architecture ;
-          issn = 2195-2701 
+          eissn = 2195-2701 
         >
   
         param[base_url] = http://www.cityterritoryarchitecture.com/
         param[journal_issn] = 2195-2701 
-        comment[platform] = BioMedCentralPlugin
+        comment[platform] = move to SpringerOpen
   
-        au < manifest ; 2014 ; City, Territory and Architecture Volume 1 ; 1 >
-        au < manifest ; 2015 ; City, Territory and Architecture Volume 2 ; 2 >
+        au < doNotProcess ; 2014 ; City, Territory and Architecture Volume 1 ; 1 >
+        au < doNotProcess ; 2015 ; City, Territory and Architecture Volume 2 ; 2 >
   
     }
   
@@ -288,6 +298,7 @@
         au < down ; 2013 ; Clinical and Translational Medicine Volume 2 ; 2 >
         au < manifest ; 2014 ; Clinical and Translational Medicine Volume 3 ; 3 >
         au < manifest ; 2015 ; Clinical and Translational Medicine Volume 4 ; 4 >
+        au < exists ; 2016 ; Clinical and Translational Medicine Volume 5 ; 5 >
   
     }
   
@@ -313,16 +324,16 @@
   
         title <
           name = Complex Adaptive Systems Modeling ;
-          issn = 2194-3206 
+          eissn = 2194-3206 
         >
   
         param[base_url] = http://www.casmodeling.com/
         param[journal_issn] = 2194-3206 
-        comment[platform] = BioMedCentralPlugin
+        comment[platform] = move to SpringerOpen
   
-        au < manifest ; 2013 ; Complex Adaptive Systems Modeling Volume 1 ; 1 >
-        au < manifest ; 2014 ; Complex Adaptive Systems Modeling Volume 2 ; 2 >
-        au < manifest ; 2015 ; Complex Adaptive Systems Modeling Volume 3 ; 3 >
+        au < doNotProcess ; 2013 ; Complex Adaptive Systems Modeling Volume 1 ; 1 >
+        au < doNotProcess ; 2014 ; Complex Adaptive Systems Modeling Volume 2 ; 2 >
+        au < doNotProcess ; 2015 ; Complex Adaptive Systems Modeling Volume 3 ; 3 >
   
     }
   
@@ -330,14 +341,14 @@
   
         title <
           name = Computational Cognitive Science ;
-          issn = 2195-3961 
+          eissn = 2195-3961 
         >
   
         param[base_url] = http://www.computationalcognitivescience.com/
         param[journal_issn] = 2195-3961 
-        comment[platform] = BioMedCentralPlugin
+        comment[platform] = move to SpringerOpen
   
-        au < manifest ; 2015 ; Computational Cognitive Science Volume 1 ; 1 >
+        au < doNotProcess ; 2015 ; Computational Cognitive Science Volume 1 ; 1 >
   
     }
   
@@ -382,34 +393,18 @@
   
         title <
           name = Decision Analytics ;
-          issn = 2193-8636 
+          eissn = 2193-8636 
         >
   
         param[base_url] = http://www.decisionanalyticsjournal.com/
         param[journal_issn] = 2193-8636 
-        comment[platform] = BioMedCentralPlugin
+        comment[platform] = move to SpringerOpen
   
-        au < manifest ; 2014 ; Decision Analytics Volume 1 ; 1 >
-        au < manifest ; 2015 ; Decision Analytics Volume 2 ; 2 >
-  
-    }
-  
-    {
-  
-        title <
-          name = Earth Perspectives ;
-          issn = 2194-6434 
-        >
-  
-        param[base_url] = http://www.earth-perspectives.com/
-        param[journal_issn] = 2194-6434 
-        comment[platform] = BioMedCentralPlugin
-  
-        au < manifest ; 2014 ; Earth Perspectives Volume 1 ; 1 >
-        au < manifest ; 2015 ; Earth Perspectives Volume 2 ; 2 >
+        au < doNotProcess ; 2014 ; Decision Analytics Volume 1 ; 1 >
+        au < doNotProcess ; 2015 ; Decision Analytics Volume 2 ; 2 >
   
     }
-
+  
     {
   
         title <
@@ -423,7 +418,24 @@
 
         au < manifest ; 2014 ; Earth, Planets and Space Volume 66 ; 66 >
         au < manifest ; 2015 ; Earth, Planets and Space Volume 67 ; 67 >
+        au < exists ; 2016 ; Earth, Planets and Space Volume 68 ; 68 >
 
+    }
+
+    {
+  
+        title <
+          name = Earth Perspectives ;
+          eissn = 2194-6434 
+        >
+  
+        param[base_url] = http://www.earth-perspectives.com/
+        param[journal_issn] = 2194-6434 
+        comment[platform] = move to SpringerOpen
+  
+        au < doNotProcess ; 2014 ; Earth Perspectives Volume 1 ; 1 >
+        au < doNotProcess ; 2015 ; Earth Perspectives Volume 2 ; 2 >
+  
     }
 
     {
@@ -435,12 +447,13 @@
   
         param[base_url] = http://www.ecologicalprocesses.com/
         param[journal_issn] = 2192-1709 
-        comment[platform] = BioMedCentralPlugin
+        comment[platform] = move to SpringerOpen
   
-        au < manifest ; 2012 ; Ecological Processes Volume 1 ; 1 >
-        au < manifest ; 2013 ; Ecological Processes Volume 2 ; 2 >
-        au < manifest ; 2014 ; Ecological Processes Volume 3 ; 3 >
-        au < manifest ; 2015 ; Ecological Processes Volume 4 ; 4 >
+        au < doNotProcess ; 2012 ; Ecological Processes Volume 1 ; 1 >
+        au < doNotProcess ; 2013 ; Ecological Processes Volume 2 ; 2 >
+        au < doNotProcess ; 2014 ; Ecological Processes Volume 3 ; 3 >
+        au < doNotProcess ; 2015 ; Ecological Processes Volume 4 ; 4 >
+        au < doNotProcess ; 2016 ; Ecological Processes Volume 5 ; 5 >
   
     }
   
@@ -457,6 +470,7 @@
   
         au < manifest ; 2014 ; EJNMMI Physics Volume 1 ; 1 >
         au < manifest ; 2015 ; EJNMMI Physics Volume 2 ; 2 >
+        au < exists ; 2016 ; EJNMMI Physics Volume 3 ; 3 >
   
     }
   
@@ -469,13 +483,13 @@
   
         param[base_url] = http://www.ejnmmires.com/
         param[journal_issn] = 2191-219X 
-        comment[platform] = BioMedCentralPlugin
+        comment[platform] = move to SpringerOpen
   
-        au < manifest ; 2011 ; EJNMMI Research Volume 1 ; 1 >
-        au < manifest ; 2012 ; EJNMMI Research Volume 2 ; 2 >
-        au < manifest ; 2013 ; EJNMMI Research Volume 3 ; 3 >
-        au < manifest ; 2014 ; EJNMMI Research Volume 4 ; 4 >
-        au < manifest ; 2015 ; EJNMMI Research Volume 5 ; 5 >
+        au < doNotProcess ; 2011 ; EJNMMI Research Volume 1 ; 1 >
+        au < doNotProcess ; 2012 ; EJNMMI Research Volume 2 ; 2 >
+        au < doNotProcess ; 2013 ; EJNMMI Research Volume 3 ; 3 >
+        au < doNotProcess ; 2014 ; EJNMMI Research Volume 4 ; 4 >
+        au < doNotProcess ; 2015 ; EJNMMI Research Volume 5 ; 5 >
   
     }
   
@@ -483,16 +497,16 @@
   
         title <
           name = Empirical Research in Vocational Education and Training ;
-          issn = 1877-6345 
+          eissn = 1877-6345 
         >
   
         param[base_url] = http://www.ervet-journal.com/
         param[journal_issn] = 1877-6345 
-        comment[platform] = BioMedCentralPlugin
+        comment[platform] = move to SpringerOpen
   
-        au < manifest ; 2013 ; Empirical Research in Vocational Education and Training Volume 5 ; 5 >
-        au < manifest ; 2014 ; Empirical Research in Vocational Education and Training Volume 6 ; 6 >
-        au < manifest ; 2015 ; Empirical Research in Vocational Education and Training Volume 7 ; 7 >
+        au < doNotProcess ; 2013 ; Empirical Research in Vocational Education and Training Volume 5 ; 5 >
+        au < doNotProcess ; 2014 ; Empirical Research in Vocational Education and Training Volume 6 ; 6 >
+        au < doNotProcess ; 2015 ; Empirical Research in Vocational Education and Training Volume 7 ; 7 >
   
     }
   
@@ -512,6 +526,7 @@
         au < down ; 2013 ; Energy, Sustainability and Society Volume 3 ; 3 >
         au < manifest ; 2014 ; Energy, Sustainability and Society Volume 4 ; 4 >
         au < manifest ; 2015 ; Energy, Sustainability and Society Volume 5 ; 5 >
+        au < exists ; 2016 ; Energy, Sustainability and Society Volume 6 ; 6 >
   
     }
   
@@ -531,6 +546,7 @@
         au < manifest ; 2013 ; Environmental Sciences Europe Volume 25 ; 25 >
         au < manifest ; 2014 ; Environmental Sciences Europe Volume 26 ; 26 >
         au < manifest ; 2015 ; Environmental Sciences Europe Volume 27 ; 27 >
+        au < exists ; 2016 ; Environmental Sciences Europe Volume 28 ; 28 >
   
     }
   
@@ -538,17 +554,18 @@
   
         title <
           name = Environmental Systems Research ;
-          issn = 2193-2697 
+          eissn = 2193-2697 
         >
   
         param[base_url] = http://www.environmentalsystemsresearch.com/
         param[journal_issn] = 2193-2697 
-        comment[platform] = BioMedCentralPlugin
+        comment[platform] = move to SpringerOpen
   
-        au < manifest ; 2012 ; Environmental Systems Research Volume 1 ; 1 >
-        au < manifest ; 2013 ; Environmental Systems Research Volume 2 ; 2 >
-        au < manifest ; 2014 ; Environmental Systems Research Volume 3 ; 3 >
-        au < manifest ; 2015 ; Environmental Systems Research Volume 4 ; 4 >
+        au < doNotProcess ; 2012 ; Environmental Systems Research Volume 1 ; 1 >
+        au < doNotProcess ; 2013 ; Environmental Systems Research Volume 2 ; 2 >
+        au < doNotProcess ; 2014 ; Environmental Systems Research Volume 3 ; 3 >
+        au < doNotProcess ; 2015 ; Environmental Systems Research Volume 4 ; 4 >
+        au < doNotProcess ; 2016 ; Environmental Systems Research Volume 5 ; 5 >
   
     }
   
@@ -567,6 +584,7 @@
         au < manifest ; 2013 ; EPJ Data Science Volume 2 ; 2 >
         au < manifest ; 2014 ; EPJ Data Science Volume 3 ; 3 >
         au < manifest ; 2015 ; EPJ Data Science Volume 4 ; 4 >
+        au < exists ; 2016 ; EPJ Data Science Volume 5 ; 5 >
   
     }
   
@@ -584,6 +602,7 @@
         au < manifest ; 2013 ; EPJ Nonlinear Biomedical Physics Volume 1 ; 1 >
         au < manifest ; 2014 ; EPJ Nonlinear Biomedical Physics Volume 2 ; 2 >
         au < manifest ; 2015 ; EPJ Nonlinear Biomedical Physics Volume 3 ; 3 >
+        au < exists ; 2016 ; EPJ Nonlinear Biomedical Physics Volume 4 ; 4 >
   
     }
   
@@ -600,6 +619,7 @@
   
         au < manifest ; 2014 ; EPJ Quantum Technology Volume 1 ; 1 >
         au < manifest ; 2015 ; EPJ Quantum Technology Volume 2 ; 2 >
+        au < exists ; 2016 ; EPJ Quantum Technology Volume 3 ; 3 >
   
     }
   
@@ -637,6 +657,7 @@
         au < manifest ; 2013 ; EURASIP Journal on Advances in Signal Processing Volume 2013 ; 2013 >
         au < manifest ; 2014 ; EURASIP Journal on Advances in Signal Processing Volume 2014 ; 2014 >
         au < manifest ; 2015 ; EURASIP Journal on Advances in Signal Processing Volume 2015 ; 2015 >
+        au < exists ; 2016 ; EURASIP Journal on Advances in Signal Processing Volume 2016 ; 2016 >
   
     }
   
@@ -661,6 +682,7 @@
         au < manifest ; 2013 ; EURASIP Journal on Audio, Speech, and Music Processing Volume 2013 ; 2013 >
         au < manifest ; 2014 ; EURASIP Journal on Audio, Speech, and Music Processing Volume 2014 ; 2014 >
         au < manifest ; 2015 ; EURASIP Journal on Audio, Speech, and Music Processing Volume 2015 ; 2015 >
+        au < exists ; 2016 ; EURASIP Journal on Audio, Speech, and Music Processing Volume 2016 ; 2016 >
   
     }
   
@@ -686,6 +708,7 @@
         au < manifest ; 2013 ; EURASIP Journal on Bioinformatics and Systems Biology Volume 2013 ; 2013 >
         au < manifest ; 2014 ; EURASIP Journal on Bioinformatics and Systems Biology Volume 2014 ; 2014 >
         au < manifest ; 2015 ; EURASIP Journal on Bioinformatics and Systems Biology Volume 2015 ; 2015 >
+        au < exists ; 2016 ; EURASIP Journal on Bioinformatics and Systems Biology Volume 2016 ; 2016 >
   
     }
   
@@ -720,6 +743,7 @@
         au < doNotProcess ; 2013 ; EURASIP Journal on Embedded Systems Volume 2013 ; 2013 >
         au < manifest ; 2014 ; EURASIP Journal on Embedded Systems Volume 2014 ; 2014 >
         au < manifest ; 2015 ; EURASIP Journal on Embedded Systems Volume 2015 ; 2015 >
+        au < exists ; 2016 ; EURASIP Journal on Embedded Systems Volume 2016 ; 2016 >
         }
     }
   
@@ -744,6 +768,7 @@
         au < manifest ; 2013 ; EURASIP Journal on Image and Video Processing Volume 2013 ; 2013 >
         au < manifest ; 2014 ; EURASIP Journal on Image and Video Processing Volume 2014 ; 2014 >
         au < manifest ; 2015 ; EURASIP Journal on Image and Video Processing Volume 2015 ; 2015 >
+        au < exists ; 2016 ; EURASIP Journal on Image and Video Processing Volume 2016 ; 2016 >
   
     }
   
@@ -768,6 +793,7 @@
         au < manifest ; 2013 ; EURASIP Journal on Information Security Volume 2013 ; 2013 >
         au < manifest ; 2014 ; EURASIP Journal on Information Security Volume 2014 ; 2014 >
         au < manifest ; 2015 ; EURASIP Journal on Information Security Volume 2015 ; 2015 >
+        au < exists ; 2016 ; EURASIP Journal on Information Security Volume 2016 ; 2016 >
   
     }
   
@@ -789,6 +815,7 @@
         au < manifest ; 2013 ; EURASIP Journal on Wireless Communications and Networking Volume 2013 ; 2013 >
         au < manifest ; 2014 ; EURASIP Journal on Wireless Communications and Networking Volume 2014 ; 2014 >
         au < manifest ; 2015 ; EURASIP Journal on Wireless Communications and Networking Volume 2015 ; 2015 >
+        au < exists ; 2016 ; EURASIP Journal on Wireless Communications and Networking Volume 2016 ; 2016 >
   
     }
   
@@ -815,17 +842,17 @@
   
         title <
           name = Fire Science Reviews ;
-          issn = 2193-0414 
+          eissn = 2193-0414 
         >
   
         param[base_url] = http://www.firesciencereviews.com/
         param[journal_issn] = 2193-0414 
-        comment[platform] = BioMedCentralPlugin
+        comment[platform] = move to SpringerOpen
   
-        au < manifest ; 2012 ; Fire Science Reviews Volume 1 ; 1 >
-        au < manifest ; 2013 ; Fire Science Reviews Volume 2 ; 2 >
-        au < manifest ; 2014 ; Fire Science Reviews Volume 3 ; 3 >
-        au < manifest ; 2015 ; Fire Science Reviews Volume 4 ; 4 >
+        au < doNotProcess ; 2012 ; Fire Science Reviews Volume 1 ; 1 >
+        au < doNotProcess ; 2013 ; Fire Science Reviews Volume 2 ; 2 >
+        au < doNotProcess ; 2014 ; Fire Science Reviews Volume 3 ; 3 >
+        au < doNotProcess ; 2015 ; Fire Science Reviews Volume 4 ; 4 >
   
     }
   
@@ -854,6 +881,7 @@
         au < manifest ; 2013 ; Fixed Point Theory and Applications Volume 2013 ; 2013 >
         au < manifest ; 2014 ; Fixed Point Theory and Applications Volume 2014 ; 2014 >
         au < manifest ; 2015 ; Fixed Point Theory and Applications Volume 2015 ; 2015 >
+        au < exists ; 2016 ; Fixed Point Theory and Applications Volume 2016 ; 2016 >
  
     }
 
@@ -870,6 +898,7 @@
 
         au < manifest ; 2014 ; Forest Ecosystems Volume 1 ; 1 >
         au < manifest ; 2015 ; Forest Ecosystems Volume 2 ; 2 >
+        au < exists ; 2016 ; Forest Ecosystems Volume 3 ; 3 >
 
     }
 
@@ -877,15 +906,15 @@
   
         title <
           name = Functional Linguistics ;
-          issn = 2196-419X 
+          eissn = 2196-419X 
         >
   
         param[base_url] = http://www.functionallinguistics.com/
         param[journal_issn] = 2196-419X 
-        comment[platform] = BioMedCentralPlugin
+        comment[platform] = move to SpringerOpen
 
-        au < manifest ; 2014 ; Functional Linguistics Volume 1 ; 1 >
-        au < manifest ; 2015 ; Functional Linguistics Volume 2 ; 2 >
+        au < doNotProcess ; 2014 ; Functional Linguistics Volume 1 ; 1 >
+        au < doNotProcess ; 2015 ; Functional Linguistics Volume 2 ; 2 >
 
     }
 
@@ -893,15 +922,15 @@
   
         title <
           name = Geoscience Letters ;
-          issn = 2196-4092 
+          eissn = 2196-4092 
         >
   
         param[base_url] = http://www.geoscienceletters.com/
         param[journal_issn] = 2196-4092 
-        comment[platform] = BioMedCentralPlugin
+        comment[platform] = move to SpringerOpen
 
-        au < manifest ; 2014 ; Geoscience Letters Volume 1 ; 1 >
-        au < manifest ; 2015 ; Geoscience Letters Volume 2 ; 2 >
+        au < doNotProcess ; 2014 ; Geoscience Letters Volume 1 ; 1 >
+        au < doNotProcess ; 2015 ; Geoscience Letters Volume 2 ; 2 >
 
     }
 
@@ -919,23 +948,24 @@
         au < manifest ; 2013 ; Geothermal Energy Volume 1 ; 1 >
         au < down ; 2014 ; Geothermal Energy Volume 2 ; 2 >
         au < manifest ; 2015 ; Geothermal Energy Volume 3 ; 3 >
+        au < exists ; 2016 ; Geothermal Energy Volume 4 ; 4 >
   
     }
   
     {
   
         title <
-          name = Health and Justice ;
-          issn = 2194-7899 
+          name = Health & Justice ;
+          eissn = 2194-7899 
         >
   
-        param[base_url] = http://www.healthandjusticejournal.com/
+        param[base_url] = http://healthandjusticejournal.springeropen.com/
         param[journal_issn] = 2194-7899 
-        comment[platform] = BioMedCentralPlugin
+        comment[platform] = move to SpringerOpen
   
-        au < manifest ; 2013 ; Health and Justice Volume 1 ; 1 >
-        au < manifest ; 2014 ; Health and Justice Volume 2 ; 2 >
-        au < manifest ; 2015 ; Health and Justice Volume 3 ; 3 >
+        au < doNotProcess ; 2013 ; Health & Justice Volume 1 ; 1 >
+        au < doNotProcess ; 2014 ; Health & Justice Volume 2 ; 2 >
+        au < doNotProcess ; 2015 ; Health & Justice Volume 3 ; 3 >
   
     }
   
@@ -948,13 +978,13 @@
   
         param[base_url] = http://www.healtheconomicsreview.com/
         param[journal_issn] = 2191-1991 
-        comment[platform] = BioMedCentralPlugin
+        comment[platform] = move to SpringerOpen
   
-        au < manifest ; 2011 ; Health Economics Review Volume 1 ; 1 >
-        au < manifest ; 2012 ; Health Economics Review Volume 2 ; 2 >
-        au < manifest ; 2013 ; Health Economics Review Volume 3 ; 3 >
-        au < manifest ; 2014 ; Health Economics Review Volume 4 ; 4 >
-        au < manifest ; 2015 ; Health Economics Review Volume 5 ; 5 >
+        au < doNotProcess ; 2011 ; Health Economics Review Volume 1 ; 1 >
+        au < doNotProcess ; 2012 ; Health Economics Review Volume 2 ; 2 >
+        au < doNotProcess ; 2013 ; Health Economics Review Volume 3 ; 3 >
+        au < doNotProcess ; 2014 ; Health Economics Review Volume 4 ; 4 >
+        au < doNotProcess ; 2015 ; Health Economics Review Volume 5 ; 5 >
   
     }
   
@@ -969,12 +999,13 @@
   
         param[base_url] = http://www.thehugojournal.com/
         param[journal_issn] = 1877-6566
-        comment[platform] = BioMedCentralPlugin
+        comment[platform] = move to SpringerOpen
+        # ceased publishing with SpringerOpen
   
-        au < manifest ; 2012 ; HUGO Journal Volume 6 ; 6 >
-        au < manifest ; 2013 ; HUGO Journal Volume 7 ; 7 >
-        au < manifest ; 2014 ; HUGO Journal Volume 8 ; 8 >
-        au < manifest ; 2015 ; HUGO Journal Volume 9 ; 9 >
+        au < doNotProcess ; 2012 ; The HUGO Journal Volume 6 ; 6 >
+        au < doNotProcess ; 2013 ; The HUGO Journal Volume 7 ; 7 >
+        au < doNotProcess ; 2014 ; The HUGO Journal Volume 8 ; 8 >
+        au < doNotProcess ; 2015 ; The HUGO Journal Volume 9 ; 9 >
   
     }
   
@@ -982,18 +1013,18 @@
   
         title <
           name = Human-centric Computing and Information Sciences ;
-          issn = 2192-1962 
+          eissn = 2192-1962 
         >
   
         param[base_url] = http://www.hcis-journal.com/
         param[journal_issn] = 2192-1962 
-        comment[platform] = BioMedCentralPlugin
+        comment[platform] = move to SpringerOpen
   
-        au < manifest ; 2011 ; Human-centric Computing and Information Sciences Volume 1 ; 1 >
-        au < manifest ; 2012 ; Human-centric Computing and Information Sciences Volume 2 ; 2 >
-        au < manifest ; 2013 ; Human-centric Computing and Information Sciences Volume 3 ; 3 >
-        au < manifest ; 2014 ; Human-centric Computing and Information Sciences Volume 4 ; 4 >
-        au < manifest ; 2015 ; Human-centric Computing and Information Sciences Volume 5 ; 5 >
+        au < doNotProcess ; 2011 ; Human-centric Computing and Information Sciences Volume 1 ; 1 >
+        au < doNotProcess ; 2012 ; Human-centric Computing and Information Sciences Volume 2 ; 2 >
+        au < doNotProcess ; 2013 ; Human-centric Computing and Information Sciences Volume 3 ; 3 >
+        au < doNotProcess ; 2014 ; Human-centric Computing and Information Sciences Volume 4 ; 4 >
+        au < doNotProcess ; 2015 ; Human-centric Computing and Information Sciences Volume 5 ; 5 >
   
     }
   
@@ -1001,16 +1032,16 @@
   
         title <
           name = In Silico Pharmacology ;
-          issn = 2193-9616 
+          eissn = 2193-9616 
         >
   
         param[base_url] = http://www.in-silico-pharmacology.com/
         param[journal_issn] = 2193-9616 
-        comment[platform] = BioMedCentralPlugin
+        comment[platform] = move to SpringerOpen
   
-        au < manifest ; 2013 ; In Silico Pharmacology Volume 1 ; 1 >
-        au < manifest ; 2014 ; In Silico Pharmacology Volume 2 ; 2 >
-        au < manifest ; 2015 ; In Silico Pharmacology Volume 3 ; 3 >
+        au < doNotProcess ; 2013 ; In Silico Pharmacology Volume 1 ; 1 >
+        au < doNotProcess ; 2014 ; In Silico Pharmacology Volume 2 ; 2 >
+        au < doNotProcess ; 2015 ; In Silico Pharmacology Volume 3 ; 3 >
   
     }
 
@@ -1018,15 +1049,15 @@
   
         title <
           name = Injury Epidemiology ;
-          issn = 2197-1714 
+          eissn = 2197-1714 
         >
   
         param[base_url] = http://www.injepijournal.com/
         param[journal_issn] = 2197-1714 
-        comment[platform] = BioMedCentralPlugin
+        comment[platform] = move to SpringerOpen
 
-        au < manifest ; 2014 ; Injury Epidemiology Volume 1 ; 1 >
-        au < manifest ; 2015 ; Injury Epidemiology Volume 2 ; 2 >
+        au < doNotProcess ; 2014 ; Injury Epidemiology Volume 1 ; 1 >
+        au < doNotProcess ; 2015 ; Injury Epidemiology Volume 2 ; 2 >
 
     }
 
@@ -1034,17 +1065,18 @@
   
         title <
           name = Integrating Materials and Manufacturing Innovation ;
-          issn = 2193-9772 
+          issn = 2193-9764 ;
+          eissn = 2193-9772 
         >
   
         param[base_url] = http://www.immijournal.com/
         param[journal_issn] = 2193-9772 
-        comment[platform] = BioMedCentralPlugin
+        comment[platform] =  move to SpringerOpen
   
-        au < manifest ; 2012 ; Integrating Materials and Manufacturing Innovation Volume 1 ; 1 >
+        au < doNotProcess ; 2012 ; Integrating Materials and Manufacturing Innovation Volume 1 ; 1 >
         au < down ; 2013 ; Integrating Materials and Manufacturing Innovation Volume 2 ; 2 >
-        au < manifest ; 2014 ; Integrating Materials and Manufacturing Innovation Volume 3 ; 3 >
-        au < manifest ; 2015 ; Integrating Materials and Manufacturing Innovation Volume 4 ; 4 >
+        au < doNotProcess ; 2014 ; Integrating Materials and Manufacturing Innovation Volume 3 ; 3 >
+        au < doNotProcess ; 2015 ; Integrating Materials and Manufacturing Innovation Volume 4 ; 4 >
   
     }
   
@@ -1052,16 +1084,16 @@
   
         title <
           name = Intensive Care Medicine Experimental ;
-          issn = 2197-425X 
+          eissn = 2197-425X 
         >
   
         param[base_url] = http://www.icm-experimental.com/
         param[journal_issn] = 2197-425X 
-        comment[platform] = BioMedCentralPlugin
+        comment[platform] = move to SpringerOpen
   
-        au < manifest ; 2013 ; Intensive Care Medicine Experimental Volume 1 ; 1 >
-        au < manifest ; 2014 ; Intensive Care Medicine Experimental Volume 2 ; 2 >
-        au < manifest ; 2015 ; Intensive Care Medicine Experimental Volume 3 ; 3 >
+        au < doNotProcess ; 2013 ; Intensive Care Medicine Experimental Volume 1 ; 1 >
+        au < doNotProcess ; 2014 ; Intensive Care Medicine Experimental Volume 2 ; 2 >
+        au < doNotProcess ; 2015 ; Intensive Care Medicine Experimental Volume 3 ; 3 >
   
     }
   
@@ -1069,17 +1101,18 @@
   
         title <
           name = International Aquatic Research ;
-          issn = 2008-6970 
+          issn = 2008-4935 ;
+          eissn = 2008-6970 
         >
   
         param[base_url] = http://www.intaquares.com/
         param[journal_issn] = 2008-6970 
-        comment[platform] = BioMedCentralPlugin
+        comment[platform] = move to SpringerOpen
   
-        au < manifest ; 2012 ; International Aquatic Research Volume 4 ; 4 >
-        au < manifest ; 2013 ; International Aquatic Research Volume 5 ; 5 >
-        au < manifest ; 2014 ; International Aquatic Research Volume 6 ; 6 >
-        au < manifest ; 2015 ; International Aquatic Research Volume 7 ; 7 >
+        au < doNotProcess ; 2012 ; International Aquatic Research Volume 4 ; 4 >
+        au < doNotProcess ; 2013 ; International Aquatic Research Volume 5 ; 5 >
+        au < doNotProcess ; 2014 ; International Aquatic Research Volume 6 ; 6 >
+        au < doNotProcess ; 2015 ; International Aquatic Research Volume 7 ; 7 >
   
     }
   
@@ -1093,12 +1126,12 @@
   
         param[base_url] = http://www.advancedstructeng.com/
         param[journal_issn] = 2008-6695 
-        comment[platform] = BioMedCentralPlugin
+        comment[platform] = move to SpringerOpen
   
-        au < manifest ; 2012 ; International Journal of Advanced Structural Engineering Volume 4 ; 4>
-        au < manifest ; 2013 ; International Journal of Advanced Structural Engineering Volume 5 ; 5 >
-        au < manifest ; 2014 ; International Journal of Advanced Structural Engineering Volume 6 ; 6 >
-        au < manifest ; 2015 ; International Journal of Advanced Structural Engineering Volume 7 ; 7 >
+        au < doNotProcess ; 2012 ; International Journal of Advanced Structural Engineering Volume 4 ; 4>
+        au < doNotProcess ; 2013 ; International Journal of Advanced Structural Engineering Volume 5 ; 5 >
+        au < doNotProcess ; 2014 ; International Journal of Advanced Structural Engineering Volume 6 ; 6 >
+        au < doNotProcess ; 2015 ; International Journal of Advanced Structural Engineering Volume 7 ; 7 >
   
     }
   
@@ -1106,16 +1139,16 @@
   
         title <
           name = International Journal of Bipolar Disorders ;
-          issn = 2194-7511 
+          eissn = 2194-7511 
         >
   
         param[base_url] = http://www.journalbipolardisorders.com/
         param[journal_issn] = 2194-7511 
-        comment[platform] = BioMedCentralPlugin
+        comment[platform] = move to SpringerOpen
   
-        au < manifest ; 2013 ; International Journal of Bipolar Disorders Volume 1 ; 1 >
-        au < manifest ; 2014 ; International Journal of Bipolar Disorders Volume 2 ; 2 >
-        au < manifest ; 2015 ; International Journal of Bipolar Disorders Volume 3 ; 3 >
+        au < doNotProcess ; 2013 ; International Journal of Bipolar Disorders Volume 1 ; 1 >
+        au < doNotProcess ; 2014 ; International Journal of Bipolar Disorders Volume 2 ; 2 >
+        au < doNotProcess ; 2015 ; International Journal of Bipolar Disorders Volume 3 ; 3 >
   
     }
   
@@ -1129,13 +1162,13 @@
   
         param[base_url] = http://www.intjem.com/
         param[journal_issn] = 1865-1372
-        comment[platform] = BioMedCentralPlugin
+        comment[platform] = move to SpringerOpen
   
-        au < manifest ; 2011 ; International Journal of Emergency Medicine Volume 4 ; 4 >
-        au < manifest ; 2012 ; International Journal of Emergency Medicine Volume 5 ; 5 >
-        au < manifest ; 2013 ; International Journal of Emergency Medicine Volume 6 ; 6 >
-        au < manifest ; 2014 ; International Journal of Emergency Medicine Volume 7 ; 7 >
-        au < manifest ; 2015 ; International Journal of Emergency Medicine Volume 8 ; 8 >
+        au < doNotProcess ; 2011 ; International Journal of Emergency Medicine Volume 4 ; 4 >
+        au < doNotProcess ; 2012 ; International Journal of Emergency Medicine Volume 5 ; 5 >
+        au < doNotProcess ; 2013 ; International Journal of Emergency Medicine Volume 6 ; 6 >
+        au < doNotProcess ; 2014 ; International Journal of Emergency Medicine Volume 7 ; 7 >
+        au < doNotProcess ; 2015 ; International Journal of Emergency Medicine Volume 8 ; 8 >
   
     }
   
@@ -1143,17 +1176,18 @@
   
         title <
           name = International Journal of Energy and Environmental Engineering ;
-          issn = 2251-6832 
+          issn = 2008-9163 ;
+          eissn = 2251-6832 
         >
   
         param[base_url] = http://www.journal-ijeee.com/
         param[journal_issn] = 2251-6832 
-        comment[platform] = BioMedCentralPlugin
+        comment[platform] = move to SpringerOpen
   
-        au < manifest ; 2012 ; International Journal of Energy and Environmental Engineering Volume 3 ; 3 >
+        au < doNotProcess ; 2012 ; International Journal of Energy and Environmental Engineering Volume 3 ; 3 >
         au < down ; 2013 ; International Journal of Energy and Environmental Engineering Volume 4 ; 4 >
-        au < manifest ; 2014 ; International Journal of Energy and Environmental Engineering Volume 5 ; 5 >
-        au < manifest ; 2015 ; International Journal of Energy and Environmental Engineering Volume 6 ; 6 >
+        au < doNotProcess ; 2014 ; International Journal of Energy and Environmental Engineering Volume 5 ; 5 >
+        au < doNotProcess ; 2015 ; International Journal of Energy and Environmental Engineering Volume 6 ; 6 >
   
     }
   
@@ -1161,15 +1195,15 @@
   
         title <
           name = International Journal of Food Contamination ;
-          issn = 2196-2804 
+          eissn = 2196-2804 
         >
   
         param[base_url] = http://www.foodcontaminationjournal.com/
         param[journal_issn] = 2196-2804 
-        comment[platform] = BioMedCentralPlugin
+        comment[platform] = move to SpringerOpen
   
-        au < manifest ; 2014 ; International Journal of Food Contamination Volume 1 ; 1 >
-        au < manifest ; 2015 ; International Journal of Food Contamination Volume 2 ; 2 >
+        au < doNotProcess ; 2014 ; International Journal of Food Contamination Volume 1 ; 1 >
+        au < doNotProcess ; 2015 ; International Journal of Food Contamination Volume 2 ; 2 >
   
     }
   
@@ -1177,33 +1211,35 @@
   
         title <
           name = International Journal of Industrial Chemistry ;
-          issn = 2228-5547 
+          issn = 2228-5970 ;
+          eissn = 2228-5547 
         >
   
         param[base_url] = http://www.industchem.com/
         param[journal_issn] = 2228-5547 
-        comment[platform] = BioMedCentralPlugin
+        comment[platform] = move to SpringerOpen
   
-        au < manifest ; 2012 ; International Journal of Industrial Chemistry Volume 3 ; 3 >
-        au < manifest ; 2013 ; International Journal of Industrial Chemistry Volume 4 ; 4 >
-        au < manifest ; 2014 ; International Journal of Industrial Chemistry Volume 5 ; 5 >
-        au < manifest ; 2015 ; International Journal of Industrial Chemistry Volume 6 ; 6 >
+        au < doNotProcess ; 2012 ; International Journal of Industrial Chemistry Volume 3 ; 3 >
+        au < doNotProcess ; 2013 ; International Journal of Industrial Chemistry Volume 4 ; 4 >
+        au < doNotProcess ; 2014 ; International Journal of Industrial Chemistry Volume 5 ; 5 >
+        au < doNotProcess ; 2015 ; International Journal of Industrial Chemistry Volume 6 ; 6 >
   
     }
   
     {
   
         title <
-          name = International Journal Of Recycling of Organic Waste in Agriculture ;
-          issn = 2251-7715 
+          name = International Journal of Recycling of Organic Waste in Agriculture ;
+          issn = 2195-3228 ;
+          eissn = 2251-7715 
         >
   
         param[base_url] = http://www.ijrowa.com/
         param[journal_issn] = 2251-7715 
-        comment[platform] = BioMedCentralPlugin
+        comment[platform] = move to SpringerOpen
   
-        au < manifest ; 2012 ; International Journal Of Recycling of Organic Waste in Agriculture Volume 1 ; 1 >
-        au < manifest ; 2013 ; International Journal Of Recycling of Organic Waste in Agriculture Volume 2 ; 2 >
+        au < doNotProcess ; 2012 ; International Journal of Recycling of Organic Waste in Agriculture Volume 1 ; 1 >
+        au < doNotProcess ; 2013 ; International Journal of Recycling of Organic Waste in Agriculture Volume 2 ; 2 >
 
     }
   
@@ -1211,15 +1247,15 @@
   
         title <
           name = International Journal of STEM Education ;
-          issn = 2196-7822 
+          eissn = 2196-7822 
         >
 
         param[base_url] = http://www.stemeducationjournal.com/
         param[journal_issn] = 2196-7822 
-        comment[platform] = BioMedCentralPlugin
+        comment[platform] = move to SpringerOpen
   
-        au < manifest ; 2014 ; International Journal of STEM Education Volume 1 ; 1 >
-        au < manifest ; 2015 ; International Journal of STEM Education Volume 2 ; 2 >
+        au < doNotProcess ; 2014 ; International Journal of STEM Education Volume 1 ; 1 >
+        au < doNotProcess ; 2015 ; International Journal of STEM Education Volume 2 ; 2 >
 
     }
   
@@ -1227,17 +1263,18 @@
   
         title <
           name = International Nano Letters ;
-          issn = 2228-5326 
+          issn = 2008-9295 ;
+          eissn = 2228-5326 
         >
   
         param[base_url] = http://www.inl-journal.com/
         param[journal_issn] = 2228-5326 
-        comment[platform] = BioMedCentralPlugin
+        comment[platform] = move to SpringerOpen
   
-        au < manifest ; 2012 ; International Nano Letters Volume 2 ; 2 >
-        au < manifest ; 2013 ; International Nano Letters Volume 3 ; 3 >
-        au < manifest ; 2014 ; International Nano Letters Volume 4 ; 4 >
-        au < manifest ; 2015 ; International Nano Letters Volume 5 ; 5 >
+        au < doNotProcess ; 2012 ; International Nano Letters Volume 2 ; 2 >
+        au < doNotProcess ; 2013 ; International Nano Letters Volume 3 ; 3 >
+        au < doNotProcess ; 2014 ; International Nano Letters Volume 4 ; 4 >
+        au < doNotProcess ; 2015 ; International Nano Letters Volume 5 ; 5 >
   
     }
   
@@ -1373,12 +1410,12 @@
           issn = 2196-1115 
         >
   
-        param[base_url] = http://www.journalofbigdata.com/
+        param[base_url] = http://journalofbigdata.springeropen.com/
         param[journal_issn] = 2196-1115 
-        comment[platform] = BioMedCentralPlugin
   
-        au < manifest ; 2014 ; Journal Of Big Data Volume 1 ; 1 >
-        au < manifest ; 2015 ; Journal Of Big Data Volume 2 ; 2 >
+        au < exists ; 2014 ; Journal Of Big Data Volume 1 ; 1 >
+        au < exists ; 2015 ; Journal Of Big Data Volume 2 ; 2 >
+        au < exists ; 2016 ; Journal Of Big Data Volume 3 ; 3 >
   
     }
   
@@ -1389,14 +1426,14 @@
           issn = 2192-113X 
         >
   
-        param[base_url] = http://www.journalofcloudcomputing.com/
+        param[base_url] = http://journalofcloudcomputing.springeropen.com/
         param[journal_issn] = 2192-113X 
-        comment[platform] = BioMedCentralPlugin
   
-        au < manifest ; 2012 ; Journal of Cloud Computing: Advances, Systems and Applications Volume 1 ; 1 >
-        au < manifest ; 2013 ; Journal of Cloud Computing: Advances, Systems and Applications Volume 2 ; 2 >
-        au < manifest ; 2014 ; Journal of Cloud Computing: Advances, Systems and Applications Volume 3 ; 3 >
-        au < manifest ; 2015 ; Journal of Cloud Computing: Advances, Systems and Applications Volume 4 ; 4 >
+        au < exists ; 2012 ; Journal of Cloud Computing: Advances, Systems and Applications Volume 1 ; 1 >
+        au < exists ; 2013 ; Journal of Cloud Computing: Advances, Systems and Applications Volume 2 ; 2 >
+        au < exists ; 2014 ; Journal of Cloud Computing: Advances, Systems and Applications Volume 3 ; 3 >
+        au < exists ; 2015 ; Journal of Cloud Computing: Advances, Systems and Applications Volume 4 ; 4 >
+        au < exists ; 2016 ; Journal of Cloud Computing: Advances, Systems and Applications Volume 5 ; 5 >
   
     }
   
@@ -1627,13 +1664,15 @@
           eissn = 1869-5760 
         >
   
-        param[base_url] = http://www.joii-journal.com/
+        param[base_url] = http://joii-journal.springeropen.com/
         param[journal_issn] = 1869-5760 
-        comment[platform] = BioMedCentralPlugin
   
-        au < manifest ; 2013 ; Journal of Ophthalmic Inflammation and Infection Volume 3 ; 3 >
-        au < manifest ; 2014 ; Journal of Ophthalmic Inflammation and Infection Volume 4 ; 4 >
-        au < manifest ; 2015 ; Journal of Ophthalmic Inflammation and Infection Volume 5 ; 5 >
+        au < exists ; 2011 ; Journal of Ophthalmic Inflammation and Infection Volume 1 ; 1 >
+        au < exists ; 2012 ; Journal of Ophthalmic Inflammation and Infection Volume 2 ; 2 >
+        au < exists ; 2013 ; Journal of Ophthalmic Inflammation and Infection Volume 3 ; 3 >
+        au < exists ; 2014 ; Journal of Ophthalmic Inflammation and Infection Volume 4 ; 4 >
+        au < exists ; 2015 ; Journal of Ophthalmic Inflammation and Infection Volume 5 ; 5 >
+        au < exists ; 2016 ; Journal of Ophthalmic Inflammation and Infection Volume 6 ; 6 >
   
     }
   
@@ -2274,12 +2313,11 @@
         eissn = 2197-8670
       >
 
-      param[base_url] = http://www.geoenvironmental-disasters.com/
+      param[base_url] = http://geoenvironmental-disasters.springeropen.com/
       param[journal_issn] = 2197-8670
-      comment[platform] = BioMedCentralPlugin
 
-      au < manifest ; 2014 ; Geoenvironmental Disasters Volume 1 ; 1 >
-      au < manifest ; 2015 ; Geoenvironmental Disasters Volume 2 ; 2 >
+      au < exists ; 2014 ; Geoenvironmental Disasters Volume 1 ; 1 >
+      au < exists ; 2015 ; Geoenvironmental Disasters Volume 2 ; 2 >
 
     }
 
@@ -2322,11 +2360,12 @@
         issn = 2198-2635
       >
 
-      param[base_url] = http://www.journalofchinesesociology.com/
+      param[base_url] = http://journalofchinesesociology.springeropen.com/
       param[journal_issn] = 2198-2635
-      comment[platform] = BioMedCentralPlugin
 
-      au < manifest ; 2015 ; Journal of Chinese Sociology Volume 2 ; 2 >
+      au < exists ; 2014 ; Journal of Chinese Sociology Volume 1 ; 1 >
+      au < exists ; 2015 ; Journal of Chinese Sociology Volume 2 ; 2 >
+      au < exists ; 2016 ; Journal of Chinese Sociology Volume 3 ; 3 >
 
     }
 
@@ -2354,13 +2393,28 @@
         eissn = 2196-0739
       >
 
-      param[base_url] = http://www.largescaleassessmentsineducation.com/
+      param[base_url] = http://largescaleassessmentsineducation.springeropen.com/
       param[journal_issn] = 2196-0739
-      comment[platform] = BioMedCentralPlugin
 
-      au < manifest ; 2013 ; Large-scale Assessments in Education Volume 1 ; 1 >
-      au < manifest ; 2014 ; Large-scale Assessments in Education Volume 2 ; 2 >
-      au < manifest ; 2015 ; Large-scale Assessments in Education Volume 3 ; 3 >
+      au < exists ; 2013 ; Large-scale Assessments in Education Volume 1 ; 1 >
+      au < exists ; 2014 ; Large-scale Assessments in Education Volume 2 ; 2 >
+      au < exists ; 2015 ; Large-scale Assessments in Education Volume 3 ; 3 >
+      au < exists ; 2016 ; Large-scale Assessments in Education Volume 4 ; 4 >
+
+    }
+
+    {
+
+      title <
+        name = Mechanics of Advanced Materials and Modern Processes ;
+        eissn = 2198-7874
+      >
+
+      param[base_url] = http://mammp-journal.springeropen.com/
+      param[journal_issn] = 2198-7874
+
+      au < exists ; 2015 ; Mechanics of Advanced Materials and Modern Processes Volume 1 ; 1 >
+      au < exists ; 2016 ; Mechanics of Advanced Materials and Modern Processes Volume 2 ; 2 >
 
     }
 
@@ -2984,11 +3038,11 @@
           eissn = 2363-9024
         >
   
-        param[base_url] = http://www.springer.com/40981/
+        param[base_url] = http://jaclinicalreports.springeropen.com/
         param[journal_issn] = 2363-9024
-        comment[platform] = Springer
   
-        au < expected ; 2015 ; JA Clinical Reports Volume 1 ; 1 >
+        au < exists ; 2015 ; JA Clinical Reports Volume 1 ; 1 >
+        au < exists ; 2016 ; JA Clinical Reports Volume 2 ; 2 >
 
     }
 
@@ -3535,12 +3589,50 @@
         eissn = 2196-3258
       >
 
-      param[base_url] = http://link.springer.com/journal/40551/
+      param[base_url] = http://infrastructure-complexity.springeropen.com/
       param[journal_issn] = 2196-3258
       comment[platform] = Springer
 
       au < exists ; 2014 ; Infrastructure Complexity Volume 1 ; 1 >
-      au < expected ; 2015 ; Infrastructure Complexity Volume 2 ; 2 >
+      au < exists ; 2015 ; Infrastructure Complexity Volume 2 ; 2 >
+      au < exists ; 2016 ; Infrastructure Complexity Volume 3 ; 3 >
+
+    }
+
+    {
+
+      title <
+        name = International Journal for Educational Integrity ;
+        eissn = 1833-2595
+      >
+
+      param[base_url] = http://edintegrity.springeropen.com/
+      param[journal_issn] = 1833-2595
+
+      au < exists ; 2015 ; International Journal for Educational Integrity Volume 11 ; 11 >
+
+    }
+
+    {
+
+      title <
+        name = International Journal of Child Care and Education Policy ;
+        eissn = 2288-6729
+      >
+
+      param[base_url] = http://ijccep.springeropen.com/
+      param[journal_issn] = 2288-6729
+
+      au < exists ; 2007 ; International Journal of Child Care and Education Policy Volume 1 ; 1 >
+      au < exists ; 2008 ; International Journal of Child Care and Education Policy Volume 2 ; 2 >
+      au < exists ; 2009 ; International Journal of Child Care and Education Policy Volume 3 ; 3 >
+      au < exists ; 2010 ; International Journal of Child Care and Education Policy Volume 4 ; 4 >
+      au < exists ; 2011 ; International Journal of Child Care and Education Policy Volume 5 ; 5 >
+      au < exists ; 2012 ; International Journal of Child Care and Education Policy Volume 6 ; 6 >
+      au < exists ; 2013 ; International Journal of Child Care and Education Policy Volume 7 ; 7 >
+      au < exists ; 2014 ; International Journal of Child Care and Education Policy Volume 8 ; 8 >
+      au < exists ; 2015 ; International Journal of Child Care and Education Policy Volume 9 ; 9 >
+      au < exists ; 2016 ; International Journal of Child Care and Education Policy Volume 10 ; 10 >
 
     }
 

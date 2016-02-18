@@ -1,10 +1,10 @@
 /*
- * $Id: TestProjectMuseUrlConsumer.java 40407 2015-03-11 01:28:09Z thib_gc $
+ * $Id$
  */
 
 /*
 
-Copyright (c) 2000-2015 Board of Trustees of Leland Stanford Jr. University,
+Copyright (c) 2000-2016 Board of Trustees of Leland Stanford Jr. University,
 all rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -28,24 +28,36 @@ Except as contained in this notice, the name of Stanford University shall not
 be used in advertising or otherwise to promote the sale, use or other dealings
 in this Software without prior written authorization from Stanford University.
 
-*/
+ */
 
-package org.lockss.plugin.projmuse;
+package org.lockss.plugin.clockss.mdpi;
 
-import org.lockss.plugin.FetchedUrlData;
-import org.lockss.test.*;
-import org.lockss.test.MockCrawler.MockCrawlerFacade;
+import java.util.regex.Pattern;
 
-public class TestProjectMuseUrlConsumer extends LockssTestCase {
+import org.lockss.plugin.clockss.SourceZipXmlArticleIteratorFactory;
+import org.lockss.util.Logger;
 
-  public void testCreation() throws Exception {
-    ProjectMuseUrlConsumerFactory pucf = new ProjectMuseUrlConsumerFactory();
-    MockArchivalUnit mau = new MockArchivalUnit();
-    MockCrawlerFacade facade = new MockCrawler(mau).new MockCrawlerFacade();
-    FetchedUrlData fud = new FetchedUrlData(
-        "/tmp/foo", "/tmp/foo", new StringInputStream(""), new org.lockss.util.CIProperties(),
-        null, null);
-    pucf.createUrlConsumer(facade, fud);
+//
+// Extend the basic SourceZipXmlArticleIteratorFactory to exclude the TOC xml files
+//  we only want to "find" the article xml files
+//
+public class MdpiZipXmlArticleIteratorFactory extends SourceZipXmlArticleIteratorFactory {
+
+  protected static Logger log = Logger.getLogger(MdpiZipXmlArticleIteratorFactory.class);
+  
+  // Be sure to exclude all nested archives in case supplemental data is provided this way
+  // also exclude __ToC_blah.xml files - but it is hard to do a positive statement to exclude this.
+  // The files we *do* want are of the form....
+  // zip: /water-07-10.zip
+  // issue TOC xml: __ToC_water_07_10.xml
+  // article xml: water-07-05731.xml
+  // the xml may not start with a double "__"
+  protected static final String NOT_TOC_XML_TEMPLATE =
+      "\"%s%d/.*\\.zip!/[^_][^_].*\\.xml$\", base_url, year";
+
+  @Override
+  protected String getIncludePatternTemplate() {
+    return NOT_TOC_XML_TEMPLATE;
   }
   
 }

@@ -54,7 +54,7 @@
     au < HighWirePressH20Plugin ; released ; 2013 ; Acupuncture in Medicine Volume 31 ; 31 >
     au < HighWirePressH20Plugin ; released ; 2014 ; Acupuncture in Medicine Volume 32 ; 32 >
     au < HighWirePressH20Plugin ; manifest ; 2015 ; Acupuncture in Medicine Volume 33 ; 33 >
-    au < HighWirePressH20Plugin ; expected ; 2016 ; Acupuncture in Medicine Volume 34 ; 34 >
+    au < HighWirePressH20Plugin ; manifest ; 2016 ; Acupuncture in Medicine Volume 34 ; 34 >
 
   }
 
@@ -463,6 +463,7 @@
     param[base_url] = http://innovations.bmj.com/
 
     au < HighWirePressH20Plugin ; manifest ; 2015 ; BMJ Innovations Volume 1 ; 1 >
+    au < HighWirePressH20Plugin ; manifest ; 2016 ; BMJ Innovations Volume 2 ; 2 >
 
   }
   
@@ -479,7 +480,7 @@
     au < HighWirePressH20Plugin ; released ; 2013 ; BMJ Open Volume 3 ; 3 >
     au < HighWirePressH20Plugin ; released ; 2014 ; BMJ Open Volume 4 ; 4 >
     au < HighWirePressH20Plugin ; manifest ; 2015 ; BMJ Open Volume 5 ; 5 >
-    au < HighWirePressH20Plugin ; expected ; 2016 ; BMJ Open Volume 6 ; 6 >
+    au < HighWirePressH20Plugin ; manifest ; 2016 ; BMJ Open Volume 6 ; 6 >
 
   }
   
@@ -1919,10 +1920,10 @@ comment[ebm13] = Site depth exceeds max crawl depth (1000)
       au < HighWirePressH20Plugin ; released ; 2010 ; Journal of the Royal Army Medical Corps Volume 156 ; 156 >
       au < HighWirePressH20Plugin ; released ; 2011 ; Journal of the Royal Army Medical Corps Volume 157 ; 157 >
       au < HighWirePressH20Plugin ; released ; 2012 ; Journal of the Royal Army Medical Corps Volume 158 ; 158 >
-      au < HighWirePressH20Plugin ; exists ; 2013 ; Journal of the Royal Army Medical Corps Volume 159 ; 159 >
-      au < HighWirePressH20Plugin ; exists ; 2014 ; Journal of the Royal Army Medical Corps Volume 160 ; 160 >
-      au < HighWirePressH20Plugin ; exists ; 2015 ; Journal of the Royal Army Medical Corps Volume 161 ; 161 >
-      au < HighWirePressH20Plugin ; exists ; 2016 ; Journal of the Royal Army Medical Corps Volume 162 ; 162 >
+      au < HighWirePressH20Plugin ; manifest ; 2013 ; Journal of the Royal Army Medical Corps Volume 159 ; 159 >
+      au < HighWirePressH20Plugin ; manifest ; 2014 ; Journal of the Royal Army Medical Corps Volume 160 ; 160 >
+      au < HighWirePressH20Plugin ; manifest ; 2015 ; Journal of the Royal Army Medical Corps Volume 161 ; 161 >
+      au < HighWirePressH20Plugin ; manifest ; 2016 ; Journal of the Royal Army Medical Corps Volume 162 ; 162 >
 
     }
     
@@ -1976,7 +1977,7 @@ comment[ebm13] = Site depth exceeds max crawl depth (1000)
     au < HighWirePressH20Plugin ; released ; 2012 ; Medical Humanities Volume 38 ; 38 >
     au < HighWirePressH20Plugin ; released ; 2013 ; Medical Humanities Volume 39 ; 39 >
     au < HighWirePressH20Plugin ; released ; 2014 ; Medical Humanities Volume 40 ; 40 >
-    au < HighWirePressH20Plugin ; exists ; 2015 ; Medical Humanities Volume 41 ; 41 >
+    au < HighWirePressH20Plugin ; manifest ; 2015 ; Medical Humanities Volume 41 ; 41 >
     au < HighWirePressH20Plugin ; expected ; 2016 ; Medical Humanities Volume 42 ; 42 >
 
   }
@@ -1990,13 +1991,17 @@ comment[ebm13] = Site depth exceeds max crawl depth (1000)
     >
 
     param[base_url] = http://mp.bmj.com/
-    comment[0] = merged with Clinical Pathology.
+    comment[0] = merged with Clinical Pathology after Jan 2004.
 
-    au < HighWirePressH20Plugin ; doNotProcess ; 1999 ; Molecular Pathology Volume 52 ; 52 >
-    au < HighWirePressH20Plugin ; doNotProcess ; 2000 ; Molecular Pathology Volume 53 ; 53 >
-    au < HighWirePressH20Plugin ; doNotProcess ; 2001 ; Molecular Pathology Volume 54 ; 54 >
-    au < HighWirePressH20Plugin ; doNotProcess ; 2002 ; Molecular Pathology Volume 55 ; 55 >
-    au < HighWirePressH20Plugin ; down ; 2003 ; Molecular Pathology Volume 56 ; 56 >
+    au < HighWirePressH20Plugin ; manifest ; 1995 ; Molecular Pathology Volume 48 ; 48 >
+    au < HighWirePressH20Plugin ; manifest ; 1996 ; Molecular Pathology Volume 49 ; 49 >
+    au < HighWirePressH20Plugin ; manifest ; 1997 ; Molecular Pathology Volume 50 ; 50 >
+    au < HighWirePressH20Plugin ; manifest ; 1998 ; Molecular Pathology Volume 51 ; 51 >
+    au < HighWirePressH20Plugin ; manifest ; 1999 ; Molecular Pathology Volume 52 ; 52 >
+    au < HighWirePressH20Plugin ; manifest ; 2000 ; Molecular Pathology Volume 53 ; 53 >
+    au < HighWirePressH20Plugin ; manifest ; 2001 ; Molecular Pathology Volume 54 ; 54 >
+    au < HighWirePressH20Plugin ; manifest ; 2002 ; Molecular Pathology Volume 55 ; 55 >
+    au < HighWirePressH20Plugin ; released ; 2003 ; Molecular Pathology Volume 56 ; 56 >
 
   }
 
@@ -2215,8 +2220,8 @@ comment[ebm13] = Site depth exceeds max crawl depth (1000)
     au < HighWirePressH20Plugin ; released ; 2012 ; Practical Neurology Volume 12 ; 12 >
     au < HighWirePressH20Plugin ; released ; 2013 ; Practical Neurology Volume 13 ; 13 >
     au < HighWirePressH20Plugin ; released ; 2014 ; Practical Neurology Volume 14 ; 14 >
-    au < HighWirePressH20Plugin ; exists ; 2015 ; Practical Neurology Volume 15 ; 15 >
-    au < HighWirePressH20Plugin ; exists ; 2016 ; Practical Neurology Volume 16 ; 16 >
+    au < HighWirePressH20Plugin ; manifest ; 2015 ; Practical Neurology Volume 15 ; 15 >
+    au < HighWirePressH20Plugin ; manifest ; 2016 ; Practical Neurology Volume 16 ; 16 >
 
   }
 
@@ -2383,8 +2388,8 @@ comment[ebm13] = Site depth exceeds max crawl depth (1000)
     au < HighWirePressH20Plugin ; released ; 2012 ; Sexually Transmitted Infections Volume 88 ; 88 >
     au < HighWirePressH20Plugin ; released ; 2013 ; Sexually Transmitted Infections Volume 89 ; 89 >
     au < HighWirePressH20Plugin ; released ; 2014 ; Sexually Transmitted Infections Volume 90 ; 90 >
-    au < HighWirePressH20Plugin ; exists ; 2015 ; Sexually Transmitted Infections Volume 91 ; 91 >
-    au < HighWirePressH20Plugin ; exists ; 2016 ; Sexually Transmitted Infections Volume 92 ; 92 >
+    au < HighWirePressH20Plugin ; manifest ; 2015 ; Sexually Transmitted Infections Volume 91 ; 91 >
+    au < HighWirePressH20Plugin ; manifest ; 2016 ; Sexually Transmitted Infections Volume 92 ; 92 >
 
   }
 

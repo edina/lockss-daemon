@@ -4,7 +4,7 @@
 
 /*
 
-Copyright (c) 2000-2012 Board of Trustees of Leland Stanford Jr. University,
+Copyright (c) 2000-2016 Board of Trustees of Leland Stanford Jr. University,
 all rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -271,6 +271,129 @@ public class TestAuUtil extends LockssTestCase {
 						  "http://foo.bar/")));
   }
 
+  public void testIsParamUrlHttpHttps() throws Exception {
+    final String MYURLKEY = "my_url";
+    final String BADURLKEY = "bad_url";
+    // HTTP URL
+    LocalMockArchivalUnit httpau = new LocalMockArchivalUnit();
+    httpau.setConfiguration(ConfigurationUtil.fromArgs(MYURLKEY, "http://www.example.com/"));
+    assertFalse(AuUtil.isParamUrlHttps(httpau, MYURLKEY));
+    assertTrue(AuUtil.isParamUrlHttp(httpau, MYURLKEY));
+    assertFalse(AuUtil.isParamUrlHttp(httpau, BADURLKEY));
+    // HTTPS URL
+    LocalMockArchivalUnit httpsau = new LocalMockArchivalUnit();
+    httpsau.setConfiguration(ConfigurationUtil.fromArgs(MYURLKEY, "https://www.example.com/"));
+    assertFalse(AuUtil.isParamUrlHttp(httpsau, MYURLKEY));
+    assertTrue(AuUtil.isParamUrlHttps(httpsau, MYURLKEY));
+    assertFalse(AuUtil.isParamUrlHttps(httpsau, BADURLKEY));
+  }
+  
+  public void testIsBaseUrlHttpHttps() throws Exception {
+    final String BASEURLKEY = ConfigParamDescr.BASE_URL.getKey();
+    // HTTP-defined AU
+    LocalMockArchivalUnit httpau = new LocalMockArchivalUnit();
+    assertFalse(AuUtil.isBaseUrlHttp(httpau));
+    assertFalse(AuUtil.isBaseUrlHttps(httpau));
+    httpau.setConfiguration(ConfigurationUtil.fromArgs(BASEURLKEY, "http://www.example.com/"));
+    assertTrue(AuUtil.isBaseUrlHttp(httpau));
+    assertFalse(AuUtil.isBaseUrlHttps(httpau));
+    // HTTPS-defined AU
+    LocalMockArchivalUnit httpsau = new LocalMockArchivalUnit();
+    assertFalse(AuUtil.isBaseUrlHttp(httpsau));
+    assertFalse(AuUtil.isBaseUrlHttps(httpsau));
+    httpsau.setConfiguration(ConfigurationUtil.fromArgs(BASEURLKEY, "https://www.example.com/"));
+    assertFalse(AuUtil.isBaseUrlHttp(httpsau));
+    assertTrue(AuUtil.isBaseUrlHttps(httpsau));
+  }
+  
+  public void testNormalizeHttpHttpsFromParamUrl() throws Exception {
+    /*
+     * Note how a URL from an unrelated host like www.lockss.org is also
+     * normalized.
+     */
+    final String MYURLKEY = "my_url";
+    // HTTP URL
+    LocalMockArchivalUnit httpau = new LocalMockArchivalUnit();
+    assertEquals("http://www.example.com/favicon.ico",
+                 AuUtil.normalizeHttpHttpsFromParamUrl(httpau, MYURLKEY,
+                                                       "http://www.example.com/favicon.ico"));
+    assertEquals("https://www.example.com/favicon.ico",
+                 AuUtil.normalizeHttpHttpsFromParamUrl(httpau, MYURLKEY,
+                                                       "https://www.example.com/favicon.ico"));
+    httpau.setConfiguration(ConfigurationUtil.fromArgs(MYURLKEY, "http://www.example.com/"));
+    assertEquals("http://www.example.com/favicon.ico",
+                 AuUtil.normalizeHttpHttpsFromParamUrl(httpau, MYURLKEY,
+                                                       "http://www.example.com/favicon.ico"));
+    assertEquals("http://www.example.com/favicon.ico",
+                 AuUtil.normalizeHttpHttpsFromParamUrl(httpau, MYURLKEY,
+                                                       "https://www.example.com/favicon.ico"));
+    assertEquals("http://www.lockss.org/favicon.ico",
+                 AuUtil.normalizeHttpHttpsFromParamUrl(httpau, MYURLKEY,
+                                                       "https://www.lockss.org/favicon.ico"));
+    // HTTPS URL
+    LocalMockArchivalUnit httpsau = new LocalMockArchivalUnit();
+    assertEquals("http://www.example.com/favicon.ico",
+                 AuUtil.normalizeHttpHttpsFromParamUrl(httpsau, MYURLKEY,
+                                                       "http://www.example.com/favicon.ico"));
+    assertEquals("https://www.example.com/favicon.ico",
+                 AuUtil.normalizeHttpHttpsFromParamUrl(httpsau, MYURLKEY,
+                                                       "https://www.example.com/favicon.ico"));
+    httpsau.setConfiguration(ConfigurationUtil.fromArgs(MYURLKEY, "https://www.example.com/"));
+    assertEquals("https://www.example.com/favicon.ico",
+                 AuUtil.normalizeHttpHttpsFromParamUrl(httpsau, MYURLKEY,
+                                                       "http://www.example.com/favicon.ico"));
+    assertEquals("https://www.example.com/favicon.ico",
+                 AuUtil.normalizeHttpHttpsFromParamUrl(httpsau, MYURLKEY,
+                                                       "https://www.example.com/favicon.ico"));
+    assertEquals("https://www.lockss.org/favicon.ico",
+                 AuUtil.normalizeHttpHttpsFromParamUrl(httpsau, MYURLKEY,
+                                                       "http://www.lockss.org/favicon.ico"));
+  }
+  
+  public void testNormalizeHttpHttpsFromBaseUrl() throws Exception {
+    /*
+     * Note how a URL from an unrelated host like www.lockss.org is also
+     * normalized.
+     */
+    final String BASEURLKEY = ConfigParamDescr.BASE_URL.getKey();
+    // HTTP AU
+    LocalMockArchivalUnit httpau = new LocalMockArchivalUnit();
+    assertEquals("http://www.example.com/favicon.ico",
+                 AuUtil.normalizeHttpHttpsFromBaseUrl(httpau,
+                                                      "http://www.example.com/favicon.ico"));
+    assertEquals("https://www.example.com/favicon.ico",
+                 AuUtil.normalizeHttpHttpsFromBaseUrl(httpau,
+                                                      "https://www.example.com/favicon.ico"));
+    httpau.setConfiguration(ConfigurationUtil.fromArgs(BASEURLKEY, "http://www.example.com/"));
+    assertEquals("http://www.example.com/favicon.ico",
+                 AuUtil.normalizeHttpHttpsFromBaseUrl(httpau,
+                                                      "http://www.example.com/favicon.ico"));
+    assertEquals("http://www.example.com/favicon.ico",
+                 AuUtil.normalizeHttpHttpsFromBaseUrl(httpau,
+                                                      "https://www.example.com/favicon.ico"));
+    assertEquals("http://www.lockss.org/favicon.ico",
+                 AuUtil.normalizeHttpHttpsFromBaseUrl(httpau,
+                                                      "https://www.lockss.org/favicon.ico"));
+    // HTTPS AU
+    LocalMockArchivalUnit httpsau = new LocalMockArchivalUnit();
+    assertEquals("http://www.example.com/favicon.ico",
+                 AuUtil.normalizeHttpHttpsFromBaseUrl(httpsau,
+                                                      "http://www.example.com/favicon.ico"));
+    assertEquals("https://www.example.com/favicon.ico",
+                 AuUtil.normalizeHttpHttpsFromBaseUrl(httpsau,
+                                                      "https://www.example.com/favicon.ico"));
+    httpsau.setConfiguration(ConfigurationUtil.fromArgs(BASEURLKEY, "https://www.example.com/"));
+    assertEquals("https://www.example.com/favicon.ico",
+                 AuUtil.normalizeHttpHttpsFromBaseUrl(httpsau,
+                                                      "http://www.example.com/favicon.ico"));
+    assertEquals("https://www.example.com/favicon.ico",
+                 AuUtil.normalizeHttpHttpsFromBaseUrl(httpsau,
+                                                      "https://www.example.com/favicon.ico"));
+    assertEquals("https://www.lockss.org/favicon.ico",
+                 AuUtil.normalizeHttpHttpsFromBaseUrl(httpsau,
+                                                      "http://www.lockss.org/favicon.ico"));
+  }
+  
   public void testIsDeleteExtraFiles() throws Exception {
     ExternalizableMap map = new ExternalizableMap();
     DefinablePlugin dplug = new DefinablePlugin();

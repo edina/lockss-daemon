@@ -4,7 +4,7 @@
 
 /*
 
-Copyright (c) 2000-2015 Board of Trustees of Leland Stanford Jr. University,
+Copyright (c) 2000-2016 Board of Trustees of Leland Stanford Jr. University,
 all rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -39,12 +39,12 @@ import org.lockss.plugin.*;
 /**
  * @since 1.67.5
  */
-public class ProjectMuseUrlNormalizer implements UrlNormalizer {
+public class ProjectMuseUrlNormalizer extends HttpToHttpsUtil.BaseUrlHttpHttpsUrlNormalizer {
 
   protected static final String VERSION_SUFFIX = "?v=";
 
   @Override
-  public String normalizeUrl(String url, ArchivalUnit au) throws PluginException {
+  public String additionalNormalization(String url, ArchivalUnit au) throws PluginException {
     url = StringUtils.substringBeforeLast(url, VERSION_SUFFIX);
     return url;
   }

@@ -107,7 +107,7 @@
     au < manifest ; exists ; 2013 ; Accounting, Auditing & Accountability Journal Volume 26 ; 26 ; >
     au < crawling ; exists ; 2014 ; Accounting, Auditing & Accountability Journal Volume 27 ; 27 ; >
     au < crawling ; exists ; 2015 ; Accounting, Auditing & Accountability Journal Volume 28 ; 28 ; >
-    au < expected ; exists ; 2016 ; Accounting, Auditing & Accountability Journal Volume 29 ; 29 ; >
+    au < manifest ; exists ; 2016 ; Accounting, Auditing & Accountability Journal Volume 29 ; 29 ; >
 
   }
 
@@ -815,7 +815,7 @@
     au < manifest ; exists ; 2013 ; Assembly Automation Volume 33 ; 33 ; >
     au < crawling ; exists ; 2014 ; Assembly Automation Volume 34 ; 34 ; >
     au < crawling ; exists ; 2015 ; Assembly Automation Volume 35 ; 35 ; >
-    au < expected ; exists ; 2016 ; Assembly Automation Volume 36 ; 36 ; >
+    au < manifest ; exists ; 2016 ; Assembly Automation Volume 36 ; 36 ; >
 
   }
 
@@ -1146,7 +1146,7 @@
     au < manifest ; exists ; 2013 ; Built Environment Project and Asset Management Volume 3 ; 3 ; >
     au < crawling ; exists ; 2014 ; Built Environment Project and Asset Management Volume 4 ; 4 ; >
     au < crawling ; exists ; 2015 ; Built Environment Project and Asset Management Volume 5 ; 5 ; >
-    au < expected ; exists ; 2016 ; Built Environment Project and Asset Management Volume 6 ; 6 ; >
+    au < manifest ; exists ; 2016 ; Built Environment Project and Asset Management Volume 6 ; 6 ; >
 
   }
 
@@ -1656,7 +1656,7 @@
     au < manifest ; exists ; 2013 ; Corporate Communications: An International Journal Volume 18 ; 18 ; >
     au < crawling ; exists ; 2014 ; Corporate Communications: An International Journal Volume 19 ; 19 ; >
     au < crawling ; exists ; 2015 ; Corporate Communications: An International Journal Volume 20 ; 20 ; >
-    au < expected ; exists ; 2016 ; Corporate Communications: An International Journal Volume 21 ; 21 ; >
+    au < manifest ; exists ; 2016 ; Corporate Communications: An International Journal Volume 21 ; 21 ; >
 
   }
 
@@ -2847,7 +2847,7 @@
     au < manifest ; exists ; 2013 ; Humanomics Volume 29 ; 29 ; >
     au < crawling ; exists ; 2014 ; Humanomics Volume 30 ; 30 ; >
     au < crawling ; exists ; 2015 ; Humanomics Volume 31 ; 31 ; >
-    au < expected ; exists ; 2016 ; Humanomics Volume 32 ; 32 ; >
+    au < manifest ; exists ; 2016 ; Humanomics Volume 32 ; 32 ; >
 
   }
 
@@ -3015,7 +3015,7 @@
     au < manifest ; exists ; 2013 ; Industrial Lubrication and Tribology Volume 65 ; 65 ; >
     au < crawling ; exists ; 2014 ; Industrial Lubrication and Tribology Volume 66 ; 66 ; >
     au < crawling ; exists ; 2015 ; Industrial Lubrication and Tribology Volume 67 ; 67 ; >
-    au < expected ; exists ; 2016 ; Industrial Lubrication and Tribology Volume 68 ; 68 ; >
+    au < manifest ; exists ; 2016 ; Industrial Lubrication and Tribology Volume 68 ; 68 ; >
 
   }
 
@@ -4481,7 +4481,7 @@
     au < manifest ; exists ; 2013 ; International Journal of Organizational Analysis Volume 21 ; 21 ; >
     au < crawling ; exists ; 2014 ; International Journal of Organizational Analysis Volume 22 ; 22 ; >
     au < crawling ; exists ; 2015 ; International Journal of Organizational Analysis Volume 23 ; 23 ; >
-    au < expected ; exists ; 2016 ; International Journal of Organizational Analysis Volume 24 ; 24 ; >
+    au < manifest ; exists ; 2016 ; International Journal of Organizational Analysis Volume 24 ; 24 ; >
 
   }
 
@@ -4992,7 +4992,7 @@
     au < manifest ; exists ; 2013 ; International Journal of Structural Integrity Volume 4 ; 4 ; >
     au < crawling ; exists ; 2014 ; International Journal of Structural Integrity Volume 5 ; 5 ; >
     au < crawling ; exists ; 2015 ; International Journal of Structural Integrity Volume 6 ; 6 ; >
-    au < expected ; exists ; 2016 ; International Journal of Structural Integrity Volume 7 ; 7 ; >
+    au < manifest ; exists ; 2016 ; International Journal of Structural Integrity Volume 7 ; 7 ; >
 
   }
 
@@ -5192,7 +5192,7 @@
     au < manifest ; exists ; 2013 ; International Marketing Review Volume 30 ; 30 ; >
     au < crawling ; exists ; 2014 ; International Marketing Review Volume 31 ; 31 ; >
     au < crawling ; exists ; 2015 ; International Marketing Review Volume 32 ; 32 ; >
-    au < expected ; exists ; 2016 ; International Marketing Review Volume 33 ; 33 ; >
+    au < manifest ; exists ; 2016 ; International Marketing Review Volume 33 ; 33 ; >
 
   }
 
@@ -5307,7 +5307,7 @@
     au < manifest ; exists ; 2013 ; Journal of Adult Protection: Evidence-based practice in relation to safeguarding adults Volume 15 ; 15 ; >
     au < crawling ; exists ; 2014 ; Journal of Adult Protection: Evidence-based practice in relation to safeguarding adults Volume 16 ; 16 ; >
     au < crawling ; exists ; 2015 ; Journal of Adult Protection: Evidence-based practice in relation to safeguarding adults Volume 17 ; 17 ; >
-    au < expected ; exists ; 2016 ; Journal of Adult Protection: Evidence-based practice in relation to safeguarding adults Volume 18 ; 18 ; >
+    au < manifest ; exists ; 2016 ; Journal of Adult Protection: Evidence-based practice in relation to safeguarding adults Volume 18 ; 18 ; >
 
   }
 
@@ -5696,7 +5696,7 @@
     au < manifest ; exists ; 2013 ; Journal of Communication Management Volume 17 ; 17 ; >
     au < crawling ; exists ; 2014 ; Journal of Communication Management Volume 18 ; 18 ; >
     au < crawling ; exists ; 2015 ; Journal of Communication Management Volume 19 ; 19 ; >
-    au < expected ; exists ; 2016 ; Journal of Communication Management Volume 20 ; 20 ; >
+    au < manifest ; exists ; 2016 ; Journal of Communication Management Volume 20 ; 20 ; >
 
   }
 
@@ -6105,7 +6105,7 @@
     au < manifest ; exists ; 2013 ; Journal of Enterprise Information Management Volume 26 ; 26 ; >
     au < crawling ; exists ; 2014 ; Journal of Enterprise Information Management Volume 27 ; 27 ; >
     au < crawling ; exists ; 2015 ; Journal of Enterprise Information Management Volume 28 ; 28 ; >
-    au < expected ; exists ; 2016 ; Journal of Enterprise Information Management Volume 29 ; 29 ; >
+    au < manifest ; exists ; 2016 ; Journal of Enterprise Information Management Volume 29 ; 29 ; >
 
   }
 
@@ -6251,7 +6251,7 @@
     au < manifest ; exists ; 2013 ; Journal of Facilities Management Volume 11 ; 11 ; >
     au < crawling ; exists ; 2014 ; Journal of Facilities Management Volume 12 ; 12 ; >
     au < crawling ; exists ; 2015 ; Journal of Facilities Management Volume 13 ; 13 ; >
-    au < expected ; exists ; 2016 ; Journal of Facilities Management Volume 14 ; 14 ; >
+    au < manifest ; exists ; 2016 ; Journal of Facilities Management Volume 14 ; 14 ; >
 
   }
 
@@ -6428,7 +6428,7 @@
     au < manifest ; exists ; 2013 ; Journal of Financial Regulation and Compliance Volume 21 ; 21 ; >
     au < crawling ; exists ; 2014 ; Journal of Financial Regulation and Compliance Volume 22 ; 22 ; >
     au < crawling ; exists ; 2015 ; Journal of Financial Regulation and Compliance Volume 23 ; 23 ; >
-    au < expected ; exists ; 2016 ; Journal of Financial Regulation and Compliance Volume 24 ; 24 ; >
+    au < manifest ; exists ; 2016 ; Journal of Financial Regulation and Compliance Volume 24 ; 24 ; >
 
   }
 
@@ -6967,7 +6967,7 @@
     au < manifest ; exists ; 2013 ; Journal of Management Development Volume 32 ; 32 ; >
     au < crawling ; exists ; 2014 ; Journal of Management Development Volume 33 ; 33 ; >
     au < crawling ; exists ; 2015 ; Journal of Management Development Volume 34 ; 34 ; >
-    au < expected ; exists ; 2016 ; Journal of Management Development Volume 35 ; 35 ; >
+    au < manifest ; exists ; 2016 ; Journal of Management Development Volume 35 ; 35 ; >
 
   }
 
@@ -7090,7 +7090,7 @@
     au < manifest ; exists ; 2013 ; Journal of Managerial Psychology Volume 28 ; 28 ; >
     au < crawling ; exists ; 2014 ; Journal of Managerial Psychology Volume 29 ; 29 ; >
     au < crawling ; exists ; 2015 ; Journal of Managerial Psychology Volume 30 ; 30 ; >
-    au < expected ; exists ; 2016 ; Journal of Managerial Psychology Volume 31 ; 31 ; >
+    au < manifest ; exists ; 2016 ; Journal of Managerial Psychology Volume 31 ; 31 ; >
 
   }
 
@@ -7264,7 +7264,7 @@
     au < manifest ; exists ; 2013 ; Journal of Organizational Change Management Volume 26 ; 26 ; >
     au < crawling ; exists ; 2014 ; Journal of Organizational Change Management Volume 27 ; 27 ; >
     au < crawling ; exists ; 2015 ; Journal of Organizational Change Management Volume 28 ; 28 ; >
-    au < expected ; exists ; 2016 ; Journal of Organizational Change Management Volume 29 ; 29 ; >
+    au < manifest ; exists ; 2016 ; Journal of Organizational Change Management Volume 29 ; 29 ; >
 
   }
 
@@ -7746,7 +7746,7 @@
     au < manifest ; exists ; 2013 ; Journal of Strategy and Management Volume 6 ; 6 ; >
     au < crawling ; exists ; 2014 ; Journal of Strategy and Management Volume 7 ; 7 ; >
     au < crawling ; exists ; 2015 ; Journal of Strategy and Management Volume 8 ; 8 ; >
-    au < expected ; exists ; 2016 ; Journal of Strategy and Management Volume 9 ; 9 ; >
+    au < manifest ; exists ; 2016 ; Journal of Strategy and Management Volume 9 ; 9 ; >
 
   }
 
@@ -7845,7 +7845,7 @@
     au < manifest ; exists ; 2013 ; Journal of Workplace Learning Volume 25 ; 25 ; >
     au < crawling ; exists ; 2014 ; Journal of Workplace Learning Volume 26 ; 26 ; >
     au < crawling ; exists ; 2015 ; Journal of Workplace Learning Volume 27 ; 27 ; >
-    au < expected ; exists ; 2016 ; Journal of Workplace Learning Volume 28 ; 28 ; >
+    au < manifest ; exists ; 2016 ; Journal of Workplace Learning Volume 28 ; 28 ; >
 
   }
 
@@ -8368,7 +8368,7 @@
     au < manifest ; exists ; 2013 ; Management Decision Volume 51 ; 51 ; >
     au < crawling ; exists ; 2014 ; Management Decision Volume 52 ; 52 ; >
     au < crawling ; exists ; 2015 ; Management Decision Volume 53 ; 53 ; >
-    au < expected ; exists ; 2016 ; Management Decision Volume 54 ; 54 ; >
+    au < manifest ; exists ; 2016 ; Management Decision Volume 54 ; 54 ; >
 
   }
 
@@ -9243,7 +9243,7 @@
     au < manifest ; exists ; 2013 ; Nutrition & Food Science Volume 43 ; 43 ; >
     au < crawling ; exists ; 2014 ; Nutrition & Food Science Volume 44 ; 44 ; >
     au < crawling ; exists ; 2015 ; Nutrition & Food Science Volume 45 ; 45 ; >
-    au < expected ; exists ; 2016 ; Nutrition & Food Science Volume 46 ; 46 ; >
+    au < manifest ; exists ; 2016 ; Nutrition & Food Science Volume 46 ; 46 ; >
 
   }
 
@@ -9987,7 +9987,7 @@
     au < manifest ; exists ; 2013 ; Rapid Prototyping Journal Volume 19 ; 19 ; >
     au < crawling ; exists ; 2014 ; Rapid Prototyping Journal Volume 20 ; 20 ; >
     au < crawling ; exists ; 2015 ; Rapid Prototyping Journal Volume 21 ; 21 ; >
-    au < expected ; exists ; 2016 ; Rapid Prototyping Journal Volume 22 ; 22 ; >
+    au < manifest ; exists ; 2016 ; Rapid Prototyping Journal Volume 22 ; 22 ; >
 
   }
 
@@ -10148,7 +10148,7 @@
     au < manifest ; exists ; 2013 ; Review of Accounting and Finance Volume 12 ; 12 ; >
     au < crawling ; exists ; 2014 ; Review of Accounting and Finance Volume 13 ; 13 ; >
     au < crawling ; exists ; 2015 ; Review of Accounting and Finance Volume 14 ; 14 ; >
-    au < expected ; exists ; 2016 ; Review of Accounting and Finance Volume 15 ; 15 ; >
+    au < manifest ; exists ; 2016 ; Review of Accounting and Finance Volume 15 ; 15 ; >
 
   }
 
@@ -10368,7 +10368,7 @@
     au < manifest ; exists ; 2013 ; Society and Business Review Volume 8 ; 8 ; >
     au < crawling ; exists ; 2014 ; Society and Business Review Volume 9 ; 9 ; >
     au < crawling ; exists ; 2015 ; Society and Business Review Volume 10 ; 10 ; >
-    au < expected ; exists ; 2016 ; Society and Business Review Volume 11 ; 11 ; >
+    au < manifest ; exists ; 2016 ; Society and Business Review Volume 11 ; 11 ; >
 
   }
 

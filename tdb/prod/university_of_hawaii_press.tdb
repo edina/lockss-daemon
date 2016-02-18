@@ -341,7 +341,7 @@
 
         param[base_url] = http://muse.jhu.edu/
 
-        au < testing ; 2013 ; China Review International Volume 20 ; 20 >
+        au < released ; 2013 ; China Review International Volume 20 ; 20 >
 
       }
 
@@ -609,7 +609,7 @@
         param[base_url] = https://muse.jhu.edu/
 
         au < released ; 2014 ; Korean Studies Volume 38 ; 38 >
-        au < expected ; 2015 ; Korean Studies Volume 39 ; 39 >
+        au < manifest ; 2015 ; Korean Studies Volume 39 ; 39 >
 
       }
 
@@ -738,7 +738,7 @@
       au < released ; 2012 ; Pacific Science Volume 66 [BioOne] ; 66 >
       au < released ; 2013 ; Pacific Science Volume 67 [BioOne] ; 67 >
       au < released ; 2014 ; Pacific Science Volume 68 [BioOne] ; 68 >
-      au < manifest ; 2015 ; Pacific Science Volume 69 [BioOne] ; 69 >
+      au < ready ; 2015 ; Pacific Science Volume 69 [BioOne] ; 69 >
 
     }
 
@@ -807,7 +807,7 @@
 
         au < released ; 2014 ; Philosophy East and West Volume 64 ; 64 >
         au < released ; 2015 ; Philosophy East and West Volume 65 ; 65 >
-        au < expected ; 2016 ; Philosophy East and West Volume 66 ; 66 >
+        au < manifest ; 2016 ; Philosophy East and West Volume 66 ; 66 >
 
       }
 

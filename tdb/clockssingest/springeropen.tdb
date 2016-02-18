@@ -16,7 +16,7 @@
   
         title <
           name = Advanced Modeling and Simulation in Engineering Sciences ;
-          issn = 2213-7467 
+          eissn = 2213-7467 
         >
   
         param[base_url] = http://www.amses-journal.com/
@@ -53,7 +53,7 @@
   
         title <
           name = Agricultural and Food Economics ;
-          issn = 2193-7532 
+          eissn = 2193-7532 
         >
   
         param[base_url] = http://www.agrifoodecon.com/
@@ -157,7 +157,7 @@
   
         title <
           name = Asian Journal of Gambling Issues and Public Health ;
-          issn = 2195-3007 
+          eissn = 2195-3007 
         >
   
         param[base_url] = http://www.ajgiph.com/
@@ -234,7 +234,7 @@
   
         title <
           name = Brazilian Journal of Science and Technology ;
-          issn = 2196-288X 
+          eissn = 2196-288X 
         >
   
         param[base_url] = http://www.bjst-journal.com/
@@ -266,7 +266,7 @@
   
         title <
           name = City, Territory and Architecture ;
-          issn = 2195-2701 
+          eissn = 2195-2701 
         >
   
         param[base_url] = http://www.cityterritoryarchitecture.com/
@@ -319,7 +319,7 @@
   
         title <
           name = Complex Adaptive Systems Modeling ;
-          issn = 2194-3206 
+          eissn = 2194-3206 
         >
   
         param[base_url] = http://www.casmodeling.com/
@@ -336,7 +336,7 @@
   
         title <
           name = Computational Cognitive Science ;
-          issn = 2195-3961 
+          eissn = 2195-3961 
         >
   
         param[base_url] = http://www.computationalcognitivescience.com/
@@ -388,7 +388,7 @@
   
         title <
           name = Decision Analytics ;
-          issn = 2193-8636 
+          eissn = 2193-8636 
         >
   
         param[base_url] = http://www.decisionanalyticsjournal.com/
@@ -404,7 +404,7 @@
   
         title <
           name = Earth Perspectives ;
-          issn = 2194-6434 
+          eissn = 2194-6434 
         >
   
         param[base_url] = http://www.earth-perspectives.com/
@@ -489,7 +489,7 @@
   
         title <
           name = Empirical Research in Vocational Education and Training ;
-          issn = 1877-6345 
+          eissn = 1877-6345 
         >
   
         param[base_url] = http://www.ervet-journal.com/
@@ -544,7 +544,7 @@
   
         title <
           name = Environmental Systems Research ;
-          issn = 2193-2697 
+          eissn = 2193-2697 
         >
   
         param[base_url] = http://www.environmentalsystemsresearch.com/
@@ -885,7 +885,7 @@
   
         title <
           name = Fire Science Reviews ;
-          issn = 2193-0414 
+          eissn = 2193-0414 
         >
   
         param[base_url] = http://www.firesciencereviews.com/
@@ -947,7 +947,7 @@
   
         title <
           name = Functional Linguistics ;
-          issn = 2196-419X 
+          eissn = 2196-419X 
         >
   
         param[base_url] = http://www.functionallinguistics.com/
@@ -963,7 +963,7 @@
   
         title <
           name = Geoscience Letters ;
-          issn = 2196-4092 
+          eissn = 2196-4092 
         >
   
         param[base_url] = http://www.geoscienceletters.com/
@@ -995,7 +995,7 @@
     {
   
         title <
-          name = Health and Justice ;
+          name = Health & Justice ;
           issn = 2194-7899 
         >
   
@@ -1003,9 +1003,9 @@
         param[journal_issn] = 2194-7899 
         comment[platform] = BioMedCentralPlugin
   
-        au < down ; exists ; 2013 ; Health and Justice Volume 1 ; 1 >
-        au < down ; exists ; 2014 ; Health and Justice Volume 2 ; 2 >
-        au < down ; exists ; 2015 ; Health and Justice Volume 3 ; 3 >
+        au < down ; exists ; 2013 ; Health & Justice Volume 1 ; 1 >
+        au < down ; exists ; 2014 ; Health & Justice Volume 2 ; 2 >
+        au < down ; exists ; 2015 ; Health & Justice Volume 3 ; 3 >
   
     }
   
@@ -1052,7 +1052,7 @@
   
         title <
           name = Human-centric Computing and Information Sciences ;
-          issn = 2192-1962 
+          eissn = 2192-1962 
         >
   
         param[base_url] = http://www.hcis-journal.com/
@@ -1071,7 +1071,7 @@
   
         title <
           name = In Silico Pharmacology ;
-          issn = 2193-9616 
+          eissn = 2193-9616 
         >
   
         param[base_url] = http://www.in-silico-pharmacology.com/
@@ -1088,7 +1088,7 @@
   
         title <
           name = Injury Epidemiology ;
-          issn = 2197-1714 
+          eissn = 2197-1714 
         >
   
         param[base_url] = http://www.injepijournal.com/
@@ -1104,7 +1104,8 @@
 
         title <
           name = Integrating Materials and Manufacturing Innovation ;
-          issn = 2193-9772 
+          issn = 2193-9764 ;
+          eissn = 2193-9772 
         >
   
         param[base_url] = http://www.immijournal.com/
@@ -1122,7 +1123,7 @@
   
         title <
           name = Intensive Care Medicine Experimental ;
-          issn = 2197-425X 
+          eissn = 2197-425X 
         >
   
         param[base_url] = http://www.icm-experimental.com/
@@ -1139,7 +1140,8 @@
   
         title <
           name = International Aquatic Research ;
-          issn = 2008-6970 
+          issn = 2008-4935 ;
+          eissn = 2008-6970 
         >
   
         param[base_url] = http://www.intaquares.com/
@@ -1176,7 +1178,7 @@
   
         title <
           name = International Journal of Bipolar Disorders ;
-          issn = 2194-7511 
+          eissn = 2194-7511 
         >
   
         param[base_url] = http://www.journalbipolardisorders.com/
@@ -1213,7 +1215,8 @@
   
         title <
           name = International Journal of Energy and Environmental Engineering ;
-          issn = 2251-6832 
+          issn = 2008-9163 ;
+          eissn = 2251-6832 
         >
   
         param[base_url] = http://www.journal-ijeee.com/
@@ -1231,7 +1234,7 @@
   
         title <
           name = International Journal of Food Contamination ;
-          issn = 2196-2804 
+          eissn = 2196-2804 
         >
   
         param[base_url] = http://www.foodcontaminationjournal.com/
@@ -1247,7 +1250,8 @@
   
         title <
           name = International Journal of Industrial Chemistry ;
-          issn = 2228-5547 
+          issn = 2228-5970 ;
+          eissn = 2228-5547 
         >
   
         param[base_url] = http://www.industchem.com/
@@ -1264,16 +1268,17 @@
     {
   
         title <
-          name = International Journal Of Recycling of Organic Waste in Agriculture ;
-          issn = 2251-7715 
+          name = International Journal of Recycling of Organic Waste in Agriculture ;
+          issn = 2195-3228 ;
+          eissn = 2251-7715 
         >
   
         param[base_url] = http://www.ijrowa.com/
         param[journal_issn] = 2251-7715 
         comment[platform] = BioMedCentralPlugin
   
-        au < doNotProcess ; exists ; 2012 ; International Journal Of Recycling of Organic Waste in Agriculture Volume 1 ; 1 >
-        au < down ; exists ; 2013 ; International Journal Of Recycling of Organic Waste in Agriculture Volume 2 ; 2 >
+        au < doNotProcess ; exists ; 2012 ; International Journal of Recycling of Organic Waste in Agriculture Volume 1 ; 1 >
+        au < down ; exists ; 2013 ; International Journal of Recycling of Organic Waste in Agriculture Volume 2 ; 2 >
   
     }
   
@@ -1281,7 +1286,7 @@
   
         title <
           name = International Journal of STEM Education ;
-          issn = 2196-7822 
+          eissn = 2196-7822 
         >
 
         param[base_url] = http://www.stemeducationjournal.com/
@@ -1297,7 +1302,8 @@
   
         title <
           name = International Nano Letters ;
-          issn = 2228-5326 
+          issn = 2008-9295 ;
+          eissn = 2228-5326 
         >
   
         param[base_url] = http://www.inl-journal.com/
