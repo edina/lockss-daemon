@@ -36,7 +36,7 @@ public class EdiauthLogin extends LockssServlet {
   /* List of IdPs that are allowed to access the service without presenting a shibbAccountable parameter
    * This should only be set for testing purposes */
   public static final String PARAM_EDIAUTH_ALLOWED_NON_ACCOUNTABLE_IDPS = PREFIX + "allowedNonAccountableIdPs";
-  
+
   private static String ediauthIP;
   private static String ediauthReturnURL;
   private static List<String> allowedNonAccountableIdPs;
@@ -44,11 +44,9 @@ public class EdiauthLogin extends LockssServlet {
   public void init(ServletConfig config) throws ServletException {
     super.init(config);
   }
-  
+
   /** Called by ServletUtil.setConfig() */
-  static void setConfig(Configuration config,
-                        Configuration oldConfig,
-                        Configuration.Differences diffs) {
+  static void setConfig(Configuration config, Configuration oldConfig, Configuration.Differences diffs) {
     if (diffs.contains(PREFIX)) {
       ediauthIP = config.get(PARAM_EDIAUTH_IP);
       ediauthReturnURL = config.get(PARAM_EDIAUTH_REDIRECT_URL);
@@ -63,11 +61,6 @@ public class EdiauthLogin extends LockssServlet {
    */
   public void lockssHandleRequest() throws IOException {
     log.debug("start EdiauthLogin...");
-    
-    Page page = ServletUtil.doNewPage("Ediauth", false);
-
-    page.add("Container: <b>" + getMachineName() + "</b>");
-    page.add("<br/>");
 
     if (isLocalhost(req)) {
       // Get parameter
@@ -130,14 +123,11 @@ public class EdiauthLogin extends LockssServlet {
 
         // Return nothing (failure) if there is no userId
         if (userId == null) {
-          log.debug("No suitable value for userId\n");
-          if (requireAccountable && !accountable)
-            log.debug("IdP doesn't assert accountability\n");
-          page.add("IdP doesn't assert accountability");
-          endPage(page);
+          log.warning("No suitable value for userId\n");
+          if (requireAccountable && !accountable) log.warning("IdP doesn't assert accountability\n");
         } else {
           log.debug("Session: " + getSession());
-          
+
           String token = java.util.UUID.randomUUID().toString();
           getAccountManager().addToMapToken(token, map.get("shibbScope"));
 
@@ -149,7 +139,7 @@ public class EdiauthLogin extends LockssServlet {
             log.debug("params.ea_context: " + eaContext);
             response_str = eaContext + separator + "ediauthToken=" + token;
           } else {
-            // Just redirect user to home page
+            // Just redirect user to serveContent page
             String serverURL = (ediauthReturnURL == null) ? "http://localhost:8082/SafeNetServeContent" : ediauthReturnURL;
             log.debug("ediauth redirect URL: " + serverURL);
             response_str = serverURL + "?ediauthToken=" + token;
@@ -161,63 +151,20 @@ public class EdiauthLogin extends LockssServlet {
           out.println(response_str);
         }
       } else {
-        log.debug("extra parameter is missing.");
-        buildEnvInfoPage(page, req);
-        endPage(page);
+        log.error("ERROR: Ediauth attempted login from " + req.getRemoteAddr());
+        resp.sendError(500);
       }
     } else {
-      buildEnvInfoPage(page, req);
-      endPage(page);
+      log.error("ERROR: Ediauth attempted login from " + req.getRemoteAddr());
+      resp.sendError(500);
     }
-  }
-
-  /* TODO: Only for development, should be removed once it's working */
-  protected void buildEnvInfoPage(Page page, HttpServletRequest req) {
-    String remoteAddr = req.getRemoteAddr();
-    String remoteHost = req.getRemoteHost();
-    int remotePort = req.getRemotePort();
-
-    String localAddress = req.getLocalAddr();
-    int localPort = req.getLocalPort();
-    String serverName = req.getServerName();
-
-    String machineId = getMachineName();
-
-    StringBuffer message = new StringBuffer();
-    message.append("remoteAddr: " + remoteAddr);
-    message.append("<br/>");
-    message.append("remoteHost: " + remoteHost);
-    message.append("<br/>");
-    message.append("remotePort: " + remotePort);
-    message.append("<br/>");
-    message.append("localAddress: " + localAddress);
-    message.append("<br/>");
-    message.append("localPort: " + localPort);
-    message.append("<br/>");
-    message.append("serverName: " + serverName);
-    message.append("<br/>");
-    message.append("Container: " + machineId);
-
-    page.add(getPageContent(message.toString()));
-  }
-
-  protected Table getPageContent(String message) {
-    Table tab = new Table(0, "align=\"center\" width=\"80%\"");
-    tab.newRow();
-    tab.newCell("align=\"center\"");
-    tab.add(message);
-    tab.newCell("align=\"center\"");
-    tab.add("&nbsp;");
-    return tab;
   }
 
   protected boolean isLocalhost(HttpServletRequest request) {
     String remoteAddr = request.getRemoteAddr();
-    String localAddress = req.getLocalAddr();
-    
-    log.debug("remote:"+remoteAddr);
-    log.debug("local:"+localAddress);
-    
+    String localAddress = request.getLocalAddr();
+
+
     return remoteAddr.equals(localAddress) || remoteAddr.equals(ediauthIP);
   }
 }
