@@ -259,5 +259,8 @@ public class SafeNetServeContent extends ServeContent {
       return entitlementRegistry.getPublisherWorkflow(publisher);
   }
 
+  void logAccess(String url, String msg) {
+      super.logAccess(url, "UA: \"" + req.getHeader("User-Agent") + "\" " + msg);
+  }
 }
 
