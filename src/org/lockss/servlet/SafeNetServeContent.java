@@ -129,9 +129,8 @@ public class SafeNetServeContent extends ServeContent {
   }
 
   protected boolean setCachedUrlAndAu() throws IOException {
-    // Find a CU that the user is entitled to access, and with content if possible.  If none, find an AU where
-    // it would fit so can rewrite content from publisher if necessary.
-    List<CachedUrl> cachedUrls = pluginMgr.findCachedUrls(url, CuContentReq.PreferContent);
+    // Find a CU that the user is entitled to access, and with content
+    List<CachedUrl> cachedUrls = pluginMgr.findCachedUrls(url, CuContentReq.HasContent);
     if(cachedUrls != null && !cachedUrls.isEmpty()) {
       for(CachedUrl cachedUrl: cachedUrls) {
         try {
