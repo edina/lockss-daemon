@@ -67,10 +67,7 @@ public class EdiauthLogin extends LockssServlet {
       String context = req.getParameter("ea_context");
       String encodedExtra = req.getParameter("ea_extra");
 
-      String response_str = "NO EA_EXTRA FOUND";
-
       // Collect encodedExtra inside a Map
-      log.debug("ea_extra:");
       if (encodedExtra != null) {
         HashMap<String, String> map = new HashMap<String, String>();
         String[] pairs = encodedExtra.split("&");
@@ -133,6 +130,8 @@ public class EdiauthLogin extends LockssServlet {
 
           String eaContext = req.getParameter("ea_context");
 
+          String response_str = "";
+          
           if (context != null && context.trim().length() > 0) {
             String separator = eaContext.contains("?") ? "&" : "?";
 
@@ -148,13 +147,13 @@ public class EdiauthLogin extends LockssServlet {
           log.debug("Returning the URL we want the user to be redirected to: " + response_str);
 
           PrintWriter out = this.resp.getWriter();
-          out.println(response_str);
+          out.print(response_str);
         }
       } else {
-        log.error("ERROR: Ediauth attempted login from " + req.getRemoteAddr());
-        resp.sendError(500);
+        log.error("ERROR: encodedExtra missing.");
       }
     } else {
+      log.debug("local address: " + req.getLocalAddr());
       log.error("ERROR: Ediauth attempted login from " + req.getRemoteAddr());
       resp.sendError(500);
     }
@@ -163,7 +162,6 @@ public class EdiauthLogin extends LockssServlet {
   protected boolean isLocalhost(HttpServletRequest request) {
     String remoteAddr = request.getRemoteAddr();
     String localAddress = request.getLocalAddr();
-
 
     return remoteAddr.equals(localAddress) || remoteAddr.equals(ediauthIP);
   }
