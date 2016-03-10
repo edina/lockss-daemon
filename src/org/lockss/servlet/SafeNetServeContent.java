@@ -116,7 +116,27 @@ public class SafeNetServeContent extends ServeContent {
 	      this.getSession().setAttribute("scope", userInstScope);
 	    } else {
 	      log.debug("Redirecting user to ediauth: "+ediauthUrl);
-	      resp.sendRedirect(ediauthUrl);
+	      // Build current Url removing ediauthToken if exists
+	      StringBuffer requestURL = req.getRequestURL();
+	      if (req.getQueryString() != null) {
+	          requestURL.append("?");
+	          Enumeration<String> paramNames = req.getParameterNames();
+	          while (paramNames.hasMoreElements()) {
+	            String paramName = paramNames.nextElement();
+	            if(!paramName.equals("ediauthToken")){
+  	            String paramValue = req.getParameter(paramName);
+  	            requestURL.append(paramName).append("=").append(paramValue);
+  	            if(paramNames.hasMoreElements()){
+  	              requestURL.append("&");
+  	            }
+	            }
+	          }
+	      }
+	      String completeURL = requestURL.toString();
+        log.debug("Current url: "+completeURL);
+	      String redirectUrl = ediauthUrl+"?context="+URLEncoder.encode(completeURL, "UTF-8");
+        log.debug("Redirect url: "+redirectUrl);
+	      resp.sendRedirect(redirectUrl);
 	      return;
 	    }
 	  } else {
