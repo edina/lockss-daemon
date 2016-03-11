@@ -45,8 +45,10 @@ import java.util.Queue;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.servlet.ServletException;
 
+import org.lockss.account.AccountManager;
 import org.lockss.app.LockssDaemon;
 import org.lockss.config.ConfigManager;
 import org.lockss.config.Tdb;
@@ -101,6 +103,7 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
 
     ConfigurationUtil.addFromArgs(ConfigManager.PARAM_PLATFORM_PROJECT, "safenet");
     ConfigurationUtil.addFromArgs(SafeNetServeContent.PARAM_MISSING_FILE_ACTION, "Redirect");
+    ConfigurationUtil.addFromArgs(SafeNetServeContent.PARAM_EDIAUTH_URL, "http://localhost:8888");
     //ConfigurationUtil.addFromArgs("org.lockss.log.default.level", "debug3");
   }
 
@@ -140,13 +143,19 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
     au.setTitleConfig(titleConfig);
     return au;
   }
-
+  
   protected void initServletRunner() {
+    initServletRunner(true);
+  }
+  
+  protected void initServletRunner(boolean scope) {
     super.initServletRunner();
     sRunner.setServletContextAttribute(ServletManager.CONTEXT_ATTR_SERVLET_MGR, new ContentServletManager());
     sRunner.registerServlet("/SafeNetServeContent", MockSafeNetServeContent.class.getName() );
     sRunner.registerServlet("/test_journal/", RedirectServlet.class.getName());
-    sClient.getSession(true).setAttribute("scope", "ed.ac.uk");
+    if(scope) {
+      sClient.getSession(true).setAttribute("scope", "ed.ac.uk");
+    }
   }
 
   public void testIndex() throws Exception {
@@ -165,6 +174,37 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
     assertEquals(3, auTable.getColumnCount());
     assertEquals("MockAU", auTable.getCellAsText(1, 0));
     assertEquals("/SafeNetServeContent?url=http%3A%2F%2Fdev-safenet.edina.ac.uk%2Ftest_journal%2F&auid=TestAU", auTable.getTableCell(1, 1).getLinks()[0].getURLString());
+  }
+  
+  public void testRedirectToEdiauth() throws Exception {
+    String expectedRedirectUrl = "http://localhost:8888?context=http%3A%2F%2Fnull%2FSafeNetServeContent%3Furl%3Dhttp%3A%2F%2Fdev-safenet.edina.ac.uk%2Ftest_journal%2F%26auid%3DTestAU";
+    
+    initServletRunner(false);
+    pluginMgr.addAu(makeAu(), null);
+    WebRequest request = new GetMethodWebRequest("http://null/SafeNetServeContent?url=http%3A%2F%2Fdev-safenet.edina.ac.uk%2Ftest_journal%2F&auid=TestAU" );
+    InvocationContext ic = sClient.newInvocation(request);
+    SafeNetServeContent snsc = (SafeNetServeContent) ic.getServlet();
+
+    WebResponse resp1 = sClient.getResource(request);
+    assertEquals("content type", "text/html", resp1.getContentType());
+    // Make sure the response code is 3xx i.e. Redirection
+    assertEquals(3, resp1.getResponseCode()/100);
+    assertEquals(expectedRedirectUrl, resp1.getHeaderField("Location"));
+  }
+  
+  public void testEdiauthToken() throws Exception {  
+    initServletRunner(false);
+    pluginMgr.addAu(makeAu(), null);
+    WebRequest request = new GetMethodWebRequest("http://null/SafeNetServeContent?url=http%3A%2F%2Fdev-safenet.edina.ac.uk%2Ftest_journal%2F&auid=TestAU&ediauthToken=token" );
+    InvocationContext ic = sClient.newInvocation(request);
+    SafeNetServeContent snsc = (SafeNetServeContent) ic.getServlet();
+    HttpSession session = sClient.getSession(true);
+    
+    sClient.getResponse(ic);
+    WebResponse resp1 = sClient.getResponse(request);
+    assertResponseOk(resp1);
+    assertEquals("<html><head><title>Blah</title></head><body>Redirected content</body></html>", resp1.getText());
+    assertEquals("scope", session.getAttribute("scope"));
   }
 
   public void testMissingUrl() throws Exception {
@@ -397,10 +437,17 @@ public class TestSafeNetServeContent extends LockssServletTestCase {
       Mockito.when(connection.getResponseInputStream()).thenReturn(new StringInputStream(response));
       return connection;
   }
+  
 
   public static class MockSafeNetServeContent extends SafeNetServeContent {
     private SafeNetServeContent delegate = Mockito.mock(SafeNetServeContent.class);
-
+    
+    public AccountManager getAccountManager() {
+      AccountManager accMng = Mockito.mock(AccountManager.class);
+      Mockito.when(accMng.getFromMapToken("token")).thenReturn("scope");
+      return accMng;
+    }
+    
     public void expectRequest(String url, LockssUrlConnection connection) throws IOException {
       Mockito.when(delegate.doOpenConnection(Mockito.eq(url), Mockito.any(LockssUrlConnectionPool.class))).thenReturn(connection);
     }
