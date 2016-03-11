@@ -193,7 +193,7 @@ public class TestEdiauthLogin extends LockssServletTestCase {
     WebRequest request = new GetMethodWebRequest("http://null/ediauth?"+
       "ea_context=http%3A%2F%2Flocalhost%3A8082%2FSomePlaceToGoTo&"+
       "ea_extra=eduPersonTargetedID%3DSOMETARGETID%26shibbAccountable%3D1%26shibbScope%3Ded.ac.uk&"+
-      "context=http%3A%2F%2Flocalhost%3A8082%2FSafeNetServeContent" );
+      "context=http%3A%2F%2Flocalhost%3A8082%2FSomePlaceToGoTo" );
     InvocationContext ic = sClient.newInvocation(request);
     EdiauthLogin el = (EdiauthLogin) ic.getServlet();
     
