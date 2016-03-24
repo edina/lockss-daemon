@@ -257,7 +257,7 @@ public class SafeNetServeContent extends ServeContent {
       }
       String start = tdbAu.getStartYear() + "0101";
       String end = tdbAu.getEndYear() + "1231";
-      
+
       return entitlementRegistry.isUserEntitled(issn, institution, start, end);
   }
 
@@ -270,7 +270,7 @@ public class SafeNetServeContent extends ServeContent {
       String start = tdbAu.getStartYear() + "0101";
       String end = tdbAu.getEndYear() + "1231";
 
-      String publisher = entitlementRegistry.getPublisher(issn, start, end);
+      String publisher = entitlementRegistry.getPublisher(issn, institution, start, end);
       if(StringUtil.isNullString(publisher)) {
         throw new IllegalArgumentException("No publisher found");
       }
