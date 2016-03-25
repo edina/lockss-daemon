@@ -96,38 +96,29 @@ public class BaseEntitlementRegistryClient extends BaseLockssManager implements 
       return extractDate(value.asText());
   }
 
-  public String getPublisher(String issn, String start, String end) throws IOException {
+  public String getPublisher(String issn, String institution, String start, String end) throws IOException {
     Map<String, String> parameters = new HashMap<String, String>();
-    parameters.put("identifier", issn);
-    Date startDate = extractDate(start);
-    Date endDate = extractDate(end);
-    JsonNode titles = callEntitlementRegistry("/titles", parameters);
-    if (titles != null) {
-      List<String> foundPublishers = new ArrayList<String>();
-      for(JsonNode title : titles) {
-        JsonNode publishers = title.get("publishers");
-        for(JsonNode publisher : publishers) {
-          Date foundStartDate = extractDate(publisher, "start");
-          Date foundEndDate = extractDate(publisher, "end");
+    parameters.put("api_key", apiKey);
+    parameters.put("identifier_value", issn);
+    parameters.put("institution", institution);
+    parameters.put("start", start);
+    parameters.put("end", end);
 
-          if ( foundStartDate != null && ( startDate == null || foundStartDate.after(startDate) ) ) {
-              continue;
-          }
-          if ( foundEndDate != null && ( endDate == null || foundEndDate.before(endDate) ) ) {
-              continue;
-          }
-          foundPublishers.add(publisher.get("id").asText());
+    JsonNode entitlements = callEntitlementRegistry("/entitlements", parameters);
+    if (entitlements != null) {
+      for(JsonNode entitlement : entitlements) {
+        JsonNode entitlementInstitution = entitlement.get("institution");
+        if (entitlementInstitution != null && entitlementInstitution.asText().equals(institution)) {
+          log.warning("TODO: Verify title and dates");
+          return entitlement.get("publisher").asText();
         }
       }
-      if (foundPublishers.size() > 1) {
-        // Valid request, but there are multiple publishers for the date range, which should never happen
-        throw new IOException("Multiple matching publishers returned from entitlement registry");
-      }
-      if (foundPublishers.size() == 1) {
-          return foundPublishers.get(0);
-      }
+
+      // Valid request, but the entitlements don't match the information we passed, which should never happen
+      throw new IOException("No matching entitlements returned from entitlement registry");
     }
-    // Valid request, no publisher found
+
+    //Valid request, no entitlements found
     return null;
   }
 
