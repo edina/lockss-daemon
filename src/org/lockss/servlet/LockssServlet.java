@@ -102,6 +102,10 @@ public abstract class LockssServlet extends HttpServlet
   // Name given to form element whose value is the action that should be
   // performed when the form is submitted.  (Not always the submit button.)
   public static final String ACTION_TAG = "lockssAction";
+  
+  public static final String ORDER_TAG = "order";
+  public static final String START_TAG = "start";
+  public static final String END_TAG = "end";
 
   public static final String JAVASCRIPT_RESOURCE =
     "org/lockss/htdocs/admin.js";

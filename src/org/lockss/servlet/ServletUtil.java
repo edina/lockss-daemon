@@ -2123,7 +2123,7 @@ public class ServletUtil {
       int lettersPerTabCount, List<String> columnHeaderNames,
       String rowTitleCssClass, List<String> columnHeaderCssClasses,
       Map<String, Boolean> tabLetterPopulationMap, Block tabsDiv,
-      String action) {
+      String action, String order) {
     final String DEBUG_HEADER = "createTabsWithTable(): ";
     if (log.isDebug2()) log.debug2(DEBUG_HEADER + "Starting...");
 
@@ -2133,7 +2133,7 @@ public class ServletUtil {
 
     // Create the spans required by jQuery to build the desired tabs.
     org.mortbay.html.List tabList =
-	createTabList(lettersPerTabCount, tabLetters, tabLetterPopulationMap, tabsDiv, action);
+	createTabList(lettersPerTabCount, tabLetters, tabLetterPopulationMap, tabsDiv, action, order);
     
     if(!SubscriptionManagement.SHOW_ADD_PAGE_ACTION.equals(action)){
       // Add them to the tabs container.
@@ -2270,7 +2270,8 @@ public class ServletUtil {
       Map<Character, Character> tabLetters,
       Map<String, Boolean> tabLetterPopulationMap,
       Block tabsDiv,
-      String action) {
+      String action,
+      String order) {
     final String DEBUG_HEADER = "createTabList(): ";
     if (log.isDebug2()) log.debug2(DEBUG_HEADER + "Starting...");
 
@@ -2319,7 +2320,10 @@ public class ServletUtil {
 
       // Set up the tab link.
       if(SubscriptionManagement.SHOW_ADD_PAGE_ACTION.equals(action)){
-        tabLink = new Link("SubscriptionManagement?lockssAction=" + action + "&start=" + startLetter + "&amp;end=" + endLetter);
+        tabLink = new Link("SubscriptionManagement?lockssAction=" + action 
+          + "&start=" + startLetter 
+          + "&end=" + endLetter
+          + "&order=" + order);
       }else{
         tabLink = new Link("#" + startLetter);
       }
