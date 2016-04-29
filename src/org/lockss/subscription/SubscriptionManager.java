@@ -1511,6 +1511,7 @@ public class SubscriptionManager extends BaseLockssDaemonManager implements
     for (TdbPublisher publisher :
       TdbUtil.getTdb().getAllTdbPublishers().values()) {
       publisherName = publisher.getName();
+      System.out.println("publisherName = " + publisherName);
       if (log.isDebug3())
 	log.debug3(DEBUG_HEADER + "publisherName = " + publisherName);
 
@@ -1544,12 +1545,14 @@ public class SubscriptionManager extends BaseLockssDaemonManager implements
 	}
 
 	titleName = title.getName();
+        System.out.println("\ttitleName = " + titleName);
 	if (log.isDebug3())
 	  log.debug3(DEBUG_HEADER + "titleName = " + titleName);
 
 	// Loop through all the title providers. 
 	for (TdbProvider provider : title.getTdbProviders()) {
 	  String providerName = provider.getName();
+          System.out.println("\t\tproviderName = " + providerName);
 	  if (log.isDebug3())
 	    log.debug3(DEBUG_HEADER + "providerName = " + providerName);
 
@@ -1616,6 +1619,138 @@ public class SubscriptionManager extends BaseLockssDaemonManager implements
     if (log.isDebug2()) log.debug2(DEBUG_HEADER
 	+ "unsubscribedPublications.size() = "
 	+ unsubscribedPublications.size());
+    return unsubscribedPublications;
+  }
+  
+  public List<SerialPublication> getUndecidedPublicationsByProvider(
+      Map<String, SubscriptionProvider> undecidedPublicationsProviders)
+    throws DbException {
+    final String DEBUG_HEADER = "getUndecidedPublicationsByProvider(): ";
+    if (log.isDebug2()) log.debug2(DEBUG_HEADER + "Starting...");
+
+    // Get the publishers for which a subscription decision has been made.
+    Map<String, PublisherSubscription> subscribedPublishers =
+        subManagerSql.findAllSubscribedPublishers();
+
+    List<SerialPublication> unsubscribedPublications =
+        new ArrayList<SerialPublication>();
+
+    // Get the existing subscriptions with publisher names.
+    MultiValueMap subscriptionMap = mapSubscriptionsByPublisher(subManagerSql
+        .findAllSubscriptionsAndPublishers());
+
+    Collection<Subscription> publisherSubscriptions = null;
+    String publisherName;
+    String titleName;
+    SerialPublication publication;
+    long providerNumber = 1;
+    long publicationNumber = 1;
+
+    // Loop through all the publishers.
+    for (TdbPublisher publisher :
+      TdbUtil.getTdb().getAllTdbPublishers().values()) {
+      publisherName = publisher.getName();
+      if (log.isDebug3())
+        log.debug3(DEBUG_HEADER + "publisherName = " + publisherName);
+
+      // Check whether a decision has been made regarding the subscription to
+      // all the publications of this publisher. 
+      if (subscribedPublishers.containsKey(publisherName)) {
+        // Yes: Skip all the publications from this publisher.
+        if (log.isDebug3()) log.debug3(DEBUG_HEADER + "publisher = '"
+            + publisherName + "' has subscription: "
+            + subscribedPublishers.get(publisherName));
+        continue;
+      }
+       // No: Get the subscribed publications that belong to the publisher.
+      publisherSubscriptions =
+          (Collection<Subscription>)subscriptionMap.get(publisherName);
+      if (log.isDebug3()) {
+        if (publisherSubscriptions != null) {
+          log.debug3(DEBUG_HEADER + "publisherSubscriptions.size() = "
+              + publisherSubscriptions.size());
+        } else {
+          log.debug3(DEBUG_HEADER + "publisherSubscriptions is null.");
+        }
+      }
+      // Loop through all the titles (subscribed or not) of the publisher.
+      for (TdbTitle title : publisher.getTdbTitles()) {
+        // Skip any titles that are not subscribable.
+        if (!isSubscribable(title)) {
+          continue;
+        }
+
+        titleName = title.getName();
+        if (log.isDebug3())
+          log.debug3(DEBUG_HEADER + "titleName = " + titleName);
+
+        // Loop through all the title providers. 
+        for (TdbProvider provider : title.getTdbProviders()) {
+          String providerName = provider.getName();
+          if (log.isDebug3())
+            log.debug3(DEBUG_HEADER + "providerName = " + providerName);
+
+          // TODO: Replace with provider.getLid() when available.
+          String providerLid = null;
+          if (log.isDebug3())
+            log.debug3(DEBUG_HEADER + "providerLid = " + providerLid);
+
+          // Check whether there is no subscription defined for this title and
+          // this provider.
+          if (publisherSubscriptions == null
+              || !matchSubscriptionTitleAndProvider(publisherSubscriptions,
+                  titleName, providerLid, providerName)) {
+            // Yes: Add the publication to the list of publications with no
+            // subscriptions.
+            publication = new SerialPublication();
+            publication.setPublicationNumber(publicationNumber++);
+            publication.setPublicationName(titleName);
+            publication.setProviderLid(providerLid);
+            publication.setProviderName(providerName);
+            publication.setPublisherName(publisherName);
+            publication.setPissn(title.getPrintIssn());
+            publication.setEissn(title.getEissn());
+            publication.setProprietaryIds(new LinkedHashSet<String>(Arrays
+                .asList(title.getProprietaryIds())));
+            publication.setTdbTitle(title);
+            publication.setAuCount(title.getTdbAuCount());
+
+            if (log.isDebug3())
+              log.debug3(DEBUG_HEADER + "publication = " + publication);
+
+            unsubscribedPublications.add(normalizePublication(publication));
+
+            // Check whether this publisher is not already among the publishers
+            // of undecided publications.
+            if (!undecidedPublicationsProviders.containsKey(providerName)) {
+              // Yes: Add this publication publisher to the list of publishers
+              // for which no decision has been made.
+              SubscriptionProvider undecidedPublicationProvider = new SubscriptionProvider();
+              undecidedPublicationProvider.setProviderName(providerName);
+              undecidedPublicationProvider
+                .setProviderNumber(providerNumber++);
+              if (log.isDebug3()) log.debug3(DEBUG_HEADER
+                  + "undecidedPublicationPublisher = "
+                  + undecidedPublicationProvider);
+
+              undecidedPublicationsProviders.put(providerName,
+                undecidedPublicationProvider);
+            }
+          }
+        }
+      }
+    }
+
+    if (log.isDebug3()) log.debug3(DEBUG_HEADER
+        + "unsubscribedPublications.size() = "
+        + unsubscribedPublications.size());
+
+    // Sort the publications for displaying purposes.
+    Collections.sort(unsubscribedPublications, PUBLICATION_COMPARATOR);
+
+    if (log.isDebug2()) log.debug2(DEBUG_HEADER
+      + "unsubscribedPublications.size() = "
+      + unsubscribedPublications.size());
     return unsubscribedPublications;
   }
   
@@ -1719,7 +1854,7 @@ public class SubscriptionManager extends BaseLockssDaemonManager implements
                   + "undecidedPublicationPlugin = "
                   + undecidedPublicationPlugin);
           
-          System.out.println("Put plugin: "+pluginName);
+//          System.out.println("Put plugin: "+pluginName);
           undecidedPublicationsPlugin.put(pluginName,
                   undecidedPublicationPlugin);
         }
