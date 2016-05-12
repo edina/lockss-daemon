@@ -642,6 +642,9 @@ public class SubscriptionManagement extends LockssServlet {
    * @throws DbException
    */
   private Page populateTab(String start, String end, String order) throws IOException, DbException {
+    // Important or some character won't display properly
+    resp.setContentType("text/html; charset=ISO-8859-1");
+    
     final String DEBUG_HEADER = "populateTab(): ";
     System.out.println(DEBUG_HEADER + "orderByProvider = " + order);
     System.out.println(DEBUG_HEADER + "start: " + start);
