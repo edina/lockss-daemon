@@ -1641,52 +1641,57 @@ public class SubscriptionManager extends BaseLockssDaemonManager implements
 
     Collection<Subscription> publisherSubscriptions = null;
     String publisherName;
+    String providerName;
     String titleName;
     SerialPublication publication;
     long providerNumber = 1;
     long publicationNumber = 1;
 
     // Loop through all the publishers.
-    for (TdbPublisher publisher :
-      TdbUtil.getTdb().getAllTdbPublishers().values()) {
-      publisherName = publisher.getName();
-      if (log.isDebug3())
-        log.debug3(DEBUG_HEADER + "publisherName = " + publisherName);
-
-      // Check whether a decision has been made regarding the subscription to
-      // all the publications of this publisher. 
-      if (subscribedPublishers.containsKey(publisherName)) {
-        // Yes: Skip all the publications from this publisher.
-        if (log.isDebug3()) log.debug3(DEBUG_HEADER + "publisher = '"
-            + publisherName + "' has subscription: "
-            + subscribedPublishers.get(publisherName));
-        continue;
-      }
-       // No: Get the subscribed publications that belong to the publisher.
-      publisherSubscriptions =
-          (Collection<Subscription>)subscriptionMap.get(publisherName);
-      if (log.isDebug3()) {
-        if (publisherSubscriptions != null) {
-          log.debug3(DEBUG_HEADER + "publisherSubscriptions.size() = "
-              + publisherSubscriptions.size());
-        } else {
-          log.debug3(DEBUG_HEADER + "publisherSubscriptions is null.");
-        }
-      }
-      // Loop through all the titles (subscribed or not) of the publisher.
-      for (TdbTitle title : publisher.getTdbTitles()) {
-        // Skip any titles that are not subscribable.
-        if (!isSubscribable(title)) {
+    for (TdbProvider provider :
+      TdbUtil.getTdb().getAllTdbProviders().values()) {
+      providerName = provider.getName();
+      
+      for (TdbPublisher publisher : 
+        provider.getTdbPublishers()) {
+        
+        publisherName = publisher.getName();
+        
+        if (log.isDebug3())
+          log.debug3(DEBUG_HEADER + "providerName = " + providerName);
+        
+        // Check whether a decision has been made regarding the subscription to
+        // all the publications of this publisher. 
+        if (subscribedPublishers.containsKey(publisherName)) {
+          // Yes: Skip all the publications from this publisher.
+          if (log.isDebug3()) log.debug3(DEBUG_HEADER + "publisher = '"
+              + publisherName + "' has subscription: "
+              + subscribedPublishers.get(publisherName));
           continue;
         }
+        // No: Get the subscribed publications that belong to the publisher.
+        publisherSubscriptions =
+          (Collection<Subscription>)subscriptionMap.get(publisherName);
+        if (log.isDebug3()) {
+          if (publisherSubscriptions != null) {
+            log.debug3(DEBUG_HEADER + "publisherSubscriptions.size() = "
+                + publisherSubscriptions.size());
+          } else {
+            log.debug3(DEBUG_HEADER + "publisherSubscriptions is null.");
+          }
+        }
+        // Loop through all the titles (subscribed or not) of the publisher.
+        for (TdbTitle title : publisher.getTdbTitles()) {
+          // Skip any titles that are not subscribable.
+          if (!isSubscribable(title)) {
+            continue;
+          }
 
-        titleName = title.getName();
-        if (log.isDebug3())
-          log.debug3(DEBUG_HEADER + "titleName = " + titleName);
+          titleName = title.getName();
+          if (log.isDebug3())
+            log.debug3(DEBUG_HEADER + "titleName = " + titleName);
 
-        // Loop through all the title providers. 
-        for (TdbProvider provider : title.getTdbProviders()) {
-          String providerName = provider.getName();
+          // Loop through all the title providers. 
           if (log.isDebug3())
             log.debug3(DEBUG_HEADER + "providerName = " + providerName);
 
@@ -1754,6 +1759,14 @@ public class SubscriptionManager extends BaseLockssDaemonManager implements
     return unsubscribedPublications;
   }
   
+  /**
+   * Gets Plugins from TdbUtil.getConfiguredTdbAus()
+   * But that's not a full listing of the Plugins
+   * 
+   * @param undecidedPublicationsPlugin
+   * @return
+   * @throws DbException
+   */
   public List<SerialPublication> getUndecidedPublicationsByPlugin(
 	      Map<String, SubscriptionPlugin> undecidedPublicationsPlugin)
 	          throws DbException {
@@ -1874,6 +1887,16 @@ public class SubscriptionManager extends BaseLockssDaemonManager implements
     return unsubscribedPublications;
   }
   
+  /**
+   * Here we are trying to get the list of plugin going through each AU
+   * obtain with: TdbUtil.getTdb().getAllTdbAuIds()
+   * Unfortunately the list AU is huge and this cause a:
+   * java.lang.OutOfMemoryError: GC overhead limit exceeded
+   * 
+   * @param undecidedPublicationsPlugin
+   * @return
+   * @throws DbException
+   */
   public List<SerialPublication> getUndecidedPublicationsByPluginBeta(
       Map<String, SubscriptionPlugin> undecidedPublicationsPlugin)
           throws DbException {
