@@ -118,7 +118,6 @@ public class SubscriptionManagement extends LockssServlet {
   public static final String SHOW_UPDATE_PAGE_HELP_TEXT =
       "Change existing title subscription options";
   public static final String PUBLISHER_PAGE_ORDER = "publisher";
-  public static final String PLUGIN_PAGE_ORDER = "plugin";
   public static final String PROVIDER_PAGE_ORDER = "provider";
   public static final String TRI_STATE_WIDGET_HIDDEN_ID_SUFFIX = "Hidden";
   public static final String TRI_STATE_WIDGET_HIDDEN_ID_UNSET_VALUE = "unset";
@@ -136,8 +135,6 @@ public class SubscriptionManagement extends LockssServlet {
       "totalSubscription";
   private static final String UNDECIDED_PUBLISHERS_SESSION_KEY =
       "undecidedPublishers";
-  private static final String UNDECIDED_PLUGINS_SESSION_KEY =
-      "undecidedPlugins";
   private static final String UNDECIDED_PROVIDERS_SESSION_KEY =
       "undecidedProviders";
   private static final String UNDECIDED_TITLES_SESSION_KEY = "undecidedTitles";
@@ -349,17 +346,12 @@ public class SubscriptionManagement extends LockssServlet {
       // subscription decision has been made.
       Map<String, Publisher> publishers = new HashMap<String, Publisher>();
       
-      Map<String, SubscriptionPlugin> plugins = new HashMap<String, SubscriptionPlugin>();
-      
       Map<String, SubscriptionProvider> providers = new HashMap<String, SubscriptionProvider>();
 
       // Get the publications for which no subscription decision has been made
       // and populate their publishers.
       List<SerialPublication> publications = new ArrayList<SerialPublication>();
-      if(order.equals(PLUGIN_PAGE_ORDER)){
-        publications =
-          subManager.getUndecidedPublicationsByPlugin(plugins);
-      } else if(order.equals(PROVIDER_PAGE_ORDER)) {
+      if(order.equals(PROVIDER_PAGE_ORDER)) {
         publications =
           subManager.getUndecidedPublicationsByProvider(providers);
       } else {
@@ -399,7 +391,7 @@ public class SubscriptionManagement extends LockssServlet {
 
 	if (publications.size() <= maxSingleTabPublicationCount
 	    || (publishers.keySet().size() <= maxSingleTabPublisherCount
-	      && plugins.keySet().size() <= maxSingleTabPublisherCount)) {
+	      && providers.keySet().size() <= maxSingleTabPublisherCount)) {
 	  lettersPerTab = LETTERS_IN_ALPHABET;
 	}
 
@@ -433,22 +425,14 @@ public class SubscriptionManagement extends LockssServlet {
 	// Save the undecided publications in the session to compare after the
 	// form is submitted.
 	HttpSession session = getSession();
-//	System.out.println("publications size: " + publications.size());
 	session.setAttribute(UNDECIDED_TITLES_SESSION_KEY, publications);
 
 	// Save the publishers in the session to compare after the form is
 	// submitted.
-//	System.out.println("publishers size: " + publishers.size());
 	session.setAttribute(UNDECIDED_PUBLISHERS_SESSION_KEY, publishers);
-	
-	// Save the plugins in the session to compare after the form is
-	// submitted.
-//	System.out.println("plugins size: " + plugins.size());
-	session.setAttribute(UNDECIDED_PLUGINS_SESSION_KEY, plugins);
 	
 	// Save the providers in the session to compare after the form is
 	// submitted.
-//	System.out.println("providers size: " + providers.size());
 	session.setAttribute(UNDECIDED_PROVIDERS_SESSION_KEY, providers);
 
 	if (subManager.isTotalSubscriptionEnabled()) {
@@ -659,26 +643,18 @@ public class SubscriptionManagement extends LockssServlet {
     resp.setContentType("text/html; charset=ISO-8859-1");
     
     final String DEBUG_HEADER = "populateTab(): ";
-//    System.out.println(DEBUG_HEADER + "orderByProvider = " + order);
-//    System.out.println(DEBUG_HEADER + "start: " + start);
-//    System.out.println(DEBUG_HEADER + "end: " + end);
     
     HttpSession session = getSession();
     
     // Get the publishers presented in the form just submitted.
     Map<String, Publisher> publishers = (Map<String, Publisher>)session
         .getAttribute(UNDECIDED_PUBLISHERS_SESSION_KEY);
-
-    // Get the plugins presented in the form just submitted.
-    Map<String, SubscriptionPlugin> plugins = (Map<String, SubscriptionPlugin>)session
-        .getAttribute(UNDECIDED_PLUGINS_SESSION_KEY);
     
     // Get the plugins presented in the form just submitted.
     Map<String, SubscriptionProvider> providers = (Map<String, SubscriptionProvider>)session
         .getAttribute(UNDECIDED_PROVIDERS_SESSION_KEY);
     
     Map<String, Publisher> tabPublishers = new  HashMap<String, Publisher>();
-    Map<String, SubscriptionPlugin> tabPlugins = new  HashMap<String, SubscriptionPlugin>();
     Map<String, SubscriptionProvider> tabProviders = new  HashMap<String, SubscriptionProvider>();
     
     switch (order) {
@@ -690,21 +666,7 @@ public class SubscriptionManagement extends LockssServlet {
           String pubName = pubIter.next();
           if(start.charAt(0) <= pubName.charAt(0) 
               && pubName.charAt(0) <= end.charAt(0) ){
-//            System.out.println(DEBUG_HEADER + "Add pubName: " + pubName);
             tabPublishers.put(pubName, publishers.get(pubName));
-          }
-        }
-        break;
-      case PLUGIN_PAGE_ORDER:
-        // Filter plugins
-        Set<String> plgIds = plugins.keySet();
-        Iterator<String> plgIter = plgIds.iterator();
-        while (plgIter.hasNext()) {
-          String plgId = plgIter.next();
-          if(start.charAt(0) <= plgId.charAt(0) 
-              && plgId.charAt(0) <= end.charAt(0) ){
-//            System.out.println(DEBUG_HEADER + "Add plgId: " + plgId);
-            tabPlugins.put(plgId, plugins.get(plgId));
           }
         }
         break;
@@ -716,7 +678,6 @@ public class SubscriptionManagement extends LockssServlet {
           String prvId = prvIter.next();
           if(start.charAt(0) <= prvId.charAt(0) 
               && prvId.charAt(0) <= end.charAt(0) ){
-//            System.out.println(DEBUG_HEADER + "Add prvId: " + prvId);
             tabProviders.put(prvId, providers.get(prvId));
           }
         }
@@ -732,12 +693,9 @@ public class SubscriptionManagement extends LockssServlet {
     for (SerialPublication publication : publications) {
       // Get the publisher name.
       String publisherName = publication.getPublisherName();
-      String pluginName = publication.getPluginName();
       String providerName = publication.getProviderName();
       // Only add if in tabPublishers.
       if(tabPublishers.get(publisherName) != null) {
-        tabPublications.add(publication);
-      }else if(tabPlugins.get(pluginName) != null) {
         tabPublications.add(publication);
       }else if(tabProviders.get(providerName) != null) {
         tabPublications.add(publication);
@@ -758,9 +716,6 @@ public class SubscriptionManagement extends LockssServlet {
     switch (order) {
       case PUBLISHER_PAGE_ORDER:
         populateTabsPublicationsByPublisher(tabPublications, tabPublishers, divTableMap, start, end);
-        break;
-      case PLUGIN_PAGE_ORDER:
-        populateTabsPublicationsByPlugin(tabPublications, tabPlugins, divTableMap, start, end);
         break;
       case PROVIDER_PAGE_ORDER:
         populateTabsPublicationsByProvider(tabPublications, tabProviders, divTableMap, start, end);
@@ -932,73 +887,6 @@ public class SubscriptionManagement extends LockssServlet {
       if (log.isDebug()) log.debug(DEBUG_HEADER + "Done.");
   }
   
-  private void populateTabsPublicationsByPlugin(List<SerialPublication> publications,
-      Map<String, SubscriptionPlugin> plugins, Map<String, Table> divTableMap,
-      String start, String end) {
-    final String DEBUG_HEADER = "populateTabsPublicationsByPlugin(): ";
-    if (log.isDebug()) {
-      if (publications != null) {
-        log.debug(DEBUG_HEADER + "publications.size() = "
-            + publications.size());
-      } else {
-        log.debug(DEBUG_HEADER + "publications is null");
-      }
-      if (plugins != null) {
-        log.debug(DEBUG_HEADER + "plugins.size() = "
-            + plugins.size());
-      } else {
-        log.debug(DEBUG_HEADER + "plugins is null");
-      }
-    }
-    Map.Entry<String, TreeSet<SerialPublication>> pubEntry;
-    String pluginName;
-    TreeSet<SerialPublication> pubSet;
-            // Get a map of the publications keyed by their publisher.
-    MultiValueMap publicationMap = new MultiValueMap();
-    publicationMap = this.orderPublicationsByPlugin(publications);
-//	    orderPublicationsByPublisher(publications);
-    
-    if (log.isDebug()) {
-      if (publicationMap != null) {
-        log.debug(DEBUG_HEADER + "publicationMap.size() = "
-            + publicationMap.size());
-      } else {
-        log.debug(DEBUG_HEADER + "publicationMap is null");
-      }
-    }
-            // Loop through all the publications mapped by their publisher.
-    Iterator<Map.Entry<String, TreeSet<SerialPublication>>> pubIterator =
-        (Iterator<Map.Entry<String, TreeSet<SerialPublication>>>)publicationMap
-        .entrySet().iterator();
-    while (pubIterator.hasNext()) {
-      pubEntry = pubIterator.next();
-      // Get the plugin name.
-      pluginName = pubEntry.getKey();
-      if (log.isDebug())
-        log.debug(DEBUG_HEADER + "pluginName = " + pluginName);
-      // Get the plugin number.
-      if(plugins.get(pluginName) != null){
-        Long pluginNumber =
-          plugins.get(pluginName).getPluginNumber();
-        if (log.isDebug())
-          log.debug3(DEBUG_HEADER + "publisherNumber = " + pluginNumber);
-        // Get the count of archival units.
-        int auCount = 1;
-        if (log.isDebug()) log.debug(DEBUG_HEADER + "auCount = " + auCount);
-        // Get the set of publications for this publisher.
-        pubSet = pubEntry.getValue();
-        if (log.isDebug())
-          log.debug(DEBUG_HEADER + "pubSet.size() = " + pubSet.size());
-        // Populate a tab with the publications for this publisher.
-        populateTabPublisherPublications(pluginName, pluginNumber,
-          null, auCount, pubSet, divTableMap, start, end);
-      }else{
-        System.err.println("Couldn't find plugin: " + pluginName);
-      }
-    }
-    if (log.isDebug()) log.debug(DEBUG_HEADER + "Done.");
-  }
-
   /**
    * Maps publications by publisher.
    * 
@@ -1009,8 +897,6 @@ public class SubscriptionManagement extends LockssServlet {
   private MultiValueMap orderPublicationsByPublisher(
       List<SerialPublication> publications) {
     final String DEBUG_HEADER = "orderPublicationsByPublisher(): ";
-
-//    System.out.println(DEBUG_HEADER + "Starting...");
     
     if (log.isDebug2()) {
       if (publications != null) {
@@ -1167,101 +1053,6 @@ public class SubscriptionManagement extends LockssServlet {
     return publicationMap;
   }
   
-  /**
-   * Maps publications by plugin.
-   * 
-   * @param publications
-   *          A List<SerialPublication> with the publications.
-   * @return a MultiValueMap with the map in the desired format.
-   */
-  private MultiValueMap orderPublicationsByPlugin(
-      List<SerialPublication> publications) {
-    final String DEBUG_HEADER = "orderPublicationsByPlugin(): ";
-    
-//    System.out.println(DEBUG_HEADER + "Starting...");
-    
-    if (log.isDebug2()) {
-      if (publications != null) {
-	log.debug2(DEBUG_HEADER + "publications.size() = "
-	    + publications.size());
-      } else {
-	log.debug2(DEBUG_HEADER + "publications is null");
-      }
-    }
-
-    SerialPublication publication;
-    String pluginName;
-    String publicationName;
-
-    // Initialize the resulting map.
-    MultiValueMap publicationMap = MultiValueMap
-	.decorate(new TreeMap<String, TreeSet<SerialPublication>>(),
-	    FactoryUtils.prototypeFactory(new TreeSet<SerialPublication>(
-		subManager.getPublicationComparator())));
-
-    int publicationCount = 0;
-
-    if (publications != null) {
-      publicationCount = publications.size();
-    }
-
-    // Loop through all the publications.
-    for (int i = 0; i < publicationCount; i++) {
-      publication = publications.get(i);
-
-      // The publisher name.
-      pluginName = publication.getPluginName();
-      
-//      System.out.println("publisherName: " + publication.getPublisherName());
-//      System.out.println("pluginName: " + pluginName);
-      
-      if (log.isDebug3())
-	log.debug3(DEBUG_HEADER + "pluginName = " + pluginName);
-
-      // Do nothing with this publication if it has no publisher.
-      if (StringUtil.isNullString(pluginName)) {
-	log.error("Publication '" + publication.getPublicationName()
-	    + "' is unsubscribable because it has no plugin.");
-	continue;
-      }
-
-      // The publication name.
-      publicationName = publication.getPublicationName();
-      if (log.isDebug3())
-	  log.debug3(DEBUG_HEADER + "publicationName = " + publicationName);
-
-      // Initialize the unique name of the publication for display purposes.
-      String uniqueName = publicationName;
-
-      // Check whether the publisher name displayed must be qualified with the
-      // provider name to make it unique.
-//      if ((i > 0
-//	  && publicationName.equals(publications.get(i - 1)
-//	      .getPublicationName()) && providerName.equals(publications.get(
-//	  i - 1).getProviderName()))
-//	  || (i < publicationCount - 1
-//	      && publicationName.equals(publications.get(i + 1)
-//	          .getPublicationName()) && providerName.equals(publications
-//	      .get(i + 1).getProviderName()))) {
-//	// Yes: Create the unique name.
-//	if (!StringUtil.isNullString(publication.getPublisherName())) {
-//	  uniqueName += " [" + publication.getPublisherName() + "]";
-//	  if (log.isDebug3())
-//	    log.debug3(DEBUG_HEADER + "uniqueName = " + uniqueName);
-//	}
-//      }
-
-      // Remember the publication unique name.
-      publication.setUniqueName(uniqueName);
-
-      // Add the publication to this publisher set of publications.
-      publicationMap.put(pluginName, publication);
-    }
-
-    if (log.isDebug2()) log.debug2(DEBUG_HEADER + "Done.");
-    return publicationMap;
-  }
-
   /**
    * Populates a tab with the publications for a publisher.
    * 
@@ -3343,8 +3134,8 @@ public class SubscriptionManagement extends LockssServlet {
   }
   
   private Link createOrderByLink(String order){
-    String linkOrder = PLUGIN_PAGE_ORDER;
-    if(order.equals(PLUGIN_PAGE_ORDER)){
+    String linkOrder = PROVIDER_PAGE_ORDER;
+    if(order.equals(PROVIDER_PAGE_ORDER)){
       linkOrder = PUBLISHER_PAGE_ORDER;
     }
     String linkHref = "/SubscriptionManagement?lockssAction=showAdd&order=" + linkOrder;

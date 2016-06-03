@@ -955,7 +955,6 @@ public class SubscriptionManagerSql {
     String providerLid;
     String providerName;
     String publisherName;
-    String pluginName;
     SerialPublication publication;
     Subscription subscription;
     List<Subscription> subscriptions = new ArrayList<Subscription>();

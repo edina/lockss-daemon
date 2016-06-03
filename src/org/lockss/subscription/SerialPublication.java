@@ -51,7 +51,6 @@ public class SerialPublication {
   private String providerLid;
   private String providerName;
   private String publisherName;
-  private String pluginName;
   private String pIssn;
   private String eIssn;
   private Set<String> proprietaryIds;
@@ -99,14 +98,6 @@ public class SerialPublication {
     this.publisherName = publisherName;
   }
 
-  public String getPluginName() {
-    return pluginName;
-  }
-
-  public void setPluginName(String pluginName) {
-    this.pluginName = pluginName;
-  }
-  
   public String getPissn() {
     return pIssn;
   }
@@ -274,7 +265,6 @@ public class SerialPublication {
 	.append("', providerLid='").append(providerLid)
 	.append("', providerName='").append(providerName)
 	.append("', publisherName='").append(publisherName)
-	.append("', pluginId='").append(pluginName)
 	.append("', pIssn='").append(pIssn)
 	.append("', eIssn='").append(eIssn)
 	.append("', proprietaryIds='").append(proprietaryIds)

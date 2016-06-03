@@ -87,7 +87,6 @@ import org.lockss.util.MetadataUtil;
 import org.lockss.util.PlatformUtil;
 import org.lockss.util.RateLimiter;
 import org.lockss.util.StringUtil;
-import org.lockss.ws.status.TdbAuHelper;
 
 /**
  * Manager of serial publication subscriptions.
@@ -1511,7 +1510,6 @@ public class SubscriptionManager extends BaseLockssDaemonManager implements
     for (TdbPublisher publisher :
       TdbUtil.getTdb().getAllTdbPublishers().values()) {
       publisherName = publisher.getName();
-      System.out.println("publisherName = " + publisherName);
       if (log.isDebug3())
 	log.debug3(DEBUG_HEADER + "publisherName = " + publisherName);
 
@@ -1545,14 +1543,12 @@ public class SubscriptionManager extends BaseLockssDaemonManager implements
 	}
 
 	titleName = title.getName();
-        System.out.println("\ttitleName = " + titleName);
 	if (log.isDebug3())
 	  log.debug3(DEBUG_HEADER + "titleName = " + titleName);
 
 	// Loop through all the title providers. 
 	for (TdbProvider provider : title.getTdbProviders()) {
 	  String providerName = provider.getName();
-          System.out.println("\t\tproviderName = " + providerName);
 	  if (log.isDebug3())
 	    log.debug3(DEBUG_HEADER + "providerName = " + providerName);
 
@@ -1759,286 +1755,6 @@ public class SubscriptionManager extends BaseLockssDaemonManager implements
     return unsubscribedPublications;
   }
   
-  /**
-   * Gets Plugins from TdbUtil.getConfiguredTdbAus()
-   * But that's not a full listing of the Plugins
-   * 
-   * @param undecidedPublicationsPlugin
-   * @return
-   * @throws DbException
-   */
-  public List<SerialPublication> getUndecidedPublicationsByPlugin(
-	      Map<String, SubscriptionPlugin> undecidedPublicationsPlugin)
-	          throws DbException {
-    final String DEBUG_HEADER = "getUndecidedPublicationsByPlugin(): ";
-    if (log.isDebug()) log.debug(DEBUG_HEADER + "Starting...");
-    
-    // Get the publishers for which a subscription decision has been made.
-    Map<String, PublisherSubscription> subscribedPublishers =
-        subManagerSql.findAllSubscribedPublishers();
-    
-    List<SerialPublication> unsubscribedPublications =
-        new ArrayList<SerialPublication>();
-    
-    // Get the existing subscriptions with publisher names.
-    MultiValueMap subscriptionMap = mapSubscriptionsByPublisher(subManagerSql
-        .findAllSubscriptionsAndPublishers());
-    
-    Collection<Subscription> publisherSubscriptions = null;
-    String publisherName;
-    String titleName;
-    SerialPublication publication;
-    long pluginNumber = 1;
-    long publicationNumber = 1;
-    
-    
-    List<TdbAu> tdbAus = TdbUtil.getConfiguredTdbAus();
-    for (TdbAu tdbau : tdbAus){
-      publisherName = tdbau .getPublisherName();
-      if (log.isDebug()){ 
-        log.debug(DEBUG_HEADER + "publisherName = " + publisherName);
-      }
-      
-      // Check whether a decision has been made regarding the subscription to
-      // all the publications of this publisher. 
-      if (subscribedPublishers.containsKey(publisherName)) {
-        // Yes: Skip this AU.
-        if (log.isDebug()){
-            log.debug(DEBUG_HEADER + "publisher = '"
-              + publisherName + "' has subscription: "
-              + subscribedPublishers.get(publisherName));
-        }
-        continue;
-      }
-
-      // No: Get the subscribed publications that belong to the publisher.
-      publisherSubscriptions =
-        (Collection<Subscription>)subscriptionMap.get(publisherName);
-      if (log.isDebug()) {
-        if (publisherSubscriptions != null) {
-          log.debug(DEBUG_HEADER + "publisherSubscriptions.size() = "
-                  + publisherSubscriptions.size());
-        } else {
-          log.debug(DEBUG_HEADER + "publisherSubscriptions is null.");
-        }
-      }
-        
-      String providerName = tdbau.getProviderName();
-      publisherName = tdbau.getPublisherName();
-      TdbTitle title = tdbau.getTdbTitle();
-      titleName = title.getName();
-      
-      ArchivalUnit au = TdbUtil.getAu(tdbau);
-      String pluginName = au.getPlugin().getPluginName();
-      if (publisherSubscriptions == null
-        || !matchSubscriptionTitleAndProvider(publisherSubscriptions,
-             titleName, null, providerName)) {
-        publication = new SerialPublication();
-        publication.setPublicationNumber(publicationNumber++);
-        publication.setPublicationName(titleName);
-        publication.setProviderLid(null);
-        publication.setProviderName(providerName);
-        publication.setPublisherName(publisherName);
-        publication.setPluginName(pluginName);
-        publication.setPissn(title.getPrintIssn());
-        publication.setEissn(title.getEissn());
-        publication.setProprietaryIds(new LinkedHashSet<String>(Arrays
-          .asList(title.getProprietaryIds())));
-        publication.setTdbTitle(title);
-        publication.setAuCount(title.getTdbAuCount());
-        
-        if (log.isDebug())
-          log.debug(DEBUG_HEADER + "publication = " + publication);
-  
-        unsubscribedPublications.add(normalizePublication(publication));
-
-        // Check whether this publisher is not already among the publishers
-        // of undecided publications.
-        if (!undecidedPublicationsPlugin.containsKey(pluginName)) {
-          // Yes: Add this publication publisher to the list of publishers
-          // for which no decision has been made.
-          SubscriptionPlugin undecidedPublicationPlugin = 
-                  new SubscriptionPlugin();
-          undecidedPublicationPlugin.setPluginId(pluginName);
-          undecidedPublicationPlugin.setProviderName(providerName);
-          undecidedPublicationPlugin
-                  .setPluginNumber(pluginNumber++);
-          if (log.isDebug()) log.debug3(DEBUG_HEADER
-                  + "undecidedPublicationPlugin = "
-                  + undecidedPublicationPlugin);
-          
-//          System.out.println("Put plugin: "+pluginName);
-          undecidedPublicationsPlugin.put(pluginName,
-                  undecidedPublicationPlugin);
-        }
-      }
-    }
-    
-    if (log.isDebug()) log.debug(DEBUG_HEADER
-        + "unsubscribedPublications.size() = "
-        + unsubscribedPublications.size());
-    
-    // Sort the publications for displaying purposes.
-    Collections.sort(unsubscribedPublications, PUBLICATION_COMPARATOR);
-    
-    if (log.isDebug()) log.debug(DEBUG_HEADER
-        + "unsubscribedPublications.size() = "
-        + unsubscribedPublications.size());
-    return unsubscribedPublications;
-  }
-  
-  /**
-   * Here we are trying to get the list of plugin going through each AU
-   * obtain with: TdbUtil.getTdb().getAllTdbAuIds()
-   * Unfortunately the list AU is huge and this cause a:
-   * java.lang.OutOfMemoryError: GC overhead limit exceeded
-   * 
-   * @param undecidedPublicationsPlugin
-   * @return
-   * @throws DbException
-   */
-  public List<SerialPublication> getUndecidedPublicationsByPluginBeta(
-      Map<String, SubscriptionPlugin> undecidedPublicationsPlugin)
-          throws DbException {
-    final String DEBUG_HEADER = "getUndecidedPublicationsByPlugin(): ";
-    if (log.isDebug3()) log.debug3(DEBUG_HEADER + "Starting...");
-    
-    // Get the publishers for which a subscription decision has been made.
-    Map<String, PublisherSubscription> subscribedPublishers =
-        subManagerSql.findAllSubscribedPublishers();
-    
-    List<SerialPublication> unsubscribedPublications =
-        new ArrayList<SerialPublication>();
-    
-    // Get the existing subscriptions with publisher names.
-    MultiValueMap subscriptionMap = mapSubscriptionsByPublisher(subManagerSql
-        .findAllSubscriptionsAndPublishers());
-    
-    Collection<Subscription> publisherSubscriptions = null;
-    String publisherName;
-    String titleName;
-    SerialPublication publication;
-    long pluginNumber = 1;
-    long publicationNumber = 1;
-    
-    
-//    List<TdbAu> tdbAus = TdbUtil.getConfiguredTdbAus();
-//    for (TdbAu tdbau : tdbAus){
-//    List<TdbTitle> tdbTitles = TdbUtil.getAllTdbTitles();
-    Set<Id> tdbAuIds = TdbUtil.getTdb().getAllTdbAuIds();
-    
-    for(Id tdbAuId : tdbAuIds){
-      TdbAu tdbAu = tdbAuId.getTdbAu();
-      
-      publisherName = tdbAu.getPublisherName();
-      if (log.isDebug3()){ 
-        log.debug3(DEBUG_HEADER + "publisherName = " + publisherName);
-      }
-      
-      // Check whether a decision has been made regarding the subscription to
-      // all the publications of this publisher. 
-      if (subscribedPublishers.containsKey(publisherName)) {
-        // Yes: Skip this AU.
-        if (log.isDebug3()){
-            log.debug3(DEBUG_HEADER + "publisher = '"
-            + publisherName + "' has subscription: "
-            + subscribedPublishers.get(publisherName));
-        }
-        continue;
-      }
-
-      // No: Get the subscribed publications that belong to the publisher.
-      publisherSubscriptions =
-        (Collection<Subscription>)subscriptionMap.get(publisherName);
-      if (log.isDebug3()) {
-        if (publisherSubscriptions != null) {
-          log.debug3(DEBUG_HEADER + "publisherSubscriptions.size() = "
-                + publisherSubscriptions.size());
-        } else {
-          log.debug3(DEBUG_HEADER + "publisherSubscriptions is null.");
-        }
-      }
-      
-      String providerName = tdbAu.getProviderName();
-      publisherName = tdbAu.getPublisherName();
-      TdbTitle title = tdbAu.getTdbTitle();
-      titleName = title.getName();
-      
-      ArchivalUnit au = null;
-      try{
-          au = TdbUtil.getAu(tdbAu);
-      }catch(java.lang.IllegalStateException ise){
-          System.err.println(ise.toString());
-          continue;
-      }
-      
-      String pluginName;
-      if(au == null){
-        String pluginId = tdbAu.getPluginId();
-        String[] pluginIdParts = pluginId.split("\\.");
-        pluginName = pluginIdParts[pluginIdParts.length-1];
-      }else{
-        pluginName = au.getPlugin().getPluginName();
-      }
-      
-      // Add space before uppercase
-      pluginName = pluginName.replaceAll("(\\p{Ll})(\\p{Lu})","$1 $2");
-      if (publisherSubscriptions == null
-        || !matchSubscriptionTitleAndProvider(publisherSubscriptions,
-            titleName, null, providerName)) {
-        publication = new SerialPublication();
-        publication.setPublicationNumber(publicationNumber++);
-        publication.setPublicationName(titleName);
-        publication.setProviderLid(null);
-        publication.setProviderName(providerName);
-        publication.setPublisherName(publisherName);
-        publication.setPluginName(pluginName);
-        publication.setPissn(title.getPrintIssn());
-        publication.setEissn(title.getEissn());
-        publication.setProprietaryIds(new LinkedHashSet<String>(Arrays
-          .asList(title.getProprietaryIds())));
-        publication.setTdbTitle(title);
-        publication.setAuCount(title.getTdbAuCount());
-        
-        if (log.isDebug3())
-          log.debug3(DEBUG_HEADER + "publication = " + publication);
-         
-        unsubscribedPublications.add(normalizePublication(publication));
-
-        // Check whether this publisher is not already among the publishers
-        // of undecided publications.
-        if (!undecidedPublicationsPlugin.containsKey(pluginName)) {
-          // Yes: Add this publication publisher to the list of publishers
-          // for which no decision has been made.
-          SubscriptionPlugin undecidedPublicationPlugin = 
-            new SubscriptionPlugin();
-          undecidedPublicationPlugin.setPluginId(pluginName);
-          undecidedPublicationPlugin.setProviderName(providerName);
-          undecidedPublicationPlugin
-            .setPluginNumber(pluginNumber++);
-          if (log.isDebug3()) log.debug3(DEBUG_HEADER
-            + "undecidedPublicationPlugin = "
-            + undecidedPublicationPlugin);
-          
-          undecidedPublicationsPlugin.put(pluginName,
-            undecidedPublicationPlugin);
-        }
-      }
-    }
-    
-    if (log.isDebug3()) log.debug3(DEBUG_HEADER
-        + "unsubscribedPublications.size() = "
-        + unsubscribedPublications.size());
-    
-    // Sort the publications for displaying purposes.
-    Collections.sort(unsubscribedPublications, PUBLICATION_COMPARATOR);
-    
-    if (log.isDebug3()) log.debug3(DEBUG_HEADER
-        + "unsubscribedPublications.size() = "
-        + unsubscribedPublications.size());
-    return unsubscribedPublications;
-  }
-
   /**
    * Provides the subscriptions in the system keyed by their publisher.
    * 
