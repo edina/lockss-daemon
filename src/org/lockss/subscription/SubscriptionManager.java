@@ -1485,20 +1485,20 @@ public class SubscriptionManager extends BaseLockssDaemonManager implements
    */
   public List<SerialPublication> getUndecidedPublicationsByPublisher(
       Map<String, Publisher> undecidedPublicationsPublishers)
-    throws DbException {
+	  throws DbException {
     final String DEBUG_HEADER = "getUndecidedPublicationsByPublisher(): ";
     if (log.isDebug2()) log.debug2(DEBUG_HEADER + "Starting...");
 
     // Get the publishers for which a subscription decision has been made.
     Map<String, PublisherSubscription> subscribedPublishers =
-        subManagerSql.findAllSubscribedPublishers();
+	subManagerSql.findAllSubscribedPublishers();
 
     List<SerialPublication> unsubscribedPublications =
-        new ArrayList<SerialPublication>();
+	new ArrayList<SerialPublication>();
 
     // Get the existing subscriptions with publisher names.
     MultiValueMap subscriptionMap = mapSubscriptionsByPublisher(subManagerSql
-        .findAllSubscriptionsAndPublishers());
+	.findAllSubscriptionsAndPublishers());
 
     Collection<Subscription> publisherSubscriptions = null;
     String publisherName;

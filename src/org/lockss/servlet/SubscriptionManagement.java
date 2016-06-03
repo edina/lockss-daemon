@@ -243,15 +243,15 @@ public class SubscriptionManagement extends LockssServlet {
     // The operation to be performed.
     String action = req.getParameter(ACTION_TAG);
 
-    String start = req.getParameter(START_TAG);
-    String end = req.getParameter(END_TAG);
+    String start = req.getParameter(TAB_START_TAG);
+    String end = req.getParameter(TAB_END_TAG);
     String order = req.getParameter(ORDER_TAG);
     if(order == null){ order = PUBLISHER_PAGE_ORDER; }
 	    
     try {
       if (SHOW_ADD_PAGE_ACTION.equals(action)) {
         if(start != null && end != null){
-          System.out.println("this.populateTab("+start+", "+end+", "+order+")");
+          // Only send the tab content
           this.writePage(this.populateTab(start, end, order));
         }else{
           displayAddPage(order);
@@ -420,6 +420,7 @@ public class SubscriptionManagement extends LockssServlet {
 
 	// Populate the tabs content with the publications for which no
 	// subscription decision has been made.
+	// W.P.: Removed as tabs are now populated only when clicked
 //	populateTabsPublications(publications, publishers, divTableMap);
 
 	// Save the undecided publications in the session to compare after the
@@ -714,6 +715,7 @@ public class SubscriptionManagement extends LockssServlet {
     
     Map<String, Table>  divTableMap = new HashMap<String, Table>();
     
+    // In order to reuse existing function, I use letter 'A'
     Table divTable = ServletUtil.createTabTable("A",
         getTabColumnHeaderNames(), "sub-row-title",
         getColumnHeaderCssClasses());    
@@ -733,11 +735,6 @@ public class SubscriptionManagement extends LockssServlet {
     Table table = divTableMap.get("A");
     
     page.add(table);
-
-//    if (subManager.isTotalSubscriptionEnabled()) {
-//      session.setAttribute(TOTAL_SUBSCRIPTION_SESSION_KEY,
-//          totalSubscriptionSetting);
-//    }
     
     return page;
   }
@@ -1329,7 +1326,8 @@ public class SubscriptionManagement extends LockssServlet {
         
     Block pubTitleLabel = new Block("label");
     pubTitleLabel.attribute("class", "publication-title");
-
+    
+    // Add checkboxes for bulk actions
     Input titleCheckBox = new Input(Input.Checkbox, 
         publication.getUniqueName().replaceAll(" ", "_"));
     titleCheckBox.attribute("id", "bulk-action-ckbox_" + publicationNumber);
@@ -1398,22 +1396,19 @@ public class SubscriptionManagement extends LockssServlet {
 
     Block triBoxBlock = new Block(Block.Span);
     
-    String publicationSubscriptionWidgetUniqId = 
-        publicationSubscriptionWidgetId;
-    
-    Input checkBox = new Input(Input.Checkbox, publicationSubscriptionWidgetUniqId);
+    Input checkBox = new Input(Input.Checkbox, publicationSubscriptionWidgetId);
     checkBox.attribute("class", "tribox");
-    checkBox.attribute("id", publicationSubscriptionWidgetUniqId);
+    checkBox.attribute("id", publicationSubscriptionWidgetId);
     checkBox.attribute("onchange", "publicationSubscriptionChanged('"
-	+ publicationSubscriptionWidgetUniqId + TRI_STATE_WIDGET_HIDDEN_ID_SUFFIX
+	+ publicationSubscriptionWidgetId + TRI_STATE_WIDGET_HIDDEN_ID_SUFFIX
 	+ "', '" + subscribedRangesId + "', '" + unsubscribedRangesId + "')");
     triBoxBlock.add(checkBox);
     triBoxBlock.add("&nbsp;");
 
-    triBoxBlock.add(getTriStateDisplayTextSpan(publicationSubscriptionWidgetUniqId,
+    triBoxBlock.add(getTriStateDisplayTextSpan(publicationSubscriptionWidgetId,
 	publicationSubscriptionSetting));
 
-    triBoxBlock.add(getTriStateHiddenInput(publicationSubscriptionWidgetUniqId,
+    triBoxBlock.add(getTriStateHiddenInput(publicationSubscriptionWidgetId,
 	publicationSubscriptionSetting));
 
     return triBoxBlock;
