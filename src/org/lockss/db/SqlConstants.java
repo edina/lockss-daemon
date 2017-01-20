@@ -212,7 +212,10 @@ public class SqlConstants {
   /** Publisher involvement indicator column. */
   public static final String IS_PUBLISHER_INVOLVED_COLUMN =
       "is_publisher_involved";
-
+  
+  /** Customer institution scope column */
+  public static final String CUSTOMER_INSTITUTION_SCOPE_COLUMN = "customer_inst_scope";
+  
   /** In-aggregation indicator column. */
   public static final String IN_AGGREGATION_COLUMN = "in_aggregation";
 
@@ -495,6 +498,9 @@ public class SqlConstants {
 
   /** Length of the URL column. */
   public static final int MAX_URL_COLUMN = 4096;
+  
+  /** Length of the URL column. */
+  public static final int MAX_SCOPE_COLUMN = 256;
 
   /** Length of the author column. */
   public static final int MAX_AUTHOR_COLUMN = 128;

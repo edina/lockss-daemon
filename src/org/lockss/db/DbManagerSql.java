@@ -438,6 +438,7 @@ public class DbManagerSql {
       + COUNTER_REQUEST_TABLE + " ("
       + URL_COLUMN + " varchar(" + MAX_URL_COLUMN + ") NOT NULL, "
       + IS_PUBLISHER_INVOLVED_COLUMN + " boolean NOT NULL,"
+      + CUSTOMER_INSTITUTION_SCOPE_COLUMN + " varchar(" + MAX_SCOPE_COLUMN + "),"
       + REQUEST_YEAR_COLUMN + " smallint NOT NULL,"
       + REQUEST_MONTH_COLUMN + " smallint NOT NULL,"
       + REQUEST_DAY_COLUMN + " smallint NOT NULL,"
