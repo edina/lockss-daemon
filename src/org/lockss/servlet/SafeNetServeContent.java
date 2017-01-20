@@ -65,6 +65,8 @@ public class SafeNetServeContent extends ServeContent {
 
   private static final String INSTITUTION_HEADER = "X-SafeNet-Institution";
 
+  public static final String INSTITUTION_SCOPE_SESSION_KEY = "scope";
+
   private static String ediauthUrl;
 
   private PublisherWorkflow workflow;
@@ -105,7 +107,7 @@ public class SafeNetServeContent extends ServeContent {
     
       
 	  // Redirect user to ediauth login page if doesn't have a institution allocated
-	  if( this.getSession().getAttribute("scope") == null ){
+	  if( this.getSession().getAttribute(INSTITUTION_SCOPE_SESSION_KEY) == null ){
 	    String token = req.getParameter("ediauthToken");
 	    if(token != null){
 	      // Reassign userAccount
@@ -113,7 +115,7 @@ public class SafeNetServeContent extends ServeContent {
 	      
 	      // UserAccount user = getUserAccount();
 	      log.debug("Assigning inst. scope to user:"+userInstScope);
-	      this.getSession().setAttribute("scope", userInstScope);
+	      this.getSession().setAttribute(INSTITUTION_SCOPE_SESSION_KEY, userInstScope);
 	    } else {
 	      log.debug("Redirecting user to ediauth: "+ediauthUrl);
 	      // Build current Url removing ediauthToken if exists
@@ -228,7 +230,7 @@ public class SafeNetServeContent extends ServeContent {
 
   protected LockssUrlConnection openConnection(String url, LockssUrlConnectionPool pool) throws IOException {
     LockssUrlConnection conn = doOpenConnection(url, pool);
-    conn.addRequestProperty(INSTITUTION_HEADER, (String) getSession().getAttribute("scope"));
+    conn.addRequestProperty(INSTITUTION_HEADER, (String) getSession().getAttribute(INSTITUTION_SCOPE_SESSION_KEY));
     return conn;
   }
 
@@ -245,7 +247,7 @@ public class SafeNetServeContent extends ServeContent {
 
   void updateInstitution() throws IOException {
       //This is currently called in lockssHandleRequest, it needs to be called from wherever we do the SAML authentication
-      String scope = (String)this.getSession().getAttribute("scope");
+      String scope = (String)this.getSession().getAttribute(INSTITUTION_SCOPE_SESSION_KEY);
       institution = entitlementRegistry.getInstitution(scope);
   }
 
@@ -280,6 +282,23 @@ public class SafeNetServeContent extends ServeContent {
 
   void logAccess(String url, String msg) {
       super.logAccess(url, "UA: \"" + req.getHeader("User-Agent") + "\" " + msg);
+  }
+  
+  /**
+   * @overwrite ServeContent to add scope
+   * Record the request in COUNTER if appropriate
+   */
+  void recordRequest(String url,
+		     CounterReportsRequestRecorder.PublisherContacted contacted,
+		     int publisherCode) {
+    log.debug("## Recording Request");
+    System.out.println("Calling recordRequest()");
+    String scope = (String)session.getAttribute(INSTITUTION_SCOPE_SESSION_KEY);
+    if (proxyMgr.isCounterCountable(req.getHeader(HttpFields.__UserAgent))) {
+      log.debug("RecordRequest: "+url+" scope: "+publisherCode);
+      CounterReportsRequestRecorder.getInstance().recordRequest(url, contacted,
+	  publisherCode, null, scope);
+    }
   }
 }
 
