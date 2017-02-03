@@ -148,10 +148,11 @@ public class CounterReportsManager extends BaseLockssDaemonManager {
       + COUNTER_REQUEST_TABLE
       + " (" + URL_COLUMN
       + "," + IS_PUBLISHER_INVOLVED_COLUMN
+      + "," + CUSTOMER_INSTITUTION_SCOPE_COLUMN
       + "," + REQUEST_YEAR_COLUMN
       + "," + REQUEST_MONTH_COLUMN
       + "," + REQUEST_DAY_COLUMN
-      + ") values (?,?,?,?,?)";
+      + ") values (?,?,?,?,?,?)";
 
   // Query to get the aggregated type requests for a book during a month.
   private static final String SQL_QUERY_BOOK_TYPE_AGGREGATE_SELECT = "select "
@@ -737,7 +738,12 @@ public class CounterReportsManager extends BaseLockssDaemonManager {
    *           if there are problems accessing the database.
    */
   public void persistRequest(String url, boolean isPublisherInvolved,
-      String organization) throws DbException {
+	      String organization) throws DbException {
+      persistRequest(url, isPublisherInvolved, organization, null);
+  }
+  
+  public void persistRequest(String url, boolean isPublisherInvolved,
+      String organization, String institution_scope) throws DbException {
     final String DEBUG_HEADER = "persistRequest(): ";
 
     // Do nothing more if the service is not ready to be used.
@@ -785,6 +791,9 @@ public class CounterReportsManager extends BaseLockssDaemonManager {
         // Populate the indication of whether this record corresponds to the
         // serving of the request by the publisher.
         insertRequest.setBoolean(index++, isPublisherInvolved);
+        
+        // Populate the customer institution scope.
+        insertRequest.setString(index++, institution_scope);
 
         // Populate the year of the request.
         insertRequest.setShort(index++, (short) requestYear);

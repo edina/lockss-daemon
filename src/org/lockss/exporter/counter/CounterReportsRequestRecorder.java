@@ -103,7 +103,12 @@ public class CounterReportsRequestRecorder {
    *          request for COUNTER purposes.
    */
   public void recordRequest(String url, PublisherContacted contacted,
-      int publisherCode, String organization) {
+	      int publisherCode, String organization) {
+      recordRequest(url, contacted, publisherCode, organization, null);
+  }
+  
+  public void recordRequest(String url, PublisherContacted contacted,
+      int publisherCode, String organization, String scope) {
     try {
       final String DEBUG_HEADER = "recordRequest(): ";
       CounterReportsManager counterReportsManager =
@@ -135,7 +140,7 @@ public class CounterReportsRequestRecorder {
 
       // Persist the request data.
       counterReportsManager.persistRequest(url, isPublisherInvolved,
-	  organization);
+	  organization, scope);
       log.debug2(DEBUG_HEADER + "Done.");
     } catch (DbException sqle) {
       log.error("Cannot persist request - Statistics not collected", sqle);
