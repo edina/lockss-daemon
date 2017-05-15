@@ -62,12 +62,15 @@ public class SafeNetServeContent extends ServeContent {
 
   /** Ediauth configuration **/
   public static final String PARAM_EDIAUTH_URL = PREFIX + "ediauthUrl";
+  // If true, scope can be 'mocked' from the URL parameters. This is for testing purposes, and should never be true in production
+  public static final String PARAM_EDIAUTH_MOCK_SCOPE = PREFIX + "mockScope";
 
   private static final String INSTITUTION_HEADER = "X-SafeNet-Institution";
 
   public static final String INSTITUTION_SCOPE_SESSION_KEY = "scope";
 
   private static String ediauthUrl;
+  private static boolean mockScope = false;
 
   private PublisherWorkflow workflow;
   private String institution;
@@ -92,6 +95,7 @@ public class SafeNetServeContent extends ServeContent {
       ServeContent.setConfig(config, oldConfig, diffs);
     if (diffs.contains(PREFIX)) {
       ediauthUrl = config.get(PARAM_EDIAUTH_URL);
+      mockScope = config.getBoolean(PARAM_EDIAUTH_MOCK_SCOPE, false);
     }
   }
 
@@ -112,9 +116,15 @@ public class SafeNetServeContent extends ServeContent {
 	    if(token != null){
 	      // Reassign userAccount
 	      String userInstScope = this.getAccountManager().getFromMapToken(token);
-	      
+
 	      // UserAccount user = getUserAccount();
 	      log.debug("Assigning inst. scope to user:"+userInstScope);
+	      this.getSession().setAttribute(INSTITUTION_SCOPE_SESSION_KEY, userInstScope);
+            } else if ( mockScope ) {
+	      String userInstScope = req.getParameter(INSTITUTION_SCOPE_SESSION_KEY);
+
+	      // UserAccount user = getUserAccount();
+	      log.warning("Setting scope from parameters:"+userInstScope+" This should not be done in production");
 	      this.getSession().setAttribute(INSTITUTION_SCOPE_SESSION_KEY, userInstScope);
 	    } else {
 	      log.debug("Redirecting user to ediauth: "+ediauthUrl);
