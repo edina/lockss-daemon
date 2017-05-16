@@ -52,6 +52,11 @@ public class BaseEntitlementRegistryClient extends BaseLockssManager implements 
   }
 
   public boolean isUserEntitled(String issn, String institution, String start, String end) throws IOException {
+      JsonNode entitlement = this.findMatchingEntitlement(issn, institution, start, end);
+      return entitlement != null;
+  }
+
+  private JsonNode findMatchingEntitlement(String issn, String institution, String start, String end) throws IOException {
     Map<String, String> parameters = new HashMap<String, String>();
     parameters.put("identifier_value", issn);
     parameters.put("institution", institution);
@@ -62,18 +67,19 @@ public class BaseEntitlementRegistryClient extends BaseLockssManager implements 
     if (entitlements != null) {
       for(JsonNode entitlement : entitlements) {
         JsonNode entitlementInstitution = entitlement.get("institution");
-        if (entitlementInstitution != null && entitlementInstitution.asText().equals(institution)) {
+        log.debug("Checking entitlement " + entitlement.toString());
+        if (entitlementInstitution != null && entitlementInstitution.asText().endsWith(institution + "/")) {
           log.warning("TODO: Verify title and dates");
-          return true;
+          return entitlement;
         }
       }
 
       // Valid request, but the entitlements don't match the information we passed, which should never happen
-      throw new IOException("No matching entitlements returned from entitlement registry");
+      throw new IOException("Entitlements returned from entitlement registry do not match passed parameters");
     }
 
     //Valid request, no entitlements found
-    return false;
+    return null;
   }
 
   private Date extractDate(String value) throws IOException {
@@ -96,35 +102,21 @@ public class BaseEntitlementRegistryClient extends BaseLockssManager implements 
   }
 
   public String getPublisher(String issn, String institution, String start, String end) throws IOException {
-    Map<String, String> parameters = new HashMap<String, String>();
-    parameters.put("identifier_value", issn);
-    parameters.put("institution", institution);
-    parameters.put("start", start);
-    parameters.put("end", end);
-
-    JsonNode entitlements = callEntitlementRegistry("/entitlements", parameters);
-    if (entitlements != null) {
-      for(JsonNode entitlement : entitlements) {
-        JsonNode entitlementInstitution = entitlement.get("institution");
-        if (entitlementInstitution != null && entitlementInstitution.asText().equals(institution)) {
-          log.warning("TODO: Verify title and dates");
-          return entitlement.get("publisher").asText();
-        }
-      }
-
-      // Valid request, but the entitlements don't match the information we passed, which should never happen
-      throw new IOException("No matching entitlements returned from entitlement registry");
+    JsonNode entitlement = this.findMatchingEntitlement(issn, institution, start, end);
+    if ( entitlement == null ) {
+        return null;
     }
 
-    //Valid request, no entitlements found
-    return null;
+    String url = entitlement.get("publisher").asText();
+    String[] parts = url.split("/");
+    return parts[parts.length - 1];
   }
 
   public PublisherWorkflow getPublisherWorkflow(String publisherGuid) throws IOException {
     Map<String, String> parameters = new HashMap<String, String>();
     JsonNode publisher = callEntitlementRegistry("/publishers/"+publisherGuid, parameters);
     if (publisher != null) {
-      JsonNode foundGuid = publisher.get("id");
+      JsonNode foundGuid = publisher.get("guid");
       if (foundGuid != null && foundGuid.asText().equals(publisherGuid)) {
         JsonNode foundWorkflow = publisher.get("workflow");
         if(foundWorkflow != null) {
@@ -135,6 +127,10 @@ public class BaseEntitlementRegistryClient extends BaseLockssManager implements 
             // Valid request, but workflow didn't match ones we've implemented, which should never happen
             throw new IOException("No valid workflow returned from entitlement registry: " + foundWorkflow.asText().toUpperCase());
           }
+        }
+        else {
+            log.warning("No workflow set for publisher, defaulting to PRIMARY_PUBLISHER");
+            return PublisherWorkflow.PRIMARY_SAFENET;
         }
       }
     }
@@ -158,7 +154,7 @@ public class BaseEntitlementRegistryClient extends BaseLockssManager implements 
       if (!scope.equals(institution.get("scope").asText())) {
         throw new IOException("No matching institutions returned from entitlement registry");
       }
-      return institution.get("id").asText();
+      return institution.get("guid").asText();
     }
     throw new IOException("No matching institutions returned from entitlement registry");
   }
@@ -179,6 +175,7 @@ public class BaseEntitlementRegistryClient extends BaseLockssManager implements 
       String url = builder.toString();
       log.debug("Connecting to ER at " + url);
       connection = openConnection(url);
+      connection.setRequestProperty("Accept", "application/json");
       connection.setRequestProperty("Authorization", "Token " + apiKey);
       connection.execute();
       int responseCode = connection.getResponseCode();
