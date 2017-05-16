@@ -25,6 +25,7 @@ import org.lockss.test.StringInputStream;
 import org.lockss.util.urlconn.LockssUrlConnection;
 
 public class TestEntitlementRegistryClient extends LockssTestCase {
+  private static final String ER_URI = "http://dev-safenet.edina.ac.uk";
   private BaseEntitlementRegistryClient client;
 
   private Map<String,String> validEntitlementParams;
@@ -38,7 +39,7 @@ public class TestEntitlementRegistryClient extends LockssTestCase {
     daemon.setEntitlementRegistryClient(client);
     daemon.setDaemonInited(true);
     Properties p = new Properties();
-    p.setProperty(BaseEntitlementRegistryClient.PARAM_ER_URI, "http://dev-safenet.edina.ac.uk");
+    p.setProperty(BaseEntitlementRegistryClient.PARAM_ER_URI, ER_URI);
     p.setProperty(BaseEntitlementRegistryClient.PARAM_ER_APIKEY, "00000000-0000-0000-0000-000000000000");
     ConfigurationUtil.setCurrentConfigFromProps(p);
     client.initService(daemon);
@@ -51,10 +52,11 @@ public class TestEntitlementRegistryClient extends LockssTestCase {
     validEntitlementParams.put("end", "20151231");
 
     validResponseParams = new HashMap<String,String>(validEntitlementParams);
-    validResponseParams.put("publisher", "33333333-0000-0000-0000-000000000000");
+    validResponseParams.put("institution", ER_URI + "/institutions/11111111-1111-1111-1111-111111111111/");
+    validResponseParams.put("publisher", ER_URI + "/publishers/33333333-0000-0000-0000-000000000000/");
 
     validPublisherParams = new HashMap<String, String>();
-    validPublisherParams.put("id", "33333333-0000-0000-0000-000000000000");
+    validPublisherParams.put("guid", "33333333-0000-0000-0000-000000000000");
     validPublisherParams.put("name", "Wiley");
   }
 
@@ -81,7 +83,7 @@ public class TestEntitlementRegistryClient extends LockssTestCase {
       fail("Expected exception not thrown");
     }
     catch(IOException e) {
-      assertEquals("No matching entitlements returned from entitlement registry", e.getMessage());
+      assertEquals("Entitlements returned from entitlement registry do not match passed parameters", e.getMessage());
     }
     Mockito.verify(client).openConnection(url);
   }
@@ -109,7 +111,7 @@ public class TestEntitlementRegistryClient extends LockssTestCase {
       fail("Expected exception not thrown");
     }
     catch(IOException e) {
-      assertTrue(e.getMessage().startsWith("No matching entitlements returned from entitlement registry"));
+      assertEquals("Entitlements returned from entitlement registry do not match passed parameters", e.getMessage());
     }
     Mockito.verify(client).openConnection(url);
   }
@@ -134,7 +136,7 @@ public class TestEntitlementRegistryClient extends LockssTestCase {
     Map<String, String> queryParams = new HashMap<String, String>();
     queryParams.put("scope", "ed.ac.uk");
     Map<String, String> institution = new HashMap<String, String>();
-    institution.put("id", "11111111-0000-0000-0000-000000000000");
+    institution.put("guid", "11111111-0000-0000-0000-000000000000");
     institution.put("name", "University of Edinburgh");
     institution.put("scope", "ed.ac.uk");
 
@@ -218,13 +220,7 @@ public class TestEntitlementRegistryClient extends LockssTestCase {
     String url = url("/publishers/33333333-0000-0000-0000-000000000000");
     Mockito.doReturn(connection(url, 200, mapToJson(responseParams))).when(client).openConnection(url);
 
-    try {
-      client.getPublisherWorkflow("33333333-0000-0000-0000-000000000000");
-      fail("Expected exception not thrown");
-    }
-    catch(IOException e) {
-      assertTrue(e.getMessage().startsWith("No valid workflow returned from entitlement registry"));
-    }
+    assertEquals(PublisherWorkflow.PRIMARY_SAFENET, client.getPublisherWorkflow("33333333-0000-0000-0000-000000000000"));
     Mockito.verify(client).openConnection(url);
   }
 
