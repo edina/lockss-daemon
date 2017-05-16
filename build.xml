@@ -1731,6 +1731,9 @@ Must specify output dir with -Doutdir=dir
         <include name="${plugin-path}/*.dat.gz" />
 	<!-- e.g. Muse URL normalizer mapping -->
         <include name="${plugin-path}/*.txt" /> <!-- Plugin externals -->
+	    <include name="${parent-path}/*.class" if="parent-path"/>
+	    <include name="${parent-path}/*.xml" if="parent-path"/>
+	    <include name="${parent-path}/*.txt" if="parent-path"/>
       </fileset>
       <manifest>
 	<section name="${plugin-path}/${plugin-file}">
