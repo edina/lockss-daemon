@@ -53,7 +53,6 @@ public class BaseEntitlementRegistryClient extends BaseLockssManager implements 
 
   public boolean isUserEntitled(String issn, String institution, String start, String end) throws IOException {
     Map<String, String> parameters = new HashMap<String, String>();
-    parameters.put("api_key", apiKey);
     parameters.put("identifier_value", issn);
     parameters.put("institution", institution);
     parameters.put("start", start);
@@ -98,7 +97,6 @@ public class BaseEntitlementRegistryClient extends BaseLockssManager implements 
 
   public String getPublisher(String issn, String institution, String start, String end) throws IOException {
     Map<String, String> parameters = new HashMap<String, String>();
-    parameters.put("api_key", apiKey);
     parameters.put("identifier_value", issn);
     parameters.put("institution", institution);
     parameters.put("start", start);
@@ -181,6 +179,7 @@ public class BaseEntitlementRegistryClient extends BaseLockssManager implements 
       String url = builder.toString();
       log.debug("Connecting to ER at " + url);
       connection = openConnection(url);
+      connection.setRequestProperty("Authorization", "Token " + apiKey);
       connection.execute();
       int responseCode = connection.getResponseCode();
       if (responseCode == 200) {
