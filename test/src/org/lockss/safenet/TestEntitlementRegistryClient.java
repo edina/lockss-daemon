@@ -45,14 +45,12 @@ public class TestEntitlementRegistryClient extends LockssTestCase {
     client.startService();
 
     validEntitlementParams = new HashMap<String, String>();
-    validEntitlementParams.put("api_key", "00000000-0000-0000-0000-000000000000");
     validEntitlementParams.put("identifier_value", "0123-456X");
     validEntitlementParams.put("institution", "11111111-1111-1111-1111-111111111111");
     validEntitlementParams.put("start", "20120101");
     validEntitlementParams.put("end", "20151231");
 
     validResponseParams = new HashMap<String,String>(validEntitlementParams);
-    validResponseParams.remove("api_key");
     validResponseParams.put("publisher", "33333333-0000-0000-0000-000000000000");
 
     validPublisherParams = new HashMap<String, String>();
