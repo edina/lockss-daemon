@@ -108,8 +108,16 @@ public class SafeNetServeContent extends ServeContent {
    * @throws IOException
    */
   public void lockssHandleRequest() throws IOException {
-    
-      
+
+          if ( mockScope ) {
+	    String userInstScope = req.getParameter(INSTITUTION_SCOPE_SESSION_KEY);
+
+            if ( ! "".equals(userInstScope) ) {
+              log.warning("Setting scope from parameters:"+userInstScope+" This should not be done in production");
+              this.getSession().setAttribute(INSTITUTION_SCOPE_SESSION_KEY, userInstScope);
+            }
+          }
+
 	  // Redirect user to ediauth login page if doesn't have a institution allocated
 	  if( this.getSession().getAttribute(INSTITUTION_SCOPE_SESSION_KEY) == null ){
 	    String token = req.getParameter("ediauthToken");
@@ -119,12 +127,6 @@ public class SafeNetServeContent extends ServeContent {
 
 	      // UserAccount user = getUserAccount();
 	      log.debug("Assigning inst. scope to user:"+userInstScope);
-	      this.getSession().setAttribute(INSTITUTION_SCOPE_SESSION_KEY, userInstScope);
-            } else if ( mockScope ) {
-	      String userInstScope = req.getParameter(INSTITUTION_SCOPE_SESSION_KEY);
-
-	      // UserAccount user = getUserAccount();
-	      log.warning("Setting scope from parameters:"+userInstScope+" This should not be done in production");
 	      this.getSession().setAttribute(INSTITUTION_SCOPE_SESSION_KEY, userInstScope);
 	    } else {
 	      log.debug("Redirecting user to ediauth: "+ediauthUrl);
@@ -145,16 +147,16 @@ public class SafeNetServeContent extends ServeContent {
 	          }
 	      }
 	      String completeURL = requestURL.toString();
-        log.debug("Current url: "+completeURL);
+              log.debug("Current url: "+completeURL);
 	      String redirectUrl = ediauthUrl+"?context="+URLEncoder.encode(completeURL, "UTF-8");
-        log.debug("Redirect url: "+redirectUrl);
+              log.debug("Redirect url: "+redirectUrl);
 	      resp.sendRedirect(redirectUrl);
 	      return;
 	    }
 	  } else {
 	    log.debug("User already have inst. allocated!");
 	  }
-      
+
     updateInstitution();
 
     super.lockssHandleRequest();
