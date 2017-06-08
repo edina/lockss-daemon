@@ -301,18 +301,24 @@ public class SafeNetServeContent extends ServeContent {
   }
 
   private void setBibInfoFromOpenUrl(OpenUrlInfo info) throws IllegalArgumentException {
+    log.debug2("Setting bib info from OpenURL");
     if(info != null) {
+      log.debug3("Info set");
       BibliographicItem item = info.getBibliographicItem();
       if(item != null) {
+        log.debug3("Item set");
         if(StringUtil.isNullString(issn)) {
+          log.debug3("Getting ISSN");
           issn = item.getIssn();
         }
 
         if(StringUtil.isNullString(start)) {
+          log.debug3("Getting start");
           start = item.getStartYear();
         }
 
         if(StringUtil.isNullString(end)) {
+          log.debug3("Getting end");
           end = item.getEndYear();
         }
       }
@@ -320,19 +326,25 @@ public class SafeNetServeContent extends ServeContent {
   }
 
   private void setBibInfoFromTdb(ArchivalUnit au) throws IllegalArgumentException {
+    log.debug2("Setting bib info from TDB");
     if(au != null) {
+      log.debug3("AU set");
       TdbAu tdbAu = au.getTdbAu();
       if(tdbAu != null) {
+        log.debug3("TdbAU set");
 
         if(StringUtil.isNullString(issn)) {
+          log.debug3("Getting ISSN");
           issn = tdbAu.getIssn();
         }
 
         if(StringUtil.isNullString(start)) {
+          log.debug3("Getting start");
           start = tdbAu.getStartYear();
         }
 
         if(StringUtil.isNullString(end)) {
+          log.debug3("Getting end");
           end = tdbAu.getEndYear();
         }
       }
