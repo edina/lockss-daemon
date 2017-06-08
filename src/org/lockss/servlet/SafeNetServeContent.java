@@ -48,6 +48,7 @@ import org.lockss.daemon.*;
 import org.lockss.daemon.OpenUrlResolver.OpenUrlInfo;
 import org.lockss.exporter.biblio.*;
 import org.lockss.exporter.counter.*;
+import org.lockss.extractor.*;
 import org.lockss.plugin.*;
 import org.lockss.plugin.PluginManager.CuContentReq;
 import org.lockss.safenet.EntitlementRegistryClient;
@@ -278,6 +279,7 @@ public class SafeNetServeContent extends ServeContent {
   }
 
   boolean isUserEntitled(ArchivalUnit au) throws IOException, IllegalArgumentException {
+      setBibInfoFromCu(cu, au);
       setBibInfoFromTdb(au);
       validateBibInfo();
       String startDate = start + "0101";
@@ -287,6 +289,7 @@ public class SafeNetServeContent extends ServeContent {
   }
 
   PublisherWorkflow getPublisherWorkflow(ArchivalUnit au) throws IOException, IllegalArgumentException {
+      setBibInfoFromCu(cu, au);
       setBibInfoFromTdb(au);
       validateBibInfo();
       String startDate = start + "0101";
@@ -351,6 +354,58 @@ public class SafeNetServeContent extends ServeContent {
     }
   }
 
+  private void setBibInfoFromCu(CachedUrl cu, ArchivalUnit au) {
+    log.debug("Setting bib info from CU");
+    if(cu != null) {
+      log.debug("CU set");
+      if(au != null) {
+        log.debug("AU set");
+        MetadataTarget target = new MetadataTarget(MetadataTarget.PURPOSE_OPENURL);
+        Plugin plugin = au.getPlugin();
+        if(plugin != null) {
+          log.debug("Plugin set");
+          FileMetadataExtractor mdExtractor = plugin.getFileMetadataExtractor(target, cu.getContentType(), au);
+          if(mdExtractor != null) {
+            log.debug("Extractor set");
+            FileMetadataExtractor.Emitter emitter = new FileMetadataExtractor.Emitter() {
+              public void emitMetadata(CachedUrl cu, ArticleMetadata md) {
+                log.debug("ArticleMetadata found");
+                BibliographicItemImpl item = new BibliographicItemImpl();
+                item.setPrintIssn(md.get("issn"));
+                item.setEissn(md.get("eissn"));
+                item.setIssnL(md.get("issnl"));
+                item.setYear(md.get("date"));
+                if(StringUtil.isNullString(issn)) {
+                  log.debug("Getting ISSN");
+                  issn = item.getIssn();
+                }
+
+                if(StringUtil.isNullString(start)) {
+                  log.debug("Getting start");
+                  start = item.getStartYear();
+                }
+
+                if(StringUtil.isNullString(end)) {
+                  log.debug("Getting end");
+                  end = item.getEndYear();
+                }
+              }
+            };
+            try {
+              mdExtractor.extract(target, cu, emitter);
+            }
+            catch(IOException e) {
+              log.error("Error extracting CU metadata", e);
+            }
+            catch(PluginException e) {
+              log.error("Error extracting CU metadata", e);
+            }
+          }
+        }
+      }
+    }
+  }
+
   private void validateBibInfo() {
      if(StringUtil.isNullString(issn)) {
        throw new IllegalArgumentException("ArchivalUnit has no ISSN");
@@ -366,7 +421,7 @@ public class SafeNetServeContent extends ServeContent {
   void logAccess(String url, String msg) {
       super.logAccess(url, "UA: \"" + req.getHeader("User-Agent") + "\" " + msg);
   }
-  
+
   /**
    * @overwrite ServeContent to add scope
    * Record the request in COUNTER if appropriate
