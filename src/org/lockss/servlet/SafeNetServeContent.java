@@ -281,6 +281,7 @@ public class SafeNetServeContent extends ServeContent {
   boolean isUserEntitled(ArchivalUnit au) throws IOException, IllegalArgumentException {
       setBibInfoFromCu(cu, au);
       setBibInfoFromTdb(au);
+      setBibInfoFromArticleFiles(au, cu);
       validateBibInfo();
       String startDate = start + "0101";
       String endDate = end + "1231";
@@ -291,6 +292,7 @@ public class SafeNetServeContent extends ServeContent {
   PublisherWorkflow getPublisherWorkflow(ArchivalUnit au) throws IOException, IllegalArgumentException {
       setBibInfoFromCu(cu, au);
       setBibInfoFromTdb(au);
+      setBibInfoFromArticleFiles(au, cu);
       validateBibInfo();
       String startDate = start + "0101";
       String endDate = end + "1231";
@@ -323,6 +325,63 @@ public class SafeNetServeContent extends ServeContent {
         if(StringUtil.isNullString(end)) {
           log.debug("Getting end");
           end = item.getEndYear();
+        }
+      }
+    }
+  }
+
+  private void setBibInfoFromArticleFiles(ArchivalUnit au, final CachedUrl cu) throws IllegalArgumentException {
+    log.debug("Setting bib info from TDB");
+    MetadataTarget target = new MetadataTarget(MetadataTarget.PURPOSE_OPENURL);
+    if(au != null) {
+      log.debug("AU set");
+      Iterator<ArticleFiles> afs = au.getArticleIterator();
+      ArticleMetadataExtractor mdExtractor = au.getPlugin().getArticleMetadataExtractor(target, au);
+      if(mdExtractor != null) {
+        log.debug("Extractor set");
+        if(afs != null) {
+          log.debug("Article Files set");
+          while(afs.hasNext()) {
+            ArticleFiles af = afs.next();
+            ArticleMetadataExtractor.Emitter emitter = new ArticleMetadataExtractor.Emitter() {
+              public void emitMetadata(ArticleFiles af2, ArticleMetadata md) {
+                log.debug("ArticleMetadata found");
+                String mdUrl = md.get("access.url");
+                String cuUrl = cu.getUrl();
+                log.debug("Comparing " + mdUrl + " to " + cuUrl);
+                if(mdUrl.equals(cuUrl)) {
+                  BibliographicItemImpl item = new BibliographicItemImpl();
+                  item.setPrintIssn(md.get("issn"));
+                  item.setEissn(md.get("eissn"));
+                  item.setIssnL(md.get("issnl"));
+                  item.setYear(md.get("date"));
+                  if(StringUtil.isNullString(issn)) {
+                    log.debug("Getting ISSN");
+                    issn = item.getIssn();
+                  }
+
+                  if(StringUtil.isNullString(start)) {
+                    log.debug("Getting start");
+                    start = item.getStartYear();
+                  }
+
+                  if(StringUtil.isNullString(end)) {
+                    log.debug("Getting end");
+                    end = item.getEndYear();
+                  }
+                }
+              }
+            };
+            try {
+              mdExtractor.extract(target, af, emitter);
+            }
+            catch(IOException e) {
+              log.error("Error extracting article metadata", e);
+            }
+            catch(PluginException e) {
+              log.error("Error extracting article metadata", e);
+            }
+          }
         }
       }
     }
