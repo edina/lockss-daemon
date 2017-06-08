@@ -180,7 +180,7 @@ public class SafeNetServeContent extends ServeContent {
           if(isUserEntitled(cachedUrl.getArchivalUnit())) {
             cu = cachedUrl;
             au = cu.getArchivalUnit();
-            if (log.isDebug3()) log.debug3("cu: " + cu + " au: " + au);
+            if (log.isDebug3()) log.debug("cu: " + cu + " au: " + au);
             break;
           }
         }
@@ -301,24 +301,24 @@ public class SafeNetServeContent extends ServeContent {
   }
 
   private void setBibInfoFromOpenUrl(OpenUrlInfo info) throws IllegalArgumentException {
-    log.debug2("Setting bib info from OpenURL");
+    log.debug("Setting bib info from OpenURL");
     if(info != null) {
-      log.debug3("Info set");
+      log.debug("Info set");
       BibliographicItem item = info.getBibliographicItem();
       if(item != null) {
-        log.debug3("Item set");
+        log.debug("Item set");
         if(StringUtil.isNullString(issn)) {
-          log.debug3("Getting ISSN");
+          log.debug("Getting ISSN");
           issn = item.getIssn();
         }
 
         if(StringUtil.isNullString(start)) {
-          log.debug3("Getting start");
+          log.debug("Getting start");
           start = item.getStartYear();
         }
 
         if(StringUtil.isNullString(end)) {
-          log.debug3("Getting end");
+          log.debug("Getting end");
           end = item.getEndYear();
         }
       }
@@ -326,25 +326,25 @@ public class SafeNetServeContent extends ServeContent {
   }
 
   private void setBibInfoFromTdb(ArchivalUnit au) throws IllegalArgumentException {
-    log.debug2("Setting bib info from TDB");
+    log.debug("Setting bib info from TDB");
     if(au != null) {
-      log.debug3("AU set");
+      log.debug("AU set");
       TdbAu tdbAu = au.getTdbAu();
       if(tdbAu != null) {
-        log.debug3("TdbAU set");
+        log.debug("TdbAU set");
 
         if(StringUtil.isNullString(issn)) {
-          log.debug3("Getting ISSN");
+          log.debug("Getting ISSN");
           issn = tdbAu.getIssn();
         }
 
         if(StringUtil.isNullString(start)) {
-          log.debug3("Getting start");
+          log.debug("Getting start");
           start = tdbAu.getStartYear();
         }
 
         if(StringUtil.isNullString(end)) {
-          log.debug3("Getting end");
+          log.debug("Getting end");
           end = tdbAu.getEndYear();
         }
       }
