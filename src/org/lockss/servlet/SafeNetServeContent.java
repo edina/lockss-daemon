@@ -45,6 +45,8 @@ import org.lockss.account.UserAccount;
 import org.lockss.app.LockssDaemon;
 import org.lockss.config.*;
 import org.lockss.daemon.*;
+import org.lockss.daemon.OpenUrlResolver.OpenUrlInfo;
+import org.lockss.exporter.biblio.*;
 import org.lockss.exporter.counter.*;
 import org.lockss.plugin.*;
 import org.lockss.plugin.PluginManager.CuContentReq;
@@ -74,11 +76,18 @@ public class SafeNetServeContent extends ServeContent {
 
   private PublisherWorkflow workflow;
   private String institution;
+  private String issn;
+  private String start;
+  private String end;
   private EntitlementRegistryClient entitlementRegistry;
 
   // don't hold onto objects after request finished
   protected void resetLocals() {
     workflow = null;
+    institution = null;
+    issn = null;
+    start = null;
+    end = null;
     super.resetLocals();
   }
 
@@ -198,6 +207,11 @@ public class SafeNetServeContent extends ServeContent {
   }
 
 
+  protected void handleOpenUrlInfo(OpenUrlInfo info) throws IOException {
+    setBibInfoFromOpenUrl(info);
+    super.handleOpenUrlInfo(info);
+  }
+
   /**
    * Handle request for content that belongs to one of our AUs, whether or not
    * we have content for that URL.  If this request contains a version param,
@@ -264,32 +278,77 @@ public class SafeNetServeContent extends ServeContent {
   }
 
   boolean isUserEntitled(ArchivalUnit au) throws IOException, IllegalArgumentException {
-      TdbAu tdbAu = au.getTdbAu();
-      String issn = tdbAu.getIssn();
-      if(StringUtil.isNullString(issn)) {
-        throw new IllegalArgumentException("ArchivalUnit has no ISSN");
-      }
-      String start = tdbAu.getStartYear() + "0101";
-      String end = tdbAu.getEndYear() + "1231";
+      setBibInfoFromTdb(au);
+      validateBibInfo();
+      String startDate = start + "0101";
+      String endDate = end + "1231";
 
-      return entitlementRegistry.isUserEntitled(issn, institution, start, end);
+      return entitlementRegistry.isUserEntitled(issn, institution, startDate, endDate);
   }
 
   PublisherWorkflow getPublisherWorkflow(ArchivalUnit au) throws IOException, IllegalArgumentException {
-      TdbAu tdbAu = au.getTdbAu();
-      String issn = tdbAu.getIssn();
-      if(StringUtil.isNullString(issn)) {
-        throw new IllegalArgumentException("ArchivalUnit has no ISSN");
-      }
-      String start = tdbAu.getStartYear() + "0101";
-      String end = tdbAu.getEndYear() + "1231";
+      setBibInfoFromTdb(au);
+      validateBibInfo();
+      String startDate = start + "0101";
+      String endDate = end + "1231";
 
-      String publisher = entitlementRegistry.getPublisher(issn, institution, start, end);
+      String publisher = entitlementRegistry.getPublisher(issn, institution, startDate, endDate);
       if(StringUtil.isNullString(publisher)) {
         throw new IllegalArgumentException("No publisher found");
       }
 
       return entitlementRegistry.getPublisherWorkflow(publisher);
+  }
+
+  private void setBibInfoFromOpenUrl(OpenUrlInfo info) throws IllegalArgumentException {
+    if(info != null) {
+      BibliographicItem item = info.getBibliographicItem();
+      if(item != null) {
+        if(StringUtil.isNullString(issn)) {
+          issn = item.getIssn();
+        }
+
+        if(StringUtil.isNullString(start)) {
+          start = item.getStartYear();
+        }
+
+        if(StringUtil.isNullString(end)) {
+          end = item.getEndYear();
+        }
+      }
+    }
+  }
+
+  private void setBibInfoFromTdb(ArchivalUnit au) throws IllegalArgumentException {
+    if(au != null) {
+      TdbAu tdbAu = au.getTdbAu();
+      if(tdbAu != null) {
+
+        if(StringUtil.isNullString(issn)) {
+          issn = tdbAu.getIssn();
+        }
+
+        if(StringUtil.isNullString(start)) {
+          start = tdbAu.getStartYear();
+        }
+
+        if(StringUtil.isNullString(end)) {
+          end = tdbAu.getEndYear();
+        }
+      }
+    }
+  }
+
+  private void validateBibInfo() {
+     if(StringUtil.isNullString(issn)) {
+       throw new IllegalArgumentException("ArchivalUnit has no ISSN");
+     }
+     if(StringUtil.isNullString(start)) {
+       throw new IllegalArgumentException("ArchivalUnit has no start year");
+     }
+     if(StringUtil.isNullString(end)) {
+       throw new IllegalArgumentException("ArchivalUnit has no end year");
+     }
   }
 
   void logAccess(String url, String msg) {
