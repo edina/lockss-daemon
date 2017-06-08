@@ -50,6 +50,7 @@ public class TestEntitlementRegistryClient extends LockssTestCase {
     validEntitlementParams.put("institution", "11111111-1111-1111-1111-111111111111");
     validEntitlementParams.put("start", "20120101");
     validEntitlementParams.put("end", "20151231");
+    validEntitlementParams.put("validate", "1");
 
     validResponseParams = new HashMap<String,String>(validEntitlementParams);
     validResponseParams.put("institution", ER_URI + "/institutions/11111111-1111-1111-1111-111111111111/");

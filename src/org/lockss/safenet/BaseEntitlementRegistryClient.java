@@ -62,6 +62,7 @@ public class BaseEntitlementRegistryClient extends BaseLockssManager implements 
     parameters.put("institution", institution);
     parameters.put("start", start);
     parameters.put("end", end);
+    parameters.put("validate", "1");
 
     JsonNode entitlements = callEntitlementRegistry("/entitlements", parameters);
     if (entitlements != null) {
