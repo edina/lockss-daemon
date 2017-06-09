@@ -76,7 +76,7 @@ public class BaseEntitlementRegistryClient extends BaseLockssManager implements 
       }
 
       // Valid request, but the entitlements don't match the information we passed, which should never happen
-      throw new IOException("Entitlements returned from entitlement registry do not match passed parameters");
+      log.error("Entitlements returned from entitlement registry do not match passed parameters");
     }
 
     //Valid request, no entitlements found

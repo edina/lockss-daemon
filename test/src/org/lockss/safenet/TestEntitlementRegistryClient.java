@@ -79,13 +79,7 @@ public class TestEntitlementRegistryClient extends LockssTestCase {
     String url = url("/entitlements", BaseEntitlementRegistryClient.mapToPairs(validEntitlementParams));
     Mockito.doReturn(connection(url, 200, "[]")).when(client).openConnection(url);
 
-    try {
-      client.isUserEntitled("0123-456X", "11111111-1111-1111-1111-111111111111", "20120101", "20151231");
-      fail("Expected exception not thrown");
-    }
-    catch(IOException e) {
-      assertEquals("Entitlements returned from entitlement registry do not match passed parameters", e.getMessage());
-    }
+    assertFalse(client.isUserEntitled("0123-456X", "11111111-1111-1111-1111-111111111111", "20120101", "20151231"));
     Mockito.verify(client).openConnection(url);
   }
 
@@ -107,13 +101,7 @@ public class TestEntitlementRegistryClient extends LockssTestCase {
     String url = url("/entitlements", BaseEntitlementRegistryClient.mapToPairs(validEntitlementParams));
     Mockito.doReturn(connection(url, 200, "{\"surprise\": \"object\"}")).when(client).openConnection(url);
 
-    try {
-      client.isUserEntitled("0123-456X", "11111111-1111-1111-1111-111111111111", "20120101", "20151231");
-      fail("Expected exception not thrown");
-    }
-    catch(IOException e) {
-      assertEquals("Entitlements returned from entitlement registry do not match passed parameters", e.getMessage());
-    }
+    assertFalse(client.isUserEntitled("0123-456X", "11111111-1111-1111-1111-111111111111", "20120101", "20151231"));
     Mockito.verify(client).openConnection(url);
   }
 
