@@ -288,10 +288,8 @@ public class SafeNetServeContent extends ServeContent {
       setBibInfoFromTdb(au);
       setBibInfoFromArticleFiles(au, cu);
       validateBibInfo();
-      String startDate = start + "0101";
-      String endDate = end + "1231";
 
-      return entitlementRegistry.isUserEntitled(issn, institution, startDate, endDate);
+      return entitlementRegistry.isUserEntitled(issn, institution, start, end);
   }
 
   PublisherWorkflow getPublisherWorkflow(ArchivalUnit au) throws IOException, IllegalArgumentException {
@@ -300,10 +298,8 @@ public class SafeNetServeContent extends ServeContent {
       setBibInfoFromTdb(au);
       setBibInfoFromArticleFiles(au, cu);
       validateBibInfo();
-      String startDate = start + "0101";
-      String endDate = end + "1231";
 
-      String publisher = entitlementRegistry.getPublisher(issn, institution, startDate, endDate);
+      String publisher = entitlementRegistry.getPublisher(issn, institution, start, end);
       if(StringUtil.isNullString(publisher)) {
         throw new IllegalArgumentException("No publisher found");
       }
@@ -345,6 +341,7 @@ public class SafeNetServeContent extends ServeContent {
     }
 
     if(StringUtil.isNullString(start)) {
+      // Despite being called StartYear, this is actually a full date
       start = item.getStartYear();
       log.debug("Setting start to " + start);
     }
@@ -466,11 +463,17 @@ public class SafeNetServeContent extends ServeContent {
 
     if(StringUtil.isNullString(start)) {
       start = tdbAu.getStartYear();
+      if(!StringUtil.isNullString(start)) {
+          start += "0101";
+      }
       log.debug("Setting start to " + start);
     }
 
     if(StringUtil.isNullString(end)) {
       end = tdbAu.getEndYear();
+      if(!StringUtil.isNullString(end)) {
+          end += "1231";
+      }
       log.debug("Setting end to " + end);
     }
   }
