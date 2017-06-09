@@ -561,8 +561,8 @@ public class SafeNetServeContent extends ServeContent {
       where.append(" and u." + MD_ITEM_SEQ_COLUMN + "=");
       where.append("mi1." + MD_ITEM_SEQ_COLUMN);
 
-      where.append(" and mi2." + PARENT_SEQ_COLUMN + "=");
-      where.append("mi1." + MD_ITEM_SEQ_COLUMN);
+      where.append(" and mi1." + PARENT_SEQ_COLUMN + "=");
+      where.append("mi2." + MD_ITEM_SEQ_COLUMN);
 
       where.append(" and i." + MD_ITEM_SEQ_COLUMN + "=");
       where.append("mi2." + MD_ITEM_SEQ_COLUMN);
