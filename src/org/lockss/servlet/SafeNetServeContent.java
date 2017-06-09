@@ -554,8 +554,8 @@ public class SafeNetServeContent extends ServeContent {
       from.append("," + MD_ITEM_TABLE + " mi2");        // article md_item
       from.append("," + ISSN_TABLE + " i");
 
-      where.append("u." + URL_COLUMN + "=");
-      where.append(cu.getUrl());
+      where.append("u." + URL_COLUMN + "= ?");
+      args.add(cu.getUrl());
       where.append(" and u." + FEATURE_COLUMN + "='Access'");
 
       where.append(" and u." + MD_ITEM_SEQ_COLUMN + "=");
