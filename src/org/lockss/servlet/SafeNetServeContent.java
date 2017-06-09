@@ -34,11 +34,14 @@ package org.lockss.servlet;
 
 import java.io.*;
 import java.net.*;
+import java.sql.*;
 import java.util.*;
 import java.util.List;
 import java.util.regex.*;
 
 import javax.servlet.*;
+
+import static org.lockss.db.SqlConstants.*;
 
 import org.apache.commons.collections.*;
 import org.lockss.account.UserAccount;
@@ -46,6 +49,7 @@ import org.lockss.app.LockssDaemon;
 import org.lockss.config.*;
 import org.lockss.daemon.*;
 import org.lockss.daemon.OpenUrlResolver.OpenUrlInfo;
+import org.lockss.db.*;
 import org.lockss.exporter.biblio.*;
 import org.lockss.exporter.counter.*;
 import org.lockss.extractor.*;
@@ -279,6 +283,7 @@ public class SafeNetServeContent extends ServeContent {
   }
 
   boolean isUserEntitled(ArchivalUnit au) throws IOException, IllegalArgumentException {
+      setBibInfoFromMetadataDB(cu);
       setBibInfoFromCu(cu, au);
       setBibInfoFromTdb(au);
       setBibInfoFromArticleFiles(au, cu);
@@ -290,6 +295,7 @@ public class SafeNetServeContent extends ServeContent {
   }
 
   PublisherWorkflow getPublisherWorkflow(ArchivalUnit au) throws IOException, IllegalArgumentException {
+      setBibInfoFromMetadataDB(cu);
       setBibInfoFromCu(cu, au);
       setBibInfoFromTdb(au);
       setBibInfoFromArticleFiles(au, cu);
@@ -427,6 +433,11 @@ public class SafeNetServeContent extends ServeContent {
       catch(PluginException e) {
         log.error("Error extracting article metadata", e);
       }
+
+      if(!StringUtil.isNullString(issn) && !StringUtil.isNullString(start) && !StringUtil.isNullString(end)) {
+        log.debug2("Bib info already set");
+        return;
+      }
     }
   }
 
@@ -507,6 +518,88 @@ public class SafeNetServeContent extends ServeContent {
     }
     catch(PluginException e) {
       log.error("Error extracting CU metadata", e);
+    }
+  }
+
+  private void setBibInfoFromMetadataDB(CachedUrl cu) {
+    log.debug2("Setting bib info from database");
+    if(!StringUtil.isNullString(issn) && !StringUtil.isNullString(start) && !StringUtil.isNullString(end)) {
+      log.debug2("Bib info already set");
+      return;
+    }
+
+    if(cu == null) {
+      log.debug2("No CachedUrl");
+      return;
+    }
+
+    Connection conn = null;
+    OpenUrlInfo resolved = null;
+    try {
+      LockssDaemon daemon = getLockssDaemon();
+      conn = daemon.getDbManager().getConnection();
+
+      StringBuilder select = new StringBuilder("select distinct ");
+      StringBuilder from = new StringBuilder(" from ");
+      StringBuilder where = new StringBuilder(" where ");
+      ArrayList<String> args = new ArrayList<String>();
+
+      // return all related values for debugging purposes
+      select.append("mi1." + DATE_COLUMN);
+      select.append(",i." + ISSN_COLUMN);
+      select.append(",i." + ISSN_TYPE_COLUMN);
+
+      from.append(URL_TABLE + " u");
+      from.append(", " + MD_ITEM_TABLE + " mi1");              // publication md_item
+      from.append("," + MD_ITEM_TABLE + " mi2");        // article md_item
+      from.append("," + ISSN_TABLE + " i");
+
+      where.append("u." + URL_COLUMN + "=");
+      where.append(cu.getUrl());
+      where.append(" and u." + FEATURE_COLUMN + "='Access'");
+
+      where.append(" and u." + MD_ITEM_SEQ_COLUMN + "=");
+      where.append("mi1." + MD_ITEM_SEQ_COLUMN);
+
+      where.append(" and mi2." + PARENT_SEQ_COLUMN + "=");
+      where.append("mi1." + MD_ITEM_SEQ_COLUMN);
+
+      where.append(" and i." + MD_ITEM_SEQ_COLUMN + "=");
+      where.append("mi2." + MD_ITEM_SEQ_COLUMN);
+
+      String query = select.toString() + from.toString() + where.toString();
+
+      PreparedStatement stmt = daemon.getDbManager().prepareStatement(conn, query);
+
+      for (int i = 0; i < args.size(); i++) {
+        log.debug3("query arg:  " + args.get(i));
+        stmt.setString(i + 1, args.get(i));
+      }
+
+      ResultSet resultSet = daemon.getDbManager().executeQuery(stmt);
+
+      BibliographicItemImpl item = new BibliographicItemImpl();
+      while ( resultSet.next() ) {
+        String year = resultSet.getString(1);
+        String issn = resultSet.getString(2);
+        String issnType = resultSet.getString(3);
+        item.setYear(year);
+        if(P_ISSN_TYPE.equals(issnType)){
+          item.setPrintIssn(issn);
+        }
+        else if(E_ISSN_TYPE.equals(issnType)){
+          item.setEissn(issn);
+        }
+        else if(L_ISSN_TYPE.equals(issnType)){
+          item.setIssnL(issn);
+        }
+      }
+      setBibInfoFromBibliographicItem(item);
+
+    } catch (DbException e) {
+      log.error("Error fetching metadata", e);
+    } catch (SQLException e) {
+      log.error("Error fetching metadata", e);
     }
   }
 
