@@ -306,162 +306,207 @@ public class SafeNetServeContent extends ServeContent {
   }
 
   private void setBibInfoFromOpenUrl(OpenUrlInfo info) throws IllegalArgumentException {
-    log.debug("Setting bib info from OpenURL");
-    if(info != null) {
-      log.debug("Info set");
-      BibliographicItem item = info.getBibliographicItem();
-      if(item != null) {
-        log.debug("Item set");
-        if(StringUtil.isNullString(issn)) {
-          log.debug("Getting ISSN");
-          issn = item.getIssn();
-        }
+    log.debug2("Setting bib info from OpenURL");
+    if(!StringUtil.isNullString(issn) && !StringUtil.isNullString(start) && !StringUtil.isNullString(end)) {
+      log.debug2("Bib info already set");
+      return;
+    }
 
-        if(StringUtil.isNullString(start)) {
-          log.debug("Getting start");
-          start = item.getStartYear();
-        }
+    if(info == null) {
+      log.debug2("No OpenUrlInfo");
+      return;
+    }
 
-        if(StringUtil.isNullString(end)) {
-          log.debug("Getting end");
-          end = item.getEndYear();
-        }
-      }
+    BibliographicItem item = info.getBibliographicItem();
+    setBibInfoFromBibliographicItem(item);
+  }
+
+  private void setBibInfoFromBibliographicItem(BibliographicItem item) {
+    log.debug2("Setting bib info from BibliographicItem");
+    if(!StringUtil.isNullString(issn) && !StringUtil.isNullString(start) && !StringUtil.isNullString(end)) {
+      log.debug2("Bib info already set");
+      return;
+    }
+
+    if(item == null) {
+      log.debug2("No BibliographicItem");
+      return;
+    }
+
+    if(StringUtil.isNullString(issn)) {
+      issn = item.getIssn();
+      log.debug("Setting issn to " + issn);
+    }
+
+    if(StringUtil.isNullString(start)) {
+      start = item.getStartYear();
+      log.debug("Setting start to " + start);
+    }
+
+    if(StringUtil.isNullString(end)) {
+      end = item.getEndYear();
+      log.debug("Setting end to " + end);
     }
   }
 
+  private void setBibInfoFromMetadata(ArticleMetadata md) {
+    log.debug2("Setting bib info from TDB");
+    if(!StringUtil.isNullString(issn) && !StringUtil.isNullString(start) && !StringUtil.isNullString(end)) {
+      log.debug2("Bib info already set");
+      return;
+    }
+
+    if(md == null) {
+      log.debug2("No ArticleMetadata");
+      return;
+    }
+
+    BibliographicItemImpl item = new BibliographicItemImpl();
+    item.setPrintIssn(md.get("issn"));
+    item.setEissn(md.get("eissn"));
+    item.setIssnL(md.get("issnl"));
+    item.setYear(md.get("date"));
+    setBibInfoFromBibliographicItem(item);
+  }
+
   private void setBibInfoFromArticleFiles(ArchivalUnit au, final CachedUrl cu) throws IllegalArgumentException {
-    log.debug("Setting bib info from TDB");
+    log.debug2("Setting bib info from TDB");
+    if(!StringUtil.isNullString(issn) && !StringUtil.isNullString(start) && !StringUtil.isNullString(end)) {
+      log.debug2("Bib info already set");
+      return;
+    }
+
+    if(au == null) {
+      log.debug2("No ArchivalUnit");
+      return;
+    }
+    if(cu == null) {
+      log.debug2("No CachedUrl");
+      return;
+    }
+
+    Plugin plugin = au.getPlugin();
+    if(plugin == null) {
+      log.debug2("No Plugin");
+      return;
+    }
+
     MetadataTarget target = new MetadataTarget(MetadataTarget.PURPOSE_OPENURL);
-    if(au != null) {
-      log.debug("AU set");
-      Iterator<ArticleFiles> afs = au.getArticleIterator();
-      ArticleMetadataExtractor mdExtractor = au.getPlugin().getArticleMetadataExtractor(target, au);
-      if(mdExtractor != null) {
-        log.debug("Extractor set");
-        if(afs != null) {
-          log.debug("Article Files set");
-          while(afs.hasNext()) {
-            ArticleFiles af = afs.next();
-            ArticleMetadataExtractor.Emitter emitter = new ArticleMetadataExtractor.Emitter() {
-              public void emitMetadata(ArticleFiles af2, ArticleMetadata md) {
-                log.debug("ArticleMetadata found");
-                String mdUrl = md.get("access.url");
-                String cuUrl = cu.getUrl();
-                log.debug("Comparing " + mdUrl + " to " + cuUrl);
-                if(mdUrl.equals(cuUrl)) {
-                  BibliographicItemImpl item = new BibliographicItemImpl();
-                  item.setPrintIssn(md.get("issn"));
-                  item.setEissn(md.get("eissn"));
-                  item.setIssnL(md.get("issnl"));
-                  item.setYear(md.get("date"));
-                  if(StringUtil.isNullString(issn)) {
-                    log.debug("Getting ISSN");
-                    issn = item.getIssn();
-                  }
+    Iterator<ArticleFiles> afs = au.getArticleIterator();
+    ArticleMetadataExtractor mdExtractor = plugin.getArticleMetadataExtractor(target, au);
 
-                  if(StringUtil.isNullString(start)) {
-                    log.debug("Getting start");
-                    start = item.getStartYear();
-                  }
+    if(afs == null) {
+      log.debug2("No ArticleIterator");
+      return;
+    }
+    if(mdExtractor == null) {
+      log.debug2("No ArticleMetadataExtractor");
+      return;
+    }
 
-                  if(StringUtil.isNullString(end)) {
-                    log.debug("Getting end");
-                    end = item.getEndYear();
-                  }
-                }
-              }
-            };
-            try {
-              mdExtractor.extract(target, af, emitter);
-            }
-            catch(IOException e) {
-              log.error("Error extracting article metadata", e);
-            }
-            catch(PluginException e) {
-              log.error("Error extracting article metadata", e);
-            }
-          }
+    ArticleMetadataExtractor.Emitter emitter = new ArticleMetadataExtractor.Emitter() {
+      public void emitMetadata(ArticleFiles af2, ArticleMetadata md) {
+        String mdUrl = md.get("access.url");
+        String cuUrl = cu.getUrl();
+        log.debug3("Comparing " + mdUrl + " to " + cuUrl);
+        if(mdUrl.equals(cuUrl)) {
+          log.debug2("Found matching URL");
+          setBibInfoFromMetadata(md);
         }
+      }
+    };
+
+    while(afs.hasNext()) {
+      ArticleFiles af = afs.next();
+      try {
+        mdExtractor.extract(target, af, emitter);
+      }
+      catch(IOException e) {
+        log.error("Error extracting article metadata", e);
+      }
+      catch(PluginException e) {
+        log.error("Error extracting article metadata", e);
       }
     }
   }
 
   private void setBibInfoFromTdb(ArchivalUnit au) throws IllegalArgumentException {
-    log.debug("Setting bib info from TDB");
-    if(au != null) {
-      log.debug("AU set");
-      TdbAu tdbAu = au.getTdbAu();
-      if(tdbAu != null) {
-        log.debug("TdbAU set");
+    log.debug2("Setting bib info from TDB");
+    if(!StringUtil.isNullString(issn) && !StringUtil.isNullString(start) && !StringUtil.isNullString(end)) {
+      log.debug2("Bib info already set");
+      return;
+    }
 
-        if(StringUtil.isNullString(issn)) {
-          log.debug("Getting ISSN");
-          issn = tdbAu.getIssn();
-        }
+    if(au == null) {
+      log.debug2("No ArchivalUnit");
+      return;
+    }
 
-        if(StringUtil.isNullString(start)) {
-          log.debug("Getting start");
-          start = tdbAu.getStartYear();
-        }
+    TdbAu tdbAu = au.getTdbAu();
+    if(tdbAu == null) {
+      log.debug2("No TdbAu");
+      return;
+    }
 
-        if(StringUtil.isNullString(end)) {
-          log.debug("Getting end");
-          end = tdbAu.getEndYear();
-        }
-      }
+    if(StringUtil.isNullString(issn)) {
+      issn = tdbAu.getIssn();
+      log.debug("Setting issn to " + issn);
+    }
+
+    if(StringUtil.isNullString(start)) {
+      start = tdbAu.getStartYear();
+      log.debug("Setting start to " + start);
+    }
+
+    if(StringUtil.isNullString(end)) {
+      end = tdbAu.getEndYear();
+      log.debug("Setting end to " + end);
     }
   }
 
   private void setBibInfoFromCu(CachedUrl cu, ArchivalUnit au) {
-    log.debug("Setting bib info from CU");
-    if(cu != null) {
-      log.debug("CU set");
-      if(au != null) {
-        log.debug("AU set");
-        MetadataTarget target = new MetadataTarget(MetadataTarget.PURPOSE_OPENURL);
-        Plugin plugin = au.getPlugin();
-        if(plugin != null) {
-          log.debug("Plugin set");
-          FileMetadataExtractor mdExtractor = plugin.getFileMetadataExtractor(target, cu.getContentType(), au);
-          if(mdExtractor != null) {
-            log.debug("Extractor set");
-            FileMetadataExtractor.Emitter emitter = new FileMetadataExtractor.Emitter() {
-              public void emitMetadata(CachedUrl cu, ArticleMetadata md) {
-                log.debug("ArticleMetadata found");
-                BibliographicItemImpl item = new BibliographicItemImpl();
-                item.setPrintIssn(md.get("issn"));
-                item.setEissn(md.get("eissn"));
-                item.setIssnL(md.get("issnl"));
-                item.setYear(md.get("date"));
-                if(StringUtil.isNullString(issn)) {
-                  log.debug("Getting ISSN");
-                  issn = item.getIssn();
-                }
+    log.debug2("Setting bib info from CU");
+    if(!StringUtil.isNullString(issn) && !StringUtil.isNullString(start) && !StringUtil.isNullString(end)) {
+      log.debug2("Bib info already set");
+      return;
+    }
 
-                if(StringUtil.isNullString(start)) {
-                  log.debug("Getting start");
-                  start = item.getStartYear();
-                }
+    if(au == null) {
+      log.debug2("No ArchivalUnit");
+      return;
+    }
+    if(cu == null) {
+      log.debug2("No CachedUrl");
+      return;
+    }
 
-                if(StringUtil.isNullString(end)) {
-                  log.debug("Getting end");
-                  end = item.getEndYear();
-                }
-              }
-            };
-            try {
-              mdExtractor.extract(target, cu, emitter);
-            }
-            catch(IOException e) {
-              log.error("Error extracting CU metadata", e);
-            }
-            catch(PluginException e) {
-              log.error("Error extracting CU metadata", e);
-            }
-          }
-        }
+    Plugin plugin = au.getPlugin();
+    if(plugin == null) {
+      log.debug2("No Plugin");
+      return;
+    }
+
+
+    MetadataTarget target = new MetadataTarget(MetadataTarget.PURPOSE_OPENURL);
+    FileMetadataExtractor mdExtractor = plugin.getFileMetadataExtractor(target, cu.getContentType(), au);
+    if(mdExtractor == null) {
+      log.debug2("No FileMetadataExtractor");
+      return;
+    }
+    FileMetadataExtractor.Emitter emitter = new FileMetadataExtractor.Emitter() {
+      public void emitMetadata(CachedUrl cu, ArticleMetadata md) {
+        log.debug2("ArticleMetadata found");
+        setBibInfoFromMetadata(md);
       }
+    };
+    try {
+      mdExtractor.extract(target, cu, emitter);
+    }
+    catch(IOException e) {
+      log.error("Error extracting CU metadata", e);
+    }
+    catch(PluginException e) {
+      log.error("Error extracting CU metadata", e);
     }
   }
 
