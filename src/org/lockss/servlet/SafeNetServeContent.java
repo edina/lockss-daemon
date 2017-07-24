@@ -576,5 +576,22 @@ public class SafeNetServeContent extends ServeContent {
   void logAccess(String url, String msg) {
       super.logAccess(url, "UA: \"" + req.getHeader("User-Agent") + "\" " + msg);
   }
+  
+  /**
+   * @overwrite ServeContent to add scope
+   * Record the request in COUNTER if appropriate
+   */
+  void recordRequest(String url,
+		     CounterReportsRequestRecorder.PublisherContacted contacted,
+		     int publisherCode) {
+    log.debug("## Recording Request");
+    System.out.println("Calling recordRequest()");
+    String scope = (String)session.getAttribute(INSTITUTION_SCOPE_SESSION_KEY);
+    if (proxyMgr.isCounterCountable(req.getHeader(HttpFields.__UserAgent))) {
+      log.debug("RecordRequest: "+url+" scope: "+publisherCode);
+      CounterReportsRequestRecorder.getInstance().recordRequest(url, contacted,
+	  publisherCode, null, scope);
+    }
+  }
 }
 
