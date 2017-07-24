@@ -36,6 +36,9 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
+import javax.servlet.http.HttpSession;
+
+import org.lockss.account.UserSession;
 import org.lockss.app.*;
 import org.lockss.config.*;
 import org.lockss.util.*;
@@ -148,6 +151,14 @@ public class ContentServletManager
 		     SafeNetServeContent.class,
                      "Serve Content",
                      ServletDescr.NO_NAV_TABLE);
+  
+  public static final ServletDescr SERVLET_EDIAUTH_LOGIN =
+	  new ServletDescr("EdiauthLogin",
+			  EdiauthLogin.class,
+			  "Ediauth Login Servlet",
+			  "ediauth",
+			  ServletDescr.NO_NAV_TABLE | ServletDescr.LARGE_LOGO,
+			  "Ediauth");
 
   public static final ServletDescr SERVLET_SERVE_CONTENT =
     new ServletDescr("ServeContent",
@@ -204,6 +215,7 @@ public class ContentServletManager
 
   static final ServletDescr servletDescrsSafeNet[] = {
     SERVLET_SERVE_CONTENT_SAFENET,
+    SERVLET_EDIAUTH_LOGIN,
   };
 
   // All servlets must be listed here (even if not in nav table).
@@ -337,5 +349,19 @@ public class ContentServletManager
 
       handler.addFilterPathMapping("/*", filterName, Dispatcher.__DEFAULT);
     }
+  }
+  
+  public Collection<UserSession> getUserSessions() {
+      if (sessionMgr != null) {
+	  return sessionMgr.getUserSessions();
+      }
+      return null;
+  }
+
+  public Collection<HttpSession> getZombieSessions() {
+      if (sessionMgr != null) {
+	  return sessionMgr.getZombieSessions();
+      }
+      return null;
   }
 }
