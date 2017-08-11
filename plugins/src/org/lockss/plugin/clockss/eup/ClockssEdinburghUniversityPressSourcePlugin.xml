@@ -1,0 +1,98 @@
+<map>
+  <entry>
+    <string>plugin_status</string>
+    <string>ready</string>
+  </entry>
+
+  <entry>
+    <string>plugin_identifier</string>
+    <string>org.lockss.plugin.clockss.ClockssEdinburghUniversityPressSourcePlugin</string>
+  </entry>
+  <entry>
+    <string>plugin_name</string>
+    <string>Edinburgh University Press Source Plugin (CLOCKSS)</string>
+  </entry>
+  <entry>
+    <string>plugin_version</string>
+    <string>1</string>
+  </entry>
+
+  <entry>
+    <!-- support for guessing at encoding, setting provider -->
+    <string>required_daemon_version</string>
+    <string>1.67.0</string>
+  </entry>
+
+  <!-- Source plugins should have the following setting because the daemon treats file-transfer a little bit differently 
+  (for example, never going to the publisher on ServeContent) -->
+  <entry>
+    <string>plugin_bulk_content</string>
+    <boolean>true</boolean>
+  </entry>
+
+  <entry>
+    <string>au_name</string>
+    <string>"Parent Source Plugin (CLOCKSS), Base URL %s, Year %d", base_url, year</string>
+  </entry>
+
+  <entry>
+    <string>plugin_parent</string>
+    <string>org.lockss.plugin.clockss.ClockssSourcePlugin</string>
+  </entry>
+  <entry>
+    <string>plugin_parent_version</string>
+    <string>15</string>
+  </entry>
+
+  <entry>
+    <string>au_name</string>
+    <string>"Edinburgh University Press Source Plugin (CLOCKSS), Base URL %s, Year %d", base_url, year</string>
+  </entry>
+
+  <!-- When the content is in an archive, the plugin needs to have the following as part of its definition -->
+  <entry>
+    <string>plugin_archive_file_types</string>
+    <string>standard</string>
+  </entry>  
+
+  <!-- This need to be change to match the actual folder structure -->
+  <entry>
+    <string>au_substance_url_pattern</string>
+    <list>
+      <string>"^%s%d/.+\.zip$", base_url, year</string>
+    </list>
+  </entry>
+
+  <entry>
+    <string>plugin_feature_version_map</string>
+    <map>
+      <entry>
+        <string>Metadata</string>
+        <string>1</string>
+      </entry>
+      <entry>
+        <string>Substance</string>
+        <string>1</string>
+      </entry>
+    </map>
+  </entry>
+  
+  <entry>
+    <string>text/xml_metadata_extractor_factory_map</string>
+    <map>
+      <entry>
+        <string>*</string>
+        <string>org.lockss.plugin.clockss.eup.EupXmlMetadataExtractorFactory</string>
+      </entry>
+    </map>
+  </entry>
+    <entry>
+    <string>application/xml_metadata_extractor_factory_map</string>
+    <map>
+      <entry>
+        <string>*</string>
+        <string>org.lockss.plugin.clockss.eup.EupXmlMetadataExtractorFactory</string>
+      </entry>
+    </map>
+  </entry>    
+</map>    
