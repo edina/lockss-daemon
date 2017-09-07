@@ -438,7 +438,6 @@ public class DbManagerSql {
       + COUNTER_REQUEST_TABLE + " ("
       + URL_COLUMN + " varchar(" + MAX_URL_COLUMN + ") NOT NULL, "
       + IS_PUBLISHER_INVOLVED_COLUMN + " boolean NOT NULL,"
-      + CUSTOMER_INSTITUTION_SCOPE_COLUMN + " varchar(" + MAX_SCOPE_COLUMN + "),"
       + REQUEST_YEAR_COLUMN + " smallint NOT NULL,"
       + REQUEST_MONTH_COLUMN + " smallint NOT NULL,"
       + REQUEST_DAY_COLUMN + " smallint NOT NULL,"
@@ -2343,6 +2342,13 @@ public class DbManagerSql {
     "create unique index idx1_" + PUBLISHER_SUBSCRIPTION_TABLE + " on "
 	+ PUBLISHER_SUBSCRIPTION_TABLE + "(" + PUBLISHER_SEQ_COLUMN + ")"
     };
+
+  // The SQL code used to add the necessary version 28 database table columns.
+  private static final String[] VERSION_28_COLUMN_ADD_QUERIES = new String[] {
+    "alter table " + COUNTER_REQUEST_TABLE
+    + " add column " + CUSTOMER_INSTITUTION_SCOPE_COLUMN
+    +   " varchar(" + MAX_SCOPE_COLUMN + ")"
+  };
 
   // The database data source.
   private DataSource dataSource = null;
@@ -9037,6 +9043,28 @@ public class DbManagerSql {
     addMetadataItemType(conn, MD_ITEM_TYPE_PROCEEDINGS_ARTICLE);
     addMetadataItemType(conn, MD_ITEM_TYPE_UNKNOWN_PUBLICATION);
     addMetadataItemType(conn, MD_ITEM_TYPE_UNKNOWN_ARTICLE);
+
+    if (log.isDebug2()) log.debug2(DEBUG_HEADER + "Done.");
+  }
+
+  /**
+   * Updates the database from version 27 to version 28.
+   * 
+   * @param conn
+   *          A Connection with the database connection to be used.
+   * @throws SQLException
+   *           if any problem occurred updating the database.
+   */
+  void updateDatabaseFrom27To28(Connection conn) throws SQLException {
+    final String DEBUG_HEADER = "updateDatabaseFrom27To28(): ";
+    if (log.isDebug2()) log.debug2(DEBUG_HEADER + "Starting...");
+
+    if (conn == null) {
+      throw new IllegalArgumentException("Null connection");
+    }
+
+    // Add the new columns.
+    executeDdlQueries(conn, VERSION_28_COLUMN_ADD_QUERIES);
 
     if (log.isDebug2()) log.debug2(DEBUG_HEADER + "Done.");
   }

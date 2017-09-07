@@ -743,7 +743,7 @@ public class CounterReportsManager extends BaseLockssDaemonManager {
   }
   
   public void persistRequest(String url, boolean isPublisherInvolved,
-      String organization, String institution_scope) throws DbException {
+      String organization, String institutionScope) throws DbException {
     final String DEBUG_HEADER = "persistRequest(): ";
 
     // Do nothing more if the service is not ready to be used.
@@ -793,7 +793,7 @@ public class CounterReportsManager extends BaseLockssDaemonManager {
         insertRequest.setBoolean(index++, isPublisherInvolved);
         
         // Populate the customer institution scope.
-        insertRequest.setString(index++, institution_scope);
+        insertRequest.setString(index++, institutionScope);
 
         // Populate the year of the request.
         insertRequest.setShort(index++, (short) requestYear);
