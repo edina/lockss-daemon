@@ -33,7 +33,7 @@
 package org.lockss.plugin.clockss.eup;
 
 import org.apache.commons.collections.map.MultiValueMap;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.lockss.plugin.clockss.SourceXmlSchemaHelper;
 import org.lockss.util.*;
 import org.lockss.extractor.*;

@@ -6,7 +6,7 @@
 
   <entry>
     <string>plugin_identifier</string>
-    <string>org.lockss.plugin.clockss.ClockssEdinburghUniversityPressSourcePlugin</string>
+    <string>org.lockss.plugin.clockss.eup.ClockssEdinburghUniversityPressSourcePlugin</string>
   </entry>
   <entry>
     <string>plugin_name</string>
@@ -21,13 +21,6 @@
     <!-- support for guessing at encoding, setting provider -->
     <string>required_daemon_version</string>
     <string>1.67.0</string>
-  </entry>
-
-  <!-- Source plugins should have the following setting because the daemon treats file-transfer a little bit differently 
-  (for example, never going to the publisher on ServeContent) -->
-  <entry>
-    <string>plugin_bulk_content</string>
-    <boolean>true</boolean>
   </entry>
 
   <entry>
@@ -71,10 +64,23 @@
         <string>1</string>
       </entry>
       <entry>
+        <string>Poll</string>
+        <string>1</string>
+      </entry>
+      <entry>
         <string>Substance</string>
         <string>1</string>
       </entry>
     </map>
+  </entry>
+  
+  <entry>
+    <string>plugin_article_iterator_factory</string>
+    <string>org.lockss.plugin.clockss.SourceZipXmlArticleIteratorFactory</string>
+  </entry>
+  <entry>
+    <string>plugin_article_metadata_extractor_factory</string>
+    <string>org.lockss.plugin.clockss.SourceZipXmlArticleIteratorFactory</string>
   </entry>
   
   <entry>
