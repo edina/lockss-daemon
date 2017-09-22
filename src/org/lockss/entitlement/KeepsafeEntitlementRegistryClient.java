@@ -68,7 +68,7 @@ public class KeepsafeEntitlementRegistryClient extends BaseLockssManager impleme
     }
   }
 
-  public Map<String, String> isUserEntitled(String issn, String affiliations, String start, String end) throws IOException {
+  public Map<String, String> getUserEntitlement(String issn, String affiliations, String start, String end) throws IOException {
       JsonNode entitlementJson = this.findMatchingEntitlement(issn, affiliations, start, end);
       
       if (entitlementJson == null || entitlementJson.get("scope") == null) {

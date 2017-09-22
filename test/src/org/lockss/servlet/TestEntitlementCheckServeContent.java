@@ -210,8 +210,7 @@ public class TestEntitlementCheckServeContent extends LockssServletTestCase {
   public void testCachedUrlPrimaryPublisherResponse() throws Exception {
     initServletRunner();
     pluginMgr.addAu(makeAu());
-    Mockito.when(entitlementRegistryClient.getInstitution("ed.ac.uk")).thenReturn("03bd5fc6-97f0-11e4-b270-8932ea886a12");
-    Mockito.when(entitlementRegistryClient.isUserEntitled("0740-2783", "03bd5fc6-97f0-11e4-b270-8932ea886a12", "20140101", "20141231")).thenReturn(true);
+    Mockito.when(entitlementRegistryClient.getUserEntitlement("0740-2783", "03bd5fc6-97f0-11e4-b270-8932ea886a12", "20140101", "20141231")).thenReturn(new HashMap());
     Mockito.when(entitlementRegistryClient.getPublisher("0740-2783", "03bd5fc6-97f0-11e4-b270-8932ea886a12", "20140101", "20141231")).thenReturn("33333333-0000-0000-0000-000000000000");
     Mockito.when(entitlementRegistryClient.getPublisherWorkflow("33333333-0000-0000-0000-000000000000")).thenReturn(PublisherWorkflow.PRIMARY_PUBLISHER);
     WebRequest request = new GetMethodWebRequest("http://null/EntitlementCheckServeContent?scope=ed.ac.uk&url=http%3A%2F%2Fpublisher.org%2Ftest_journal%2F" );
@@ -230,8 +229,7 @@ public class TestEntitlementCheckServeContent extends LockssServletTestCase {
   public void testCachedUrlPrimaryPublisherError() throws Exception {
     initServletRunner();
     pluginMgr.addAu(makeAu());
-    Mockito.when(entitlementRegistryClient.getInstitution("ed.ac.uk")).thenReturn("03bd5fc6-97f0-11e4-b270-8932ea886a12");
-    Mockito.when(entitlementRegistryClient.isUserEntitled("0740-2783", "03bd5fc6-97f0-11e4-b270-8932ea886a12", "20140101", "20141231")).thenReturn(true);
+    Mockito.when(entitlementRegistryClient.getUserEntitlement("0740-2783", "03bd5fc6-97f0-11e4-b270-8932ea886a12", "20140101", "20141231")).thenReturn(new HashMap());
     Mockito.when(entitlementRegistryClient.getPublisher("0740-2783", "03bd5fc6-97f0-11e4-b270-8932ea886a12", "20140101", "20141231")).thenReturn("33333333-0000-0000-0000-000000000000");
     Mockito.when(entitlementRegistryClient.getPublisherWorkflow("33333333-0000-0000-0000-000000000000")).thenReturn(PublisherWorkflow.PRIMARY_PUBLISHER);
     WebRequest request = new GetMethodWebRequest("http://null/EntitlementCheckServeContent?scope=ed.ac.uk&url=http%3A%2F%2Fpublisher.org%2Ftest_journal%2F" );
@@ -250,8 +248,7 @@ public class TestEntitlementCheckServeContent extends LockssServletTestCase {
   public void testCachedUrlPrimaryLockss() throws Exception {
     initServletRunner();
     pluginMgr.addAu(makeAu());
-    Mockito.when(entitlementRegistryClient.getInstitution("ed.ac.uk")).thenReturn("03bd5fc6-97f0-11e4-b270-8932ea886a12");
-    Mockito.when(entitlementRegistryClient.isUserEntitled("0740-2783", "03bd5fc6-97f0-11e4-b270-8932ea886a12", "20140101", "20141231")).thenReturn(true);
+    Mockito.when(entitlementRegistryClient.getUserEntitlement("0740-2783", "03bd5fc6-97f0-11e4-b270-8932ea886a12", "20140101", "20141231")).thenReturn(new HashMap());
     Mockito.when(entitlementRegistryClient.getPublisher("0740-2783", "03bd5fc6-97f0-11e4-b270-8932ea886a12", "20140101", "20141231")).thenReturn("33333333-0000-0000-0000-000000000000");
     Mockito.when(entitlementRegistryClient.getPublisherWorkflow("33333333-0000-0000-0000-000000000000")).thenReturn(PublisherWorkflow.PRIMARY_LOCKSS);
     WebRequest request = new GetMethodWebRequest("http://null/EntitlementCheckServeContent?scope=ed.ac.uk&url=http%3A%2F%2Fpublisher.org%2Ftest_journal%2F" );
@@ -266,8 +263,7 @@ public class TestEntitlementCheckServeContent extends LockssServletTestCase {
   public void testCachedUrlLibraryNotification() throws Exception {
     initServletRunner();
     pluginMgr.addAu(makeAu());
-    Mockito.when(entitlementRegistryClient.getInstitution("ed.ac.uk")).thenReturn("03bd5fc6-97f0-11e4-b270-8932ea886a12");
-    Mockito.when(entitlementRegistryClient.isUserEntitled("0740-2783", "03bd5fc6-97f0-11e4-b270-8932ea886a12", "20140101", "20141231")).thenReturn(true);
+    Mockito.when(entitlementRegistryClient.getUserEntitlement("0740-2783", "03bd5fc6-97f0-11e4-b270-8932ea886a12", "20140101", "20141231")).thenReturn(new HashMap());
     Mockito.when(entitlementRegistryClient.getPublisher("0740-2783", "03bd5fc6-97f0-11e4-b270-8932ea886a12", "20140101", "20141231")).thenReturn("33333333-0000-0000-0000-000000000000");
     Mockito.when(entitlementRegistryClient.getPublisherWorkflow("33333333-0000-0000-0000-000000000000")).thenReturn(PublisherWorkflow.LIBRARY_NOTIFICATION);
     sClient.setExceptionsThrownOnErrorStatus(false);
@@ -301,8 +297,7 @@ public class TestEntitlementCheckServeContent extends LockssServletTestCase {
     props.setProperty("eissn", "");
     props.setProperty("attributes.year", "");
     pluginMgr.addAu(makeAu(props));
-    Mockito.when(entitlementRegistryClient.getInstitution("ed.ac.uk")).thenReturn("03bd5fc6-97f0-11e4-b270-8932ea886a12");
-    Mockito.when(entitlementRegistryClient.isUserEntitled("07402783", "03bd5fc6-97f0-11e4-b270-8932ea886a12", "2014", "2014")).thenReturn(true);
+    Mockito.when(entitlementRegistryClient.getUserEntitlement("07402783", "03bd5fc6-97f0-11e4-b270-8932ea886a12", "2014", "2014")).thenReturn(new HashMap());
     Mockito.when(entitlementRegistryClient.getPublisher("07402783", "03bd5fc6-97f0-11e4-b270-8932ea886a12", "2014", "2014")).thenReturn("33333333-0000-0000-0000-000000000000");
     Mockito.when(entitlementRegistryClient.getPublisherWorkflow("33333333-0000-0000-0000-000000000000")).thenReturn(PublisherWorkflow.PRIMARY_PUBLISHER);
     WebRequest request = new GetMethodWebRequest("http://null/EntitlementCheckServeContent?scope=ed.ac.uk&url=http%3A%2F%2Fpublisher.org%2Ftest_journal%2F" );
@@ -321,8 +316,7 @@ public class TestEntitlementCheckServeContent extends LockssServletTestCase {
   public void testUnauthorisedUrl() throws Exception {
     initServletRunner();
     pluginMgr.addAu(makeAu());
-    Mockito.when(entitlementRegistryClient.getInstitution("ed.ac.uk")).thenReturn("03bd5fc6-97f0-11e4-b270-8932ea886a12");
-    Mockito.when(entitlementRegistryClient.isUserEntitled("0740-2783", "03bd5fc6-97f0-11e4-b270-8932ea886a12", "20140101", "20141231")).thenReturn(false);
+    Mockito.when(entitlementRegistryClient.getUserEntitlement("0740-2783", "03bd5fc6-97f0-11e4-b270-8932ea886a12", "20140101", "20141231")).thenReturn(new HashMap());
     sClient.setExceptionsThrownOnErrorStatus(false);
     WebRequest request = new GetMethodWebRequest("http://null/EntitlementCheckServeContent?scope=ed.ac.uk&url=http%3A%2F%2Fpublisher.org%2Ftest_journal%2F" );
     InvocationContext ic = sClient.newInvocation(request);
@@ -337,8 +331,7 @@ public class TestEntitlementCheckServeContent extends LockssServletTestCase {
   public void testEntitlementRegistryError() throws Exception {
     initServletRunner();
     pluginMgr.addAu(makeAu());
-    Mockito.when(entitlementRegistryClient.getInstitution("ed.ac.uk")).thenReturn("03bd5fc6-97f0-11e4-b270-8932ea886a12");
-    Mockito.when(entitlementRegistryClient.isUserEntitled("0740-2783", "03bd5fc6-97f0-11e4-b270-8932ea886a12", "20140101", "20141231")).thenThrow(new IOException("Could not contact entitlement registry"));
+    Mockito.when(entitlementRegistryClient.getUserEntitlement("0740-2783", "03bd5fc6-97f0-11e4-b270-8932ea886a12", "20140101", "20141231")).thenThrow(new IOException("Could not contact entitlement registry"));
     sClient.setExceptionsThrownOnErrorStatus(false);
     WebRequest request = new GetMethodWebRequest("http://null/EntitlementCheckServeContent?scope=ed.ac.uk&url=http%3A%2F%2Fpublisher.org%2Ftest_journal%2F" );
     InvocationContext ic = sClient.newInvocation(request);
@@ -374,8 +367,8 @@ public class TestEntitlementCheckServeContent extends LockssServletTestCase {
   //   props.setProperty("eissn", "0000-0000");
   //   pluginMgr.addAu(makeAu(props));
   //   Mockito.when(entitlementRegistryClient.getInstitution("ed.ac.uk")).thenReturn("03bd5fc6-97f0-11e4-b270-8932ea886a12");
-  //   Mockito.when(entitlementRegistryClient.isUserEntitled("0740-2783", "03bd5fc6-97f0-11e4-b270-8932ea886a12", "20140101", "20141231")).thenReturn(false);
-  //   Mockito.when(entitlementRegistryClient.isUserEntitled("0000-0000", "03bd5fc6-97f0-11e4-b270-8932ea886a12", "20140101", "20141231")).thenReturn(true);
+  //   Mockito.when(entitlementRegistryClient.getUserEntitlement("0740-2783", "03bd5fc6-97f0-11e4-b270-8932ea886a12", "20140101", "20141231")).thenReturn(false);
+  //   Mockito.when(entitlementRegistryClient.getUserEntitlement("0000-0000", "03bd5fc6-97f0-11e4-b270-8932ea886a12", "20140101", "20141231")).thenReturn(true);
   //   Mockito.when(entitlementRegistryClient.getPublisher("0000-0000", "03bd5fc6-97f0-11e4-b270-8932ea886a12", "20140101", "20141231")).thenReturn("33333333-0000-0000-0000-000000000000");
   //   Mockito.when(entitlementRegistryClient.getPublisherWorkflow("33333333-0000-0000-0000-00000000000000")).thenReturn(PublisherWorkflow.PRIMARY_PUBLISHER);
   //   WebRequest request = new GetMethodWebRequest("http://null/EntitlementCheckServeContent?scope=ed.ac.uk&url=http%3A%2F%2Fpublisher.org%2Ftest_journal%2F" );

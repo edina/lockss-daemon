@@ -1,6 +1,7 @@
 package org.lockss.entitlement;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Properties;
 
 import org.mockito.Mockito;
@@ -29,18 +30,18 @@ public class TestCachingEntitlementRegistryClient extends LockssTestCase {
   }
 
   public void testCaching() throws Exception {
-    Mockito.when(mock.isUserEntitled("0000-0000", "11111111-1111-1111-1111-111111111111", "20120101", "20151231")).thenReturn(true);
-    Mockito.when(mock.isUserEntitled("0000-0001", "11111111-1111-1111-1111-111111111111", "20120101", "20151231")).thenReturn(false);
-    Mockito.when(mock.isUserEntitled("0000-0002", "11111111-1111-1111-1111-111111111111", "20120101", "20151231")).thenThrow(new IOException("Error communicating with entitlement registry. Response was 500 null"));
+    Mockito.when(mock.getUserEntitlement("0000-0000", "11111111-1111-1111-1111-111111111111", "20120101", "20151231")).thenReturn(new HashMap());
+    Mockito.when(mock.getUserEntitlement("0000-0001", "11111111-1111-1111-1111-111111111111", "20120101", "20151231")).thenReturn(new HashMap());
+    Mockito.when(mock.getUserEntitlement("0000-0002", "11111111-1111-1111-1111-111111111111", "20120101", "20151231")).thenThrow(new IOException("Error communicating with entitlement registry. Response was 500 null"));
     Mockito.when(mock.getPublisher("0000-0000", "11111111-1111-1111-1111-111111111111", "20120101", "20151231")).thenReturn("33333333-0000-0000-0000-000000000000");
     Mockito.when(mock.getPublisher("0000-0001", "11111111-1111-1111-1111-111111111111", "20120101", "20151231")).thenReturn("33333333-0000-0000-0000-000000000001");
     Mockito.when(mock.getPublisherWorkflow("33333333-0000-0000-0000-000000000000")).thenReturn(PublisherWorkflow.PRIMARY_LOCKSS);
     Mockito.when(mock.getPublisherWorkflow("33333333-1111-1111-1111-111111111111")).thenReturn(PublisherWorkflow.PRIMARY_PUBLISHER);
 
-    assertTrue(client.isUserEntitled("0000-0000", "11111111-1111-1111-1111-111111111111", "20120101", "20151231"));
-    assertFalse(client.isUserEntitled("0000-0001", "11111111-1111-1111-1111-111111111111", "20120101", "20151231"));
+    assertNotNull(client.getUserEntitlement("0000-0000", "11111111-1111-1111-1111-111111111111", "20120101", "20151231"));
+    assertNull(client.getUserEntitlement("0000-0001", "11111111-1111-1111-1111-111111111111", "20120101", "20151231"));
     try {
-      client.isUserEntitled("0000-0002", "11111111-1111-1111-1111-111111111111", "20120101", "20151231");
+      client.getUserEntitlement("0000-0002", "11111111-1111-1111-1111-111111111111", "20120101", "20151231");
       fail("Expected exception not thrown");
     }
     catch(IOException e) {
@@ -56,18 +57,18 @@ public class TestCachingEntitlementRegistryClient extends LockssTestCase {
     assertEquals("33333333-0000-0000-0000-000000000001", client.getPublisher("0000-0001", "11111111-1111-1111-1111-111111111111", "20120101", "20151231"));
     assertEquals("33333333-0000-0000-0000-000000000000", client.getPublisher("0000-0000", "11111111-1111-1111-1111-111111111111", "20120101", "20151231"));
     try {
-      client.isUserEntitled("0000-0002", "11111111-1111-1111-1111-111111111111", "20120101", "20151231");
+      client.getUserEntitlement("0000-0002", "11111111-1111-1111-1111-111111111111", "20120101", "20151231");
       fail("Expected exception not thrown");
     }
     catch(IOException e) {
       assertEquals("Error communicating with entitlement registry. Response was 500 null", e.getMessage());
     }
-    assertFalse(client.isUserEntitled("0000-0001", "11111111-1111-1111-1111-111111111111", "20120101", "20151231"));
-    assertTrue(client.isUserEntitled("0000-0000", "11111111-1111-1111-1111-111111111111", "20120101", "20151231"));
+    assertNull(client.getUserEntitlement("0000-0001", "11111111-1111-1111-1111-111111111111", "20120101", "20151231"));
+    assertNotNull(client.getUserEntitlement("0000-0000", "11111111-1111-1111-1111-111111111111", "20120101", "20151231"));
 
-    Mockito.verify(mock, Mockito.times(2)).isUserEntitled("0000-0000", "11111111-1111-1111-1111-111111111111", "20120101", "20151231");
-    Mockito.verify(mock).isUserEntitled("0000-0001", "11111111-1111-1111-1111-111111111111", "20120101", "20151231");
-    Mockito.verify(mock, Mockito.times(2)).isUserEntitled("0000-0002", "11111111-1111-1111-1111-111111111111", "20120101", "20151231");
+    Mockito.verify(mock, Mockito.times(2)).getUserEntitlement("0000-0000", "11111111-1111-1111-1111-111111111111", "20120101", "20151231");
+    Mockito.verify(mock).getUserEntitlement("0000-0001", "11111111-1111-1111-1111-111111111111", "20120101", "20151231");
+    Mockito.verify(mock, Mockito.times(2)).getUserEntitlement("0000-0002", "11111111-1111-1111-1111-111111111111", "20120101", "20151231");
     Mockito.verify(mock).getPublisher("0000-0000", "11111111-1111-1111-1111-111111111111", "20120101", "20151231");
     Mockito.verify(mock).getPublisher("0000-0001", "11111111-1111-1111-1111-111111111111", "20120101", "20151231");
     Mockito.verify(mock).getPublisherWorkflow("33333333-0000-0000-0000-000000000000");

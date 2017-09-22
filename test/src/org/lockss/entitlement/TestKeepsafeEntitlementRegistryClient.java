@@ -65,7 +65,7 @@ public class TestKeepsafeEntitlementRegistryClient extends LockssTestCase {
     Mockito.doReturn(connection(url, 500, "Internal server error")).when(client).openConnection(url);
 
     try {
-      client.isUserEntitled("0123-456X", "11111111-1111-1111-1111-111111111111", "20120101", "20151231");
+      client.getUserEntitlement("0123-456X", "11111111-1111-1111-1111-111111111111", "20120101", "20151231");
       fail("Expected exception not thrown");
     }
     catch(IOException e) {
@@ -78,7 +78,7 @@ public class TestKeepsafeEntitlementRegistryClient extends LockssTestCase {
     String url = url("/entitlements", KeepsafeEntitlementRegistryClient.mapToPairs(validEntitlementParams));
     Mockito.doReturn(connection(url, 200, "[]")).when(client).openConnection(url);
 
-    assertFalse(client.isUserEntitled("0123-456X", "11111111-1111-1111-1111-111111111111", "20120101", "20151231"));
+    assertNull(client.getUserEntitlement("0123-456X", "11111111-1111-1111-1111-111111111111", "20120101", "20151231"));
     Mockito.verify(client).openConnection(url);
   }
 
@@ -87,7 +87,7 @@ public class TestKeepsafeEntitlementRegistryClient extends LockssTestCase {
     Mockito.doReturn(connection(url, 200, "[{\"this\": isn't, JSON}]")).when(client).openConnection(url);
 
     try {
-      client.isUserEntitled("0123-456X", "11111111-1111-1111-1111-111111111111", "20120101", "20151231");
+      client.getUserEntitlement("0123-456X", "11111111-1111-1111-1111-111111111111", "20120101", "20151231");
       fail("Expected exception not thrown");
     }
     catch(IOException e) {
@@ -100,7 +100,7 @@ public class TestKeepsafeEntitlementRegistryClient extends LockssTestCase {
     String url = url("/entitlements", KeepsafeEntitlementRegistryClient.mapToPairs(validEntitlementParams));
     Mockito.doReturn(connection(url, 200, "{\"surprise\": \"object\"}")).when(client).openConnection(url);
 
-    assertFalse(client.isUserEntitled("0123-456X", "11111111-1111-1111-1111-111111111111", "20120101", "20151231"));
+    assertNull(client.getUserEntitlement("0123-456X", "11111111-1111-1111-1111-111111111111", "20120101", "20151231"));
     Mockito.verify(client).openConnection(url);
   }
 
@@ -108,7 +108,7 @@ public class TestKeepsafeEntitlementRegistryClient extends LockssTestCase {
     String url = url("/entitlements", KeepsafeEntitlementRegistryClient.mapToPairs(validEntitlementParams));
     Mockito.doReturn(connection(url, 200, "[" + mapToJson(validResponseParams) + "]")).when(client).openConnection(url);
 
-    assertTrue(client.isUserEntitled("0123-456X", "11111111-1111-1111-1111-111111111111", "20120101", "20151231"));
+    assertNotNull(client.getUserEntitlement("0123-456X", "11111111-1111-1111-1111-111111111111", "20120101", "20151231"));
     Mockito.verify(client).openConnection(url);
   }
 
@@ -116,64 +116,7 @@ public class TestKeepsafeEntitlementRegistryClient extends LockssTestCase {
     String url = url("/entitlements", KeepsafeEntitlementRegistryClient.mapToPairs(validEntitlementParams));
     Mockito.doReturn(connection(url, 204, "")).when(client).openConnection(url);
 
-    assertFalse(client.isUserEntitled("0123-456X", "11111111-1111-1111-1111-111111111111", "20120101", "20151231"));
-    Mockito.verify(client).openConnection(url);
-  }
-
-  public void testGetInstitution() throws Exception {
-    Map<String, String> queryParams = new HashMap<String, String>();
-    queryParams.put("scope", "ed.ac.uk");
-    Map<String, String> institution = new HashMap<String, String>();
-    institution.put("guid", "11111111-0000-0000-0000-000000000000");
-    institution.put("name", "University of Edinburgh");
-    institution.put("scope", "ed.ac.uk");
-
-    String url = url("/institutions", KeepsafeEntitlementRegistryClient.mapToPairs(queryParams));
-    Mockito.doReturn(connection(url, 200, "[" + mapToJson(institution) + "]")).when(client).openConnection(url);
-    assertEquals("11111111-0000-0000-0000-000000000000", client.getInstitution("ed.ac.uk"));
-
-    Mockito.verify(client).openConnection(url);
-  }
-
-  public void testGetInstitutionNoResponse() throws Exception {
-    Map<String, String> queryParams = new HashMap<String, String>();
-    queryParams.put("scope", "ed.ac.uk");
-
-    String url = url("/institutions", KeepsafeEntitlementRegistryClient.mapToPairs(queryParams));
-    Mockito.doReturn(connection(url, 200, "[]")).when(client).openConnection(url);
-    try {
-      client.getInstitution("ed.ac.uk");
-      fail("Expected exception not thrown");
-    }
-    catch (IOException e) {
-      assertEquals("No matching institutions returned from entitlement registry", e.getMessage());
-    }
-
-    Mockito.verify(client).openConnection(url);
-  }
-
-  public void testGetInstitutionMultipleResults() throws Exception {
-    Map<String, String> queryParams = new HashMap<String, String>();
-    queryParams.put("scope", "ed.ac.uk");
-    Map<String, String> institution1 = new HashMap<String, String>();
-    institution1.put("id", "11111111-0000-0000-0000-000000000000");
-    institution1.put("name", "University of Edinburgh");
-    institution1.put("scope", "ed.ac.uk");
-    Map<String, String> institution2 = new HashMap<String, String>();
-    institution2.put("id", "11111111-1111-1111-1111-111111111111");
-    institution2.put("name", "University of Edinburgh 2");
-    institution2.put("scope", "ed.ac.uk");
-
-    String url = url("/institutions", KeepsafeEntitlementRegistryClient.mapToPairs(queryParams));
-    Mockito.doReturn(connection(url, 200, "[" + mapToJson(institution1) + "," + mapToJson(institution2) + "]")).when(client).openConnection(url);
-    try {
-      client.getInstitution("ed.ac.uk");
-      fail("Expected exception not thrown");
-    }
-    catch (IOException e) {
-      assertEquals("Multiple matching institutions returned from entitlement registry", e.getMessage());
-    }
-
+    assertNull(client.getUserEntitlement("0123-456X", "11111111-1111-1111-1111-111111111111", "20120101", "20151231"));
     Mockito.verify(client).openConnection(url);
   }
 

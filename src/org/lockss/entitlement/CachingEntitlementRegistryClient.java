@@ -36,10 +36,10 @@ public class CachingEntitlementRegistryClient extends BaseLockssDaemonManager im
     }
   }
 
-  public synchronized HashMap<String,String> isUserEntitled(String issn, String institution, String start, String end) throws IOException {
+  public synchronized HashMap<String,String> getUserEntitlement(String issn, String institution, String start, String end) throws IOException {
     Object result = this.cache.get("isUserEntitled", issn, institution, start, end);
     if(result == null) {
-        result = this.client.isUserEntitled(issn, institution, start, end);
+        result = this.client.getUserEntitlement(issn, institution, start, end);
         this.cache.put("isUserEntitled", issn, institution, start, end, result);
     }
     return (HashMap<String,String>) result;

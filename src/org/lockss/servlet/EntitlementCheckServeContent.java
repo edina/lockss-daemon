@@ -223,7 +223,7 @@ public class EntitlementCheckServeContent extends ServeContent {
   @Override
   protected LockssUrlConnection openConnection(String url, LockssUrlConnectionPool pool) throws IOException {
     LockssUrlConnection conn = doOpenConnection(url, pool);
-    conn.addRequestProperty(INSTITUTION_HEADER, entitlement.get("scope");
+    conn.addRequestProperty(INSTITUTION_HEADER, entitlement.get("scope"));
     return conn;
   }
 
@@ -247,7 +247,7 @@ public class EntitlementCheckServeContent extends ServeContent {
       
       String userAffiliations = (String) this.getSession().getAttribute(affiliationAttributeName);
       
-      entitlement = entitlementRegistry.isUserEntitled(issn, userAffiliations, start, end);
+      entitlement = entitlementRegistry.getUserEntitlement(issn, userAffiliations, start, end);
       
       return entitlement != null;
   }
