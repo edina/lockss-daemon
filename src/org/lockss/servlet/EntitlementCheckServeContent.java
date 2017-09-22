@@ -69,25 +69,25 @@ public class EntitlementCheckServeContent extends ServeContent {
 
   // If true, scope can be 'mocked' from the URL parameters. This is for testing purposes, and should never be true in production
   public static final String PARAM_MOCK_SCOPE = PREFIX + "mockScope";
+  
+  public static final String PARAM_AFFILIATION_ATTRIBUTE_NAME = PREFIX + "affiliationAttributeName";
 
   private static final String INSTITUTION_HEADER = "X-Lockss-Institution";
 
-  public static final String INSTITUTION_SCOPE_SESSION_KEY = "scope";
-
   private static boolean mockScope = false;
+  private static String affiliationAttributeName = "affiliation";
 
   private PublisherWorkflow workflow;
-  private String institution;
   private String issn;
   private String start;
   private String end;
   private EntitlementRegistryClient entitlementRegistry;
   private MetadataManager metadataManager;
+  private Map<String, String> entitlement;
 
   // don't hold onto objects after request finished
   protected void resetLocals() {
     workflow = null;
-    institution = null;
     issn = null;
     start = null;
     end = null;
@@ -108,6 +108,10 @@ public class EntitlementCheckServeContent extends ServeContent {
       ServeContent.setConfig(config, oldConfig, diffs);
     if (diffs.contains(PREFIX)) {
       mockScope = config.getBoolean(PARAM_MOCK_SCOPE, false);
+      
+      if(config.containsKey(PARAM_AFFILIATION_ATTRIBUTE_NAME)){
+        affiliationAttributeName = PARAM_AFFILIATION_ATTRIBUTE_NAME;
+      }
     }
   }
 
@@ -122,14 +126,22 @@ public class EntitlementCheckServeContent extends ServeContent {
   public void lockssHandleRequest() throws IOException {
 
     if ( mockScope ) {
-      String userInstScope = req.getParameter(INSTITUTION_SCOPE_SESSION_KEY);
+      String userInstScope = req.getParameter(affiliationAttributeName);
       if ( ! "".equals(userInstScope) ) {
         log.warning("Setting scope from parameters:"+userInstScope+" This should not be done in production");
-        this.getSession().setAttribute(INSTITUTION_SCOPE_SESSION_KEY, userInstScope);
+        this.getSession().setAttribute(affiliationAttributeName, userInstScope);
       }
     }
-
-    updateInstitution();
+    
+    if (log.isDebug2()) {
+      log.debug2("Session Attributes:");
+      // Print all attributes in case 'affiliation' is not the right one
+      Enumeration attributeNames = this.getSession().getAttributeNames();
+      while (attributeNames.hasMoreElements()) {
+          String attributeNm = (String) attributeNames.nextElement();
+          log.debug2("- " + attributeNm + " : " + this.getSession().getAttribute(attributeNm));
+      }
+    }
 
     super.lockssHandleRequest();
   }
@@ -211,7 +223,7 @@ public class EntitlementCheckServeContent extends ServeContent {
   @Override
   protected LockssUrlConnection openConnection(String url, LockssUrlConnectionPool pool) throws IOException {
     LockssUrlConnection conn = doOpenConnection(url, pool);
-    conn.addRequestProperty(INSTITUTION_HEADER, (String) getSession().getAttribute(INSTITUTION_SCOPE_SESSION_KEY));
+    conn.addRequestProperty(INSTITUTION_HEADER, entitlement.get("scope");
     return conn;
   }
 
@@ -230,22 +242,22 @@ public class EntitlementCheckServeContent extends ServeContent {
     handleUrlRequestError(missingUrl, PubState.KnownDown, "You are not authorised to access the requested URL on this LOCKSS box. ", HttpResponse.__403_Forbidden, "unauthorised");
   }
 
-
-  void updateInstitution() throws IOException {
-      String institutionScope = (String) this.getSession().getAttribute(INSTITUTION_SCOPE_SESSION_KEY);
-      institution = entitlementRegistry.getInstitution(institutionScope);
-  }
-
   boolean isUserEntitled(CachedUrl cachedUrl, ArchivalUnit archivalUnit) throws IOException, IllegalArgumentException {
       validateBibInfo(cachedUrl, archivalUnit);
-
-      return entitlementRegistry.isUserEntitled(issn, institution, start, end);
+      
+      String userAffiliations = (String) this.getSession().getAttribute(affiliationAttributeName);
+      
+      entitlement = entitlementRegistry.isUserEntitled(issn, userAffiliations, start, end);
+      
+      return entitlement != null;
   }
 
   PublisherWorkflow getPublisherWorkflow(CachedUrl cachedUrl, ArchivalUnit archivalUnit) throws IOException, IllegalArgumentException {
       validateBibInfo(cachedUrl, archivalUnit);
-
-      String publisher = entitlementRegistry.getPublisher(issn, institution, start, end);
+      
+      String institutionGUID = entitlement.get("guid");
+      
+      String publisher = entitlementRegistry.getPublisher(issn, institutionGUID, start, end);
       if(StringUtil.isNullString(publisher)) {
         throw new IllegalArgumentException("No publisher found");
       }
@@ -391,8 +403,7 @@ public class EntitlementCheckServeContent extends ServeContent {
 		     CounterReportsRequestRecorder.PublisherContacted contacted,
 		     int publisherCode) {
     log.debug("## Recording Request");
-    System.out.println("Calling recordRequest()");
-    String scope = (String)session.getAttribute(INSTITUTION_SCOPE_SESSION_KEY);
+    String scope = entitlement.get("scope");
     if (proxyMgr.isCounterCountable(req.getHeader(HttpFields.__UserAgent))) {
       log.debug("RecordRequest: "+url+" scope: "+publisherCode);
       CounterReportsRequestRecorder.getInstance().recordRequest(url, contacted,

@@ -2,6 +2,7 @@ package org.lockss.entitlement;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.collections.map.LRUMap;
@@ -35,13 +36,13 @@ public class CachingEntitlementRegistryClient extends BaseLockssDaemonManager im
     }
   }
 
-  public synchronized boolean isUserEntitled(String issn, String institution, String start, String end) throws IOException {
+  public synchronized HashMap<String,String> isUserEntitled(String issn, String institution, String start, String end) throws IOException {
     Object result = this.cache.get("isUserEntitled", issn, institution, start, end);
     if(result == null) {
         result = this.client.isUserEntitled(issn, institution, start, end);
         this.cache.put("isUserEntitled", issn, institution, start, end, result);
     }
-    return (Boolean) result;
+    return (HashMap<String,String>) result;
   }
 
   public synchronized String getPublisher(String issn, String institution, String start, String end) throws IOException {
@@ -60,15 +61,6 @@ public class CachingEntitlementRegistryClient extends BaseLockssDaemonManager im
         this.cache.put("getPublisherWorkflow", publisherName, result);
     }
     return (PublisherWorkflow) result;
-  }
-
-  public synchronized String getInstitution(String scope) throws IOException {
-    Object result = this.cache.get("getInstitution", scope);
-    if(result == null) {
-        result = this.client.getInstitution(scope);
-        this.cache.put("getInstitution", scope, result);
-    }
-    return (String) result;
   }
 }
 
