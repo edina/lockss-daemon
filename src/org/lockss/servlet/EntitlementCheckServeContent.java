@@ -76,6 +76,7 @@ public class EntitlementCheckServeContent extends ServeContent {
 
   private static boolean mockScope = false;
   private static String affiliationAttributeName = "affiliation";
+  private String remoteUser;
 
   private PublisherWorkflow workflow;
   private String issn;
@@ -132,16 +133,19 @@ public class EntitlementCheckServeContent extends ServeContent {
         this.getSession().setAttribute(affiliationAttributeName, userInstScope);
       }
     }
-    
+
     if (log.isDebug2()) {
       log.debug2("Session Attributes:");
       // Print all attributes in case 'affiliation' is not the right one
-      Enumeration attributeNames = this.getSession().getAttributeNames();
+      Enumeration attributeNames = req.getAttributeNames();
       while (attributeNames.hasMoreElements()) {
           String attributeNm = (String) attributeNames.nextElement();
-          log.debug2("- " + attributeNm + " : " + this.getSession().getAttribute(attributeNm));
+          log.debug2("- " + attributeNm + " : " + req.getAttribute(attributeNm));
       }
+      remoteUser = req.getRemoteUser();
+      log.debug2("RemoteUser: " + remoteUser);
     }
+    
 
     super.lockssHandleRequest();
   }
@@ -245,7 +249,7 @@ public class EntitlementCheckServeContent extends ServeContent {
   boolean isUserEntitled(CachedUrl cachedUrl, ArchivalUnit archivalUnit) throws IOException, IllegalArgumentException {
       validateBibInfo(cachedUrl, archivalUnit);
       
-      String userAffiliations = (String) this.getSession().getAttribute(affiliationAttributeName);
+      String userAffiliations = (String) req.getAttribute(affiliationAttributeName);
       
       entitlement = entitlementRegistry.getUserEntitlement(issn, userAffiliations, start, end);
       
