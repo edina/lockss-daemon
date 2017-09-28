@@ -8,7 +8,7 @@ import org.lockss.app.LockssManager;
 import com.fasterxml.jackson.databind.JsonNode;
 
 public interface EntitlementRegistryClient extends LockssManager {
-  Map getUserEntitlement(String issn, String affiliations, String start, String end) throws IOException;
+  Map<String, String> getUserEntitlement(String issn, String affiliations, String start, String end) throws IOException;
   String getPublisher(String issn, String institution, String start, String end) throws IOException;
   PublisherWorkflow getPublisherWorkflow(String publisherGuid) throws IOException;
 }

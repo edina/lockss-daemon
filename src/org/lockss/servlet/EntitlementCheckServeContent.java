@@ -137,13 +137,19 @@ public class EntitlementCheckServeContent extends ServeContent {
     if (log.isDebug2()) {
       log.debug2("Session Attributes:");
       // Print all attributes in case 'affiliation' is not the right one
-      Enumeration attributeNames = req.getAttributeNames();
+      Enumeration<String> attributeNames = req.getAttributeNames();
       while (attributeNames.hasMoreElements()) {
           String attributeNm = (String) attributeNames.nextElement();
           log.debug2("- " + attributeNm + " : " + req.getAttribute(attributeNm));
       }
       remoteUser = req.getRemoteUser();
       log.debug2("RemoteUser: " + remoteUser);
+      
+      Enumeration<String> headerNames = req.getHeaderNames();
+      while (headerNames.hasMoreElements()) {
+          String headerNm = (String) headerNames.nextElement();
+          log.debug2("- " + headerNm + " : " + req.getHeader(headerNm));
+      }
     }
     
 
@@ -245,11 +251,22 @@ public class EntitlementCheckServeContent extends ServeContent {
       throws IOException {
     handleUrlRequestError(missingUrl, PubState.KnownDown, "You are not authorised to access the requested URL on this LOCKSS box. ", HttpResponse.__403_Forbidden, "unauthorised");
   }
+  
+  protected void handleAuthenticationError(String missingUrl)
+      throws IOException {
+    handleUrlRequestError(missingUrl, PubState.KnownDown, "The Identity Provider didn't return a valid scoped affiliation for this user. ", HttpResponse.__403_Forbidden, "unauthorised");
+  }
 
   boolean isUserEntitled(CachedUrl cachedUrl, ArchivalUnit archivalUnit) throws IOException, IllegalArgumentException {
       validateBibInfo(cachedUrl, archivalUnit);
       
-      String userAffiliations = (String) req.getAttribute(affiliationAttributeName);
+      String userAffiliations = (String) req.getHeader(affiliationAttributeName);
+      if (userAffiliations == null){
+        handleAuthenticationError(cachedUrl.getUrl());
+        
+        return false;
+      }
+      userAffiliations = new String( userAffiliations.getBytes("ISO-8859-1"), "UTF-8");
       
       entitlement = entitlementRegistry.getUserEntitlement(issn, userAffiliations, start, end);
       
