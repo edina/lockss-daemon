@@ -70,13 +70,12 @@ public class EntitlementCheckServeContent extends ServeContent {
   // If true, scope can be 'mocked' from the URL parameters. This is for testing purposes, and should never be true in production
   public static final String PARAM_MOCK_SCOPE = PREFIX + "mockScope";
   
-  public static final String PARAM_AFFILIATION_ATTRIBUTE_NAME = PREFIX + "affiliationAttributeName";
+  public static final String PARAM_AFFILIATION_HEADER_NAME = PREFIX + "affiliationHeaderName";
 
   private static final String INSTITUTION_HEADER = "X-Lockss-Institution";
 
   private static boolean mockScope = false;
-  private static String affiliationAttributeName = "affiliation";
-  private String remoteUser;
+  private static String affiliationHeaderName = "AJP_affiliation";
 
   private PublisherWorkflow workflow;
   private String issn;
@@ -110,8 +109,8 @@ public class EntitlementCheckServeContent extends ServeContent {
     if (diffs.contains(PREFIX)) {
       mockScope = config.getBoolean(PARAM_MOCK_SCOPE, false);
       
-      if(config.containsKey(PARAM_AFFILIATION_ATTRIBUTE_NAME)){
-        affiliationAttributeName = PARAM_AFFILIATION_ATTRIBUTE_NAME;
+      if(config.containsKey(PARAM_AFFILIATION_HEADER_NAME)){
+        affiliationHeaderName = PARAM_AFFILIATION_HEADER_NAME;
       }
     }
   }
@@ -127,24 +126,15 @@ public class EntitlementCheckServeContent extends ServeContent {
   public void lockssHandleRequest() throws IOException {
 
     if ( mockScope ) {
-      String userInstScope = req.getParameter(affiliationAttributeName);
+      String userInstScope = req.getParameter(affiliationHeaderName);
       if ( ! "".equals(userInstScope) ) {
         log.warning("Setting scope from parameters:"+userInstScope+" This should not be done in production");
-        this.getSession().setAttribute(affiliationAttributeName, userInstScope);
+        this.getSession().setAttribute(affiliationHeaderName, userInstScope);
       }
     }
 
     if (log.isDebug2()) {
-      log.debug2("Session Attributes:");
-      // Print all attributes in case 'affiliation' is not the right one
-      Enumeration<String> attributeNames = req.getAttributeNames();
-      while (attributeNames.hasMoreElements()) {
-          String attributeNm = (String) attributeNames.nextElement();
-          log.debug2("- " + attributeNm + " : " + req.getAttribute(attributeNm));
-      }
-      remoteUser = req.getRemoteUser();
-      log.debug2("RemoteUser: " + remoteUser);
-      
+      log.debug2("Request Header:");
       Enumeration<String> headerNames = req.getHeaderNames();
       while (headerNames.hasMoreElements()) {
           String headerNm = (String) headerNames.nextElement();
@@ -152,7 +142,6 @@ public class EntitlementCheckServeContent extends ServeContent {
       }
     }
     
-
     super.lockssHandleRequest();
   }
 
@@ -251,20 +240,17 @@ public class EntitlementCheckServeContent extends ServeContent {
       throws IOException {
     handleUrlRequestError(missingUrl, PubState.KnownDown, "You are not authorised to access the requested URL on this LOCKSS box. ", HttpResponse.__403_Forbidden, "unauthorised");
   }
-  
-  protected void handleAuthenticationError(String missingUrl)
-      throws IOException {
-    handleUrlRequestError(missingUrl, PubState.KnownDown, "The Identity Provider didn't return a valid scoped affiliation for this user. ", HttpResponse.__403_Forbidden, "unauthorised");
-  }
 
   boolean isUserEntitled(CachedUrl cachedUrl, ArchivalUnit archivalUnit) throws IOException, IllegalArgumentException {
       validateBibInfo(cachedUrl, archivalUnit);
       
-      String userAffiliations = (String) req.getHeader(affiliationAttributeName);
+      String userAffiliations = (String) req.getHeader(affiliationHeaderName);
+      
+      if (log.isDebug2()) {
+        log.debug2("User affiliation in header["+affiliationHeaderName+"]:"+userAffiliations);
+      }
       if (userAffiliations == null){
-        handleAuthenticationError(cachedUrl.getUrl());
-        
-        return false;
+	throw new IOException("The Identity Provider didn't return a valid scoped affiliation for this user.");
       }
       userAffiliations = new String( userAffiliations.getBytes("ISO-8859-1"), "UTF-8");
       
