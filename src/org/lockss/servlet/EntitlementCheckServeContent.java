@@ -75,7 +75,7 @@ public class EntitlementCheckServeContent extends ServeContent {
   private static final String INSTITUTION_HEADER = "X-Lockss-Institution";
 
   private static boolean mockScope = false;
-  private static String affiliationHeaderName = "AJP_affiliation";
+  private static String affiliationHeaderName = "shibb_affiliation";
 
   private PublisherWorkflow workflow;
   private String issn;
@@ -110,7 +110,7 @@ public class EntitlementCheckServeContent extends ServeContent {
       mockScope = config.getBoolean(PARAM_MOCK_SCOPE, false);
       
       if(config.containsKey(PARAM_AFFILIATION_HEADER_NAME)){
-        affiliationHeaderName = PARAM_AFFILIATION_HEADER_NAME;
+        affiliationHeaderName = config.get(PARAM_AFFILIATION_HEADER_NAME);
       }
     }
   }
