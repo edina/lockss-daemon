@@ -100,14 +100,20 @@ public class KeepsafeEntitlementRegistryClient extends BaseLockssManager impleme
       }
       
       for(JsonNode entitlement : entitlements) {
-        String entitlementInstitution = entitlement.get("institution").asText();
-        String entitlementScope = entitlement.get("scope").asText();
-        String entitlementAffiliation = entitlement.get("affiliation").asText();
-        String entitlementScopedAffiliation = entitlementAffiliation + "@" + entitlementScope;
-        log.debug("Checking entitlement " + entitlement.toString());
-        if (entitlementInstitution != null && affiliations.contains(entitlementScopedAffiliation)) {
-          log.warning("TODO: Verify title and dates");
-          return entitlement;
+        if( entitlement.hasNonNull("institution") && 
+            entitlement.hasNonNull("scope") && 
+            entitlement.hasNonNull("affiliation") ){
+          String entitlementInstitution = entitlement.get("institution").asText();
+          String entitlementScope = entitlement.get("scope").asText();
+          String entitlementAffiliation = entitlement.get("affiliation").asText();
+          String entitlementScopedAffiliation = entitlementAffiliation + "@" + entitlementScope;
+          log.debug("Checking entitlement " + entitlement.toString());
+          if ( entitlementInstitution != null && affiliations.contains(entitlementScopedAffiliation) ) {
+            log.warning("TODO: Verify title and dates");
+            return entitlement;
+          }
+        } else {
+          log.error("Entitlements Registry didn't returned the expected parameters.");
         }
       }
 
