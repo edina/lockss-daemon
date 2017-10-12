@@ -87,13 +87,18 @@ public class KeepsafeEntitlementRegistryClient extends BaseLockssManager impleme
   private JsonNode findMatchingEntitlement(String issn, String affiliations, String start, String end) throws IOException {
     Map<String, String> parameters = new HashMap<String, String>();
     parameters.put("identifier_value", issn);
-    parameters.put("scoped_affiliations", affiliations);
+    // The ER doesn't like ';' separated parameter so replacing with commas
+    parameters.put("scoped_affiliations", affiliations.replaceAll(";",","));
     parameters.put("start", start);
     parameters.put("end", end);
     parameters.put("validate", "1");
 
     JsonNode entitlements = callEntitlementRegistry("/entitlements", parameters);
     if (entitlements != null) {
+      if(entitlements.size() == 0){
+        log.error("No valid entitlement was returned from entitlement registry.");
+      }
+      
       for(JsonNode entitlement : entitlements) {
         String entitlementInstitution = entitlement.get("institution").asText();
         String entitlementScope = entitlement.get("scope").asText();

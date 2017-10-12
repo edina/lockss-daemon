@@ -250,7 +250,8 @@ public class EntitlementCheckServeContent extends ServeContent {
         log.debug2("User affiliation in header["+affiliationHeaderName+"]:"+userAffiliations);
       }
       if (userAffiliations == null){
-	throw new IOException("The Identity Provider didn't return a valid scoped affiliation for this user.");
+        log.error("The Identity Provider didn't return a valid scoped affiliation for this user.");
+        return false;
       }
       userAffiliations = new String( userAffiliations.getBytes("ISO-8859-1"), "UTF-8");
       
