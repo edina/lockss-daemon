@@ -101,6 +101,7 @@ public class KeepsafeEntitlementRegistryClient extends BaseLockssManager impleme
       for(JsonNode entitlement : entitlements) {
         if( entitlement.hasNonNull("institution") ){
           JsonNode entitlementInstitution = entitlement.get("institution");
+          
           if( entitlementInstitution.hasNonNull("name") &&
               entitlementInstitution.hasNonNull("scope") ) {
             String entitlementInstitutionName = entitlementInstitution.get("name").asText();
@@ -110,6 +111,7 @@ public class KeepsafeEntitlementRegistryClient extends BaseLockssManager impleme
               // TODO: Ideally we would want to check validity of 'dates', 'titles' and 'affiliation' return by the ER
               return entitlement;
             }
+          }
         }
         log.error("Entitlements Registry didn't returned the expected parameters.");
       }
