@@ -91,6 +91,7 @@ public class KeepsafeEntitlementRegistryClient extends BaseLockssManager impleme
     parameters.put("start", start);
     parameters.put("end", end);
     parameters.put("validate", "1");
+    parameters.put("expand", "1");
 
     JsonNode entitlements = callEntitlementRegistry("/entitlements", parameters);
     if (entitlements != null) {
