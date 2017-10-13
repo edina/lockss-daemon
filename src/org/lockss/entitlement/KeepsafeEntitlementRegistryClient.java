@@ -71,7 +71,12 @@ public class KeepsafeEntitlementRegistryClient extends BaseLockssManager impleme
   public Map<String, String> getUserEntitlement(String issn, String affiliations, String start, String end) throws IOException {
       log.debug("getUserEntitlement for issn: "+issn+" affiliations:"+affiliations+" start:"+start+" end:"+end);
       
-      JsonNode entitlementJson = this.findMatchingEntitlement(issn, affiliations, start, end);
+      JsonNode entitlementJson = 
+        this.findMatchingEntitlement(
+          issn, start, end, 
+          "scoped_affiliation", 
+          affiliations.replaceAll(";",",")
+        );
       
       if ( entitlementJson == null ) {
         return null;
@@ -84,15 +89,19 @@ public class KeepsafeEntitlementRegistryClient extends BaseLockssManager impleme
       
       log.debug("User Entitlement scope: "+entitlement.get("scope"));
       log.debug("User Entitlement institution: "+entitlement.get("institution"));
-      
-      return entitlement;
+      // Check that the entitlement return match the information we've passed
+      if ( affiliations.contains(entitlement.get("scope")) ) {
+        // TODO: Ideally we would want to check validity of 'dates', 'titles' and 'affiliation' return by the ER
+        return entitlement;
+      }
+      log.error("Entitlements returned from entitlement registry do not match passed parameters");
+      return null;
   }
-
-  private JsonNode findMatchingEntitlement(String issn, String affiliations, String start, String end) throws IOException {
+  
+  private JsonNode findMatchingEntitlement(String issn, String start, String end, String search_index, String search_term) throws IOException {
     Map<String, String> parameters = new HashMap<String, String>();
     parameters.put("identifier_value", issn);
-    // The ER doesn't like ';' separated parameter so replacing with commas
-    parameters.put("scoped_affiliations", affiliations.replaceAll(";",","));
+    parameters.put(search_index, search_term);
     parameters.put("start", start);
     parameters.put("end", end);
     parameters.put("validate", "1");
@@ -109,20 +118,13 @@ public class KeepsafeEntitlementRegistryClient extends BaseLockssManager impleme
           JsonNode entitlementInstitution = entitlement.get("institution");
           
           if( entitlementInstitution.hasNonNull("name") &&
-              entitlementInstitution.hasNonNull("scope") ) {
-            String entitlementScope = entitlementInstitution.get("scope").asText();
-            
-            if ( affiliations.contains(entitlementScope) ) {
-              // TODO: Ideally we would want to check validity of 'dates', 'titles' and 'affiliation' return by the ER
-              return entitlement;
-            }
+              entitlementInstitution.hasNonNull("scope") &&
+              entitlementInstitution.hasNonNull("publisher") ) {            
+            return entitlement;
           }
         }
-        log.error("Entitlements Registry didn't returned the expected parameters.");
       }
-
-      // Valid request, but the entitlement don't match the information we passed, which should never happen
-      log.error("Entitlements returned from entitlement registry do not match passed parameters");
+      log.error("Entitlements Registry didn't returned the expected parameters.");
     }
 
     //Valid request, no entitlement found
@@ -149,14 +151,19 @@ public class KeepsafeEntitlementRegistryClient extends BaseLockssManager impleme
   }
 
   public String getPublisher(String issn, String institution, String start, String end) throws IOException {
-    JsonNode entitlement = this.findMatchingEntitlement(issn, institution, start, end);
+    JsonNode entitlement = this.findMatchingEntitlement(issn, start, end, "institution", institution);
     if ( entitlement == null ) {
         return null;
     }
-
-    String url = entitlement.get("publisher").asText();
-    String[] parts = url.split("/");
-    return parts[parts.length - 1];
+    
+    if( entitlement.get("publisher").hasNonNull("url") ){
+      String url = entitlement.get("publisher").get("url").asText();
+      String[] parts = url.split("/");
+      return parts[parts.length - 1];
+    }
+    
+    log.error("getPublisher: Entitlement return by ER is not in the expected format.");
+    return null;
   }
 
   public PublisherWorkflow getPublisherWorkflow(String publisherGuid) throws IOException {
