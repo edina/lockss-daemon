@@ -125,14 +125,6 @@ public class EntitlementCheckServeContent extends ServeContent {
    */
   public void lockssHandleRequest() throws IOException {
 
-    if ( mockScope ) {
-      String userInstScope = req.getParameter(affiliationHeaderName);
-      if ( ! "".equals(userInstScope) ) {
-        log.warning("Setting scope from parameters:"+userInstScope+" This should not be done in production");
-        this.getSession().setAttribute(affiliationHeaderName, userInstScope);
-      }
-    }
-
     if (log.isDebug2()) {
       log.debug2("Request Header:");
       Enumeration<String> headerNames = req.getHeaderNames();
