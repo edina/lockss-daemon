@@ -76,10 +76,9 @@ public class KeepsafeEntitlementRegistryClient extends BaseLockssManager impleme
       }
       
       Map<String,String> entitlement = new HashMap<String,String>();
-      entitlement.put("guid", entitlementJson.get("guid").asText());
-      entitlement.put("institution", entitlementJson.get("institution").asText());
-      entitlement.put("scope", entitlementJson.get("scope").asText());
-      entitlement.put("affiliation", entitlementJson.get("affiliation").asText());
+      entitlement.put("guid", entitlementJson.get("institution").get("guid").asText());
+      entitlement.put("institution", entitlementJson.get("institution").get("name").asText());
+      entitlement.put("scope", entitlementJson.get("institution").get("scope").asText());
       
       return entitlement;
   }
@@ -100,21 +99,19 @@ public class KeepsafeEntitlementRegistryClient extends BaseLockssManager impleme
       }
       
       for(JsonNode entitlement : entitlements) {
-        if( entitlement.hasNonNull("institution") && 
-            entitlement.hasNonNull("scope") && 
-            entitlement.hasNonNull("affiliation") ){
-          String entitlementInstitution = entitlement.get("institution").asText();
-          String entitlementScope = entitlement.get("scope").asText();
-          String entitlementAffiliation = entitlement.get("affiliation").asText();
-          String entitlementScopedAffiliation = entitlementAffiliation + "@" + entitlementScope;
-          log.debug("Checking entitlement " + entitlement.toString());
-          if ( entitlementInstitution != null && affiliations.contains(entitlementScopedAffiliation) ) {
-            log.warning("TODO: Verify title and dates");
-            return entitlement;
-          }
-        } else {
-          log.error("Entitlements Registry didn't returned the expected parameters.");
+        if( entitlement.hasNonNull("institution") ){
+          JsonNode entitlementInstitution = entitlement.get("institution");
+          if( entitlementInstitution.hasNonNull("name") &&
+              entitlementInstitution.hasNonNull("scope") ) {
+            String entitlementInstitutionName = entitlementInstitution.get("name").asText();
+            String entitlementScope = entitlementInstitution.get("scope").asText();
+            
+            if ( affiliations.contains(entitlementScope) ) {
+              // TODO: Ideally we would want to check validity of 'dates', 'titles' and 'affiliation' return by the ER
+              return entitlement;
+            }
         }
+        log.error("Entitlements Registry didn't returned the expected parameters.");
       }
 
       // Valid request, but the entitlements don't match the information we passed, which should never happen
