@@ -74,7 +74,7 @@ public class KeepsafeEntitlementRegistryClient extends BaseLockssManager impleme
       JsonNode entitlementJson = 
         this.findMatchingEntitlement(
           issn, start, end, 
-          "scoped_affiliation", 
+          "scoped_affiliations", 
           affiliations.replaceAll(";",",")
         );
       
