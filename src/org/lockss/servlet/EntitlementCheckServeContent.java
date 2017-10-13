@@ -245,15 +245,22 @@ public class EntitlementCheckServeContent extends ServeContent {
       validateBibInfo(cachedUrl, archivalUnit);
       
       String userAffiliations = (String) req.getHeader(affiliationHeaderName);
+      if ( mockScope ) {
+        String userInstScope = req.getParameter(affiliationHeaderName);
+        if ( ! "".equals(userInstScope) ) {
+          log.warning("Setting scope from parameters:"+userInstScope+" This should not be done in production");
+          userAffiliations = userInstScope;
+        }
+      }
       
       if (log.isDebug2()) {
-        log.debug2("User affiliation in header["+affiliationHeaderName+"]:"+userAffiliations);
+        log.debug2("User shibboleth scoped affiliations: "+userAffiliations);
       }
       if (userAffiliations == null){
         log.error("The Identity Provider didn't return a valid scoped affiliation for this user.");
         return false;
       }
-      userAffiliations = new String( userAffiliations.getBytes("ISO-8859-1"), "UTF-8");
+//      userAffiliations = new String( userAffiliations.getBytes("ISO-8859-1"), "UTF-8");
       
       entitlement = entitlementRegistry.getUserEntitlement(issn, userAffiliations, start, end);
       

@@ -69,6 +69,8 @@ public class KeepsafeEntitlementRegistryClient extends BaseLockssManager impleme
   }
 
   public Map<String, String> getUserEntitlement(String issn, String affiliations, String start, String end) throws IOException {
+      log.debug("getUserEntitlement for issn: "+issn+" affiliations:"+affiliations+" start:"+start+" end:"+end);
+      
       JsonNode entitlementJson = this.findMatchingEntitlement(issn, affiliations, start, end);
       
       if ( entitlementJson == null ) {
@@ -108,7 +110,6 @@ public class KeepsafeEntitlementRegistryClient extends BaseLockssManager impleme
           
           if( entitlementInstitution.hasNonNull("name") &&
               entitlementInstitution.hasNonNull("scope") ) {
-            String entitlementInstitutionName = entitlementInstitution.get("name").asText();
             String entitlementScope = entitlementInstitution.get("scope").asText();
             
             if ( affiliations.contains(entitlementScope) ) {
@@ -120,11 +121,11 @@ public class KeepsafeEntitlementRegistryClient extends BaseLockssManager impleme
         log.error("Entitlements Registry didn't returned the expected parameters.");
       }
 
-      // Valid request, but the entitlements don't match the information we passed, which should never happen
+      // Valid request, but the entitlement don't match the information we passed, which should never happen
       log.error("Entitlements returned from entitlement registry do not match passed parameters");
     }
 
-    //Valid request, no entitlements found
+    //Valid request, no entitlement found
     return null;
   }
 
