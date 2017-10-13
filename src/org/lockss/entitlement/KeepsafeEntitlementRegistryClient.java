@@ -71,7 +71,7 @@ public class KeepsafeEntitlementRegistryClient extends BaseLockssManager impleme
   public Map<String, String> getUserEntitlement(String issn, String affiliations, String start, String end) throws IOException {
       JsonNode entitlementJson = this.findMatchingEntitlement(issn, affiliations, start, end);
       
-      if (entitlementJson == null || entitlementJson.get("scope") == null) {
+      if ( entitlementJson == null ) {
         return null;
       }
       
@@ -79,6 +79,9 @@ public class KeepsafeEntitlementRegistryClient extends BaseLockssManager impleme
       entitlement.put("guid", entitlementJson.get("institution").get("guid").asText());
       entitlement.put("institution", entitlementJson.get("institution").get("name").asText());
       entitlement.put("scope", entitlementJson.get("institution").get("scope").asText());
+      
+      log.debug("User Entitlement scope: "+entitlement.get("scope"));
+      log.debug("User Entitlement institution: "+entitlement.get("institution"));
       
       return entitlement;
   }
