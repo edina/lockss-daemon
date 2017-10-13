@@ -114,12 +114,12 @@ public class KeepsafeEntitlementRegistryClient extends BaseLockssManager impleme
       }
       
       for(JsonNode entitlement : entitlements) {
-        if( entitlement.hasNonNull("institution") ){
+        if( entitlement.hasNonNull("institution") &&
+            entitlement.hasNonNull("publisher") ){
           JsonNode entitlementInstitution = entitlement.get("institution");
           
           if( entitlementInstitution.hasNonNull("name") &&
-              entitlementInstitution.hasNonNull("scope") &&
-              entitlementInstitution.hasNonNull("publisher") ) {            
+              entitlementInstitution.hasNonNull("scope") ) {            
             return entitlement;
           }
         }
