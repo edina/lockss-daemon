@@ -22,4 +22,4 @@ release:
     - ant rpm
   artifacts:
     paths:
-      - "rpms/RPMS/noarch/lockss-daemon-{$RPM_RELEASE_NAME}-${RPM_RELEASE}.noarch.rpm"
+      - "rpms/RPMS/noarch/lockss-daemon-${RPM_RELEASE_NAME}-${RPM_RELEASE}.noarch.rpm"
