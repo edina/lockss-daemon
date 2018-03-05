@@ -1,0 +1,27 @@
+variables:
+  TAG_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
+  RPM_RELEASE: $CI_PIPELINE_ID.keepsafe.el7
+  RPM_RELEASE_NAME: 1.73.2
+
+stages:
+  - build
+  - release
+
+before_script:
+  - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+
+build:
+  stage: build
+  image: docker:latest
+  script:
+    - docker build -t $TAG_IMAGE .
+    - docker push $TAG_IMAGE
+
+release:
+  stage: release
+  image: $TAG_IMAGE
+  script:
+    - ant rpm
+  artifacts:
+    paths:
+      - "rpms/RPMS/noarch/lockss-daemon-{$RPM_RELEASE_NAME}-${RPM_RELEASE}.noarch.rpm"
