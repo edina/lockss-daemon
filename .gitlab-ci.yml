@@ -7,13 +7,11 @@ stages:
   - build
   - release
 
-before_script:
-  - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
-
 build:
   stage: build
   image: docker:latest
   script:
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
     - docker build -t $TAG_IMAGE .
     - docker push $TAG_IMAGE
 
